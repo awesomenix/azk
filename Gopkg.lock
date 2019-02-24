@@ -673,6 +673,7 @@
     "pkg/api/errors",
     "pkg/api/meta",
     "pkg/api/resource",
+    "pkg/apis/config",
     "pkg/apis/meta/internalversion",
     "pkg/apis/meta/v1",
     "pkg/apis/meta/v1/unstructured",
@@ -707,6 +708,7 @@
     "pkg/util/uuid",
     "pkg/util/validation",
     "pkg/util/validation/field",
+    "pkg/util/version",
     "pkg/util/wait",
     "pkg/util/yaml",
     "pkg/version",
@@ -796,6 +798,17 @@
   version = "kubernetes-1.13.3"
 
 [[projects]]
+  branch = "master"
+  digest = "1:a4e4bd202eacc180b484a6a1a59b2a6bc1b9e48a77bdaae6ed7407851d6e8b96"
+  name = "k8s.io/cluster-bootstrap"
+  packages = [
+    "token/api",
+    "token/util",
+  ]
+  pruneopts = "T"
+  revision = "fab9a0a63c5548759135f6cc365e6eedacdba590"
+
+[[projects]]
   digest = "1:dc1ae99dcab96913d81ae970b1f7a7411a54199b14bfb17a7e86f9a56979c720"
   name = "k8s.io/code-generator"
   packages = [
@@ -846,6 +859,34 @@
   packages = ["pkg/util/proto"]
   pruneopts = "T"
   revision = "aa8624f5a2df0ffbc1e8f4c9f37a2ad5cfcba13b"
+
+[[projects]]
+  digest = "1:7efe1fa6e975ed7e44d545966348883d10ddc6335ca7793d940947049f2910ae"
+  name = "k8s.io/kubernetes"
+  packages = [
+    "cmd/kubeadm/app/apis/kubeadm",
+    "cmd/kubeadm/app/constants",
+    "cmd/kubeadm/app/phases/certs",
+    "cmd/kubeadm/app/util",
+    "cmd/kubeadm/app/util/pkiutil",
+    "pkg/apis/core",
+    "pkg/kubelet/apis/config",
+    "pkg/proxy/apis/config",
+    "pkg/registry/core/service/allocator",
+    "pkg/registry/core/service/ipallocator",
+    "pkg/version",
+  ]
+  pruneopts = "T"
+  revision = "721bfa751924da8d1680787490c54b9179b1fed0"
+  version = "v1.13.3"
+
+[[projects]]
+  branch = "master"
+  digest = "1:c891eb9bb736124a30371e8c6d0f045c95e5971f93f1a64d4fd8ee4cf98dcadb"
+  name = "k8s.io/utils"
+  packages = ["exec"]
+  pruneopts = "T"
+  revision = "c2654d5206da6b7b6ace12841e8f359bb89b443c"
 
 [[projects]]
   digest = "1:5aa50779f75cc439edd3455a6dee7cf179b52f8dde764a47cc929693485d1afb"
@@ -952,6 +993,8 @@
     "k8s.io/client-go/rest",
     "k8s.io/code-generator/cmd/client-gen",
     "k8s.io/code-generator/cmd/deepcopy-gen",
+    "k8s.io/kubernetes/cmd/kubeadm/app/apis/kubeadm",
+    "k8s.io/kubernetes/cmd/kubeadm/app/phases/certs",
     "sigs.k8s.io/controller-runtime/pkg/client",
     "sigs.k8s.io/controller-runtime/pkg/client/config",
     "sigs.k8s.io/controller-runtime/pkg/controller",

@@ -24,6 +24,7 @@ type ControlPlaneStatus struct {
 
 // ControlPlane is the Schema for the controlplanes API
 // +k8s:openapi-gen=true
+// +kubebuilder:subresource:status
 type ControlPlane struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

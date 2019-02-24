@@ -24,6 +24,7 @@ type NodeSetStatus struct {
 
 // NodeSet is the Schema for the nodesets API
 // +k8s:openapi-gen=true
+// +kubebuilder:subresource:status
 type NodeSet struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

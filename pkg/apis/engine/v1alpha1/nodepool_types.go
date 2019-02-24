@@ -24,6 +24,7 @@ type NodePoolStatus struct {
 
 // NodePool is the Schema for the nodepools API
 // +k8s:openapi-gen=true
+// +kubebuilder:subresource:status
 type NodePool struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

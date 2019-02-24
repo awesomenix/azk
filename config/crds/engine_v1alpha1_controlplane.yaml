@@ -11,6 +11,8 @@ spec:
     kind: ControlPlane
     plural: controlplanes
   scope: Namespaced
+  subresources:
+    status: {}
   validation:
     openAPIV3Schema:
       properties:

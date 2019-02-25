@@ -721,6 +721,14 @@
   version = "kubernetes-1.13.3"
 
 [[projects]]
+  digest = "1:da776dfd04fb719e79285f6a2db89376af1482a280e84a278c62360cffdd9c32"
+  name = "k8s.io/apiserver"
+  packages = ["pkg/util/feature"]
+  pruneopts = "T"
+  revision = "26bc712632e1faf9efc6b63f712325c760ad1ebe"
+  version = "kubernetes-1.13.3"
+
+[[projects]]
   digest = "1:aed3bb8785aec725a564291f79abf365c5ba013e41c7c38c9287fb7d69e9affd"
   name = "k8s.io/client-go"
   packages = [
@@ -865,9 +873,16 @@
   name = "k8s.io/kubernetes"
   packages = [
     "cmd/kubeadm/app/apis/kubeadm",
+    "cmd/kubeadm/app/apis/kubeadm/scheme",
+    "cmd/kubeadm/app/apis/kubeadm/v1alpha3",
+    "cmd/kubeadm/app/apis/kubeadm/v1beta1",
     "cmd/kubeadm/app/constants",
+    "cmd/kubeadm/app/features",
+    "cmd/kubeadm/app/images",
     "cmd/kubeadm/app/phases/certs",
+    "cmd/kubeadm/app/phases/kubeconfig",
     "cmd/kubeadm/app/util",
+    "cmd/kubeadm/app/util/kubeconfig",
     "cmd/kubeadm/app/util/pkiutil",
     "pkg/apis/core",
     "pkg/kubelet/apis/config",
@@ -994,7 +1009,11 @@
     "k8s.io/code-generator/cmd/client-gen",
     "k8s.io/code-generator/cmd/deepcopy-gen",
     "k8s.io/kubernetes/cmd/kubeadm/app/apis/kubeadm",
+    "k8s.io/kubernetes/cmd/kubeadm/app/apis/kubeadm/scheme",
+    "k8s.io/kubernetes/cmd/kubeadm/app/apis/kubeadm/v1beta1",
+    "k8s.io/kubernetes/cmd/kubeadm/app/constants",
     "k8s.io/kubernetes/cmd/kubeadm/app/phases/certs",
+    "k8s.io/kubernetes/cmd/kubeadm/app/phases/kubeconfig",
     "sigs.k8s.io/controller-runtime/pkg/client",
     "sigs.k8s.io/controller-runtime/pkg/client/config",
     "sigs.k8s.io/controller-runtime/pkg/controller",

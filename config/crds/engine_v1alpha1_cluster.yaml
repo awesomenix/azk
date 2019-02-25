@@ -31,6 +31,27 @@ spec:
         spec:
           type: object
         status:
+          properties:
+            adminKubeConfig:
+              type: string
+            caCertificate:
+              type: string
+            caCertificateKey:
+              type: string
+            etcdCACertificate:
+              type: string
+            etcdCACertificateKey:
+              type: string
+            frontProxyCACertificate:
+              type: string
+            frontProxyCACertificateKey:
+              type: string
+            provisioningState:
+              type: string
+            serviceAccountKey:
+              type: string
+            serviceAccountPub:
+              type: string
           type: object
   version: v1alpha1
 status:

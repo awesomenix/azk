@@ -15,8 +15,16 @@ type ClusterSpec struct {
 
 // ClusterStatus defines the observed state of Cluster
 type ClusterStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	ProvisioningState          string `json:"provisioningState,omitempty"`
+	CACertificate              string `json:"caCertificate,omitempty"`
+	CACertificateKey           string `json:"caCertificateKey,omitempty"`
+	ServiceAccountKey          string `json:"serviceAccountKey,omitempty"`
+	ServiceAccountPub          string `json:"serviceAccountPub,omitempty"`
+	FrontProxyCACertificate    string `json:"frontProxyCACertificate,omitempty"`
+	FrontProxyCACertificateKey string `json:"frontProxyCACertificateKey,omitempty"`
+	EtcdCACertificate          string `json:"etcdCACertificate,omitempty"`
+	EtcdCACertificateKey       string `json:"etcdCACertificateKey,omitempty"`
+	AdminKubeConfig            string `json:"adminKubeConfig,omitempty"`
 }
 
 // +genclient

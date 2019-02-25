@@ -1,6 +1,8 @@
 package cluster
 
 import (
+	"fmt"
+	"os"
 	"testing"
 	"time"
 
@@ -18,7 +20,6 @@ import (
 var c client.Client
 
 var expectedRequest = reconcile.Request{NamespacedName: types.NamespacedName{Name: "foo", Namespace: "default"}}
-var depKey = types.NamespacedName{Name: "foo-deployment", Namespace: "default"}
 
 const timeout = time.Second * 5
 
@@ -42,6 +43,7 @@ func TestReconcile(t *testing.T) {
 		mgrStopped.Wait()
 	}()
 
+	defer os.RemoveAll("/tmp/kubeadm")
 	// Create the Cluster object and expect the Reconcile and Deployment to be created
 	err = c.Create(context.TODO(), instance)
 	// The instance object may not be a valid object because it might be missing some required fields.
@@ -53,4 +55,48 @@ func TestReconcile(t *testing.T) {
 	g.Expect(err).NotTo(gomega.HaveOccurred())
 	defer c.Delete(context.TODO(), instance)
 	g.Eventually(requests, timeout).Should(gomega.Receive(gomega.Equal(expectedRequest)))
+
+	instance = &enginev1alpha1.Cluster{}
+	g.Eventually(func() error {
+		if err := c.Get(context.TODO(), types.NamespacedName{Name: "foo", Namespace: "default"}, instance); err != nil {
+			return err
+		}
+		if instance.Status.ProvisioningState != "Succeeded" {
+			return fmt.Errorf("Provisioning State still %s", instance.Status.ProvisioningState)
+		}
+		return nil
+	}, 20*time.Second).
+		Should(gomega.Succeed())
+
+	g.Eventually(func() error {
+		if instance.Status.CACertificate == "" {
+			return fmt.Errorf("Expected non empty CACertificate")
+		}
+		if instance.Status.CACertificateKey == "" {
+			return fmt.Errorf("Expected non empty CACertificateKey")
+		}
+		if instance.Status.ServiceAccountKey == "" {
+			return fmt.Errorf("Expected non empty ServiceAccountKey")
+		}
+		if instance.Status.ServiceAccountPub == "" {
+			return fmt.Errorf("Expected non empty ServiceAccountPub")
+		}
+		if instance.Status.FrontProxyCACertificate == "" {
+			return fmt.Errorf("Expected non empty FrontProxyCACertificate")
+		}
+		if instance.Status.FrontProxyCACertificateKey == "" {
+			return fmt.Errorf("Expected non empty FrontProxyCACertificateKey")
+		}
+		if instance.Status.EtcdCACertificate == "" {
+			return fmt.Errorf("Expected non empty EtcdCACertificate")
+		}
+		if instance.Status.EtcdCACertificateKey == "" {
+			return fmt.Errorf("Expected non empty EtcdCACertificateKey")
+		}
+		if instance.Status.AdminKubeConfig == "" {
+			return fmt.Errorf("Expected non empty AdminKubeConfig")
+		}
+		return nil
+	}, timeout).
+		Should(gomega.Succeed())
 }

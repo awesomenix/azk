@@ -96,6 +96,12 @@ func TestReconcile(t *testing.T) {
 		if instance.Status.AdminKubeConfig == "" {
 			return fmt.Errorf("Expected non empty AdminKubeConfig")
 		}
+		if instance.Status.BootstrapToken == "" {
+			return fmt.Errorf("Expected non empty BootstrapToken")
+		}
+		if instance.Status.DiscoveryHashes == nil || len(instance.Status.DiscoveryHashes) <= 0 {
+			return fmt.Errorf("Expected non empty DiscoveryHashes")
+		}
 		return nil
 	}, timeout).
 		Should(gomega.Succeed())

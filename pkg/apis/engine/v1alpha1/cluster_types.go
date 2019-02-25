@@ -15,16 +15,18 @@ type ClusterSpec struct {
 
 // ClusterStatus defines the observed state of Cluster
 type ClusterStatus struct {
-	ProvisioningState          string `json:"provisioningState,omitempty"`
-	CACertificate              string `json:"caCertificate,omitempty"`
-	CACertificateKey           string `json:"caCertificateKey,omitempty"`
-	ServiceAccountKey          string `json:"serviceAccountKey,omitempty"`
-	ServiceAccountPub          string `json:"serviceAccountPub,omitempty"`
-	FrontProxyCACertificate    string `json:"frontProxyCACertificate,omitempty"`
-	FrontProxyCACertificateKey string `json:"frontProxyCACertificateKey,omitempty"`
-	EtcdCACertificate          string `json:"etcdCACertificate,omitempty"`
-	EtcdCACertificateKey       string `json:"etcdCACertificateKey,omitempty"`
-	AdminKubeConfig            string `json:"adminKubeConfig,omitempty"`
+	ProvisioningState          string   `json:"provisioningState,omitempty"`
+	CACertificate              string   `json:"caCertificate,omitempty"`
+	CACertificateKey           string   `json:"caCertificateKey,omitempty"`
+	ServiceAccountKey          string   `json:"serviceAccountKey,omitempty"`
+	ServiceAccountPub          string   `json:"serviceAccountPub,omitempty"`
+	FrontProxyCACertificate    string   `json:"frontProxyCACertificate,omitempty"`
+	FrontProxyCACertificateKey string   `json:"frontProxyCACertificateKey,omitempty"`
+	EtcdCACertificate          string   `json:"etcdCACertificate,omitempty"`
+	EtcdCACertificateKey       string   `json:"etcdCACertificateKey,omitempty"`
+	AdminKubeConfig            string   `json:"adminKubeConfig,omitempty"`
+	BootstrapToken             string   `json:"bootstrapToken,omitempty"`
+	DiscoveryHashes            []string `json:"discoveryHashes,omitempty"`
 }
 
 // +genclient

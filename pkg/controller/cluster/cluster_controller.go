@@ -8,6 +8,8 @@ import (
 	"time"
 
 	enginev1alpha1 "github.com/awesomenix/azkube/pkg/apis/engine/v1alpha1"
+	azhelpers "github.com/awesomenix/azkube/pkg/azure"
+	"github.com/awesomenix/azkube/pkg/helpers"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/tools/clientcmd"
@@ -31,7 +33,8 @@ import (
 )
 
 const (
-	tmpDir = "/tmp/kubeadm/"
+	tmpDir              = "/tmp/kubeadm/"
+	groupsFinalizerName = "groups.finalizers.engine.azkube.io"
 )
 
 var log = logf.Log.WithName("controller")
@@ -91,6 +94,70 @@ func (r *ReconcileCluster) Reconcile(request reconcile.Request) (reconcile.Resul
 		return reconcile.Result{}, err
 	}
 
+	cloudConfig := azhelpers.CloudConfiguration{
+		CloudName:      azhelpers.AzurePublicCloudName,
+		SubscriptionID: instance.Spec.SubscriptionID,
+		ClientID:       instance.Spec.ClientID,
+		ClientSecret:   instance.Spec.ClientSecret,
+		TenantID:       instance.Spec.TenantID,
+		UserAgent:      "azkube",
+	}
+
+	if instance.ObjectMeta.DeletionTimestamp.IsZero() {
+		// The object is not being deleted, so if it does not have our finalizer,
+		// then lets add the finalizer and update the object.
+		update := false
+
+		if !helpers.ContainsFinalizer(instance.ObjectMeta.Finalizers, groupsFinalizerName) {
+			instance.ObjectMeta.Finalizers = append(instance.ObjectMeta.Finalizers, groupsFinalizerName)
+			if cloudConfig.IsValid() {
+				err := cloudConfig.CreateOrUpdateResourceGroup(context.TODO(), instance.Spec.ResourceGroupName, instance.Spec.Location)
+				if err != nil {
+					return reconcile.Result{Requeue: true}, err
+				}
+				err = cloudConfig.CreateVirtualNetworkAndSubnets(context.TODO(), "azkube-vnet", instance.Spec.ResourceGroupName, instance.Spec.Location)
+				if err != nil {
+					return reconcile.Result{Requeue: true}, err
+				}
+			}
+			update = true
+		}
+
+		if update {
+			if err := r.Update(context.TODO(), instance); err != nil {
+				return reconcile.Result{Requeue: true}, err
+			}
+			// Once updates object changes we need to requeue
+			return reconcile.Result{Requeue: true}, nil
+		}
+
+	} else {
+		if helpers.ContainsFinalizer(instance.ObjectMeta.Finalizers, groupsFinalizerName) {
+			if cloudConfig.IsValid() {
+				log.Info("Deleting Resource Group", "Name", instance.Spec.ResourceGroupName)
+				// our finalizer is present, so lets handle our external dependency
+				if err := cloudConfig.DeleteResourceGroup(context.TODO(), instance.Spec.ResourceGroupName); err != nil {
+					// if fail to delete the external dependency here, return with error
+					// so that it can be retried
+					// meh! its fine if it fails, we definitely need to wait here for it to be deleted
+				}
+			}
+
+			// remove our finalizer from the list and update it.
+			instance.ObjectMeta.Finalizers = helpers.RemoveFinalizer(instance.ObjectMeta.Finalizers, groupsFinalizerName)
+			if err := r.Update(context.TODO(), instance); err != nil {
+				return reconcile.Result{Requeue: true}, nil
+			}
+		}
+
+		return reconcile.Result{}, nil
+	}
+
+	if instance.Status.ProvisioningState == "Succeeded" {
+		// Ideally we need to check that everything is good
+		return reconcile.Result{}, nil
+	}
+
 	instance.Status.ProvisioningState = "Updating"
 	if err := r.Status().Update(context.TODO(), instance); err != nil {
 		return reconcile.Result{}, err
@@ -121,6 +188,7 @@ func (r *ReconcileCluster) Reconcile(request reconcile.Request) (reconcile.Resul
 		log.Error(err, "Error Updating Status")
 		return reconcile.Result{RequeueAfter: 3 * time.Second}, err
 	}
+
 	instance.Status.ProvisioningState = "Succeeded"
 	if err := r.Status().Update(context.TODO(), instance); err != nil {
 		return reconcile.Result{}, err

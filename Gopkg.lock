@@ -10,6 +10,44 @@
   version = "v0.36.0"
 
 [[projects]]
+  digest = "1:b92928b73320648b38c93cacb9082c0fe3f8ac3383ad9bd537eef62c380e0e7a"
+  name = "contrib.go.opencensus.io/exporter/ocagent"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "00af367e65149ff1f2f4b93bbfbb84fd9297170d"
+  version = "v0.2.0"
+
+[[projects]]
+  digest = "1:2be13b5a1890942cfbe480736409838ccf01f6ae02fa82c6ebac35ad6be0284d"
+  name = "github.com/Azure/azure-sdk-for-go"
+  packages = [
+    "services/compute/mgmt/2018-04-01/compute",
+    "services/network/mgmt/2018-01-01/network",
+    "services/resources/mgmt/2017-05-10/resources",
+    "version",
+  ]
+  pruneopts = "T"
+  revision = "4d7ea88c4dd04df3dff2c3118136a0e1e3bd787d"
+  version = "v26.0.0"
+
+[[projects]]
+  digest = "1:7ab2c93ffae30e24a69c05d532fa89b610742945388e4ccebf91a6e229e9037b"
+  name = "github.com/Azure/go-autorest"
+  packages = [
+    "autorest",
+    "autorest/adal",
+    "autorest/azure",
+    "autorest/date",
+    "autorest/to",
+    "autorest/validation",
+    "logger",
+    "tracing",
+  ]
+  pruneopts = "T"
+  revision = "f4369d4c79bf40df5e86def1e0f54c7ef261a51c"
+  version = "v11.5.0"
+
+[[projects]]
   digest = "1:464aef731a5f82ded547c62e249a2e9ec59fbbc9ddab53cda7b9857852630a61"
   name = "github.com/appscode/jsonpatch"
   packages = ["."]
@@ -26,12 +64,33 @@
   revision = "3a771d992973f24aa725d07868b467d1ddfceafb"
 
 [[projects]]
+  digest = "1:0b2d5839372f6dc106fcaa70b6bd5832789a633c4e470540f76c2ec6c560e1c1"
+  name = "github.com/census-instrumentation/opencensus-proto"
+  packages = [
+    "gen-go/agent/common/v1",
+    "gen-go/agent/trace/v1",
+    "gen-go/resource/v1",
+    "gen-go/trace/v1",
+  ]
+  pruneopts = "T"
+  revision = "7f2434bc10da710debe5c4315ed6d4df454b4024"
+  version = "v0.1.0"
+
+[[projects]]
   digest = "1:9f42202ac457c462ad8bb9642806d275af9ab4850cf0b1960b9c6f083d4a309a"
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
   pruneopts = "T"
   revision = "8991bc29aa16c548c550c7ff78260e27b9ab7c73"
   version = "v1.1.1"
+
+[[projects]]
+  digest = "1:6b014c67cb522566c30ef02116f9acb50cd60954708cf92c6654e2985696db18"
+  name = "github.com/dgrijalva/jwt-go"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "06ea1031745cb8b3dab3f6a236daf2b0aa468b7e"
+  version = "v3.2.0"
 
 [[projects]]
   digest = "1:7f98547edaaa86eeaba758dd915cb2ee9264568257febdaad73c6b697e19b561"
@@ -104,6 +163,7 @@
     "ptypes/any",
     "ptypes/duration",
     "ptypes/timestamp",
+    "ptypes/wrappers",
   ]
   pruneopts = "T"
   revision = "aa810b61a9c79d51363740d207bb46cf8e620ed5"
@@ -413,6 +473,30 @@
   version = "v1.0.3"
 
 [[projects]]
+  digest = "1:b6f574d818cb549185939ce3c228983b339eeba4aee229c74c5848ff9e806836"
+  name = "go.opencensus.io"
+  packages = [
+    ".",
+    "exemplar",
+    "internal",
+    "internal/tagencoding",
+    "plugin/ochttp",
+    "plugin/ochttp/propagation/b3",
+    "plugin/ochttp/propagation/tracecontext",
+    "stats",
+    "stats/internal",
+    "stats/view",
+    "tag",
+    "trace",
+    "trace/internal",
+    "trace/propagation",
+    "trace/tracestate",
+  ]
+  pruneopts = "T"
+  revision = "b7bf3cdb64150a8c8c53b769fdeb2ba581bd4d4b"
+  version = "v0.18.0"
+
+[[projects]]
   digest = "1:365b8ecb35a5faf5aa0ee8d798548fc9cd4200cb95d77a5b0b285ac881bae499"
   name = "go.uber.org/atomic"
   packages = ["."]
@@ -465,6 +549,8 @@
     "http2",
     "http2/hpack",
     "idna",
+    "internal/timeseries",
+    "trace",
   ]
   pruneopts = "T"
   revision = "3a22650c66bd7f4fb6d1e8072ffd7b75c8a27898"
@@ -482,6 +568,14 @@
   ]
   pruneopts = "T"
   revision = "9b3c75971fc92dd27c6436a37c05c831498658f1"
+
+[[projects]]
+  branch = "master"
+  digest = "1:6932d1ef4294f3ea819748e89d1003f5df3804b20b84b5f1c60f8f1d7c933e2d"
+  name = "golang.org/x/sync"
+  packages = ["semaphore"]
+  pruneopts = "T"
+  revision = "37e7f081c4d4c64e13b10787722085407fe5d15f"
 
 [[projects]]
   branch = "master"
@@ -559,6 +653,14 @@
   revision = "83362c3779f5f48611068d488a03ea7bbaddc81e"
 
 [[projects]]
+  digest = "1:2aa09cbc32ca3e699753b1270176ff10bf6752326510e18878d2cb25a5274f4f"
+  name = "google.golang.org/api"
+  packages = ["support/bundler"]
+  pruneopts = "T"
+  revision = "19e022d8cf43ce81f046bae8cc18c5397cc7732f"
+  version = "v0.1.0"
+
+[[projects]]
   digest = "1:1469235a5a8e192cfe6a99c4804b883a02f0ff96a693cd1660515a3a3b94d5ac"
   name = "google.golang.org/appengine"
   packages = [
@@ -576,6 +678,54 @@
   pruneopts = "T"
   revision = "e9657d882bb81064595ca3b56cbe2546bbabf7b1"
   version = "v1.4.0"
+
+[[projects]]
+  branch = "master"
+  digest = "1:58cab6380ee63ac4d983ff73b8f6aab7ab6d0cf8dc82550641017fb8e6a0940e"
+  name = "google.golang.org/genproto"
+  packages = ["googleapis/rpc/status"]
+  pruneopts = "T"
+  revision = "082222b4a5c572e33e82ee9162d1352c7cf38682"
+
+[[projects]]
+  digest = "1:adec72b8770ba7ad04c7a5a8ef8c6cc13a766bd11f900b60f360303b4f56e0b1"
+  name = "google.golang.org/grpc"
+  packages = [
+    ".",
+    "balancer",
+    "balancer/base",
+    "balancer/roundrobin",
+    "binarylog/grpc_binarylog_v1",
+    "codes",
+    "connectivity",
+    "credentials",
+    "credentials/internal",
+    "encoding",
+    "encoding/proto",
+    "grpclog",
+    "internal",
+    "internal/backoff",
+    "internal/binarylog",
+    "internal/channelz",
+    "internal/envconfig",
+    "internal/grpcrand",
+    "internal/grpcsync",
+    "internal/syscall",
+    "internal/transport",
+    "keepalive",
+    "metadata",
+    "naming",
+    "peer",
+    "resolver",
+    "resolver/dns",
+    "resolver/passthrough",
+    "stats",
+    "status",
+    "tap",
+  ]
+  pruneopts = "T"
+  revision = "a02b0774206b209466313a0b525d2c738fe407eb"
+  version = "v1.18.0"
 
 [[projects]]
   digest = "1:7fc160b460a6fc506b37fcca68332464c3f2cd57b6e3f111f26c5bbfd2d5518e"
@@ -884,6 +1034,7 @@
     "cmd/kubeadm/app/util",
     "cmd/kubeadm/app/util/kubeconfig",
     "cmd/kubeadm/app/util/pkiutil",
+    "cmd/kubeadm/app/util/pubkeypin",
     "pkg/apis/core",
     "pkg/kubelet/apis/config",
     "pkg/proxy/apis/config",
@@ -913,7 +1064,6 @@
     "pkg/client/apiutil",
     "pkg/client/config",
     "pkg/controller",
-    "pkg/controller/controllerutil",
     "pkg/envtest",
     "pkg/envtest/printer",
     "pkg/event",
@@ -991,12 +1141,17 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/Azure/azure-sdk-for-go/services/compute/mgmt/2018-04-01/compute",
+    "github.com/Azure/azure-sdk-for-go/services/network/mgmt/2018-01-01/network",
+    "github.com/Azure/azure-sdk-for-go/services/resources/mgmt/2017-05-10/resources",
+    "github.com/Azure/go-autorest/autorest",
+    "github.com/Azure/go-autorest/autorest/adal",
+    "github.com/Azure/go-autorest/autorest/azure",
+    "github.com/Azure/go-autorest/autorest/to",
     "github.com/emicklei/go-restful",
     "github.com/onsi/ginkgo",
     "github.com/onsi/gomega",
     "golang.org/x/net/context",
-    "k8s.io/api/apps/v1",
-    "k8s.io/api/core/v1",
     "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1",
     "k8s.io/apimachinery/pkg/api/errors",
     "k8s.io/apimachinery/pkg/apis/meta/v1",
@@ -1006,6 +1161,9 @@
     "k8s.io/client-go/kubernetes/scheme",
     "k8s.io/client-go/plugin/pkg/client/auth/gcp",
     "k8s.io/client-go/rest",
+    "k8s.io/client-go/tools/clientcmd",
+    "k8s.io/client-go/util/cert",
+    "k8s.io/cluster-bootstrap/token/util",
     "k8s.io/code-generator/cmd/client-gen",
     "k8s.io/code-generator/cmd/deepcopy-gen",
     "k8s.io/kubernetes/cmd/kubeadm/app/apis/kubeadm",
@@ -1014,10 +1172,11 @@
     "k8s.io/kubernetes/cmd/kubeadm/app/constants",
     "k8s.io/kubernetes/cmd/kubeadm/app/phases/certs",
     "k8s.io/kubernetes/cmd/kubeadm/app/phases/kubeconfig",
+    "k8s.io/kubernetes/cmd/kubeadm/app/util/kubeconfig",
+    "k8s.io/kubernetes/cmd/kubeadm/app/util/pubkeypin",
     "sigs.k8s.io/controller-runtime/pkg/client",
     "sigs.k8s.io/controller-runtime/pkg/client/config",
     "sigs.k8s.io/controller-runtime/pkg/controller",
-    "sigs.k8s.io/controller-runtime/pkg/controller/controllerutil",
     "sigs.k8s.io/controller-runtime/pkg/envtest",
     "sigs.k8s.io/controller-runtime/pkg/handler",
     "sigs.k8s.io/controller-runtime/pkg/manager",

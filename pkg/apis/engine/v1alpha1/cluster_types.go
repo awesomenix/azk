@@ -4,13 +4,18 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // ClusterSpec defines the desired state of Cluster
 type ClusterSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	SubscriptionID    string `json:"subscriptionID,omitempty"`
+	ResourceGroupName string `json:"resourceGroupName,omitempty"`
+	ResourceName      string `json:"resourceName,omitempty"`
+	DNSPrefix         string `json:"dnsPrefix,omitempty"`
+	Location          string `json:"location,omitempty"`
+	TenantID          string `json:"tenantID,omitempty"`
+	ClientID          string `json:"clientID,omitempty"`
+	ClientSecret      string `json:"clientSecret,omitempty"`
+	VMType            string `json:"vmtype,omitempty"` // VMTypes are standard, vmss
+	PrivateCluster    bool   `json:"privateCluster,omitempty"`
 }
 
 // ClusterStatus defines the observed state of Cluster

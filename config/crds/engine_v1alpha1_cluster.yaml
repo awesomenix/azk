@@ -29,15 +29,43 @@ spec:
         metadata:
           type: object
         spec:
+          properties:
+            clientID:
+              type: string
+            clientSecret:
+              type: string
+            dnsPrefix:
+              type: string
+            location:
+              type: string
+            privateCluster:
+              description: VMTypes are standard, vmss
+              type: boolean
+            resourceGroupName:
+              type: string
+            resourceName:
+              type: string
+            subscriptionID:
+              type: string
+            tenantID:
+              type: string
+            vmtype:
+              type: string
           type: object
         status:
           properties:
             adminKubeConfig:
               type: string
+            bootstrapToken:
+              type: string
             caCertificate:
               type: string
             caCertificateKey:
               type: string
+            discoveryHashes:
+              items:
+                type: string
+              type: array
             etcdCACertificate:
               type: string
             etcdCACertificateKey:

@@ -659,11 +659,6 @@ func (iter PaginatedWebServicesListIterator) Value() WebService {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the PaginatedWebServicesListIterator type.
-func NewPaginatedWebServicesListIterator(page PaginatedWebServicesListPage) PaginatedWebServicesListIterator {
-	return PaginatedWebServicesListIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (pwsl PaginatedWebServicesList) IsEmpty() bool {
 	return pwsl.Value == nil || len(*pwsl.Value) == 0
@@ -731,11 +726,6 @@ func (page PaginatedWebServicesListPage) Values() []WebService {
 		return nil
 	}
 	return *page.pwsl.Value
-}
-
-// Creates a new instance of the PaginatedWebServicesListPage type.
-func NewPaginatedWebServicesListPage(getNextPage func(context.Context, PaginatedWebServicesList) (PaginatedWebServicesList, error)) PaginatedWebServicesListPage {
-	return PaginatedWebServicesListPage{fn: getNextPage}
 }
 
 // Parameter web Service Parameter object for node and global parameter
@@ -822,7 +812,7 @@ type Properties struct {
 	Parameters map[string]*Parameter `json:"parameters"`
 	// PayloadsInBlobStorage - When set to true, indicates that the payload size is larger than 3 MB. Otherwise false. If the payload size exceed 3 MB, the payload is stored in a blob and the PayloadsLocation parameter contains the URI of the blob. Otherwise, this will be set to false and Assets, Input, Output, Package, Parameters, ExampleRequest are inline. The Payload sizes is determined by adding the size of the Assets, Input, Output, Package, Parameters, and the ExampleRequest.
 	PayloadsInBlobStorage *bool `json:"payloadsInBlobStorage,omitempty"`
-	// PayloadsLocation - The URI of the payload blob. This parameter contains a value only if the payloadsInBlobStorage parameter is set to true. Otherwise is set to null.
+	// PayloadsLocation - The URI of the payload blob. This paramater contains a value only if the payloadsInBlobStorage parameter is set to true. Otherwise is set to null.
 	PayloadsLocation *BlobLocation `json:"payloadsLocation,omitempty"`
 	// PackageType - Possible values include: 'PackageTypeWebServiceProperties', 'PackageTypeGraph'
 	PackageType PackageType `json:"packageType,omitempty"`
@@ -997,7 +987,7 @@ type PropertiesForGraph struct {
 	Parameters map[string]*Parameter `json:"parameters"`
 	// PayloadsInBlobStorage - When set to true, indicates that the payload size is larger than 3 MB. Otherwise false. If the payload size exceed 3 MB, the payload is stored in a blob and the PayloadsLocation parameter contains the URI of the blob. Otherwise, this will be set to false and Assets, Input, Output, Package, Parameters, ExampleRequest are inline. The Payload sizes is determined by adding the size of the Assets, Input, Output, Package, Parameters, and the ExampleRequest.
 	PayloadsInBlobStorage *bool `json:"payloadsInBlobStorage,omitempty"`
-	// PayloadsLocation - The URI of the payload blob. This parameter contains a value only if the payloadsInBlobStorage parameter is set to true. Otherwise is set to null.
+	// PayloadsLocation - The URI of the payload blob. This paramater contains a value only if the payloadsInBlobStorage parameter is set to true. Otherwise is set to null.
 	PayloadsLocation *BlobLocation `json:"payloadsLocation,omitempty"`
 	// PackageType - Possible values include: 'PackageTypeWebServiceProperties', 'PackageTypeGraph'
 	PackageType PackageType `json:"packageType,omitempty"`

@@ -921,11 +921,11 @@ type APIEntityProperties struct {
 	RuntimeUrls *[]string `json:"runtimeUrls,omitempty"`
 	// Protocols - Protocols supported by the front end - http/https
 	Protocols *[]string `json:"protocols,omitempty"`
-	// Policies - API policies
+	// Policies - Api polcies
 	Policies *APIPolicies `json:"policies,omitempty"`
 	// BackendService - Backend service definition
 	BackendService *BackendServiceDefinition `json:"backendService,omitempty"`
-	// APIDefinitionURL - API definition Url - url where the swagger can be downloaded from
+	// APIDefinitionURL - Api definition Url - url where the swagger can be downloaded from
 	APIDefinitionURL *string `json:"apiDefinitionUrl,omitempty"`
 	// Metadata - Free form object for the data caller wants to store
 	Metadata interface{} `json:"metadata,omitempty"`
@@ -984,7 +984,7 @@ func (ae APIEntityProperties) MarshalJSON() ([]byte, error) {
 	return json.Marshal(objectMap)
 }
 
-// APIOAuthSettings oAuth settings for the connection provider
+// APIOAuthSettings oAuth settings for the conenction provider
 type APIOAuthSettings struct {
 	// IdentityProvider - Identity provider
 	IdentityProvider *string `json:"identityProvider,omitempty"`
@@ -1039,7 +1039,7 @@ type APIOAuthSettingsParameter struct {
 	UIDefinition interface{} `json:"uiDefinition,omitempty"`
 }
 
-// APIPolicies API policies
+// APIPolicies api policies
 type APIPolicies struct {
 	*APIPoliciesProperties `json:"properties,omitempty"`
 	// ID - Resource Id
@@ -1234,11 +1234,6 @@ func (iter ApisCollectionIterator) Value() APIEntity {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ApisCollectionIterator type.
-func NewApisCollectionIterator(page ApisCollectionPage) ApisCollectionIterator {
-	return ApisCollectionIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (ac ApisCollection) IsEmpty() bool {
 	return ac.Value == nil || len(*ac.Value) == 0
@@ -1306,11 +1301,6 @@ func (page ApisCollectionPage) Values() []APIEntity {
 		return nil
 	}
 	return *page.ac.Value
-}
-
-// Creates a new instance of the ApisCollectionPage type.
-func NewApisCollectionPage(getNextPage func(context.Context, ApisCollection) (ApisCollection, error)) ApisCollectionPage {
-	return ApisCollectionPage{fn: getNextPage}
 }
 
 // ApplicationLogsConfig application logs configuration
@@ -1730,11 +1720,6 @@ func (iter BackupItemCollectionIterator) Value() BackupItem {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the BackupItemCollectionIterator type.
-func NewBackupItemCollectionIterator(page BackupItemCollectionPage) BackupItemCollectionIterator {
-	return BackupItemCollectionIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (bic BackupItemCollection) IsEmpty() bool {
 	return bic.Value == nil || len(*bic.Value) == 0
@@ -1802,11 +1787,6 @@ func (page BackupItemCollectionPage) Values() []BackupItem {
 		return nil
 	}
 	return *page.bic.Value
-}
-
-// Creates a new instance of the BackupItemCollectionPage type.
-func NewBackupItemCollectionPage(getNextPage func(context.Context, BackupItemCollection) (BackupItemCollection, error)) BackupItemCollectionPage {
-	return BackupItemCollectionPage{fn: getNextPage}
 }
 
 // BackupItemProperties ...
@@ -2187,11 +2167,6 @@ func (iter CertificateCollectionIterator) Value() Certificate {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the CertificateCollectionIterator type.
-func NewCertificateCollectionIterator(page CertificateCollectionPage) CertificateCollectionIterator {
-	return CertificateCollectionIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (cc CertificateCollection) IsEmpty() bool {
 	return cc.Value == nil || len(*cc.Value) == 0
@@ -2259,11 +2234,6 @@ func (page CertificateCollectionPage) Values() []Certificate {
 		return nil
 	}
 	return *page.cc.Value
-}
-
-// Creates a new instance of the CertificateCollectionPage type.
-func NewCertificateCollectionPage(getNextPage func(context.Context, CertificateCollection) (CertificateCollection, error)) CertificateCollectionPage {
-	return CertificateCollectionPage{fn: getNextPage}
 }
 
 // CertificateDetails certificate Details
@@ -2917,7 +2887,7 @@ func (coc *CertificateOrderCertificate) UnmarshalJSON(body []byte) error {
 	return nil
 }
 
-// CertificateOrderCertificateCollection collection of certificate order certificates
+// CertificateOrderCertificateCollection collection of ceritificateorder certificates
 type CertificateOrderCertificateCollection struct {
 	autorest.Response `json:"-"`
 	// Value - Collection of resources
@@ -2983,11 +2953,6 @@ func (iter CertificateOrderCertificateCollectionIterator) Value() CertificateOrd
 		return CertificateOrderCertificate{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the CertificateOrderCertificateCollectionIterator type.
-func NewCertificateOrderCertificateCollectionIterator(page CertificateOrderCertificateCollectionPage) CertificateOrderCertificateCollectionIterator {
-	return CertificateOrderCertificateCollectionIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -3059,11 +3024,6 @@ func (page CertificateOrderCertificateCollectionPage) Values() []CertificateOrde
 	return *page.cocc.Value
 }
 
-// Creates a new instance of the CertificateOrderCertificateCollectionPage type.
-func NewCertificateOrderCertificateCollectionPage(getNextPage func(context.Context, CertificateOrderCertificateCollection) (CertificateOrderCertificateCollection, error)) CertificateOrderCertificateCollectionPage {
-	return CertificateOrderCertificateCollectionPage{fn: getNextPage}
-}
-
 // CertificateOrderCertificateProperties ...
 type CertificateOrderCertificateProperties struct {
 	// KeyVaultID - Key Vault Csm resource Id
@@ -3074,7 +3034,7 @@ type CertificateOrderCertificateProperties struct {
 	ProvisioningState KeyVaultSecretStatus `json:"provisioningState,omitempty"`
 }
 
-// CertificateOrderCollection collection of certificate orders
+// CertificateOrderCollection collection of ceritificate orders
 type CertificateOrderCollection struct {
 	autorest.Response `json:"-"`
 	// Value - Collection of resources
@@ -3139,11 +3099,6 @@ func (iter CertificateOrderCollectionIterator) Value() CertificateOrder {
 		return CertificateOrder{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the CertificateOrderCollectionIterator type.
-func NewCertificateOrderCollectionIterator(page CertificateOrderCollectionPage) CertificateOrderCollectionIterator {
-	return CertificateOrderCollectionIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -3213,11 +3168,6 @@ func (page CertificateOrderCollectionPage) Values() []CertificateOrder {
 		return nil
 	}
 	return *page.coc.Value
-}
-
-// Creates a new instance of the CertificateOrderCollectionPage type.
-func NewCertificateOrderCollectionPage(getNextPage func(context.Context, CertificateOrderCollection) (CertificateOrderCollection, error)) CertificateOrderCollectionPage {
-	return CertificateOrderCollectionPage{fn: getNextPage}
 }
 
 // CertificateOrderProperties ...
@@ -3328,7 +3278,7 @@ type CertificateProperties struct {
 	Issuer *string `json:"issuer,omitempty"`
 	// IssueDate - Certificate issue Date
 	IssueDate *date.Time `json:"issueDate,omitempty"`
-	// ExpirationDate - Certificate expiration date
+	// ExpirationDate - Certificate expriration date
 	ExpirationDate *date.Time `json:"expirationDate,omitempty"`
 	// Password - Certificate password
 	Password *string `json:"password,omitempty"`
@@ -3535,11 +3485,6 @@ func (iter ClassicMobileServiceCollectionIterator) Value() ClassicMobileService 
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ClassicMobileServiceCollectionIterator type.
-func NewClassicMobileServiceCollectionIterator(page ClassicMobileServiceCollectionPage) ClassicMobileServiceCollectionIterator {
-	return ClassicMobileServiceCollectionIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (cmsc ClassicMobileServiceCollection) IsEmpty() bool {
 	return cmsc.Value == nil || len(*cmsc.Value) == 0
@@ -3607,11 +3552,6 @@ func (page ClassicMobileServiceCollectionPage) Values() []ClassicMobileService {
 		return nil
 	}
 	return *page.cmsc.Value
-}
-
-// Creates a new instance of the ClassicMobileServiceCollectionPage type.
-func NewClassicMobileServiceCollectionPage(getNextPage func(context.Context, ClassicMobileServiceCollection) (ClassicMobileServiceCollection, error)) ClassicMobileServiceCollectionPage {
-	return ClassicMobileServiceCollectionPage{fn: getNextPage}
 }
 
 // ClassicMobileServiceProperties ...
@@ -3819,7 +3759,7 @@ type ConfirmConsentCodeInputProperties struct {
 	Code *string `json:"code,omitempty"`
 }
 
-// Connection API Connection
+// Connection api Connection
 type Connection struct {
 	autorest.Response     `json:"-"`
 	*ConnectionProperties `json:"properties,omitempty"`
@@ -3942,7 +3882,7 @@ func (c *Connection) UnmarshalJSON(body []byte) error {
 	return nil
 }
 
-// ConnectionCollection collection of connections
+// ConnectionCollection collection of conenctions
 type ConnectionCollection struct {
 	autorest.Response `json:"-"`
 	// Value - Collection of resources
@@ -4007,11 +3947,6 @@ func (iter ConnectionCollectionIterator) Value() Connection {
 		return Connection{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the ConnectionCollectionIterator type.
-func NewConnectionCollectionIterator(page ConnectionCollectionPage) ConnectionCollectionIterator {
-	return ConnectionCollectionIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -4081,11 +4016,6 @@ func (page ConnectionCollectionPage) Values() []Connection {
 		return nil
 	}
 	return *page.cc.Value
-}
-
-// Creates a new instance of the ConnectionCollectionPage type.
-func NewConnectionCollectionPage(getNextPage func(context.Context, ConnectionCollection) (ConnectionCollection, error)) ConnectionCollectionPage {
-	return ConnectionCollectionPage{fn: getNextPage}
 }
 
 // ConnectionError connection error
@@ -4532,7 +4462,7 @@ type ConsentLink struct {
 	Status LinkState `json:"status,omitempty"`
 }
 
-// ConsentLinkInput connection Consent Link payload
+// ConsentLinkInput connection Constent Link payload
 type ConsentLinkInput struct {
 	*ConsentLinkInputProperties `json:"properties,omitempty"`
 	// ID - Resource Id
@@ -4683,7 +4613,7 @@ type ConsentLinkPayload struct {
 }
 
 // Contact contact information for domain registration. If 'Domain Privacy' option is not selected then the
-// contact information will be made publicly available through the Whois directories as per ICANN
+// contact information will be  be made publicly available through the Whois directories as per ICANN
 // requirements.
 type Contact struct {
 	// AddressMailing - Mailing address
@@ -4729,7 +4659,7 @@ type CsmPublishingProfileOptions struct {
 	Format *string `json:"format,omitempty"`
 }
 
-// CsmSiteRecoveryEntity class containing details about site recovery operation.
+// CsmSiteRecoveryEntity class containting details about site recovery operation.
 type CsmSiteRecoveryEntity struct {
 	// SnapshotTime - Point in time in which the site recover should be attempted.
 	SnapshotTime *date.Time `json:"snapshotTime,omitempty"`
@@ -4751,7 +4681,7 @@ type CsmSlotEntity struct {
 
 // CsmUsageQuota usage of the quota resource
 type CsmUsageQuota struct {
-	// Unit - Units of measurement for the quota resource
+	// Unit - Units of measurement for the quota resourse
 	Unit *string `json:"unit,omitempty"`
 	// NextResetTime - Next reset time for the resource counter
 	NextResetTime *date.Time `json:"nextResetTime,omitempty"`
@@ -4830,11 +4760,6 @@ func (iter CsmUsageQuotaCollectionIterator) Value() CsmUsageQuota {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the CsmUsageQuotaCollectionIterator type.
-func NewCsmUsageQuotaCollectionIterator(page CsmUsageQuotaCollectionPage) CsmUsageQuotaCollectionIterator {
-	return CsmUsageQuotaCollectionIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (cuqc CsmUsageQuotaCollection) IsEmpty() bool {
 	return cuqc.Value == nil || len(*cuqc.Value) == 0
@@ -4902,11 +4827,6 @@ func (page CsmUsageQuotaCollectionPage) Values() []CsmUsageQuota {
 		return nil
 	}
 	return *page.cuqc.Value
-}
-
-// Creates a new instance of the CsmUsageQuotaCollectionPage type.
-func NewCsmUsageQuotaCollectionPage(getNextPage func(context.Context, CsmUsageQuotaCollection) (CsmUsageQuotaCollection, error)) CsmUsageQuotaCollectionPage {
-	return CsmUsageQuotaCollectionPage{fn: getNextPage}
 }
 
 // Csr certificate signing request object
@@ -5040,7 +4960,7 @@ type CsrProperties struct {
 	DistinguishedName *string `json:"distinguishedName,omitempty"`
 	// CsrString - Actual CSR string created
 	CsrString *string `json:"csrString,omitempty"`
-	// PfxBlob - PFX certificate of created certificate
+	// PfxBlob - PFX certifcate of created certificate
 	PfxBlob *string `json:"pfxBlob,omitempty"`
 	// Password - PFX password
 	Password *string `json:"password,omitempty"`
@@ -5381,11 +5301,6 @@ func (iter DeletedSiteCollectionIterator) Value() DeletedSite {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the DeletedSiteCollectionIterator type.
-func NewDeletedSiteCollectionIterator(page DeletedSiteCollectionPage) DeletedSiteCollectionIterator {
-	return DeletedSiteCollectionIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (dsc DeletedSiteCollection) IsEmpty() bool {
 	return dsc.Value == nil || len(*dsc.Value) == 0
@@ -5453,11 +5368,6 @@ func (page DeletedSiteCollectionPage) Values() []DeletedSite {
 		return nil
 	}
 	return *page.dsc.Value
-}
-
-// Creates a new instance of the DeletedSiteCollectionPage type.
-func NewDeletedSiteCollectionPage(getNextPage func(context.Context, DeletedSiteCollection) (DeletedSiteCollection, error)) DeletedSiteCollectionPage {
-	return DeletedSiteCollectionPage{fn: getNextPage}
 }
 
 // DeletedSiteProperties ...
@@ -5528,7 +5438,7 @@ type DeletedSiteProperties struct {
 	DefaultHostName *string `json:"defaultHostName,omitempty"`
 }
 
-// Deployment represents user credentials used for publishing activity
+// Deployment represents user crendentials used for publishing activity
 type Deployment struct {
 	autorest.Response     `json:"-"`
 	*DeploymentProperties `json:"properties,omitempty"`
@@ -5718,11 +5628,6 @@ func (iter DeploymentCollectionIterator) Value() Deployment {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the DeploymentCollectionIterator type.
-func NewDeploymentCollectionIterator(page DeploymentCollectionPage) DeploymentCollectionIterator {
-	return DeploymentCollectionIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (dc DeploymentCollection) IsEmpty() bool {
 	return dc.Value == nil || len(*dc.Value) == 0
@@ -5790,11 +5695,6 @@ func (page DeploymentCollectionPage) Values() []Deployment {
 		return nil
 	}
 	return *page.dc.Value
-}
-
-// Creates a new instance of the DeploymentCollectionPage type.
-func NewDeploymentCollectionPage(getNextPage func(context.Context, DeploymentCollection) (DeploymentCollection, error)) DeploymentCollectionPage {
-	return DeploymentCollectionPage{fn: getNextPage}
 }
 
 // DeploymentProperties ...
@@ -6022,11 +5922,6 @@ func (iter DomainCollectionIterator) Value() Domain {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the DomainCollectionIterator type.
-func NewDomainCollectionIterator(page DomainCollectionPage) DomainCollectionIterator {
-	return DomainCollectionIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (dc DomainCollection) IsEmpty() bool {
 	return dc.Value == nil || len(*dc.Value) == 0
@@ -6094,11 +5989,6 @@ func (page DomainCollectionPage) Values() []Domain {
 		return nil
 	}
 	return *page.dc.Value
-}
-
-// Creates a new instance of the DomainCollectionPage type.
-func NewDomainCollectionPage(getNextPage func(context.Context, DomainCollection) (DomainCollection, error)) DomainCollectionPage {
-	return DomainCollectionPage{fn: getNextPage}
 }
 
 // DomainControlCenterSsoRequest single sign on request information for domain management
@@ -6816,11 +6706,6 @@ func (iter GeoRegionCollectionIterator) Value() GeoRegion {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the GeoRegionCollectionIterator type.
-func NewGeoRegionCollectionIterator(page GeoRegionCollectionPage) GeoRegionCollectionIterator {
-	return GeoRegionCollectionIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (grc GeoRegionCollection) IsEmpty() bool {
 	return grc.Value == nil || len(*grc.Value) == 0
@@ -6888,11 +6773,6 @@ func (page GeoRegionCollectionPage) Values() []GeoRegion {
 		return nil
 	}
 	return *page.grc.Value
-}
-
-// Creates a new instance of the GeoRegionCollectionPage type.
-func NewGeoRegionCollectionPage(getNextPage func(context.Context, GeoRegionCollection) (GeoRegionCollection, error)) GeoRegionCollectionPage {
-	return GeoRegionCollectionPage{fn: getNextPage}
 }
 
 // GeoRegionProperties ...
@@ -7108,11 +6988,6 @@ func (iter HostingEnvironmentCollectionIterator) Value() HostingEnvironment {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the HostingEnvironmentCollectionIterator type.
-func NewHostingEnvironmentCollectionIterator(page HostingEnvironmentCollectionPage) HostingEnvironmentCollectionIterator {
-	return HostingEnvironmentCollectionIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (hec HostingEnvironmentCollection) IsEmpty() bool {
 	return hec.Value == nil || len(*hec.Value) == 0
@@ -7180,11 +7055,6 @@ func (page HostingEnvironmentCollectionPage) Values() []HostingEnvironment {
 		return nil
 	}
 	return *page.hec.Value
-}
-
-// Creates a new instance of the HostingEnvironmentCollectionPage type.
-func NewHostingEnvironmentCollectionPage(getNextPage func(context.Context, HostingEnvironmentCollection) (HostingEnvironmentCollection, error)) HostingEnvironmentCollectionPage {
-	return HostingEnvironmentCollectionPage{fn: getNextPage}
 }
 
 // HostingEnvironmentDiagnostics diagnostics for a hosting environment (App Service Environment)
@@ -7401,7 +7271,7 @@ type HostingEnvironmentServiceDescriptions struct {
 	// ServiceURL - service url to use
 	ServiceURL *string `json:"serviceUrl,omitempty"`
 	// UseInternalRouting - When the backend url is in same ASE, for performance reason this flag can be set to true
-	//             If WebApp.DisableHostNames is also set it improves the security by making the back end accessible only
+	//             If WebApp.DisableHostNames is also set it improves the security by making the back end accesible only
 	//             via API calls
 	//             Note: calls will fail if this option is used but back end is not on the same ASE
 	UseInternalRouting *bool `json:"useInternalRouting,omitempty"`
@@ -7729,11 +7599,6 @@ func (iter HostNameBindingCollectionIterator) Value() HostNameBinding {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the HostNameBindingCollectionIterator type.
-func NewHostNameBindingCollectionIterator(page HostNameBindingCollectionPage) HostNameBindingCollectionIterator {
-	return HostNameBindingCollectionIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (hnbc HostNameBindingCollection) IsEmpty() bool {
 	return hnbc.Value == nil || len(*hnbc.Value) == 0
@@ -7801,11 +7666,6 @@ func (page HostNameBindingCollectionPage) Values() []HostNameBinding {
 		return nil
 	}
 	return *page.hnbc.Value
-}
-
-// Creates a new instance of the HostNameBindingCollectionPage type.
-func NewHostNameBindingCollectionPage(getNextPage func(context.Context, HostNameBindingCollection) (HostNameBindingCollection, error)) HostNameBindingCollectionPage {
-	return HostNameBindingCollectionPage{fn: getNextPage}
 }
 
 // HostNameBindingProperties ...
@@ -8231,11 +8091,6 @@ func (iter ManagedHostingEnvironmentCollectionIterator) Value() ManagedHostingEn
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ManagedHostingEnvironmentCollectionIterator type.
-func NewManagedHostingEnvironmentCollectionIterator(page ManagedHostingEnvironmentCollectionPage) ManagedHostingEnvironmentCollectionIterator {
-	return ManagedHostingEnvironmentCollectionIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (mhec ManagedHostingEnvironmentCollection) IsEmpty() bool {
 	return mhec.Value == nil || len(*mhec.Value) == 0
@@ -8303,11 +8158,6 @@ func (page ManagedHostingEnvironmentCollectionPage) Values() []ManagedHostingEnv
 		return nil
 	}
 	return *page.mhec.Value
-}
-
-// Creates a new instance of the ManagedHostingEnvironmentCollectionPage type.
-func NewManagedHostingEnvironmentCollectionPage(getNextPage func(context.Context, ManagedHostingEnvironmentCollection) (ManagedHostingEnvironmentCollection, error)) ManagedHostingEnvironmentCollectionPage {
-	return ManagedHostingEnvironmentCollectionPage{fn: getNextPage}
 }
 
 // ManagedHostingEnvironmentProperties ...
@@ -8397,7 +8247,7 @@ func (future *ManagedHostingEnvironmentsDeleteManagedHostingEnvironmentFuture) R
 	return
 }
 
-// MetricAvailabilily class representing metrics availability and retention
+// MetricAvailabilily class repesenting metrics availability and retention
 type MetricAvailabilily struct {
 	// TimeGrain - Time grain
 	TimeGrain *string `json:"timeGrain,omitempty"`
@@ -8405,7 +8255,7 @@ type MetricAvailabilily struct {
 	Retention *string `json:"retention,omitempty"`
 }
 
-// MetricDefinition class representing metadata for the metrics
+// MetricDefinition class repesenting metadata for the metrics
 type MetricDefinition struct {
 	autorest.Response           `json:"-"`
 	*MetricDefinitionProperties `json:"properties,omitempty"`
@@ -8528,7 +8378,7 @@ func (md *MetricDefinition) UnmarshalJSON(body []byte) error {
 	return nil
 }
 
-// MetricDefinitionCollection collection of metric definitions
+// MetricDefinitionCollection collection of metric defintions
 type MetricDefinitionCollection struct {
 	autorest.Response `json:"-"`
 	// Value - Collection of resources
@@ -8593,11 +8443,6 @@ func (iter MetricDefinitionCollectionIterator) Value() MetricDefinition {
 		return MetricDefinition{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the MetricDefinitionCollectionIterator type.
-func NewMetricDefinitionCollectionIterator(page MetricDefinitionCollectionPage) MetricDefinitionCollectionIterator {
-	return MetricDefinitionCollectionIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -8667,11 +8512,6 @@ func (page MetricDefinitionCollectionPage) Values() []MetricDefinition {
 		return nil
 	}
 	return *page.mdc.Value
-}
-
-// Creates a new instance of the MetricDefinitionCollectionPage type.
-func NewMetricDefinitionCollectionPage(getNextPage func(context.Context, MetricDefinitionCollection) (MetricDefinitionCollection, error)) MetricDefinitionCollectionPage {
-	return MetricDefinitionCollectionPage{fn: getNextPage}
 }
 
 // MetricDefinitionProperties ...
@@ -8761,11 +8601,6 @@ func (iter NameIdentifierCollectionIterator) Value() NameIdentifier {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the NameIdentifierCollectionIterator type.
-func NewNameIdentifierCollectionIterator(page NameIdentifierCollectionPage) NameIdentifierCollectionIterator {
-	return NameIdentifierCollectionIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (nic NameIdentifierCollection) IsEmpty() bool {
 	return nic.Value == nil || len(*nic.Value) == 0
@@ -8833,11 +8668,6 @@ func (page NameIdentifierCollectionPage) Values() []NameIdentifier {
 		return nil
 	}
 	return *page.nic.Value
-}
-
-// Creates a new instance of the NameIdentifierCollectionPage type.
-func NewNameIdentifierCollectionPage(getNextPage func(context.Context, NameIdentifierCollection) (NameIdentifierCollection, error)) NameIdentifierCollectionPage {
-	return NameIdentifierCollectionPage{fn: getNextPage}
 }
 
 // NameValuePair name value pair
@@ -9171,11 +9001,11 @@ type RampUpRule struct {
 	ActionHostName *string `json:"actionHostName,omitempty"`
 	// ReroutePercentage - Percentage of the traffic which will be redirected to {Microsoft.Web.Hosting.Administration.RampUpRule.ActionHostName}
 	ReroutePercentage *float64 `json:"reroutePercentage,omitempty"`
-	// ChangeStep - [Optional] In auto ramp up scenario this is the step to add/remove from {Microsoft.Web.Hosting.Administration.RampUpRule.ReroutePercentage} until it reaches
-	//             {Microsoft.Web.Hosting.Administration.RampUpRule.MinReroutePercentage} or {Microsoft.Web.Hosting.Administration.RampUpRule.MaxReroutePercentage}. Site metrics are checked every N minutes specified in {Microsoft.Web.Hosting.Administration.RampUpRule.ChangeIntervalInMinutes}.
+	// ChangeStep - [Optional] In auto ramp up scenario this is the step to to add/remove from {Microsoft.Web.Hosting.Administration.RampUpRule.ReroutePercentage} until it reaches
+	//             {Microsoft.Web.Hosting.Administration.RampUpRule.MinReroutePercentage} or {Microsoft.Web.Hosting.Administration.RampUpRule.MaxReroutePercentage}. Site metrics are checked every N minutes specificed in {Microsoft.Web.Hosting.Administration.RampUpRule.ChangeIntervalInMinutes}.
 	//             Custom decision algorithm can be provided in TiPCallback site extension which Url can be specified in {Microsoft.Web.Hosting.Administration.RampUpRule.ChangeDecisionCallbackUrl}
 	ChangeStep *float64 `json:"changeStep,omitempty"`
-	// ChangeIntervalInMinutes - [Optional] Specifies interval in minutes to reevaluate ReroutePercentage
+	// ChangeIntervalInMinutes - [Optional] Specifies interval in mimuntes to reevaluate ReroutePercentage
 	ChangeIntervalInMinutes *int32 `json:"changeIntervalInMinutes,omitempty"`
 	// MinReroutePercentage - [Optional] Specifies lower boundary above which ReroutePercentage will stay.
 	MinReroutePercentage *float64 `json:"minReroutePercentage,omitempty"`
@@ -9390,7 +9220,7 @@ type ReissueCertificateOrderRequestProperties struct {
 	DelayExistingRevokeInHours *int32 `json:"delayExistingRevokeInHours,omitempty"`
 }
 
-// RelayServiceConnectionEntity class that represents a BizTalk Hybrid Connection
+// RelayServiceConnectionEntity class that represents a Biztalk Hybrid Connection
 type RelayServiceConnectionEntity struct {
 	autorest.Response                       `json:"-"`
 	*RelayServiceConnectionEntityProperties `json:"properties,omitempty"`
@@ -9787,11 +9617,6 @@ func (iter ResourceMetricCollectionIterator) Value() ResourceMetric {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ResourceMetricCollectionIterator type.
-func NewResourceMetricCollectionIterator(page ResourceMetricCollectionPage) ResourceMetricCollectionIterator {
-	return ResourceMetricCollectionIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (rmc ResourceMetricCollection) IsEmpty() bool {
 	return rmc.Value == nil || len(*rmc.Value) == 0
@@ -9859,11 +9684,6 @@ func (page ResourceMetricCollectionPage) Values() []ResourceMetric {
 		return nil
 	}
 	return *page.rmc.Value
-}
-
-// Creates a new instance of the ResourceMetricCollectionPage type.
-func NewResourceMetricCollectionPage(getNextPage func(context.Context, ResourceMetricCollection) (ResourceMetricCollection, error)) ResourceMetricCollectionPage {
-	return ResourceMetricCollectionPage{fn: getNextPage}
 }
 
 // ResourceMetricName name of a metric for any resource
@@ -10096,7 +9916,7 @@ type RestoreRequestProperties struct {
 	Overwrite *bool `json:"overwrite,omitempty"`
 	// SiteName - Name of a site (Web App)
 	SiteName *string `json:"siteName,omitempty"`
-	// Databases - Collection of databases which should be restored. This list has to match the list of databases included in the backup.
+	// Databases - Collection of databses which should be restored. This list has to match the list of databases included in the backup.
 	Databases *[]DatabaseBackupSetting `json:"databases,omitempty"`
 	// IgnoreConflictingHostNames - Changes a logic when restoring a site with custom domains. If "true", custom domains are removed automatically. If "false", custom domains are added to
 	//             the site object when it is being restored, but that might fail due to conflicts during the operation.
@@ -10311,11 +10131,6 @@ func (iter ServerFarmCollectionIterator) Value() ServerFarmWithRichSku {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ServerFarmCollectionIterator type.
-func NewServerFarmCollectionIterator(page ServerFarmCollectionPage) ServerFarmCollectionIterator {
-	return ServerFarmCollectionIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (sfc ServerFarmCollection) IsEmpty() bool {
 	return sfc.Value == nil || len(*sfc.Value) == 0
@@ -10383,11 +10198,6 @@ func (page ServerFarmCollectionPage) Values() []ServerFarmWithRichSku {
 		return nil
 	}
 	return *page.sfc.Value
-}
-
-// Creates a new instance of the ServerFarmCollectionPage type.
-func NewServerFarmCollectionPage(getNextPage func(context.Context, ServerFarmCollection) (ServerFarmCollection, error)) ServerFarmCollectionPage {
-	return ServerFarmCollectionPage{fn: getNextPage}
 }
 
 // ServerFarmsCreateOrUpdateServerFarmFuture an abstraction for monitoring and retrieving the results of a
@@ -10578,7 +10388,7 @@ type ServerFarmWithRichSkuProperties struct {
 	PerSiteScaling *bool `json:"perSiteScaling,omitempty"`
 	// NumberOfSites - Number of web apps assigned to this App Service Plan
 	NumberOfSites *int32 `json:"numberOfSites,omitempty"`
-	// ResourceGroup - Resource group of the server farm
+	// ResourceGroup - Resource group of the serverfarm
 	ResourceGroup *string `json:"resourceGroup,omitempty"`
 	// Reserved - Enables creation of a Linux App Service Plan
 	Reserved *bool `json:"reserved,omitempty"`
@@ -10898,11 +10708,6 @@ func (iter SiteCollectionIterator) Value() Site {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the SiteCollectionIterator type.
-func NewSiteCollectionIterator(page SiteCollectionPage) SiteCollectionIterator {
-	return SiteCollectionIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (sc SiteCollection) IsEmpty() bool {
 	return sc.Value == nil || len(*sc.Value) == 0
@@ -10970,11 +10775,6 @@ func (page SiteCollectionPage) Values() []Site {
 		return nil
 	}
 	return *page.sc.Value
-}
-
-// Creates a new instance of the SiteCollectionPage type.
-func NewSiteCollectionPage(getNextPage func(context.Context, SiteCollection) (SiteCollection, error)) SiteCollectionPage {
-	return SiteCollectionPage{fn: getNextPage}
 }
 
 // SiteConfig configuration of Azure web site
@@ -11164,7 +10964,7 @@ type SiteConfigProperties struct {
 	VirtualApplications *[]VirtualApplication `json:"virtualApplications,omitempty"`
 	// LoadBalancing - Site load balancing. Possible values include: 'WeightedRoundRobin', 'LeastRequests', 'LeastResponseTime', 'WeightedTotalTraffic', 'RequestHash'
 	LoadBalancing SiteLoadBalancing `json:"loadBalancing,omitempty"`
-	// Experiments - This is work around for polymorphic types
+	// Experiments - This is work around for polymophic types
 	Experiments *Experiments `json:"experiments,omitempty"`
 	// Limits - Site limits
 	Limits *SiteLimits `json:"limits,omitempty"`
@@ -11377,11 +11177,6 @@ func (iter SiteInstanceCollectionIterator) Value() SiteInstance {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the SiteInstanceCollectionIterator type.
-func NewSiteInstanceCollectionIterator(page SiteInstanceCollectionPage) SiteInstanceCollectionIterator {
-	return SiteInstanceCollectionIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (sic SiteInstanceCollection) IsEmpty() bool {
 	return sic.Value == nil || len(*sic.Value) == 0
@@ -11449,11 +11244,6 @@ func (page SiteInstanceCollectionPage) Values() []SiteInstance {
 		return nil
 	}
 	return *page.sic.Value
-}
-
-// Creates a new instance of the SiteInstanceCollectionPage type.
-func NewSiteInstanceCollectionPage(getNextPage func(context.Context, SiteInstanceCollection) (SiteInstanceCollection, error)) SiteInstanceCollectionPage {
-	return SiteInstanceCollectionPage{fn: getNextPage}
 }
 
 // SiteInstanceProperties ...
@@ -12210,11 +12000,6 @@ func (iter SkuInfoCollectionIterator) Value() SkuInfo {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the SkuInfoCollectionIterator type.
-func NewSkuInfoCollectionIterator(page SkuInfoCollectionPage) SkuInfoCollectionIterator {
-	return SkuInfoCollectionIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (sic SkuInfoCollection) IsEmpty() bool {
 	return sic.Value == nil || len(*sic.Value) == 0
@@ -12282,11 +12067,6 @@ func (page SkuInfoCollectionPage) Values() []SkuInfo {
 		return nil
 	}
 	return *page.sic.Value
-}
-
-// Creates a new instance of the SkuInfoCollectionPage type.
-func NewSkuInfoCollectionPage(getNextPage func(context.Context, SkuInfoCollection) (SkuInfoCollection, error)) SkuInfoCollectionPage {
-	return SkuInfoCollectionPage{fn: getNextPage}
 }
 
 // SlotConfigNames class containing names for connection strings and application settings to be marked as
@@ -12620,11 +12400,6 @@ func (iter SlotDifferenceCollectionIterator) Value() SlotDifference {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the SlotDifferenceCollectionIterator type.
-func NewSlotDifferenceCollectionIterator(page SlotDifferenceCollectionPage) SlotDifferenceCollectionIterator {
-	return SlotDifferenceCollectionIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (sdc SlotDifferenceCollection) IsEmpty() bool {
 	return sdc.Value == nil || len(*sdc.Value) == 0
@@ -12692,11 +12467,6 @@ func (page SlotDifferenceCollectionPage) Values() []SlotDifference {
 		return nil
 	}
 	return *page.sdc.Value
-}
-
-// Creates a new instance of the SlotDifferenceCollectionPage type.
-func NewSlotDifferenceCollectionPage(getNextPage func(context.Context, SlotDifferenceCollection) (SlotDifferenceCollection, error)) SlotDifferenceCollectionPage {
-	return SlotDifferenceCollectionPage{fn: getNextPage}
 }
 
 // SlotDifferenceProperties ...
@@ -12850,7 +12620,7 @@ func (sc *SourceControl) UnmarshalJSON(body []byte) error {
 	return nil
 }
 
-// SourceControlCollection collection of source controls
+// SourceControlCollection collection of soure controls
 type SourceControlCollection struct {
 	autorest.Response `json:"-"`
 	// Value - Collection of resources
@@ -12915,11 +12685,6 @@ func (iter SourceControlCollectionIterator) Value() SourceControl {
 		return SourceControl{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the SourceControlCollectionIterator type.
-func NewSourceControlCollectionIterator(page SourceControlCollectionPage) SourceControlCollectionIterator {
-	return SourceControlCollectionIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -12989,11 +12754,6 @@ func (page SourceControlCollectionPage) Values() []SourceControl {
 		return nil
 	}
 	return *page.scc.Value
-}
-
-// Creates a new instance of the SourceControlCollectionPage type.
-func NewSourceControlCollectionPage(getNextPage func(context.Context, SourceControlCollection) (SourceControlCollection, error)) SourceControlCollectionPage {
-	return SourceControlCollectionPage{fn: getNextPage}
 }
 
 // SourceControlProperties ...
@@ -13105,11 +12865,6 @@ func (iter StampCapacityCollectionIterator) Value() StampCapacity {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the StampCapacityCollectionIterator type.
-func NewStampCapacityCollectionIterator(page StampCapacityCollectionPage) StampCapacityCollectionIterator {
-	return StampCapacityCollectionIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (scc StampCapacityCollection) IsEmpty() bool {
 	return scc.Value == nil || len(*scc.Value) == 0
@@ -13177,11 +12932,6 @@ func (page StampCapacityCollectionPage) Values() []StampCapacity {
 		return nil
 	}
 	return *page.scc.Value
-}
-
-// Creates a new instance of the StampCapacityCollectionPage type.
-func NewStampCapacityCollectionPage(getNextPage func(context.Context, StampCapacityCollection) (StampCapacityCollection, error)) StampCapacityCollectionPage {
-	return StampCapacityCollectionPage{fn: getNextPage}
 }
 
 // StatusCodesBasedTrigger statusCodeBasedTrigger
@@ -13323,11 +13073,6 @@ func (iter TldLegalAgreementCollectionIterator) Value() TldLegalAgreement {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the TldLegalAgreementCollectionIterator type.
-func NewTldLegalAgreementCollectionIterator(page TldLegalAgreementCollectionPage) TldLegalAgreementCollectionIterator {
-	return TldLegalAgreementCollectionIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (tlac TldLegalAgreementCollection) IsEmpty() bool {
 	return tlac.Value == nil || len(*tlac.Value) == 0
@@ -13395,11 +13140,6 @@ func (page TldLegalAgreementCollectionPage) Values() []TldLegalAgreement {
 		return nil
 	}
 	return *page.tlac.Value
-}
-
-// Creates a new instance of the TldLegalAgreementCollectionPage type.
-func NewTldLegalAgreementCollectionPage(getNextPage func(context.Context, TldLegalAgreementCollection) (TldLegalAgreementCollection, error)) TldLegalAgreementCollectionPage {
-	return TldLegalAgreementCollectionPage{fn: getNextPage}
 }
 
 // TopLevelDomain a top level domain object
@@ -13527,7 +13267,7 @@ func (tld *TopLevelDomain) UnmarshalJSON(body []byte) error {
 
 // TopLevelDomainAgreementOption options for retrieving the list of top level domain legal agreements
 type TopLevelDomainAgreementOption struct {
-	// IncludePrivacy - If true then the list of agreements will include agreements for domain privacy as well.
+	// IncludePrivacy - If true then the list of agreements will inclue agreements for domain privacy as well.
 	IncludePrivacy *bool `json:"includePrivacy,omitempty"`
 }
 
@@ -13598,11 +13338,6 @@ func (iter TopLevelDomainCollectionIterator) Value() TopLevelDomain {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the TopLevelDomainCollectionIterator type.
-func NewTopLevelDomainCollectionIterator(page TopLevelDomainCollectionPage) TopLevelDomainCollectionIterator {
-	return TopLevelDomainCollectionIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (tldc TopLevelDomainCollection) IsEmpty() bool {
 	return tldc.Value == nil || len(*tldc.Value) == 0
@@ -13670,11 +13405,6 @@ func (page TopLevelDomainCollectionPage) Values() []TopLevelDomain {
 		return nil
 	}
 	return *page.tldc.Value
-}
-
-// Creates a new instance of the TopLevelDomainCollectionPage type.
-func NewTopLevelDomainCollectionPage(getNextPage func(context.Context, TopLevelDomainCollection) (TopLevelDomainCollection, error)) TopLevelDomainCollectionPage {
-	return TopLevelDomainCollectionPage{fn: getNextPage}
 }
 
 // TopLevelDomainProperties ...
@@ -13874,11 +13604,6 @@ func (iter UsageCollectionIterator) Value() Usage {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the UsageCollectionIterator type.
-func NewUsageCollectionIterator(page UsageCollectionPage) UsageCollectionIterator {
-	return UsageCollectionIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (uc UsageCollection) IsEmpty() bool {
 	return uc.Value == nil || len(*uc.Value) == 0
@@ -13948,11 +13673,6 @@ func (page UsageCollectionPage) Values() []Usage {
 	return *page.uc.Value
 }
 
-// Creates a new instance of the UsageCollectionPage type.
-func NewUsageCollectionPage(getNextPage func(context.Context, UsageCollection) (UsageCollection, error)) UsageCollectionPage {
-	return UsageCollectionPage{fn: getNextPage}
-}
-
 // UsageProperties ...
 type UsageProperties struct {
 	// DisplayName - Friendly name shown in the UI
@@ -13975,7 +13695,7 @@ type UsageProperties struct {
 	SiteMode *string `json:"siteMode,omitempty"`
 }
 
-// User represents user credentials used for publishing activity
+// User represents user crendentials used for publishing activity
 type User struct {
 	autorest.Response `json:"-"`
 	*UserProperties   `json:"properties,omitempty"`
@@ -14763,11 +14483,6 @@ func (iter WorkerPoolCollectionIterator) Value() WorkerPool {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the WorkerPoolCollectionIterator type.
-func NewWorkerPoolCollectionIterator(page WorkerPoolCollectionPage) WorkerPoolCollectionIterator {
-	return WorkerPoolCollectionIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (wpc WorkerPoolCollection) IsEmpty() bool {
 	return wpc.Value == nil || len(*wpc.Value) == 0
@@ -14835,11 +14550,6 @@ func (page WorkerPoolCollectionPage) Values() []WorkerPool {
 		return nil
 	}
 	return *page.wpc.Value
-}
-
-// Creates a new instance of the WorkerPoolCollectionPage type.
-func NewWorkerPoolCollectionPage(getNextPage func(context.Context, WorkerPoolCollection) (WorkerPoolCollection, error)) WorkerPoolCollectionPage {
-	return WorkerPoolCollectionPage{fn: getNextPage}
 }
 
 // WorkerPoolProperties ...

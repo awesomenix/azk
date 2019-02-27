@@ -18,6 +18,8 @@ type CloudConfiguration struct {
 	ClientID       string
 	ClientSecret   string
 	TenantID       string
+	GroupName      string
+	GroupLocation  string
 	UserAgent      string
 }
 
@@ -82,26 +84,4 @@ func (c *CloudConfiguration) GetDeploymentsClient() (resources.DeploymentsClient
 	deploymentsClient.Authorizer = a
 	deploymentsClient.AddToUserAgent(c.UserAgent)
 	return deploymentsClient, nil
-}
-
-func (c *CloudConfiguration) GetAvailabilitySetsClient() (compute.AvailabilitySetsClient, error) {
-	asClient := compute.NewAvailabilitySetsClient(c.SubscriptionID)
-	a, err := c.getAuthorizerForResource()
-	if err != nil {
-		return asClient, err
-	}
-	asClient.Authorizer = a
-	asClient.AddToUserAgent(c.UserAgent)
-	return asClient, nil
-}
-
-func (c *CloudConfiguration) GetVMClient() (compute.VirtualMachinesClient, error) {
-	vmClient := compute.NewVirtualMachinesClient(c.SubscriptionID)
-	a, err := c.getAuthorizerForResource()
-	if err != nil {
-		return vmClient, err
-	}
-	vmClient.Authorizer = a
-	vmClient.AddToUserAgent(c.UserAgent)
-	return vmClient, nil
 }

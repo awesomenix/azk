@@ -1,6 +1,6 @@
 // +build go1.9
 
-// Copyright 2019 Microsoft Corporation
+// Copyright 2018 Microsoft Corporation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,16 +19,15 @@
 
 package managementgroups
 
-import (
-	"context"
-
-	original "github.com/Azure/azure-sdk-for-go/services/preview/resources/mgmt/2018-03-01-preview/managementgroups"
-)
+import original "github.com/Azure/azure-sdk-for-go/services/preview/resources/mgmt/2018-03-01-preview/managementgroups"
 
 const (
 	DefaultBaseURI = original.DefaultBaseURI
 )
 
+type BaseClient = original.BaseClient
+type EntitiesClient = original.EntitiesClient
+type Client = original.Client
 type InheritedPermissions = original.InheritedPermissions
 
 const (
@@ -100,11 +99,9 @@ const (
 	Type2Subscriptions                                Type2 = original.Type2Subscriptions
 )
 
-type BaseClient = original.BaseClient
 type CheckNameAvailabilityRequest = original.CheckNameAvailabilityRequest
 type CheckNameAvailabilityResult = original.CheckNameAvailabilityResult
 type ChildInfo = original.ChildInfo
-type Client = original.Client
 type CreateManagementGroupChildInfo = original.CreateManagementGroupChildInfo
 type CreateManagementGroupDetails = original.CreateManagementGroupDetails
 type CreateManagementGroupProperties = original.CreateManagementGroupProperties
@@ -113,7 +110,6 @@ type CreateOrUpdateFuture = original.CreateOrUpdateFuture
 type CreateParentGroupInfo = original.CreateParentGroupInfo
 type DeleteFuture = original.DeleteFuture
 type Details = original.Details
-type EntitiesClient = original.EntitiesClient
 type EntityHierarchyItem = original.EntityHierarchyItem
 type EntityHierarchyItemProperties = original.EntityHierarchyItemProperties
 type EntityInfo = original.EntityInfo
@@ -137,22 +133,19 @@ type OperationListResultIterator = original.OperationListResultIterator
 type OperationListResultPage = original.OperationListResultPage
 type OperationResults = original.OperationResults
 type OperationResultsProperties = original.OperationResultsProperties
-type OperationsClient = original.OperationsClient
 type ParentGroupInfo = original.ParentGroupInfo
 type PatchManagementGroupRequest = original.PatchManagementGroupRequest
 type Properties = original.Properties
 type SetObject = original.SetObject
-type SubscriptionsClient = original.SubscriptionsClient
 type TenantBackfillStatusResult = original.TenantBackfillStatusResult
+type OperationsClient = original.OperationsClient
+type SubscriptionsClient = original.SubscriptionsClient
 
 func New() BaseClient {
 	return original.New()
 }
-func NewClient() Client {
-	return original.NewClient()
-}
-func NewClientWithBaseURI(baseURI string) Client {
-	return original.NewClientWithBaseURI(baseURI)
+func NewWithBaseURI(baseURI string) BaseClient {
+	return original.NewWithBaseURI(baseURI)
 }
 func NewEntitiesClient() EntitiesClient {
 	return original.NewEntitiesClient()
@@ -160,23 +153,38 @@ func NewEntitiesClient() EntitiesClient {
 func NewEntitiesClientWithBaseURI(baseURI string) EntitiesClient {
 	return original.NewEntitiesClientWithBaseURI(baseURI)
 }
-func NewEntityListResultIterator(page EntityListResultPage) EntityListResultIterator {
-	return original.NewEntityListResultIterator(page)
+func NewClient() Client {
+	return original.NewClient()
 }
-func NewEntityListResultPage(getNextPage func(context.Context, EntityListResult) (EntityListResult, error)) EntityListResultPage {
-	return original.NewEntityListResultPage(getNextPage)
+func NewClientWithBaseURI(baseURI string) Client {
+	return original.NewClientWithBaseURI(baseURI)
 }
-func NewListResultIterator(page ListResultPage) ListResultIterator {
-	return original.NewListResultIterator(page)
+func PossibleInheritedPermissionsValues() []InheritedPermissions {
+	return original.PossibleInheritedPermissionsValues()
 }
-func NewListResultPage(getNextPage func(context.Context, ListResult) (ListResult, error)) ListResultPage {
-	return original.NewListResultPage(getNextPage)
+func PossiblePermissionsValues() []Permissions {
+	return original.PossiblePermissionsValues()
 }
-func NewOperationListResultIterator(page OperationListResultPage) OperationListResultIterator {
-	return original.NewOperationListResultIterator(page)
+func PossiblePermissions1Values() []Permissions1 {
+	return original.PossiblePermissions1Values()
 }
-func NewOperationListResultPage(getNextPage func(context.Context, OperationListResult) (OperationListResult, error)) OperationListResultPage {
-	return original.NewOperationListResultPage(getNextPage)
+func PossibleProvisioningStateValues() []ProvisioningState {
+	return original.PossibleProvisioningStateValues()
+}
+func PossibleReasonValues() []Reason {
+	return original.PossibleReasonValues()
+}
+func PossibleStatusValues() []Status {
+	return original.PossibleStatusValues()
+}
+func PossibleTypeValues() []Type {
+	return original.PossibleTypeValues()
+}
+func PossibleType1Values() []Type1 {
+	return original.PossibleType1Values()
+}
+func PossibleType2Values() []Type2 {
+	return original.PossibleType2Values()
 }
 func NewOperationsClient() OperationsClient {
 	return original.NewOperationsClient()
@@ -189,36 +197,6 @@ func NewSubscriptionsClient() SubscriptionsClient {
 }
 func NewSubscriptionsClientWithBaseURI(baseURI string) SubscriptionsClient {
 	return original.NewSubscriptionsClientWithBaseURI(baseURI)
-}
-func NewWithBaseURI(baseURI string) BaseClient {
-	return original.NewWithBaseURI(baseURI)
-}
-func PossibleInheritedPermissionsValues() []InheritedPermissions {
-	return original.PossibleInheritedPermissionsValues()
-}
-func PossiblePermissions1Values() []Permissions1 {
-	return original.PossiblePermissions1Values()
-}
-func PossiblePermissionsValues() []Permissions {
-	return original.PossiblePermissionsValues()
-}
-func PossibleProvisioningStateValues() []ProvisioningState {
-	return original.PossibleProvisioningStateValues()
-}
-func PossibleReasonValues() []Reason {
-	return original.PossibleReasonValues()
-}
-func PossibleStatusValues() []Status {
-	return original.PossibleStatusValues()
-}
-func PossibleType1Values() []Type1 {
-	return original.PossibleType1Values()
-}
-func PossibleType2Values() []Type2 {
-	return original.PossibleType2Values()
-}
-func PossibleTypeValues() []Type {
-	return original.PossibleTypeValues()
 }
 func UserAgent() string {
 	return original.UserAgent() + " profiles/preview"

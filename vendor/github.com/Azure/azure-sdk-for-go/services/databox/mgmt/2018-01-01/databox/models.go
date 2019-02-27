@@ -113,30 +113,13 @@ const (
 	InProgress CopyStatus = "InProgress"
 	// NotReturned No copy triggered as device was not returned.
 	NotReturned CopyStatus = "NotReturned"
-	// NotStarted Data copy hasn't started yet.
+	// NotStarted Data copy hasnt started yet.
 	NotStarted CopyStatus = "NotStarted"
 )
 
 // PossibleCopyStatusValues returns an array of possible values for the CopyStatus const type.
 func PossibleCopyStatusValues() []CopyStatus {
 	return []CopyStatus{Completed, CompletedWithErrors, Failed, InProgress, NotReturned, NotStarted}
-}
-
-// DataDestinationType enumerates the values for data destination type.
-type DataDestinationType string
-
-const (
-	// DataDestinationTypeDestinationAccountDetails ...
-	DataDestinationTypeDestinationAccountDetails DataDestinationType = "DestinationAccountDetails"
-	// DataDestinationTypeManagedDisk ...
-	DataDestinationTypeManagedDisk DataDestinationType = "ManagedDisk"
-	// DataDestinationTypeStorageAccount ...
-	DataDestinationTypeStorageAccount DataDestinationType = "StorageAccount"
-)
-
-// PossibleDataDestinationTypeValues returns an array of possible values for the DataDestinationType const type.
-func PossibleDataDestinationTypeValues() []DataDestinationType {
-	return []DataDestinationType{DataDestinationTypeDestinationAccountDetails, DataDestinationTypeManagedDisk, DataDestinationTypeStorageAccount}
 }
 
 // JobDetailsTypeEnum enumerates the values for job details type enum.
@@ -208,10 +191,8 @@ const (
 	AzureFile ShareDestinationFormatType = "AzureFile"
 	// BlockBlob Azure storage block blob format.
 	BlockBlob ShareDestinationFormatType = "BlockBlob"
-	// HCS StorSimple data format.
+	// HCS Storsimple data format.
 	HCS ShareDestinationFormatType = "HCS"
-	// ManagedDisk Azure Compute Disk.
-	ManagedDisk ShareDestinationFormatType = "ManagedDisk"
 	// PageBlob Azure storage page blob format.
 	PageBlob ShareDestinationFormatType = "PageBlob"
 	// UnknownType Unknown format.
@@ -220,7 +201,7 @@ const (
 
 // PossibleShareDestinationFormatTypeValues returns an array of possible values for the ShareDestinationFormatType const type.
 func PossibleShareDestinationFormatTypeValues() []ShareDestinationFormatType {
-	return []ShareDestinationFormatType{AzureFile, BlockBlob, HCS, ManagedDisk, PageBlob, UnknownType}
+	return []ShareDestinationFormatType{AzureFile, BlockBlob, HCS, PageBlob, UnknownType}
 }
 
 // SkuDisabledReason enumerates the values for sku disabled reason.
@@ -233,29 +214,26 @@ const (
 	SkuDisabledReasonFeature SkuDisabledReason = "Feature"
 	// SkuDisabledReasonNone SKU is not disabled.
 	SkuDisabledReasonNone SkuDisabledReason = "None"
-	// SkuDisabledReasonNoSubscriptionInfo Subscription has not registered to Microsoft.DataBox and Service
-	// does not have the subscription notification.
-	SkuDisabledReasonNoSubscriptionInfo SkuDisabledReason = "NoSubscriptionInfo"
 	// SkuDisabledReasonOfferType Subscription does not have required offer types for the SKU.
 	SkuDisabledReasonOfferType SkuDisabledReason = "OfferType"
-	// SkuDisabledReasonRegion SKU is not available to push data to the requested Azure region.
+	// SkuDisabledReasonRegion SKU is not available to push data to the requested storage account region.
 	SkuDisabledReasonRegion SkuDisabledReason = "Region"
 )
 
 // PossibleSkuDisabledReasonValues returns an array of possible values for the SkuDisabledReason const type.
 func PossibleSkuDisabledReasonValues() []SkuDisabledReason {
-	return []SkuDisabledReason{SkuDisabledReasonCountry, SkuDisabledReasonFeature, SkuDisabledReasonNone, SkuDisabledReasonNoSubscriptionInfo, SkuDisabledReasonOfferType, SkuDisabledReasonRegion}
+	return []SkuDisabledReason{SkuDisabledReasonCountry, SkuDisabledReasonFeature, SkuDisabledReasonNone, SkuDisabledReasonOfferType, SkuDisabledReasonRegion}
 }
 
 // SkuName enumerates the values for sku name.
 type SkuName string
 
 const (
-	// DataBox DataBox.
+	// DataBox Databox.
 	DataBox SkuName = "DataBox"
-	// DataBoxDisk DataBoxDisk.
+	// DataBoxDisk DataboxDisk.
 	DataBoxDisk SkuName = "DataBoxDisk"
-	// DataBoxHeavy DataBoxHeavy.
+	// DataBoxHeavy DataboxHeavy.
 	DataBoxHeavy SkuName = "DataBoxHeavy"
 )
 
@@ -532,11 +510,6 @@ func (iter AvailableSkusResultIterator) Value() SkuInformation {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the AvailableSkusResultIterator type.
-func NewAvailableSkusResultIterator(page AvailableSkusResultPage) AvailableSkusResultIterator {
-	return AvailableSkusResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (asr AvailableSkusResult) IsEmpty() bool {
 	return asr.Value == nil || len(*asr.Value) == 0
@@ -604,11 +577,6 @@ func (page AvailableSkusResultPage) Values() []SkuInformation {
 		return nil
 	}
 	return *page.asr.Value
-}
-
-// Creates a new instance of the AvailableSkusResultPage type.
-func NewAvailableSkusResultPage(getNextPage func(context.Context, AvailableSkusResult) (AvailableSkusResult, error)) AvailableSkusResultPage {
-	return AvailableSkusResultPage{fn: getNextPage}
 }
 
 // CancellationReason reason for cancellation.
@@ -737,196 +705,12 @@ type CopyProgress struct {
 	BytesSentToCloud *int64 `json:"bytesSentToCloud,omitempty"`
 	// TotalBytesToProcess - Total amount of data to be processed by the job.
 	TotalBytesToProcess *int64 `json:"totalBytesToProcess,omitempty"`
-	// FilesProcessed - Number of files processed by the job as of now.
-	FilesProcessed *int64 `json:"filesProcessed,omitempty"`
-	// TotalFilesToProcess - Total number of files to be processed by the job.
-	TotalFilesToProcess *int64 `json:"totalFilesToProcess,omitempty"`
 }
 
-// BasicDestinationAccountDetails details of the destination of the data
-type BasicDestinationAccountDetails interface {
-	AsDestinationManagedDiskDetails() (*DestinationManagedDiskDetails, bool)
-	AsDestinationStorageAccountDetails() (*DestinationStorageAccountDetails, bool)
-	AsDestinationAccountDetails() (*DestinationAccountDetails, bool)
-}
-
-// DestinationAccountDetails details of the destination of the data
+// DestinationAccountDetails details for the destination account.
 type DestinationAccountDetails struct {
-	// AccountID - Arm Id of the destination where the data has to be moved.
+	// AccountID - Destination storage account id.
 	AccountID *string `json:"accountId,omitempty"`
-	// DataDestinationType - Possible values include: 'DataDestinationTypeDestinationAccountDetails', 'DataDestinationTypeManagedDisk', 'DataDestinationTypeStorageAccount'
-	DataDestinationType DataDestinationType `json:"dataDestinationType,omitempty"`
-}
-
-func unmarshalBasicDestinationAccountDetails(body []byte) (BasicDestinationAccountDetails, error) {
-	var m map[string]interface{}
-	err := json.Unmarshal(body, &m)
-	if err != nil {
-		return nil, err
-	}
-
-	switch m["dataDestinationType"] {
-	case string(DataDestinationTypeManagedDisk):
-		var dmdd DestinationManagedDiskDetails
-		err := json.Unmarshal(body, &dmdd)
-		return dmdd, err
-	case string(DataDestinationTypeStorageAccount):
-		var dsad DestinationStorageAccountDetails
-		err := json.Unmarshal(body, &dsad)
-		return dsad, err
-	default:
-		var dad DestinationAccountDetails
-		err := json.Unmarshal(body, &dad)
-		return dad, err
-	}
-}
-func unmarshalBasicDestinationAccountDetailsArray(body []byte) ([]BasicDestinationAccountDetails, error) {
-	var rawMessages []*json.RawMessage
-	err := json.Unmarshal(body, &rawMessages)
-	if err != nil {
-		return nil, err
-	}
-
-	dadArray := make([]BasicDestinationAccountDetails, len(rawMessages))
-
-	for index, rawMessage := range rawMessages {
-		dad, err := unmarshalBasicDestinationAccountDetails(*rawMessage)
-		if err != nil {
-			return nil, err
-		}
-		dadArray[index] = dad
-	}
-	return dadArray, nil
-}
-
-// MarshalJSON is the custom marshaler for DestinationAccountDetails.
-func (dad DestinationAccountDetails) MarshalJSON() ([]byte, error) {
-	dad.DataDestinationType = DataDestinationTypeDestinationAccountDetails
-	objectMap := make(map[string]interface{})
-	if dad.AccountID != nil {
-		objectMap["accountId"] = dad.AccountID
-	}
-	if dad.DataDestinationType != "" {
-		objectMap["dataDestinationType"] = dad.DataDestinationType
-	}
-	return json.Marshal(objectMap)
-}
-
-// AsDestinationManagedDiskDetails is the BasicDestinationAccountDetails implementation for DestinationAccountDetails.
-func (dad DestinationAccountDetails) AsDestinationManagedDiskDetails() (*DestinationManagedDiskDetails, bool) {
-	return nil, false
-}
-
-// AsDestinationStorageAccountDetails is the BasicDestinationAccountDetails implementation for DestinationAccountDetails.
-func (dad DestinationAccountDetails) AsDestinationStorageAccountDetails() (*DestinationStorageAccountDetails, bool) {
-	return nil, false
-}
-
-// AsDestinationAccountDetails is the BasicDestinationAccountDetails implementation for DestinationAccountDetails.
-func (dad DestinationAccountDetails) AsDestinationAccountDetails() (*DestinationAccountDetails, bool) {
-	return &dad, true
-}
-
-// AsBasicDestinationAccountDetails is the BasicDestinationAccountDetails implementation for DestinationAccountDetails.
-func (dad DestinationAccountDetails) AsBasicDestinationAccountDetails() (BasicDestinationAccountDetails, bool) {
-	return &dad, true
-}
-
-// DestinationManagedDiskDetails details for the destination compute disks.
-type DestinationManagedDiskDetails struct {
-	// ResourceGroupID - Destination Resource Group Id where the Compute disks should be created.
-	ResourceGroupID *string `json:"resourceGroupId,omitempty"`
-	// StagingStorageAccountID - Arm Id of the storage account that can be used to copy the vhd for staging.
-	StagingStorageAccountID *string `json:"stagingStorageAccountId,omitempty"`
-	// AccountID - Arm Id of the destination where the data has to be moved.
-	AccountID *string `json:"accountId,omitempty"`
-	// DataDestinationType - Possible values include: 'DataDestinationTypeDestinationAccountDetails', 'DataDestinationTypeManagedDisk', 'DataDestinationTypeStorageAccount'
-	DataDestinationType DataDestinationType `json:"dataDestinationType,omitempty"`
-}
-
-// MarshalJSON is the custom marshaler for DestinationManagedDiskDetails.
-func (dmdd DestinationManagedDiskDetails) MarshalJSON() ([]byte, error) {
-	dmdd.DataDestinationType = DataDestinationTypeManagedDisk
-	objectMap := make(map[string]interface{})
-	if dmdd.ResourceGroupID != nil {
-		objectMap["resourceGroupId"] = dmdd.ResourceGroupID
-	}
-	if dmdd.StagingStorageAccountID != nil {
-		objectMap["stagingStorageAccountId"] = dmdd.StagingStorageAccountID
-	}
-	if dmdd.AccountID != nil {
-		objectMap["accountId"] = dmdd.AccountID
-	}
-	if dmdd.DataDestinationType != "" {
-		objectMap["dataDestinationType"] = dmdd.DataDestinationType
-	}
-	return json.Marshal(objectMap)
-}
-
-// AsDestinationManagedDiskDetails is the BasicDestinationAccountDetails implementation for DestinationManagedDiskDetails.
-func (dmdd DestinationManagedDiskDetails) AsDestinationManagedDiskDetails() (*DestinationManagedDiskDetails, bool) {
-	return &dmdd, true
-}
-
-// AsDestinationStorageAccountDetails is the BasicDestinationAccountDetails implementation for DestinationManagedDiskDetails.
-func (dmdd DestinationManagedDiskDetails) AsDestinationStorageAccountDetails() (*DestinationStorageAccountDetails, bool) {
-	return nil, false
-}
-
-// AsDestinationAccountDetails is the BasicDestinationAccountDetails implementation for DestinationManagedDiskDetails.
-func (dmdd DestinationManagedDiskDetails) AsDestinationAccountDetails() (*DestinationAccountDetails, bool) {
-	return nil, false
-}
-
-// AsBasicDestinationAccountDetails is the BasicDestinationAccountDetails implementation for DestinationManagedDiskDetails.
-func (dmdd DestinationManagedDiskDetails) AsBasicDestinationAccountDetails() (BasicDestinationAccountDetails, bool) {
-	return &dmdd, true
-}
-
-// DestinationStorageAccountDetails details for the destination storage account.
-type DestinationStorageAccountDetails struct {
-	// StorageAccountID - Destination Storage Account Arm Id.
-	StorageAccountID *string `json:"storageAccountId,omitempty"`
-	// AccountID - Arm Id of the destination where the data has to be moved.
-	AccountID *string `json:"accountId,omitempty"`
-	// DataDestinationType - Possible values include: 'DataDestinationTypeDestinationAccountDetails', 'DataDestinationTypeManagedDisk', 'DataDestinationTypeStorageAccount'
-	DataDestinationType DataDestinationType `json:"dataDestinationType,omitempty"`
-}
-
-// MarshalJSON is the custom marshaler for DestinationStorageAccountDetails.
-func (dsad DestinationStorageAccountDetails) MarshalJSON() ([]byte, error) {
-	dsad.DataDestinationType = DataDestinationTypeStorageAccount
-	objectMap := make(map[string]interface{})
-	if dsad.StorageAccountID != nil {
-		objectMap["storageAccountId"] = dsad.StorageAccountID
-	}
-	if dsad.AccountID != nil {
-		objectMap["accountId"] = dsad.AccountID
-	}
-	if dsad.DataDestinationType != "" {
-		objectMap["dataDestinationType"] = dsad.DataDestinationType
-	}
-	return json.Marshal(objectMap)
-}
-
-// AsDestinationManagedDiskDetails is the BasicDestinationAccountDetails implementation for DestinationStorageAccountDetails.
-func (dsad DestinationStorageAccountDetails) AsDestinationManagedDiskDetails() (*DestinationManagedDiskDetails, bool) {
-	return nil, false
-}
-
-// AsDestinationStorageAccountDetails is the BasicDestinationAccountDetails implementation for DestinationStorageAccountDetails.
-func (dsad DestinationStorageAccountDetails) AsDestinationStorageAccountDetails() (*DestinationStorageAccountDetails, bool) {
-	return &dsad, true
-}
-
-// AsDestinationAccountDetails is the BasicDestinationAccountDetails implementation for DestinationStorageAccountDetails.
-func (dsad DestinationStorageAccountDetails) AsDestinationAccountDetails() (*DestinationAccountDetails, bool) {
-	return nil, false
-}
-
-// AsBasicDestinationAccountDetails is the BasicDestinationAccountDetails implementation for DestinationStorageAccountDetails.
-func (dsad DestinationStorageAccountDetails) AsBasicDestinationAccountDetails() (BasicDestinationAccountDetails, bool) {
-	return &dsad, true
 }
 
 // DestinationToServiceLocationMap map of destination location to service location
@@ -1015,7 +799,7 @@ type DiskJobDetails struct {
 	DisksAndSizeDetails map[string]*int32 `json:"disksAndSizeDetails"`
 	// Passkey - User entered passkey for DataBox Disk job.
 	Passkey *string `json:"passkey,omitempty"`
-	// ExpectedDataSizeInTeraBytes - The expected size of the data, which needs to be transferred in this job, in terabytes.
+	// ExpectedDataSizeInTeraBytes - The expected size of the data, which needs to be transfered in this job, in tera bytes.
 	ExpectedDataSizeInTeraBytes *int32 `json:"expectedDataSizeInTeraBytes,omitempty"`
 	// JobStages - List of stages that run in the job.
 	JobStages *[]JobStages `json:"jobStages,omitempty"`
@@ -1028,7 +812,7 @@ type DiskJobDetails struct {
 	// ReturnPackage - Return package shipping details.
 	ReturnPackage *PackageShippingDetails `json:"returnPackage,omitempty"`
 	// DestinationAccountDetails - Destination account details.
-	DestinationAccountDetails *[]BasicDestinationAccountDetails `json:"destinationAccountDetails,omitempty"`
+	DestinationAccountDetails *[]DestinationAccountDetails `json:"destinationAccountDetails,omitempty"`
 	// ErrorDetails - Error details for failure. This is optional.
 	ErrorDetails *[]JobErrorDetails `json:"errorDetails,omitempty"`
 	// Preferences - Preferences for the order.
@@ -1227,7 +1011,8 @@ func (djd *DiskJobDetails) UnmarshalJSON(body []byte) error {
 			}
 		case "destinationAccountDetails":
 			if v != nil {
-				destinationAccountDetails, err := unmarshalBasicDestinationAccountDetailsArray(*v)
+				var destinationAccountDetails []DestinationAccountDetails
+				err = json.Unmarshal(*v, &destinationAccountDetails)
 				if err != nil {
 					return err
 				}
@@ -1364,7 +1149,7 @@ type Error struct {
 	Message *string `json:"message,omitempty"`
 }
 
-// HeavyAccountCopyLogDetails copy log details for a storage account for DataBoxHeavy
+// HeavyAccountCopyLogDetails copy log details for a storage account for Databox heavy
 type HeavyAccountCopyLogDetails struct {
 	// AccountName - Destination account name.
 	AccountName *string `json:"accountName,omitempty"`
@@ -1415,11 +1200,11 @@ func (hacld HeavyAccountCopyLogDetails) AsBasicCopyLogDetails() (BasicCopyLogDet
 	return &hacld, true
 }
 
-// HeavyJobDetails dataBoxHeavy Device Job Details
+// HeavyJobDetails databox Heavy Device Job Details
 type HeavyJobDetails struct {
 	// CopyProgress - Copy progress per account.
 	CopyProgress *[]CopyProgress `json:"copyProgress,omitempty"`
-	// ExpectedDataSizeInTeraBytes - The expected size of the data, which needs to be transferred in this job, in terabytes.
+	// ExpectedDataSizeInTeraBytes - The expected size of the data, which needs to be transfered in this job, in tera bytes.
 	ExpectedDataSizeInTeraBytes *int32 `json:"expectedDataSizeInTeraBytes,omitempty"`
 	// JobStages - List of stages that run in the job.
 	JobStages *[]JobStages `json:"jobStages,omitempty"`
@@ -1432,7 +1217,7 @@ type HeavyJobDetails struct {
 	// ReturnPackage - Return package shipping details.
 	ReturnPackage *PackageShippingDetails `json:"returnPackage,omitempty"`
 	// DestinationAccountDetails - Destination account details.
-	DestinationAccountDetails *[]BasicDestinationAccountDetails `json:"destinationAccountDetails,omitempty"`
+	DestinationAccountDetails *[]DestinationAccountDetails `json:"destinationAccountDetails,omitempty"`
 	// ErrorDetails - Error details for failure. This is optional.
 	ErrorDetails *[]JobErrorDetails `json:"errorDetails,omitempty"`
 	// Preferences - Preferences for the order.
@@ -1595,7 +1380,8 @@ func (hjd *HeavyJobDetails) UnmarshalJSON(body []byte) error {
 			}
 		case "destinationAccountDetails":
 			if v != nil {
-				destinationAccountDetails, err := unmarshalBasicDestinationAccountDetailsArray(*v)
+				var destinationAccountDetails []DestinationAccountDetails
+				err = json.Unmarshal(*v, &destinationAccountDetails)
 				if err != nil {
 					return err
 				}
@@ -1660,9 +1446,9 @@ func (hjd *HeavyJobDetails) UnmarshalJSON(body []byte) error {
 	return nil
 }
 
-// HeavyJobSecrets the secrets related to a DataBoxHeavy job.
+// HeavyJobSecrets the secrets related to a databox heavy job.
 type HeavyJobSecrets struct {
-	// CabinetPodSecrets - Contains the list of secret objects for a DataBoxHeavy job.
+	// CabinetPodSecrets - Contains the list of secret objects for a databox heavy job.
 	CabinetPodSecrets *[]HeavySecret `json:"cabinetPodSecrets,omitempty"`
 	// JobSecretsType - Possible values include: 'JobSecretsTypeJobSecrets', 'JobSecretsTypeDataBoxDisk', 'JobSecretsTypeDataBoxHeavy', 'JobSecretsTypeDataBox'
 	JobSecretsType JobSecretsTypeEnum `json:"jobSecretsType,omitempty"`
@@ -1706,7 +1492,7 @@ func (hjs HeavyJobSecrets) AsBasicJobSecrets() (BasicJobSecrets, bool) {
 	return &hjs, true
 }
 
-// HeavySecret the secrets related to a DataBoxHeavy.
+// HeavySecret the secrets related to a databox heavy.
 type HeavySecret struct {
 	// DeviceSerialNumber - Serial number of the assigned device.
 	DeviceSerialNumber *string `json:"deviceSerialNumber,omitempty"`
@@ -1730,7 +1516,7 @@ type BasicJobDetails interface {
 
 // JobDetails job details.
 type JobDetails struct {
-	// ExpectedDataSizeInTeraBytes - The expected size of the data, which needs to be transferred in this job, in terabytes.
+	// ExpectedDataSizeInTeraBytes - The expected size of the data, which needs to be transfered in this job, in tera bytes.
 	ExpectedDataSizeInTeraBytes *int32 `json:"expectedDataSizeInTeraBytes,omitempty"`
 	// JobStages - List of stages that run in the job.
 	JobStages *[]JobStages `json:"jobStages,omitempty"`
@@ -1743,7 +1529,7 @@ type JobDetails struct {
 	// ReturnPackage - Return package shipping details.
 	ReturnPackage *PackageShippingDetails `json:"returnPackage,omitempty"`
 	// DestinationAccountDetails - Destination account details.
-	DestinationAccountDetails *[]BasicDestinationAccountDetails `json:"destinationAccountDetails,omitempty"`
+	DestinationAccountDetails *[]DestinationAccountDetails `json:"destinationAccountDetails,omitempty"`
 	// ErrorDetails - Error details for failure. This is optional.
 	ErrorDetails *[]JobErrorDetails `json:"errorDetails,omitempty"`
 	// Preferences - Preferences for the order.
@@ -1939,7 +1725,8 @@ func (jd *JobDetails) UnmarshalJSON(body []byte) error {
 			}
 		case "destinationAccountDetails":
 			if v != nil {
-				destinationAccountDetails, err := unmarshalBasicDestinationAccountDetailsArray(*v)
+				var destinationAccountDetails []DestinationAccountDetails
+				err = json.Unmarshal(*v, &destinationAccountDetails)
 				if err != nil {
 					return err
 				}
@@ -2004,11 +1791,11 @@ func (jd *JobDetails) UnmarshalJSON(body []byte) error {
 	return nil
 }
 
-// JobDetailsType dataBox Job Details
+// JobDetailsType databox Job Details
 type JobDetailsType struct {
 	// CopyProgress - Copy progress per storage account.
 	CopyProgress *[]CopyProgress `json:"copyProgress,omitempty"`
-	// ExpectedDataSizeInTeraBytes - The expected size of the data, which needs to be transferred in this job, in terabytes.
+	// ExpectedDataSizeInTeraBytes - The expected size of the data, which needs to be transfered in this job, in tera bytes.
 	ExpectedDataSizeInTeraBytes *int32 `json:"expectedDataSizeInTeraBytes,omitempty"`
 	// JobStages - List of stages that run in the job.
 	JobStages *[]JobStages `json:"jobStages,omitempty"`
@@ -2021,7 +1808,7 @@ type JobDetailsType struct {
 	// ReturnPackage - Return package shipping details.
 	ReturnPackage *PackageShippingDetails `json:"returnPackage,omitempty"`
 	// DestinationAccountDetails - Destination account details.
-	DestinationAccountDetails *[]BasicDestinationAccountDetails `json:"destinationAccountDetails,omitempty"`
+	DestinationAccountDetails *[]DestinationAccountDetails `json:"destinationAccountDetails,omitempty"`
 	// ErrorDetails - Error details for failure. This is optional.
 	ErrorDetails *[]JobErrorDetails `json:"errorDetails,omitempty"`
 	// Preferences - Preferences for the order.
@@ -2184,7 +1971,8 @@ func (jdt *JobDetailsType) UnmarshalJSON(body []byte) error {
 			}
 		case "destinationAccountDetails":
 			if v != nil {
-				destinationAccountDetails, err := unmarshalBasicDestinationAccountDetailsArray(*v)
+				var destinationAccountDetails []DestinationAccountDetails
+				err = json.Unmarshal(*v, &destinationAccountDetails)
 				if err != nil {
 					return err
 				}
@@ -2558,11 +2346,6 @@ func (iter JobResourceListIterator) Value() JobResource {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the JobResourceListIterator type.
-func NewJobResourceListIterator(page JobResourceListPage) JobResourceListIterator {
-	return JobResourceListIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (jrl JobResourceList) IsEmpty() bool {
 	return jrl.Value == nil || len(*jrl.Value) == 0
@@ -2630,11 +2413,6 @@ func (page JobResourceListPage) Values() []JobResource {
 		return nil
 	}
 	return *page.jrl.Value
-}
-
-// Creates a new instance of the JobResourceListPage type.
-func NewJobResourceListPage(getNextPage func(context.Context, JobResourceList) (JobResourceList, error)) JobResourceListPage {
-	return JobResourceListPage{fn: getNextPage}
 }
 
 // JobResourceUpdateParameter the JobResourceUpdateParameter.
@@ -2834,7 +2612,7 @@ func (js JobSecrets) AsBasicJobSecrets() (BasicJobSecrets, bool) {
 	return &js, true
 }
 
-// JobSecretsType the secrets related to a DataBox job.
+// JobSecretsType the secrets related to a databox job.
 type JobSecretsType struct {
 	// PodSecrets - Contains the list of secret objects for a job.
 	PodSecrets *[]Secret `json:"podSecrets,omitempty"`
@@ -3023,11 +2801,6 @@ func (iter OperationListIterator) Value() Operation {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the OperationListIterator type.
-func NewOperationListIterator(page OperationListPage) OperationListIterator {
-	return OperationListIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (ol OperationList) IsEmpty() bool {
 	return ol.Value == nil || len(*ol.Value) == 0
@@ -3097,11 +2870,6 @@ func (page OperationListPage) Values() []Operation {
 	return *page.ol.Value
 }
 
-// Creates a new instance of the OperationListPage type.
-func NewOperationListPage(getNextPage func(context.Context, OperationList) (OperationList, error)) OperationListPage {
-	return OperationListPage{fn: getNextPage}
-}
-
 // PackageShippingDetails shipping details.
 type PackageShippingDetails struct {
 	// CarrierName - Name of the carrier.
@@ -3160,7 +2928,7 @@ type Secret struct {
 type ShareCredentialDetails struct {
 	// ShareName - Name of the share.
 	ShareName *string `json:"shareName,omitempty"`
-	// ShareType - Type of the share. Possible values include: 'UnknownType', 'HCS', 'BlockBlob', 'PageBlob', 'AzureFile', 'ManagedDisk'
+	// ShareType - Type of the share. Possible values include: 'UnknownType', 'HCS', 'BlockBlob', 'PageBlob', 'AzureFile'
 	ShareType ShareDestinationFormatType `json:"shareType,omitempty"`
 	// UserName - User name for the share.
 	UserName *string `json:"userName,omitempty"`
@@ -3316,7 +3084,7 @@ type SkuProperties struct {
 	Costs *[]SkuCost `json:"costs,omitempty"`
 	// APIVersions - Api versions that support this Sku.
 	APIVersions *[]string `json:"apiVersions,omitempty"`
-	// DisabledReason - Reason why the Sku is disabled. Possible values include: 'SkuDisabledReasonNone', 'SkuDisabledReasonCountry', 'SkuDisabledReasonRegion', 'SkuDisabledReasonFeature', 'SkuDisabledReasonOfferType', 'SkuDisabledReasonNoSubscriptionInfo'
+	// DisabledReason - Reason why the Sku is disabled. Possible values include: 'SkuDisabledReasonNone', 'SkuDisabledReasonCountry', 'SkuDisabledReasonRegion', 'SkuDisabledReasonFeature', 'SkuDisabledReasonOfferType'
 	DisabledReason SkuDisabledReason `json:"disabledReason,omitempty"`
 	// DisabledReasonMessage - Message for why the Sku is disabled.
 	DisabledReasonMessage *string `json:"disabledReasonMessage,omitempty"`
@@ -3386,39 +3154,7 @@ type UpdateJobProperties struct {
 	// Details - Details of a job to be updated.
 	Details *UpdateJobDetails `json:"details,omitempty"`
 	// DestinationAccountDetails - Destination account details.
-	DestinationAccountDetails *[]BasicDestinationAccountDetails `json:"destinationAccountDetails,omitempty"`
-}
-
-// UnmarshalJSON is the custom unmarshaler for UpdateJobProperties struct.
-func (ujp *UpdateJobProperties) UnmarshalJSON(body []byte) error {
-	var m map[string]*json.RawMessage
-	err := json.Unmarshal(body, &m)
-	if err != nil {
-		return err
-	}
-	for k, v := range m {
-		switch k {
-		case "details":
-			if v != nil {
-				var details UpdateJobDetails
-				err = json.Unmarshal(*v, &details)
-				if err != nil {
-					return err
-				}
-				ujp.Details = &details
-			}
-		case "destinationAccountDetails":
-			if v != nil {
-				destinationAccountDetails, err := unmarshalBasicDestinationAccountDetailsArray(*v)
-				if err != nil {
-					return err
-				}
-				ujp.DestinationAccountDetails = &destinationAccountDetails
-			}
-		}
-	}
-
-	return nil
+	DestinationAccountDetails *[]DestinationAccountDetails `json:"destinationAccountDetails,omitempty"`
 }
 
 // ValidateAddress the requirements to validate customer address where the device needs to be shipped.

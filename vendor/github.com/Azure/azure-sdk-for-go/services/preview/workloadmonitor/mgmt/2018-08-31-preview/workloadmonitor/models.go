@@ -446,11 +446,6 @@ func (iter ComponentsCollectionIterator) Value() Component {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ComponentsCollectionIterator type.
-func NewComponentsCollectionIterator(page ComponentsCollectionPage) ComponentsCollectionIterator {
-	return ComponentsCollectionIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (cc ComponentsCollection) IsEmpty() bool {
 	return cc.Value == nil || len(*cc.Value) == 0
@@ -518,11 +513,6 @@ func (page ComponentsCollectionPage) Values() []Component {
 		return nil
 	}
 	return *page.cc.Value
-}
-
-// Creates a new instance of the ComponentsCollectionPage type.
-func NewComponentsCollectionPage(getNextPage func(context.Context, ComponentsCollection) (ComponentsCollection, error)) ComponentsCollectionPage {
-	return ComponentsCollectionPage{fn: getNextPage}
 }
 
 // ErrorFieldContract error field contract.
@@ -653,9 +643,9 @@ func (mVar *Monitor) UnmarshalJSON(body []byte) error {
 type MonitorCriteria struct {
 	// HealthState - Target health state of the criteria. Possible values include: 'Error', 'Warning', 'Success', 'Unknown', 'Uninitialized'
 	HealthState HealthState `json:"healthState,omitempty"`
-	// Threshold - Threshold value for this criteria
+	// Threshold - Treshold value for this criteria
 	Threshold *float64 `json:"threshold,omitempty"`
-	// ComparisonOperator - Comparison enum on threshold of this criteria. Possible values include: 'Equals', 'GreaterThan', 'GreaterThanOrEqual', 'LessThan', 'LessThanOrEqual', 'NotEquals'
+	// ComparisonOperator - Comparison enum on theshold of this criteria. Possible values include: 'Equals', 'GreaterThan', 'GreaterThanOrEqual', 'LessThan', 'LessThanOrEqual', 'NotEquals'
 	ComparisonOperator Operator `json:"comparisonOperator,omitempty"`
 }
 
@@ -932,11 +922,6 @@ func (iter MonitorInstancesCollectionIterator) Value() MonitorInstance {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the MonitorInstancesCollectionIterator type.
-func NewMonitorInstancesCollectionIterator(page MonitorInstancesCollectionPage) MonitorInstancesCollectionIterator {
-	return MonitorInstancesCollectionIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (mic MonitorInstancesCollection) IsEmpty() bool {
 	return mic.Value == nil || len(*mic.Value) == 0
@@ -1006,11 +991,6 @@ func (page MonitorInstancesCollectionPage) Values() []MonitorInstance {
 	return *page.mic.Value
 }
 
-// Creates a new instance of the MonitorInstancesCollectionPage type.
-func NewMonitorInstancesCollectionPage(getNextPage func(context.Context, MonitorInstancesCollection) (MonitorInstancesCollection, error)) MonitorInstancesCollectionPage {
-	return MonitorInstancesCollectionPage{fn: getNextPage}
-}
-
 // MonitorProperties model for properties of a Monitor.
 type MonitorProperties struct {
 	// Description - Description of the monitor
@@ -1037,7 +1017,7 @@ type MonitorProperties struct {
 	ComponentTypeDisplayName *string `json:"componentTypeDisplayName,omitempty"`
 	// MonitorState - Is the monitor state enabled or disabled. Possible values include: 'MonitorStateEnabled', 'MonitorStateDisabled'
 	MonitorState MonitorState `json:"monitorState,omitempty"`
-	// Criteria - Collection of MonitorCriteria. For PATCH calls, instead of partial list, complete list of expected criteria should be passed for proper updating.
+	// Criteria - Collection of MonitorCriteria. For PATCH calls, instead of partial list, complete list of expected criteria should be passed for proper updation.
 	Criteria *[]MonitorCriteria `json:"criteria,omitempty"`
 	// AlertGeneration - Generates alerts or not. Possible values include: 'Enabled', 'Disabled'
 	AlertGeneration AlertGeneration `json:"alertGeneration,omitempty"`
@@ -1120,11 +1100,6 @@ func (iter MonitorsCollectionIterator) Value() Monitor {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the MonitorsCollectionIterator type.
-func NewMonitorsCollectionIterator(page MonitorsCollectionPage) MonitorsCollectionIterator {
-	return MonitorsCollectionIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (mc MonitorsCollection) IsEmpty() bool {
 	return mc.Value == nil || len(*mc.Value) == 0
@@ -1194,17 +1169,11 @@ func (page MonitorsCollectionPage) Values() []Monitor {
 	return *page.mc.Value
 }
 
-// Creates a new instance of the MonitorsCollectionPage type.
-func NewMonitorsCollectionPage(getNextPage func(context.Context, MonitorsCollection) (MonitorsCollection, error)) MonitorsCollectionPage {
-	return MonitorsCollectionPage{fn: getNextPage}
-}
-
-// NotificationSetting model for NotificationSetting.
+// NotificationSetting model for component.
 type NotificationSetting struct {
-	autorest.Response `json:"-"`
 	// Etag - For optimistic concurrency control.
 	Etag *string `json:"etag,omitempty"`
-	// NotificationSettingProperties - Properties of Notification Settings
+	// NotificationSettingProperties - Properties of the component.
 	*NotificationSettingProperties `json:"properties,omitempty"`
 	// ID - Fully qualified resource Id for the resource. Ex - /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{resourceProviderNamespace}/{resourceType}/{resourceName}
 	ID *string `json:"id,omitempty"`
@@ -1297,16 +1266,17 @@ func (ns *NotificationSetting) UnmarshalJSON(body []byte) error {
 
 // NotificationSettingProperties model for properties of a NotificationSetting.
 type NotificationSettingProperties struct {
-	// ActionGroupResourceIds - List of action group resource ids to be notified
-	ActionGroupResourceIds *[]string `json:"actionGroupResourceIds,omitempty"`
+	// ActionGroups - List of action group resource ids to be notified
+	ActionGroups *[]string `json:"actionGroups,omitempty"`
 }
 
 // NotificationSettingsCollection model for collection of notificationSettings.
 type NotificationSettingsCollection struct {
 	autorest.Response `json:"-"`
-	Value             *[]NotificationSetting `json:"value,omitempty"`
 	// NextLink - URL to the next set of results.
 	NextLink *string `json:"nextLink,omitempty"`
+	// Value - Collection of components.
+	Value *[]NotificationSetting `json:"value,omitempty"`
 }
 
 // NotificationSettingsCollectionIterator provides access to a complete listing of NotificationSetting
@@ -1366,11 +1336,6 @@ func (iter NotificationSettingsCollectionIterator) Value() NotificationSetting {
 		return NotificationSetting{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the NotificationSettingsCollectionIterator type.
-func NewNotificationSettingsCollectionIterator(page NotificationSettingsCollectionPage) NotificationSettingsCollectionIterator {
-	return NotificationSettingsCollectionIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -1440,11 +1405,6 @@ func (page NotificationSettingsCollectionPage) Values() []NotificationSetting {
 		return nil
 	}
 	return *page.nsc.Value
-}
-
-// Creates a new instance of the NotificationSettingsCollectionPage type.
-func NewNotificationSettingsCollectionPage(getNextPage func(context.Context, NotificationSettingsCollection) (NotificationSettingsCollection, error)) NotificationSettingsCollectionPage {
-	return NotificationSettingsCollectionPage{fn: getNextPage}
 }
 
 // Operation operation supported by the resource provider.
@@ -1524,11 +1484,6 @@ func (iter OperationListResultIterator) Value() Operation {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the OperationListResultIterator type.
-func NewOperationListResultIterator(page OperationListResultPage) OperationListResultIterator {
-	return OperationListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (olr OperationListResult) IsEmpty() bool {
 	return olr.Value == nil || len(*olr.Value) == 0
@@ -1596,11 +1551,6 @@ func (page OperationListResultPage) Values() []Operation {
 		return nil
 	}
 	return *page.olr.Value
-}
-
-// Creates a new instance of the OperationListResultPage type.
-func NewOperationListResultPage(getNextPage func(context.Context, OperationListResult) (OperationListResult, error)) OperationListResultPage {
-	return OperationListResultPage{fn: getNextPage}
 }
 
 // OperationProperties properties of an operation supported by the resource provider.

@@ -12,6 +12,9 @@ spec:
     plural: nodepools
   scope: Namespaced
   subresources:
+    scale:
+      specReplicasPath: .spec.replicas
+      statusReplicasPath: .status.replicas
     status: {}
   validation:
     openAPIV3Schema:
@@ -29,8 +32,25 @@ spec:
         metadata:
           type: object
         spec:
+          properties:
+            kubernetesVersion:
+              type: string
+            replicas:
+              format: int32
+              type: integer
           type: object
         status:
+          properties:
+            kubernetesVersion:
+              type: string
+            nodesetName:
+              type: string
+            provisioningState:
+              type: string
+            replicas:
+              description: PrevNodeSetName   string `json:"prevNodeSetName,omitempty"`
+              format: int32
+              type: integer
           type: object
   version: v1alpha1
 status:

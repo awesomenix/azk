@@ -518,11 +518,6 @@ func (iter ApplianceDefinitionListResultIterator) Value() ApplianceDefinition {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ApplianceDefinitionListResultIterator type.
-func NewApplianceDefinitionListResultIterator(page ApplianceDefinitionListResultPage) ApplianceDefinitionListResultIterator {
-	return ApplianceDefinitionListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (adlr ApplianceDefinitionListResult) IsEmpty() bool {
 	return adlr.Value == nil || len(*adlr.Value) == 0
@@ -590,11 +585,6 @@ func (page ApplianceDefinitionListResultPage) Values() []ApplianceDefinition {
 		return nil
 	}
 	return *page.adlr.Value
-}
-
-// Creates a new instance of the ApplianceDefinitionListResultPage type.
-func NewApplianceDefinitionListResultPage(getNextPage func(context.Context, ApplianceDefinitionListResult) (ApplianceDefinitionListResult, error)) ApplianceDefinitionListResultPage {
-	return ApplianceDefinitionListResultPage{fn: getNextPage}
 }
 
 // ApplianceDefinitionProperties the appliance definition properties.
@@ -784,11 +774,6 @@ func (iter ApplianceListResultIterator) Value() Appliance {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ApplianceListResultIterator type.
-func NewApplianceListResultIterator(page ApplianceListResultPage) ApplianceListResultIterator {
-	return ApplianceListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (alr ApplianceListResult) IsEmpty() bool {
 	return alr.Value == nil || len(*alr.Value) == 0
@@ -856,11 +841,6 @@ func (page ApplianceListResultPage) Values() []Appliance {
 		return nil
 	}
 	return *page.alr.Value
-}
-
-// Creates a new instance of the ApplianceListResultPage type.
-func NewApplianceListResultPage(getNextPage func(context.Context, ApplianceListResult) (ApplianceListResult, error)) ApplianceListResultPage {
-	return ApplianceListResultPage{fn: getNextPage}
 }
 
 // AppliancePatchable information about appliance.
@@ -1186,7 +1166,7 @@ func (future *AppliancesDeleteFuture) Result(client AppliancesClient) (ar autore
 	return
 }
 
-// ErrorResponse error response indicates ARM appliance is not able to process the incoming request. The
+// ErrorResponse error reponse indicates ARM appliance is not able to process the incoming request. The
 // reason is provided in the error message.
 type ErrorResponse struct {
 	// HTTPStatus - Http status code.
@@ -1343,11 +1323,6 @@ func (iter OperationListResultIterator) Value() Operation {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the OperationListResultIterator type.
-func NewOperationListResultIterator(page OperationListResultPage) OperationListResultIterator {
-	return OperationListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (olr OperationListResult) IsEmpty() bool {
 	return olr.Value == nil || len(*olr.Value) == 0
@@ -1415,11 +1390,6 @@ func (page OperationListResultPage) Values() []Operation {
 		return nil
 	}
 	return *page.olr.Value
-}
-
-// Creates a new instance of the OperationListResultPage type.
-func NewOperationListResultPage(getNextPage func(context.Context, OperationListResult) (OperationListResult, error)) OperationListResultPage {
-	return OperationListResultPage{fn: getNextPage}
 }
 
 // Plan plan for the appliance.

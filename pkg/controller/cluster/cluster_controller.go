@@ -33,8 +33,10 @@ import (
 )
 
 const (
-	tmpDir              = "/tmp/kubeadm/"
-	groupsFinalizerName = "groups.finalizers.engine.azkube.io"
+	tmpDir                 = "/tmp/kubeadm/"
+	groupsFinalizerName    = "groups.finalizers.engine.azkube.io"
+	azkubeLoadBalancerName = "azkube-lb"
+	azkubePublicIPName     = "azkube-publicip"
 )
 
 var log = logf.Log.WithName("controller")
@@ -100,6 +102,8 @@ func (r *ReconcileCluster) Reconcile(request reconcile.Request) (reconcile.Resul
 		ClientID:       instance.Spec.ClientID,
 		ClientSecret:   instance.Spec.ClientSecret,
 		TenantID:       instance.Spec.TenantID,
+		GroupName:      instance.Spec.ResourceGroupName,
+		GroupLocation:  instance.Spec.Location,
 		UserAgent:      "azkube",
 	}
 
@@ -111,11 +115,11 @@ func (r *ReconcileCluster) Reconcile(request reconcile.Request) (reconcile.Resul
 		if !helpers.ContainsFinalizer(instance.ObjectMeta.Finalizers, groupsFinalizerName) {
 			instance.ObjectMeta.Finalizers = append(instance.ObjectMeta.Finalizers, groupsFinalizerName)
 			if cloudConfig.IsValid() {
-				err := cloudConfig.CreateOrUpdateResourceGroup(context.TODO(), instance.Spec.ResourceGroupName, instance.Spec.Location)
+				err := cloudConfig.CreateOrUpdateResourceGroup(context.TODO())
 				if err != nil {
 					return reconcile.Result{Requeue: true}, err
 				}
-				err = cloudConfig.CreateVirtualNetworkAndSubnets(context.TODO(), "azkube-vnet", instance.Spec.ResourceGroupName, instance.Spec.Location)
+				err = cloudConfig.CreateVirtualNetworkAndSubnets(context.TODO(), "azkube-vnet")
 				if err != nil {
 					return reconcile.Result{Requeue: true}, err
 				}
@@ -136,7 +140,7 @@ func (r *ReconcileCluster) Reconcile(request reconcile.Request) (reconcile.Resul
 			if cloudConfig.IsValid() {
 				log.Info("Deleting Resource Group", "Name", instance.Spec.ResourceGroupName)
 				// our finalizer is present, so lets handle our external dependency
-				if err := cloudConfig.DeleteResourceGroup(context.TODO(), instance.Spec.ResourceGroupName); err != nil {
+				if err := cloudConfig.DeleteResourceGroup(context.TODO()); err != nil {
 					// if fail to delete the external dependency here, return with error
 					// so that it can be retried
 					// meh! its fine if it fails, we definitely need to wait here for it to be deleted
@@ -163,11 +167,30 @@ func (r *ReconcileCluster) Reconcile(request reconcile.Request) (reconcile.Resul
 		return reconcile.Result{}, err
 	}
 
+	publicAddress := ""
+	if cloudConfig.IsValid() {
+		if err := cloudConfig.CreateLoadBalancer(
+			context.TODO(),
+			azkubeLoadBalancerName,
+			azkubePublicIPName); err != nil {
+			return reconcile.Result{}, err
+		}
+
+		pip, err := cloudConfig.GetPublicIP(context.TODO(), azkubePublicIPName)
+		if err != nil {
+			return reconcile.Result{}, err
+		}
+		publicAddress = *pip.PublicIPAddressPropertiesFormat.IPAddress
+	}
+
 	v1beta1cfg := &kubeadmv1beta1.InitConfiguration{}
 	kubeadmscheme.Scheme.Default(v1beta1cfg)
 	v1beta1cfg.CertificatesDir = tmpDir + request.Name + "/certs"
 	v1beta1cfg.Etcd.Local = &kubeadmv1beta1.LocalEtcd{}
-	v1beta1cfg.LocalAPIEndpoint = kubeadmv1beta1.APIEndpoint{AdvertiseAddress: "10.0.0.1", BindPort: 6443}
+	v1beta1cfg.LocalAPIEndpoint = kubeadmv1beta1.APIEndpoint{AdvertiseAddress: "192.0.0.4", BindPort: 6443}
+	if publicAddress != "" {
+		v1beta1cfg.APIServer.CertSANs = []string{publicAddress}
+	}
 	v1beta1cfg.NodeRegistration.Name = "fakenode" + request.Name
 	cfg := &kubeadmapi.InitConfiguration{}
 	kubeadmscheme.Scheme.Default(cfg)
@@ -182,6 +205,18 @@ func (r *ReconcileCluster) Reconcile(request reconcile.Request) (reconcile.Resul
 	if err := createKubeconfigs(cfg, kubeConfigDir); err != nil {
 		log.Error(err, "Error Generating Kubeconfigs")
 		return reconcile.Result{RequeueAfter: 3 * time.Second}, err
+	}
+
+	if publicAddress != "" {
+		cfg.ControlPlaneEndpoint = fmt.Sprintf("%s:443", publicAddress)
+		if err := kubeconfigphase.CreateKubeConfigFile("customer-kubeconfig.conf", kubeConfigDir, cfg); err != nil {
+			return reconcile.Result{RequeueAfter: 3 * time.Second}, err
+		}
+		buf, err := ioutil.ReadFile(tmpDir + instance.Name + "/kubeconfigs/customer-kubeconfig.conf")
+		if err != nil {
+			return reconcile.Result{RequeueAfter: 3 * time.Second}, err
+		}
+		instance.Status.CustomerKubeConfig = string(buf)
 	}
 
 	if err := updateStatus(instance); err != nil {

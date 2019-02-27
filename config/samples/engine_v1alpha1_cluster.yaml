@@ -6,4 +6,11 @@ metadata:
   name: cluster-sample
 spec:
   # Add fields here
-  foo: bar
+  subscriptionID: ""
+  tenantID: ""
+  clientID: ""
+  clientSecret: ""
+  resourceGroupName: resourcegroup
+  resourceName: myresourcename
+  dnsPrefix: mydnsprefix
+  location: eastus2

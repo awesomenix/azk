@@ -691,7 +691,7 @@ func (aphc AzureProcessHostingConfiguration) AsBasicProcessHostingConfiguration(
 type AzureServiceFabricClusterConfiguration struct {
 	// Name - Service Fabric cluster name.
 	Name *string `json:"name,omitempty"`
-	// ClusterID - Service Fabric cluster identifier.
+	// ClusterID - Service Fabric cluster indentifier.
 	ClusterID *string `json:"clusterId,omitempty"`
 }
 
@@ -1012,11 +1012,6 @@ func (iter ClientGroupMembersCollectionIterator) Value() ClientGroupMember {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ClientGroupMembersCollectionIterator type.
-func NewClientGroupMembersCollectionIterator(page ClientGroupMembersCollectionPage) ClientGroupMembersCollectionIterator {
-	return ClientGroupMembersCollectionIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (cgmc ClientGroupMembersCollection) IsEmpty() bool {
 	return cgmc.Value == nil || len(*cgmc.Value) == 0
@@ -1084,11 +1079,6 @@ func (page ClientGroupMembersCollectionPage) Values() []ClientGroupMember {
 		return nil
 	}
 	return *page.cgmc.Value
-}
-
-// Creates a new instance of the ClientGroupMembersCollectionPage type.
-func NewClientGroupMembersCollectionPage(getNextPage func(context.Context, ClientGroupMembersCollection) (ClientGroupMembersCollection, error)) ClientGroupMembersCollectionPage {
-	return ClientGroupMembersCollectionPage{fn: getNextPage}
 }
 
 // ClientGroupMembersCount specifies the number of members in a client group.
@@ -1383,11 +1373,6 @@ func (iter ConnectionCollectionIterator) Value() Connection {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ConnectionCollectionIterator type.
-func NewConnectionCollectionIterator(page ConnectionCollectionPage) ConnectionCollectionIterator {
-	return ConnectionCollectionIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (cc ConnectionCollection) IsEmpty() bool {
 	return cc.Value == nil || len(*cc.Value) == 0
@@ -1455,11 +1440,6 @@ func (page ConnectionCollectionPage) Values() []Connection {
 		return nil
 	}
 	return *page.cc.Value
-}
-
-// Creates a new instance of the ConnectionCollectionPage type.
-func NewConnectionCollectionPage(getNextPage func(context.Context, ConnectionCollection) (ConnectionCollection, error)) ConnectionCollectionPage {
-	return ConnectionCollectionPage{fn: getNextPage}
 }
 
 // ConnectionProperties properties for a connection resource.
@@ -2035,11 +2015,6 @@ func (iter MachineCollectionIterator) Value() Machine {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the MachineCollectionIterator type.
-func NewMachineCollectionIterator(page MachineCollectionPage) MachineCollectionIterator {
-	return MachineCollectionIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (mc MachineCollection) IsEmpty() bool {
 	return mc.Value == nil || len(*mc.Value) == 0
@@ -2107,11 +2082,6 @@ func (page MachineCollectionPage) Values() []Machine {
 		return nil
 	}
 	return *page.mc.Value
-}
-
-// Creates a new instance of the MachineCollectionPage type.
-func NewMachineCollectionPage(getNextPage func(context.Context, MachineCollection) (MachineCollection, error)) MachineCollectionPage {
-	return MachineCollectionPage{fn: getNextPage}
 }
 
 // MachineCountsByOperatingSystem machines by operating system.
@@ -2335,11 +2305,6 @@ func (iter MachineGroupCollectionIterator) Value() MachineGroup {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the MachineGroupCollectionIterator type.
-func NewMachineGroupCollectionIterator(page MachineGroupCollectionPage) MachineGroupCollectionIterator {
-	return MachineGroupCollectionIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (mgc MachineGroupCollection) IsEmpty() bool {
 	return mgc.Value == nil || len(*mgc.Value) == 0
@@ -2407,11 +2372,6 @@ func (page MachineGroupCollectionPage) Values() []MachineGroup {
 		return nil
 	}
 	return *page.mgc.Value
-}
-
-// Creates a new instance of the MachineGroupCollectionPage type.
-func NewMachineGroupCollectionPage(getNextPage func(context.Context, MachineGroupCollection) (MachineGroupCollection, error)) MachineGroupCollectionPage {
-	return MachineGroupCollectionPage{fn: getNextPage}
 }
 
 // MachineGroupMapRequest specifies the computation of a machine group dependency map. A machine group
@@ -3576,11 +3536,6 @@ func (iter PortCollectionIterator) Value() Port {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the PortCollectionIterator type.
-func NewPortCollectionIterator(page PortCollectionPage) PortCollectionIterator {
-	return PortCollectionIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (pc PortCollection) IsEmpty() bool {
 	return pc.Value == nil || len(*pc.Value) == 0
@@ -3648,11 +3603,6 @@ func (page PortCollectionPage) Values() []Port {
 		return nil
 	}
 	return *page.pc.Value
-}
-
-// Creates a new instance of the PortCollectionPage type.
-func NewPortCollectionPage(getNextPage func(context.Context, PortCollection) (PortCollection, error)) PortCollectionPage {
-	return PortCollectionPage{fn: getNextPage}
 }
 
 // PortProperties resource properties.
@@ -4087,11 +4037,6 @@ func (iter ProcessCollectionIterator) Value() Process {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ProcessCollectionIterator type.
-func NewProcessCollectionIterator(page ProcessCollectionPage) ProcessCollectionIterator {
-	return ProcessCollectionIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (pc ProcessCollection) IsEmpty() bool {
 	return pc.Value == nil || len(*pc.Value) == 0
@@ -4161,18 +4106,13 @@ func (page ProcessCollectionPage) Values() []Process {
 	return *page.pc.Value
 }
 
-// Creates a new instance of the ProcessCollectionPage type.
-func NewProcessCollectionPage(getNextPage func(context.Context, ProcessCollection) (ProcessCollection, error)) ProcessCollectionPage {
-	return ProcessCollectionPage{fn: getNextPage}
-}
-
 // ProcessDetails describes process metadata.
 type ProcessDetails struct {
-	// PersistentKey - A unique identifier for a process, generally resilient to process restart, computed by Service Map.
+	// PersistentKey - A unique indentifier for a process, generally resilient to process restart, computed by Service Map.
 	PersistentKey *string `json:"persistentKey,omitempty"`
 	// PoolID - Represents the identity of the process pool assigned to the process by Dependency Agent.
 	PoolID *int32 `json:"poolId,omitempty"`
-	// FirstPid - The Operating System Process Identifier (PID) of the first process in this process pool.
+	// FirstPid - The Operating System Process Idendifier (PID) of the first process in this process pool.
 	FirstPid *int32 `json:"firstPid,omitempty"`
 	// Description - Process description.
 	Description *string `json:"description,omitempty"`
@@ -4978,11 +4918,11 @@ type Timezone struct {
 	FullName *string `json:"fullName,omitempty"`
 }
 
-// VirtualMachineConfiguration describes the virtualization-related configuration of a machine.
+// VirtualMachineConfiguration describes the virtualizaton-related configuration of a machine.
 type VirtualMachineConfiguration struct {
 	// VirtualMachineType - Specifies the virtualization technology used by the machine (hyperv, vmware, etc.). Possible values include: 'VirtualMachineTypeUnknown', 'VirtualMachineTypeHyperv', 'VirtualMachineTypeLdom', 'VirtualMachineTypeLpar', 'VirtualMachineTypeVmware', 'VirtualMachineTypeVirtualPc', 'VirtualMachineTypeXen'
 	VirtualMachineType VirtualMachineType `json:"virtualMachineType,omitempty"`
-	// NativeMachineID - The unique identifier of the virtual machine as reported by the underlying virtualization system.
+	// NativeMachineID - The unique identifier of the virtual machine as reported by the underlying virtualization sytem.
 	NativeMachineID *string `json:"nativeMachineId,omitempty"`
 	// VirtualMachineName - The Name of the virtual machine.
 	VirtualMachineName *string `json:"virtualMachineName,omitempty"`

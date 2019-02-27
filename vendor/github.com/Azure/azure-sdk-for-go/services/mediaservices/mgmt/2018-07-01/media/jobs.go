@@ -381,8 +381,11 @@ func (client JobsClient) GetResponder(resp *http.Response) (result Job, err erro
 // accountName - the Media Services account name.
 // transformName - the Transform name.
 // filter - restricts the set of items returned.
-// orderby - specifies the the key by which the result collection should be ordered.
-func (client JobsClient) List(ctx context.Context, resourceGroupName string, accountName string, transformName string, filter string, orderby string) (result JobCollectionPage, err error) {
+// top - specifies a non-negative integer n that limits the number of items returned from a collection. The
+// service returns the number of available items up to but not greater than the specified value n.
+// skip - specifies a non-negative integer n that excludes the first n items of the queried collection from the
+// result. The service returns items starting at position n+1.
+func (client JobsClient) List(ctx context.Context, resourceGroupName string, accountName string, transformName string, filter string, top *int32, skip *int32) (result JobCollectionPage, err error) {
 	if tracing.IsEnabled() {
 		ctx = tracing.StartSpan(ctx, fqdn+"/JobsClient.List")
 		defer func() {
@@ -394,7 +397,7 @@ func (client JobsClient) List(ctx context.Context, resourceGroupName string, acc
 		}()
 	}
 	result.fn = client.listNextResults
-	req, err := client.ListPreparer(ctx, resourceGroupName, accountName, transformName, filter, orderby)
+	req, err := client.ListPreparer(ctx, resourceGroupName, accountName, transformName, filter, top, skip)
 	if err != nil {
 		err = autorest.NewErrorWithError(err, "media.JobsClient", "List", nil, "Failure preparing request")
 		return
@@ -416,7 +419,7 @@ func (client JobsClient) List(ctx context.Context, resourceGroupName string, acc
 }
 
 // ListPreparer prepares the List request.
-func (client JobsClient) ListPreparer(ctx context.Context, resourceGroupName string, accountName string, transformName string, filter string, orderby string) (*http.Request, error) {
+func (client JobsClient) ListPreparer(ctx context.Context, resourceGroupName string, accountName string, transformName string, filter string, top *int32, skip *int32) (*http.Request, error) {
 	pathParameters := map[string]interface{}{
 		"accountName":       autorest.Encode("path", accountName),
 		"resourceGroupName": autorest.Encode("path", resourceGroupName),
@@ -431,8 +434,11 @@ func (client JobsClient) ListPreparer(ctx context.Context, resourceGroupName str
 	if len(filter) > 0 {
 		queryParameters["$filter"] = autorest.Encode("query", filter)
 	}
-	if len(orderby) > 0 {
-		queryParameters["$orderby"] = autorest.Encode("query", orderby)
+	if top != nil {
+		queryParameters["$top"] = autorest.Encode("query", *top)
+	}
+	if skip != nil {
+		queryParameters["$skip"] = autorest.Encode("query", *skip)
 	}
 
 	preparer := autorest.CreatePreparer(
@@ -485,7 +491,7 @@ func (client JobsClient) listNextResults(ctx context.Context, lastResults JobCol
 }
 
 // ListComplete enumerates all values, automatically crossing page boundaries as required.
-func (client JobsClient) ListComplete(ctx context.Context, resourceGroupName string, accountName string, transformName string, filter string, orderby string) (result JobCollectionIterator, err error) {
+func (client JobsClient) ListComplete(ctx context.Context, resourceGroupName string, accountName string, transformName string, filter string, top *int32, skip *int32) (result JobCollectionIterator, err error) {
 	if tracing.IsEnabled() {
 		ctx = tracing.StartSpan(ctx, fqdn+"/JobsClient.List")
 		defer func() {
@@ -496,12 +502,11 @@ func (client JobsClient) ListComplete(ctx context.Context, resourceGroupName str
 			tracing.EndSpan(ctx, sc, err)
 		}()
 	}
-	result.page, err = client.List(ctx, resourceGroupName, accountName, transformName, filter, orderby)
+	result.page, err = client.List(ctx, resourceGroupName, accountName, transformName, filter, top, skip)
 	return
 }
 
-// Update update is only supported for description and priority. Updating Priority will take effect when the Job state
-// is Queued or Scheduled and depending on the timing the priority update may be ignored.
+// Update updates a Job.
 // Parameters:
 // resourceGroupName - the name of the resource group within the Azure subscription.
 // accountName - the Media Services account name.

@@ -518,11 +518,6 @@ func (iter ApplicationDefinitionListResultIterator) Value() ApplicationDefinitio
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ApplicationDefinitionListResultIterator type.
-func NewApplicationDefinitionListResultIterator(page ApplicationDefinitionListResultPage) ApplicationDefinitionListResultIterator {
-	return ApplicationDefinitionListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (adlr ApplicationDefinitionListResult) IsEmpty() bool {
 	return adlr.Value == nil || len(*adlr.Value) == 0
@@ -590,11 +585,6 @@ func (page ApplicationDefinitionListResultPage) Values() []ApplicationDefinition
 		return nil
 	}
 	return *page.adlr.Value
-}
-
-// Creates a new instance of the ApplicationDefinitionListResultPage type.
-func NewApplicationDefinitionListResultPage(getNextPage func(context.Context, ApplicationDefinitionListResult) (ApplicationDefinitionListResult, error)) ApplicationDefinitionListResultPage {
-	return ApplicationDefinitionListResultPage{fn: getNextPage}
 }
 
 // ApplicationDefinitionProperties the managed application definition properties.
@@ -790,11 +780,6 @@ func (iter ApplicationListResultIterator) Value() Application {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ApplicationListResultIterator type.
-func NewApplicationListResultIterator(page ApplicationListResultPage) ApplicationListResultIterator {
-	return ApplicationListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (alr ApplicationListResult) IsEmpty() bool {
 	return alr.Value == nil || len(*alr.Value) == 0
@@ -862,11 +847,6 @@ func (page ApplicationListResultPage) Values() []Application {
 		return nil
 	}
 	return *page.alr.Value
-}
-
-// Creates a new instance of the ApplicationListResultPage type.
-func NewApplicationListResultPage(getNextPage func(context.Context, ApplicationListResult) (ApplicationListResult, error)) ApplicationListResultPage {
-	return ApplicationListResultPage{fn: getNextPage}
 }
 
 // ApplicationPatchable information about managed application.
@@ -1188,7 +1168,7 @@ func (future *ApplicationsDeleteFuture) Result(client ApplicationsClient) (ar au
 	return
 }
 
-// ErrorResponse error response indicates managed application is not able to process the incoming request.
+// ErrorResponse error reponse indicates managed application is not able to process the incoming request.
 // The reason is provided in the error message.
 type ErrorResponse struct {
 	// HTTPStatus - Http status code.

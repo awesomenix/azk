@@ -425,7 +425,7 @@ type CloudError struct {
 
 // CloudErrorBody describes a particular API error with an error code and a message.
 type CloudErrorBody struct {
-	// Code - An error code that describes the error condition more precisely than an HTTP status code. Can be used to programmatically handle specific error cases.
+	// Code - An error code that describes the error condition more precisely than an HTTP status code. Can be used to programatically handle specific error cases.
 	Code *string `json:"code,omitempty"`
 	// Message - A message that describes the error in detail and provides debugging information.
 	Message *string `json:"message,omitempty"`
@@ -563,7 +563,7 @@ type EnvironmentMutableProperties struct {
 	PartitionKeyProperties *[]PartitionKeyProperty `json:"partitionKeyProperties,omitempty"`
 }
 
-// EnvironmentResource an environment is a set of time-series data available for query, and is the top
+// EnvironmentResource an environment is a set of time-series data avaliable for query, and is the top
 // level Azure Time Series Insights resource.
 type EnvironmentResource struct {
 	autorest.Response `json:"-"`
@@ -738,7 +738,7 @@ func (future *EnvironmentsCreateOrUpdateFuture) Result(client EnvironmentsClient
 
 // EnvironmentStateDetails an object that contains the details about an environment's state.
 type EnvironmentStateDetails struct {
-	// Code - Contains the code that represents the reason of an environment being in a particular state. Can be used to programmatically handle specific cases.
+	// Code - Contains the code that represents the reason of an environment being in a particular state. Can be used to programatically handle specific cases.
 	Code *string `json:"code,omitempty"`
 	// Message - A message that describes the state in detail.
 	Message *string `json:"message,omitempty"`
@@ -1990,11 +1990,6 @@ func (iter OperationListResultIterator) Value() Operation {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the OperationListResultIterator type.
-func NewOperationListResultIterator(page OperationListResultPage) OperationListResultIterator {
-	return OperationListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (olr OperationListResult) IsEmpty() bool {
 	return olr.Value == nil || len(*olr.Value) == 0
@@ -2062,11 +2057,6 @@ func (page OperationListResultPage) Values() []Operation {
 		return nil
 	}
 	return *page.olr.Value
-}
-
-// Creates a new instance of the OperationListResultPage type.
-func NewOperationListResultPage(getNextPage func(context.Context, OperationListResult) (OperationListResult, error)) OperationListResultPage {
-	return OperationListResultPage{fn: getNextPage}
 }
 
 // PartitionKeyProperty the structure of the property that a partition key can have. An environment can

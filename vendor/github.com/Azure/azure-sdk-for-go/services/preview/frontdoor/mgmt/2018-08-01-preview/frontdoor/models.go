@@ -497,7 +497,7 @@ type AzureAsyncOperationResult struct {
 
 // AzureManagedOverrideRuleGroup defines contents of a web application rule
 type AzureManagedOverrideRuleGroup struct {
-	// RuleGroupOverride - Describes override rule group. Possible values include: 'SQLInjection', 'XSS'
+	// RuleGroupOverride - Describes overrideruleGroup. Possible values include: 'SQLInjection', 'XSS'
 	RuleGroupOverride RuleGroupOverride `json:"ruleGroupOverride,omitempty"`
 	// Action - Type of Actions. Possible values include: 'Allow', 'Block', 'Log'
 	Action Action `json:"action,omitempty"`
@@ -509,7 +509,7 @@ type AzureManagedRuleSet struct {
 	RuleGroupOverrides *[]AzureManagedOverrideRuleGroup `json:"ruleGroupOverrides,omitempty"`
 	// Priority - Describes priority of the rule
 	Priority *int32 `json:"priority,omitempty"`
-	// Version - defines version of the rule set
+	// Version - defines version of the ruleset
 	Version *int32 `json:"version,omitempty"`
 	// RuleSetType - Possible values include: 'RuleSetTypeUnknown', 'RuleSetTypeAzureManagedRuleSet'
 	RuleSetType RuleSetType `json:"ruleSetType,omitempty"`
@@ -650,7 +650,7 @@ func (bp *BackendPool) UnmarshalJSON(body []byte) error {
 }
 
 // BackendPoolListResult result of the request to list Backend Pools. It contains a list of Backend Pools
-// objects and a URL link to get the next set of results.
+// objects and a URL link to get the the next set of results.
 type BackendPoolListResult struct {
 	autorest.Response `json:"-"`
 	// Value - List of Backend Pools within a Front Door.
@@ -715,11 +715,6 @@ func (iter BackendPoolListResultIterator) Value() BackendPool {
 		return BackendPool{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the BackendPoolListResultIterator type.
-func NewBackendPoolListResultIterator(page BackendPoolListResultPage) BackendPoolListResultIterator {
-	return BackendPoolListResultIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -789,11 +784,6 @@ func (page BackendPoolListResultPage) Values() []BackendPool {
 		return nil
 	}
 	return *page.bplr.Value
-}
-
-// Creates a new instance of the BackendPoolListResultPage type.
-func NewBackendPoolListResultPage(getNextPage func(context.Context, BackendPoolListResult) (BackendPoolListResult, error)) BackendPoolListResultPage {
-	return BackendPoolListResultPage{fn: getNextPage}
 }
 
 // BackendPoolProperties the JSON object that contains the properties required to create a routing rule.
@@ -997,7 +987,7 @@ type CustomRule struct {
 	RuleType RuleType `json:"ruleType,omitempty"`
 	// RateLimitDurationInMinutes - Defines rate limit duration. Default - 1 minute
 	RateLimitDurationInMinutes *int32 `json:"rateLimitDurationInMinutes,omitempty"`
-	// RateLimitThreshold - Defines rate limit threshold
+	// RateLimitThreshold - Defines rate limit thresold
 	RateLimitThreshold *int32 `json:"rateLimitThreshold,omitempty"`
 	// MatchConditions - List of match conditions
 	MatchConditions *[]MatchCondition1 `json:"matchConditions,omitempty"`
@@ -1052,7 +1042,7 @@ type ErrorDetails struct {
 	Message *string `json:"message,omitempty"`
 }
 
-// ErrorResponse error response indicates Front Door service is not able to process the incoming request.
+// ErrorResponse error reponse indicates Front Door service is not able to process the incoming request.
 // The reason is provided in the error message.
 type ErrorResponse struct {
 	// Code - Error code.
@@ -1426,7 +1416,7 @@ func (future *FrontendEndpointsEnableHTTPSFuture) Result(client FrontendEndpoint
 }
 
 // FrontendEndpointsListResult result of the request to list frontend endpoints. It contains a list of
-// Frontend endpoint objects and a URL link to get the next set of results.
+// Frontend endpoint objects and a URL link to get the the next set of results.
 type FrontendEndpointsListResult struct {
 	autorest.Response `json:"-"`
 	// Value - List of Frontend endpoints within a Front Door.
@@ -1491,11 +1481,6 @@ func (iter FrontendEndpointsListResultIterator) Value() FrontendEndpoint {
 		return FrontendEndpoint{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the FrontendEndpointsListResultIterator type.
-func NewFrontendEndpointsListResultIterator(page FrontendEndpointsListResultPage) FrontendEndpointsListResultIterator {
-	return FrontendEndpointsListResultIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -1565,11 +1550,6 @@ func (page FrontendEndpointsListResultPage) Values() []FrontendEndpoint {
 		return nil
 	}
 	return *page.felr.Value
-}
-
-// Creates a new instance of the FrontendEndpointsListResultPage type.
-func NewFrontendEndpointsListResultPage(getNextPage func(context.Context, FrontendEndpointsListResult) (FrontendEndpointsListResult, error)) FrontendEndpointsListResultPage {
-	return FrontendEndpointsListResultPage{fn: getNextPage}
 }
 
 // FrontendEndpointUpdateParameters frontend endpoint used in routing rule
@@ -1644,7 +1624,7 @@ func (future *HealthProbeSettingsDeleteFuture) Result(client HealthProbeSettings
 }
 
 // HealthProbeSettingsListResult result of the request to list HealthProbeSettings. It contains a list of
-// HealthProbeSettings objects and a URL link to get the next set of results.
+// HealthProbeSettings objects and a URL link to get the the next set of results.
 type HealthProbeSettingsListResult struct {
 	autorest.Response `json:"-"`
 	// Value - List of HealthProbeSettings within a Front Door.
@@ -1710,11 +1690,6 @@ func (iter HealthProbeSettingsListResultIterator) Value() HealthProbeSettingsMod
 		return HealthProbeSettingsModel{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the HealthProbeSettingsListResultIterator type.
-func NewHealthProbeSettingsListResultIterator(page HealthProbeSettingsListResultPage) HealthProbeSettingsListResultIterator {
-	return HealthProbeSettingsListResultIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -1784,11 +1759,6 @@ func (page HealthProbeSettingsListResultPage) Values() []HealthProbeSettingsMode
 		return nil
 	}
 	return *page.hpslr.Value
-}
-
-// Creates a new instance of the HealthProbeSettingsListResultPage type.
-func NewHealthProbeSettingsListResultPage(getNextPage func(context.Context, HealthProbeSettingsListResult) (HealthProbeSettingsListResult, error)) HealthProbeSettingsListResultPage {
-	return HealthProbeSettingsListResultPage{fn: getNextPage}
 }
 
 // HealthProbeSettingsModel load balancing settings for a backend pool
@@ -1913,7 +1883,7 @@ type KeyVaultCertificateSourceParametersVault struct {
 }
 
 // ListResult result of the request to list Front Doors. It contains a list of Front Door objects and a URL
-// link to get the next set of results.
+// link to get the the next set of results.
 type ListResult struct {
 	autorest.Response `json:"-"`
 	// Value - List of Front Doors within a resource group.
@@ -1978,11 +1948,6 @@ func (iter ListResultIterator) Value() FrontDoor {
 		return FrontDoor{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the ListResultIterator type.
-func NewListResultIterator(page ListResultPage) ListResultIterator {
-	return ListResultIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -2054,11 +2019,6 @@ func (page ListResultPage) Values() []FrontDoor {
 	return *page.lr.Value
 }
 
-// Creates a new instance of the ListResultPage type.
-func NewListResultPage(getNextPage func(context.Context, ListResult) (ListResult, error)) ListResultPage {
-	return ListResultPage{fn: getNextPage}
-}
-
 // LoadBalancingSettingsCreateOrUpdateFuture an abstraction for monitoring and retrieving the results of a
 // long-running operation.
 type LoadBalancingSettingsCreateOrUpdateFuture struct {
@@ -2112,7 +2072,7 @@ func (future *LoadBalancingSettingsDeleteFuture) Result(client LoadBalancingSett
 }
 
 // LoadBalancingSettingsListResult result of the request to list load balancing settings. It contains a
-// list of load balancing settings objects and a URL link to get the next set of results.
+// list of load balancing settings objects and a URL link to get the the next set of results.
 type LoadBalancingSettingsListResult struct {
 	autorest.Response `json:"-"`
 	// Value - List of Backend Pools within a Front Door.
@@ -2178,11 +2138,6 @@ func (iter LoadBalancingSettingsListResultIterator) Value() LoadBalancingSetting
 		return LoadBalancingSettingsModel{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the LoadBalancingSettingsListResultIterator type.
-func NewLoadBalancingSettingsListResultIterator(page LoadBalancingSettingsListResultPage) LoadBalancingSettingsListResultIterator {
-	return LoadBalancingSettingsListResultIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -2252,11 +2207,6 @@ func (page LoadBalancingSettingsListResultPage) Values() []LoadBalancingSettings
 		return nil
 	}
 	return *page.lbslr.Value
-}
-
-// Creates a new instance of the LoadBalancingSettingsListResultPage type.
-func NewLoadBalancingSettingsListResultPage(getNextPage func(context.Context, LoadBalancingSettingsListResult) (LoadBalancingSettingsListResult, error)) LoadBalancingSettingsListResultPage {
-	return LoadBalancingSettingsListResultPage{fn: getNextPage}
 }
 
 // LoadBalancingSettingsModel load balancing settings for a backend pool
@@ -2374,7 +2324,7 @@ type BasicManagedRuleSet interface {
 type ManagedRuleSet struct {
 	// Priority - Describes priority of the rule
 	Priority *int32 `json:"priority,omitempty"`
-	// Version - defines version of the rule set
+	// Version - defines version of the ruleset
 	Version *int32 `json:"version,omitempty"`
 	// RuleSetType - Possible values include: 'RuleSetTypeUnknown', 'RuleSetTypeAzureManagedRuleSet'
 	RuleSetType RuleSetType `json:"ruleSetType,omitempty"`
@@ -2671,7 +2621,7 @@ func (rr *RoutingRule) UnmarshalJSON(body []byte) error {
 }
 
 // RoutingRuleListResult result of the request to list Routing Rules. It contains a list of Routing Rule
-// objects and a URL link to get the next set of results.
+// objects and a URL link to get the the next set of results.
 type RoutingRuleListResult struct {
 	autorest.Response `json:"-"`
 	// Value - List of Routing Rules within a Front Door.
@@ -2736,11 +2686,6 @@ func (iter RoutingRuleListResultIterator) Value() RoutingRule {
 		return RoutingRule{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the RoutingRuleListResultIterator type.
-func NewRoutingRuleListResultIterator(page RoutingRuleListResultPage) RoutingRuleListResultIterator {
-	return RoutingRuleListResultIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -2810,11 +2755,6 @@ func (page RoutingRuleListResultPage) Values() []RoutingRule {
 		return nil
 	}
 	return *page.rrlr.Value
-}
-
-// Creates a new instance of the RoutingRuleListResultPage type.
-func NewRoutingRuleListResultPage(getNextPage func(context.Context, RoutingRuleListResult) (RoutingRuleListResult, error)) RoutingRuleListResultPage {
-	return RoutingRuleListResultPage{fn: getNextPage}
 }
 
 // RoutingRuleProperties the JSON object that contains the properties required to create a routing rule.
@@ -3092,7 +3032,8 @@ func (wafp1 *WebApplicationFirewallPolicy1) UnmarshalJSON(body []byte) error {
 }
 
 // WebApplicationFirewallPolicyListResult result of the request to list WebApplicationFirewallPolicies. It
-// contains a list of WebApplicationFirewallPolicy objects and a URL link to get the next set of results.
+// contains a list of WebApplicationFirewallPolicy objects and a URL link to get the the next set of
+// results.
 type WebApplicationFirewallPolicyListResult struct {
 	autorest.Response `json:"-"`
 	// Value - List of WebApplicationFirewallPolicies within a resource group.
@@ -3158,11 +3099,6 @@ func (iter WebApplicationFirewallPolicyListResultIterator) Value() WebApplicatio
 		return WebApplicationFirewallPolicy1{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the WebApplicationFirewallPolicyListResultIterator type.
-func NewWebApplicationFirewallPolicyListResultIterator(page WebApplicationFirewallPolicyListResultPage) WebApplicationFirewallPolicyListResultIterator {
-	return WebApplicationFirewallPolicyListResultIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -3232,11 +3168,6 @@ func (page WebApplicationFirewallPolicyListResultPage) Values() []WebApplication
 		return nil
 	}
 	return *page.wafplr.Value
-}
-
-// Creates a new instance of the WebApplicationFirewallPolicyListResultPage type.
-func NewWebApplicationFirewallPolicyListResultPage(getNextPage func(context.Context, WebApplicationFirewallPolicyListResult) (WebApplicationFirewallPolicyListResult, error)) WebApplicationFirewallPolicyListResultPage {
-	return WebApplicationFirewallPolicyListResultPage{fn: getNextPage}
 }
 
 // WebApplicationFirewallPolicyPropertiesFormat defines web application firewall policy properties

@@ -507,11 +507,6 @@ func (iter BotResponseListIterator) Value() Bot {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the BotResponseListIterator type.
-func NewBotResponseListIterator(page BotResponseListPage) BotResponseListIterator {
-	return BotResponseListIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (brl BotResponseList) IsEmpty() bool {
 	return brl.Value == nil || len(*brl.Value) == 0
@@ -579,11 +574,6 @@ func (page BotResponseListPage) Values() []Bot {
 		return nil
 	}
 	return *page.brl.Value
-}
-
-// Creates a new instance of the BotResponseListPage type.
-func NewBotResponseListPage(getNextPage func(context.Context, BotResponseList) (BotResponseList, error)) BotResponseListPage {
-	return BotResponseListPage{fn: getNextPage}
 }
 
 // BasicChannel channel definition
@@ -817,11 +807,6 @@ func (iter ChannelResponseListIterator) Value() BotChannel {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ChannelResponseListIterator type.
-func NewChannelResponseListIterator(page ChannelResponseListPage) ChannelResponseListIterator {
-	return ChannelResponseListIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (crl ChannelResponseList) IsEmpty() bool {
 	return crl.Value == nil || len(*crl.Value) == 0
@@ -889,11 +874,6 @@ func (page ChannelResponseListPage) Values() []BotChannel {
 		return nil
 	}
 	return *page.crl.Value
-}
-
-// Creates a new instance of the ChannelResponseListPage type.
-func NewChannelResponseListPage(getNextPage func(context.Context, ChannelResponseList) (ChannelResponseList, error)) ChannelResponseListPage {
-	return ChannelResponseListPage{fn: getNextPage}
 }
 
 // CheckNameAvailabilityRequestBody the request body for a request to Bot Service Management to check
@@ -1071,11 +1051,6 @@ func (iter ConnectionSettingResponseListIterator) Value() ConnectionSetting {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ConnectionSettingResponseListIterator type.
-func NewConnectionSettingResponseListIterator(page ConnectionSettingResponseListPage) ConnectionSettingResponseListIterator {
-	return ConnectionSettingResponseListIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (csrl ConnectionSettingResponseList) IsEmpty() bool {
 	return csrl.Value == nil || len(*csrl.Value) == 0
@@ -1143,11 +1118,6 @@ func (page ConnectionSettingResponseListPage) Values() []ConnectionSetting {
 		return nil
 	}
 	return *page.csrl.Value
-}
-
-// Creates a new instance of the ConnectionSettingResponseListPage type.
-func NewConnectionSettingResponseListPage(getNextPage func(context.Context, ConnectionSettingResponseList) (ConnectionSettingResponseList, error)) ConnectionSettingResponseListPage {
-	return ConnectionSettingResponseListPage{fn: getNextPage}
 }
 
 // DirectLineChannel direct Line channel definition
@@ -1512,11 +1482,6 @@ func (iter EnterpriseChannelResponseListIterator) Value() EnterpriseChannel {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the EnterpriseChannelResponseListIterator type.
-func NewEnterpriseChannelResponseListIterator(page EnterpriseChannelResponseListPage) EnterpriseChannelResponseListIterator {
-	return EnterpriseChannelResponseListIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (ecrl EnterpriseChannelResponseList) IsEmpty() bool {
 	return ecrl.Value == nil || len(*ecrl.Value) == 0
@@ -1584,11 +1549,6 @@ func (page EnterpriseChannelResponseListPage) Values() []EnterpriseChannel {
 		return nil
 	}
 	return *page.ecrl.Value
-}
-
-// Creates a new instance of the EnterpriseChannelResponseListPage type.
-func NewEnterpriseChannelResponseListPage(getNextPage func(context.Context, EnterpriseChannelResponseList) (EnterpriseChannelResponseList, error)) EnterpriseChannelResponseListPage {
-	return EnterpriseChannelResponseListPage{fn: getNextPage}
 }
 
 // EnterpriseChannelsCreateFuture an abstraction for monitoring and retrieving the results of a
@@ -2066,11 +2026,6 @@ func (iter OperationEntityListResultIterator) Value() OperationEntity {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the OperationEntityListResultIterator type.
-func NewOperationEntityListResultIterator(page OperationEntityListResultPage) OperationEntityListResultIterator {
-	return OperationEntityListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (oelr OperationEntityListResult) IsEmpty() bool {
 	return oelr.Value == nil || len(*oelr.Value) == 0
@@ -2138,11 +2093,6 @@ func (page OperationEntityListResultPage) Values() []OperationEntity {
 		return nil
 	}
 	return *page.oelr.Value
-}
-
-// Creates a new instance of the OperationEntityListResultPage type.
-func NewOperationEntityListResultPage(getNextPage func(context.Context, OperationEntityListResult) (OperationEntityListResult, error)) OperationEntityListResultPage {
-	return OperationEntityListResultPage{fn: getNextPage}
 }
 
 // Resource azure resource
@@ -2221,13 +2171,13 @@ type ServiceProviderParameter struct {
 type ServiceProviderProperties struct {
 	// ID - Id for Service Provider
 	ID *string `json:"id,omitempty"`
-	// DisplayName - Display Name of the Service Provider
+	// DisplayName - Diplay Name of the Service Provider
 	DisplayName *string `json:"displayName,omitempty"`
-	// ServiceProviderName - Display Name of the Service Provider
+	// ServiceProviderName - Diplay Name of the Service Provider
 	ServiceProviderName *string `json:"serviceProviderName,omitempty"`
-	// DevPortalURL - Display Name of the Service Provider
+	// DevPortalURL - Diplay Name of the Service Provider
 	DevPortalURL *string `json:"devPortalUrl,omitempty"`
-	// IconURL - Display Name of the Service Provider
+	// IconURL - Diplay Name of the Service Provider
 	IconURL *string `json:"iconUrl,omitempty"`
 	// Parameters - The list of parameters for the Service Provider
 	Parameters *[]ServiceProviderParameter `json:"parameters,omitempty"`

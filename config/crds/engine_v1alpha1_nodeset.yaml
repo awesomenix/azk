@@ -12,6 +12,9 @@ spec:
     plural: nodesets
   scope: Namespaced
   subresources:
+    scale:
+      specReplicasPath: .spec.replicas
+      statusReplicasPath: .status.replicas
     status: {}
   validation:
     openAPIV3Schema:
@@ -29,8 +32,33 @@ spec:
         metadata:
           type: object
         spec:
+          properties:
+            kubernetesVersion:
+              type: string
+            replicas:
+              format: int32
+              type: integer
           type: object
         status:
+          properties:
+            kubeConfig:
+              type: string
+            kubernetesVersion:
+              type: string
+            nodeStatus:
+              items:
+                properties:
+                  vmComputerName:
+                    type: string
+                  vmInstanceID:
+                    type: string
+                type: object
+              type: array
+            provisioningState:
+              type: string
+            replicas:
+              format: int32
+              type: integer
           type: object
   version: v1alpha1
 status:

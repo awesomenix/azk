@@ -7,22 +7,13 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/Azure/azure-sdk-for-go)](https://goreportcard.com/report/github.com/Azure/azure-sdk-for-go)
 
 azure-sdk-for-go provides Go packages for managing and using Azure services.
-It officially supports the last two major releases of Go.  Older versions of
-Go will be kept running in CI until they no longer work due to changes in any
-of the SDK's external dependencies.  The CHANGELOG will be updated when a
-version of Go is removed from CI.
+It is continuously tested with Go 1.8, 1.9, 1.10, 1.11 and master.
 
 To be notified about updates and changes, subscribe to the [Azure update
 feed](https://azure.microsoft.com/updates/).
 
 Users may prefer to jump right in to our samples repo at
 [github.com/Azure-Samples/azure-sdk-for-go-samples][samples_repo].
-
-Questions and feedback? Chat with us in the **[#Azure SDK
-channel](https://gophers.slack.com/messages/CA7HK8EEP)** on the [Gophers
-Slack](https://gophers.slack.com/). Sign up
-[here](https://invite.slack.golangbridge.org) first if necessary.
-
 
 ## Package Updates
 
@@ -331,14 +322,13 @@ import "github.com/Azure/azure-sdk-for-go/profiles/2017-03-09/network/mgmt/netwo
 import "github.com/Azure/azure-sdk-for-go/profiles/2017-03-09/storage/mgmt/storage"
 ```
 
-The following profiles are available for hybrid Azure and Azure Stack environments.
-- 2017-03-09
-- 2018-03-01
+The `2017-03-09` profile is the only one currently available and is for use in
+hybrid Azure and Azure Stack environments. More profiles are under development.
 
 In addition to versioned profiles, we also provide two special profiles
-`latest` and `preview`. The `latest` profile contains the latest API version
-of each service, excluding any preview versions and/or content.  The `preview`
-profile is similar to the `latest` profile but includes preview API versions.
+`latest` and `preview`. These _always_ include the most recent respective stable or
+preview API versions for each service, even when updating them to do so causes
+breaking changes. That is, these do _not_ adhere to semantic versioning rules.
 
 The `latest` and `preview` profiles can help you stay up to date with API
 updates as you build applications. Since they are by definition not stable,

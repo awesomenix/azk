@@ -573,7 +573,7 @@ type EdifactDelimiterOverride struct {
 	MessageID *string `json:"messageId,omitempty"`
 	// MessageVersion - The message version.
 	MessageVersion *string `json:"messageVersion,omitempty"`
-	// MessageRelease - The message release version.
+	// MessageRelease - The message releaseversion.
 	MessageRelease *string `json:"messageRelease,omitempty"`
 	// DataElementSeparator - The data element separator.
 	DataElementSeparator *int32 `json:"dataElementSeparator,omitempty"`
@@ -1093,11 +1093,6 @@ func (iter IntegrationAccountAgreementListResultIterator) Value() IntegrationAcc
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the IntegrationAccountAgreementListResultIterator type.
-func NewIntegrationAccountAgreementListResultIterator(page IntegrationAccountAgreementListResultPage) IntegrationAccountAgreementListResultIterator {
-	return IntegrationAccountAgreementListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (iaalr IntegrationAccountAgreementListResult) IsEmpty() bool {
 	return iaalr.Value == nil || len(*iaalr.Value) == 0
@@ -1165,11 +1160,6 @@ func (page IntegrationAccountAgreementListResultPage) Values() []IntegrationAcco
 		return nil
 	}
 	return *page.iaalr.Value
-}
-
-// Creates a new instance of the IntegrationAccountAgreementListResultPage type.
-func NewIntegrationAccountAgreementListResultPage(getNextPage func(context.Context, IntegrationAccountAgreementListResult) (IntegrationAccountAgreementListResult, error)) IntegrationAccountAgreementListResultPage {
-	return IntegrationAccountAgreementListResultPage{fn: getNextPage}
 }
 
 // IntegrationAccountAgreementProperties ...
@@ -1372,11 +1362,6 @@ func (iter IntegrationAccountCertificateListResultIterator) Value() IntegrationA
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the IntegrationAccountCertificateListResultIterator type.
-func NewIntegrationAccountCertificateListResultIterator(page IntegrationAccountCertificateListResultPage) IntegrationAccountCertificateListResultIterator {
-	return IntegrationAccountCertificateListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (iaclr IntegrationAccountCertificateListResult) IsEmpty() bool {
 	return iaclr.Value == nil || len(*iaclr.Value) == 0
@@ -1446,11 +1431,6 @@ func (page IntegrationAccountCertificateListResultPage) Values() []IntegrationAc
 	return *page.iaclr.Value
 }
 
-// Creates a new instance of the IntegrationAccountCertificateListResultPage type.
-func NewIntegrationAccountCertificateListResultPage(getNextPage func(context.Context, IntegrationAccountCertificateListResult) (IntegrationAccountCertificateListResult, error)) IntegrationAccountCertificateListResultPage {
-	return IntegrationAccountCertificateListResultPage{fn: getNextPage}
-}
-
 // IntegrationAccountCertificateProperties ...
 type IntegrationAccountCertificateProperties struct {
 	// CreatedTime - The created time.
@@ -1467,7 +1447,7 @@ type IntegrationAccountCertificateProperties struct {
 
 // IntegrationAccountContentHash ...
 type IntegrationAccountContentHash struct {
-	// Algorithm - The content hash algorithm.
+	// Algorithm - The conetnt hash algorithm.
 	Algorithm *string `json:"algorithm,omitempty"`
 	// Value - The content hash value.
 	Value *string `json:"value,omitempty"`
@@ -1554,11 +1534,6 @@ func (iter IntegrationAccountListResultIterator) Value() IntegrationAccount {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the IntegrationAccountListResultIterator type.
-func NewIntegrationAccountListResultIterator(page IntegrationAccountListResultPage) IntegrationAccountListResultIterator {
-	return IntegrationAccountListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (ialr IntegrationAccountListResult) IsEmpty() bool {
 	return ialr.Value == nil || len(*ialr.Value) == 0
@@ -1626,11 +1601,6 @@ func (page IntegrationAccountListResultPage) Values() []IntegrationAccount {
 		return nil
 	}
 	return *page.ialr.Value
-}
-
-// Creates a new instance of the IntegrationAccountListResultPage type.
-func NewIntegrationAccountListResultPage(getNextPage func(context.Context, IntegrationAccountListResult) (IntegrationAccountListResult, error)) IntegrationAccountListResultPage {
-	return IntegrationAccountListResultPage{fn: getNextPage}
 }
 
 // IntegrationAccountMap ...
@@ -1817,11 +1787,6 @@ func (iter IntegrationAccountMapListResultIterator) Value() IntegrationAccountMa
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the IntegrationAccountMapListResultIterator type.
-func NewIntegrationAccountMapListResultIterator(page IntegrationAccountMapListResultPage) IntegrationAccountMapListResultIterator {
-	return IntegrationAccountMapListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (iamlr IntegrationAccountMapListResult) IsEmpty() bool {
 	return iamlr.Value == nil || len(*iamlr.Value) == 0
@@ -1889,11 +1854,6 @@ func (page IntegrationAccountMapListResultPage) Values() []IntegrationAccountMap
 		return nil
 	}
 	return *page.iamlr.Value
-}
-
-// Creates a new instance of the IntegrationAccountMapListResultPage type.
-func NewIntegrationAccountMapListResultPage(getNextPage func(context.Context, IntegrationAccountMapListResult) (IntegrationAccountMapListResult, error)) IntegrationAccountMapListResultPage {
-	return IntegrationAccountMapListResultPage{fn: getNextPage}
 }
 
 // IntegrationAccountMapProperties ...
@@ -2098,11 +2058,6 @@ func (iter IntegrationAccountPartnerListResultIterator) Value() IntegrationAccou
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the IntegrationAccountPartnerListResultIterator type.
-func NewIntegrationAccountPartnerListResultIterator(page IntegrationAccountPartnerListResultPage) IntegrationAccountPartnerListResultIterator {
-	return IntegrationAccountPartnerListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (iaplr IntegrationAccountPartnerListResult) IsEmpty() bool {
 	return iaplr.Value == nil || len(*iaplr.Value) == 0
@@ -2170,11 +2125,6 @@ func (page IntegrationAccountPartnerListResultPage) Values() []IntegrationAccoun
 		return nil
 	}
 	return *page.iaplr.Value
-}
-
-// Creates a new instance of the IntegrationAccountPartnerListResultPage type.
-func NewIntegrationAccountPartnerListResultPage(getNextPage func(context.Context, IntegrationAccountPartnerListResult) (IntegrationAccountPartnerListResult, error)) IntegrationAccountPartnerListResultPage {
-	return IntegrationAccountPartnerListResultPage{fn: getNextPage}
 }
 
 // IntegrationAccountPartnerProperties ...
@@ -2410,11 +2360,6 @@ func (iter IntegrationAccountSchemaListResultIterator) Value() IntegrationAccoun
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the IntegrationAccountSchemaListResultIterator type.
-func NewIntegrationAccountSchemaListResultIterator(page IntegrationAccountSchemaListResultPage) IntegrationAccountSchemaListResultIterator {
-	return IntegrationAccountSchemaListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (iaslr IntegrationAccountSchemaListResult) IsEmpty() bool {
 	return iaslr.Value == nil || len(*iaslr.Value) == 0
@@ -2482,11 +2427,6 @@ func (page IntegrationAccountSchemaListResultPage) Values() []IntegrationAccount
 		return nil
 	}
 	return *page.iaslr.Value
-}
-
-// Creates a new instance of the IntegrationAccountSchemaListResultPage type.
-func NewIntegrationAccountSchemaListResultPage(getNextPage func(context.Context, IntegrationAccountSchemaListResult) (IntegrationAccountSchemaListResult, error)) IntegrationAccountSchemaListResultPage {
-	return IntegrationAccountSchemaListResultPage{fn: getNextPage}
 }
 
 // IntegrationAccountSchemaProperties ...

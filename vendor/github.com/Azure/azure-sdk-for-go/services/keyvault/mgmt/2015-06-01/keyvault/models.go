@@ -285,11 +285,6 @@ func (iter ResourceListResultIterator) Value() Resource {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ResourceListResultIterator type.
-func NewResourceListResultIterator(page ResourceListResultPage) ResourceListResultIterator {
-	return ResourceListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (rlr ResourceListResult) IsEmpty() bool {
 	return rlr.Value == nil || len(*rlr.Value) == 0
@@ -357,11 +352,6 @@ func (page ResourceListResultPage) Values() []Resource {
 		return nil
 	}
 	return *page.rlr.Value
-}
-
-// Creates a new instance of the ResourceListResultPage type.
-func NewResourceListResultPage(getNextPage func(context.Context, ResourceListResult) (ResourceListResult, error)) ResourceListResultPage {
-	return ResourceListResultPage{fn: getNextPage}
 }
 
 // Sku SKU details
@@ -505,11 +495,6 @@ func (iter VaultListResultIterator) Value() Vault {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the VaultListResultIterator type.
-func NewVaultListResultIterator(page VaultListResultPage) VaultListResultIterator {
-	return VaultListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (vlr VaultListResult) IsEmpty() bool {
 	return vlr.Value == nil || len(*vlr.Value) == 0
@@ -577,11 +562,6 @@ func (page VaultListResultPage) Values() []Vault {
 		return nil
 	}
 	return *page.vlr.Value
-}
-
-// Creates a new instance of the VaultListResultPage type.
-func NewVaultListResultPage(getNextPage func(context.Context, VaultListResult) (VaultListResult, error)) VaultListResultPage {
-	return VaultListResultPage{fn: getNextPage}
 }
 
 // VaultProperties properties of the vault

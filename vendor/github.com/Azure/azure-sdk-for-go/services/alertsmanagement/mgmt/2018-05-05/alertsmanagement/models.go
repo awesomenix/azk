@@ -410,11 +410,6 @@ func (iter AlertsListIterator) Value() Alert {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the AlertsListIterator type.
-func NewAlertsListIterator(page AlertsListPage) AlertsListIterator {
-	return AlertsListIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (al AlertsList) IsEmpty() bool {
 	return al.Value == nil || len(*al.Value) == 0
@@ -482,11 +477,6 @@ func (page AlertsListPage) Values() []Alert {
 		return nil
 	}
 	return *page.al.Value
-}
-
-// Creates a new instance of the AlertsListPage type.
-func NewAlertsListPage(getNextPage func(context.Context, AlertsList) (AlertsList, error)) AlertsListPage {
-	return AlertsListPage{fn: getNextPage}
 }
 
 // AlertsSummary summary of alerts based on the input filters and 'groupby' parameters.
@@ -667,11 +657,6 @@ func (iter OperationsListIterator) Value() Operation {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the OperationsListIterator type.
-func NewOperationsListIterator(page OperationsListPage) OperationsListIterator {
-	return OperationsListIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (ol OperationsList) IsEmpty() bool {
 	return ol.Value == nil || len(*ol.Value) == 0
@@ -739,11 +724,6 @@ func (page OperationsListPage) Values() []Operation {
 		return nil
 	}
 	return *page.ol.Value
-}
-
-// Creates a new instance of the OperationsListPage type.
-func NewOperationsListPage(getNextPage func(context.Context, OperationsList) (OperationsList, error)) OperationsListPage {
-	return OperationsListPage{fn: getNextPage}
 }
 
 // Resource an azure resource object

@@ -248,11 +248,6 @@ func (iter AppListResultIterator) Value() App {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the AppListResultIterator type.
-func NewAppListResultIterator(page AppListResultPage) AppListResultIterator {
-	return AppListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (alr AppListResult) IsEmpty() bool {
 	return alr.Value == nil || len(*alr.Value) == 0
@@ -320,11 +315,6 @@ func (page AppListResultPage) Values() []App {
 		return nil
 	}
 	return *page.alr.Value
-}
-
-// Creates a new instance of the AppListResultPage type.
-func NewAppListResultPage(getNextPage func(context.Context, AppListResult) (AppListResult, error)) AppListResultPage {
-	return AppListResultPage{fn: getNextPage}
 }
 
 // AppPatch the description of the IoT Central application.
@@ -623,11 +613,6 @@ func (iter OperationListResultIterator) Value() Operation {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the OperationListResultIterator type.
-func NewOperationListResultIterator(page OperationListResultPage) OperationListResultIterator {
-	return OperationListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (olr OperationListResult) IsEmpty() bool {
 	return olr.Value == nil || len(*olr.Value) == 0
@@ -695,11 +680,6 @@ func (page OperationListResultPage) Values() []Operation {
 		return nil
 	}
 	return *page.olr.Value
-}
-
-// Creates a new instance of the OperationListResultPage type.
-func NewOperationListResultPage(getNextPage func(context.Context, OperationListResult) (OperationListResult, error)) OperationListResultPage {
-	return OperationListResultPage{fn: getNextPage}
 }
 
 // Resource the common properties of an ARM resource.

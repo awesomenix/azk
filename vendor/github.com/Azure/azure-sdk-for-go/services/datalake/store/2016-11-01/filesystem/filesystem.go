@@ -44,8 +44,7 @@ func NewClient() Client {
 // Parameters:
 // accountName - the Azure Data Lake Store account to execute filesystem operations on.
 // pathParameter - the Data Lake Store path (starting with '/') of the file to which to append.
-// streamContents - the file contents to include when appending to the file.  The maximum content size is 4MB.
-// For content larger than 4MB you must append the content in 4MB chunks.
+// streamContents - the file contents to include when appending to the file.
 // offset - the optional offset in the stream to begin the append operation. Default is to append at the end of
 // the stream.
 // syncFlag - optionally indicates what to do after completion of the concurrent append. DATA indicates that
@@ -334,8 +333,7 @@ func (client Client) ConcatResponder(resp *http.Response) (result autorest.Respo
 // accountName - the Azure Data Lake Store account to execute filesystem operations on.
 // pathParameter - the Data Lake Store path (starting with '/') of the file to which to append using concurrent
 // append.
-// streamContents - the file contents to include when appending to the file.  The maximum content size is 4MB.
-// For content larger than 4MB you must append the content in 4MB chunks.
+// streamContents - the file contents to include when appending to the file.
 // appendMode - indicates the concurrent append call should create the file if it doesn't exist or just open
 // the existing file for append
 // syncFlag - optionally indicates what to do after completion of the concurrent append. DATA indicates that
@@ -437,8 +435,7 @@ func (client Client) ConcurrentAppendResponder(resp *http.Response) (result auto
 // accountName - the Azure Data Lake Store account to execute filesystem operations on.
 // pathParameter - the Data Lake Store path (starting with '/') of the file to create.
 // streamContents - the file contents to include when creating the file. This parameter is optional, resulting
-// in an empty file if not specified.  The maximum content size is 4MB.  For content larger than 4MB you must
-// append the content in 4MB chunks.
+// in an empty file if not specified.
 // overwrite - the indication of if the file should be overwritten.
 // syncFlag - optionally indicates what to do after completion of the create. DATA indicates that more data
 // will be sent immediately by the client, the file handle should remain open/locked, and file metadata
@@ -636,7 +633,7 @@ func (client Client) DeleteResponder(resp *http.Response) (result FileOperationR
 // accountName - the Azure Data Lake Store account to execute filesystem operations on.
 // pathParameter - the Data Lake Store path (starting with '/') of the file or directory for which to get the
 // ACL.
-// tooID - an optional switch to return friendly names in place of object ID for ACL entries. tooId=false
+// tooID - an optional switch to return friendly names in place of object ID for ACL entries. tooid=false
 // returns friendly names instead of the AAD Object ID. Default value is true, returning AAD object IDs.
 func (client Client) GetACLStatus(ctx context.Context, accountName string, pathParameter string, tooID *bool) (result ACLStatusResult, err error) {
 	if tracing.IsEnabled() {
@@ -804,7 +801,7 @@ func (client Client) GetContentSummaryResponder(resp *http.Response) (result Con
 // accountName - the Azure Data Lake Store account to execute filesystem operations on.
 // pathParameter - the Data Lake Store path (starting with '/') of the file or directory for which to retrieve
 // the status.
-// tooID - an optional switch to return friendly names in place of owner and group. tooId=false returns
+// tooID - an optional switch to return friendly names in place of owner and group. tooid=false returns
 // friendly names instead of the AAD Object ID. Default value is true, returning AAD object IDs.
 func (client Client) GetFileStatus(ctx context.Context, accountName string, pathParameter string, tooID *bool) (result FileStatusResult, err error) {
 	if tracing.IsEnabled() {
@@ -891,13 +888,13 @@ func (client Client) GetFileStatusResponder(resp *http.Response) (result FileSta
 // accountName - the Azure Data Lake Store account to execute filesystem operations on.
 // pathParameter - the Data Lake Store path (starting with '/') of the directory to list.
 // listSize - gets or sets the number of items to return. Optional.
-// listAfter - gets or sets the item or lexicographical index after which to begin returning results. For
+// listAfter - gets or sets the item or lexographical index after which to begin returning results. For
 // example, a file list of 'a','b','d' and listAfter='b' will return 'd', and a listAfter='c' will also return
 // 'd'. Optional.
-// listBefore - gets or sets the item or lexicographical index before which to begin returning results. For
+// listBefore - gets or sets the item or lexographical index before which to begin returning results. For
 // example, a file list of 'a','b','d' and listBefore='d' will return 'a','b', and a listBefore='c' will also
 // return 'a','b'. Optional.
-// tooID - an optional switch to return friendly names in place of owner and group. tooId=false returns
+// tooID - an optional switch to return friendly names in place of owner and group. tooid=false returns
 // friendly names instead of the AAD Object ID. Default value is true, returning AAD object IDs.
 func (client Client) ListFileStatus(ctx context.Context, accountName string, pathParameter string, listSize *int32, listAfter string, listBefore string, tooID *bool) (result FileStatusesResult, err error) {
 	if tracing.IsEnabled() {

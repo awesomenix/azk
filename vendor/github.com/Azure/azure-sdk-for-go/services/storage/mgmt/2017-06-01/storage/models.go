@@ -526,7 +526,7 @@ func (a *Account) UnmarshalJSON(body []byte) error {
 	return nil
 }
 
-// AccountCheckNameAvailabilityParameters the parameters used to check the availability of the storage
+// AccountCheckNameAvailabilityParameters the parameters used to check the availabity of the storage
 // account name.
 type AccountCheckNameAvailabilityParameters struct {
 	// Name - The storage account name.
@@ -730,7 +730,7 @@ type AccountPropertiesUpdateParameters struct {
 
 // AccountRegenerateKeyParameters the parameters used to regenerate the storage account key.
 type AccountRegenerateKeyParameters struct {
-	// KeyName - The name of storage keys that want to be regenerated, possible values are key1, key2.
+	// KeyName - The name of storage keys that want to be regenerated, possible vaules are key1, key2.
 	KeyName *string `json:"keyName,omitempty"`
 }
 
@@ -880,11 +880,11 @@ type CheckNameAvailabilityResult struct {
 type CustomDomain struct {
 	// Name - Gets or sets the custom domain name assigned to the storage account. Name is the CNAME source.
 	Name *string `json:"name,omitempty"`
-	// UseSubDomainName - Indicates whether indirect CName validation is enabled. Default value is false. This should only be set on updates.
-	UseSubDomainName *bool `json:"useSubDomainName,omitempty"`
+	// UseSubDomain - Indicates whether indirect CName validation is enabled. Default value is false. This should only be set on updates.
+	UseSubDomain *bool `json:"useSubDomain,omitempty"`
 }
 
-// Dimension dimension of blobs, possibly be blob type or access tier.
+// Dimension dimension of blobs, possiblly be blob type or access tier.
 type Dimension struct {
 	// Name - Display name of dimension.
 	Name *string `json:"name,omitempty"`
@@ -972,7 +972,7 @@ type ListAccountSasResponse struct {
 // ListServiceSasResponse the List service SAS credentials operation response.
 type ListServiceSasResponse struct {
 	autorest.Response `json:"-"`
-	// ServiceSasToken - List service SAS credentials of specific resource.
+	// ServiceSasToken - List service SAS credentials of speicific resource.
 	ServiceSasToken *string `json:"serviceSasToken,omitempty"`
 }
 
@@ -1160,7 +1160,7 @@ type Restriction struct {
 	ReasonCode ReasonCode `json:"reasonCode,omitempty"`
 }
 
-// ServiceSasParameters the parameters to list service SAS credentials of a specific resource.
+// ServiceSasParameters the parameters to list service SAS credentials of a speicific resource.
 type ServiceSasParameters struct {
 	// CanonicalizedResource - The canonical path to the signed resource.
 	CanonicalizedResource *string `json:"canonicalizedResource,omitempty"`

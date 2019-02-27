@@ -236,7 +236,7 @@ type AdministratorDetails struct {
 	FirstName *string `json:"first_name,omitempty"`
 	// LastName - Last name.
 	LastName *string `json:"last_name,omitempty"`
-	// EmailAddress - Email address.
+	// EmailAddress - Email addresss.
 	EmailAddress *string `json:"email,omitempty"`
 	// Phone - Phone number.
 	Phone *string `json:"phone,omitempty"`
@@ -492,11 +492,6 @@ func (iter CertificateIssuerListResultIterator) Value() CertificateIssuerItem {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the CertificateIssuerListResultIterator type.
-func NewCertificateIssuerListResultIterator(page CertificateIssuerListResultPage) CertificateIssuerListResultIterator {
-	return CertificateIssuerListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (cilr CertificateIssuerListResult) IsEmpty() bool {
 	return cilr.Value == nil || len(*cilr.Value) == 0
@@ -564,11 +559,6 @@ func (page CertificateIssuerListResultPage) Values() []CertificateIssuerItem {
 		return nil
 	}
 	return *page.cilr.Value
-}
-
-// Creates a new instance of the CertificateIssuerListResultPage type.
-func NewCertificateIssuerListResultPage(getNextPage func(context.Context, CertificateIssuerListResult) (CertificateIssuerListResult, error)) CertificateIssuerListResultPage {
-	return CertificateIssuerListResultPage{fn: getNextPage}
 }
 
 // CertificateIssuerSetParameters the certificate issuer set parameters.
@@ -692,11 +682,6 @@ func (iter CertificateListResultIterator) Value() CertificateItem {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the CertificateListResultIterator type.
-func NewCertificateListResultIterator(page CertificateListResultPage) CertificateListResultIterator {
-	return CertificateListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (clr CertificateListResult) IsEmpty() bool {
 	return clr.Value == nil || len(*clr.Value) == 0
@@ -764,11 +749,6 @@ func (page CertificateListResultPage) Values() []CertificateItem {
 		return nil
 	}
 	return *page.clr.Value
-}
-
-// Creates a new instance of the CertificateListResultPage type.
-func NewCertificateListResultPage(getNextPage func(context.Context, CertificateListResult) (CertificateListResult, error)) CertificateListResultPage {
-	return CertificateListResultPage{fn: getNextPage}
 }
 
 // CertificateMergeParameters the certificate merge parameters
@@ -877,7 +857,7 @@ func (cup CertificateUpdateParameters) MarshalJSON() ([]byte, error) {
 
 // Contact the contact information for the vault certificates.
 type Contact struct {
-	// EmailAddress - Email address.
+	// EmailAddress - Email addresss.
 	EmailAddress *string `json:"email,omitempty"`
 	// Name - Name.
 	Name *string `json:"name,omitempty"`
@@ -1079,11 +1059,6 @@ func (iter DeletedCertificateListResultIterator) Value() DeletedCertificateItem 
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the DeletedCertificateListResultIterator type.
-func NewDeletedCertificateListResultIterator(page DeletedCertificateListResultPage) DeletedCertificateListResultIterator {
-	return DeletedCertificateListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (dclr DeletedCertificateListResult) IsEmpty() bool {
 	return dclr.Value == nil || len(*dclr.Value) == 0
@@ -1151,11 +1126,6 @@ func (page DeletedCertificateListResultPage) Values() []DeletedCertificateItem {
 		return nil
 	}
 	return *page.dclr.Value
-}
-
-// Creates a new instance of the DeletedCertificateListResultPage type.
-func NewDeletedCertificateListResultPage(getNextPage func(context.Context, DeletedCertificateListResult) (DeletedCertificateListResult, error)) DeletedCertificateListResultPage {
-	return DeletedCertificateListResultPage{fn: getNextPage}
 }
 
 // DeletedKeyBundle a DeletedKeyBundle consisting of a WebKey plus its Attributes and deletion info
@@ -1316,11 +1286,6 @@ func (iter DeletedKeyListResultIterator) Value() DeletedKeyItem {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the DeletedKeyListResultIterator type.
-func NewDeletedKeyListResultIterator(page DeletedKeyListResultPage) DeletedKeyListResultIterator {
-	return DeletedKeyListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (dklr DeletedKeyListResult) IsEmpty() bool {
 	return dklr.Value == nil || len(*dklr.Value) == 0
@@ -1388,11 +1353,6 @@ func (page DeletedKeyListResultPage) Values() []DeletedKeyItem {
 		return nil
 	}
 	return *page.dklr.Value
-}
-
-// Creates a new instance of the DeletedKeyListResultPage type.
-func NewDeletedKeyListResultPage(getNextPage func(context.Context, DeletedKeyListResult) (DeletedKeyListResult, error)) DeletedKeyListResultPage {
-	return DeletedKeyListResultPage{fn: getNextPage}
 }
 
 // DeletedSasDefinitionBundle a deleted SAS definition bundle consisting of its previous id, attributes and
@@ -1571,11 +1531,6 @@ func (iter DeletedSasDefinitionListResultIterator) Value() DeletedSasDefinitionI
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the DeletedSasDefinitionListResultIterator type.
-func NewDeletedSasDefinitionListResultIterator(page DeletedSasDefinitionListResultPage) DeletedSasDefinitionListResultIterator {
-	return DeletedSasDefinitionListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (dsdlr DeletedSasDefinitionListResult) IsEmpty() bool {
 	return dsdlr.Value == nil || len(*dsdlr.Value) == 0
@@ -1643,11 +1598,6 @@ func (page DeletedSasDefinitionListResultPage) Values() []DeletedSasDefinitionIt
 		return nil
 	}
 	return *page.dsdlr.Value
-}
-
-// Creates a new instance of the DeletedSasDefinitionListResultPage type.
-func NewDeletedSasDefinitionListResultPage(getNextPage func(context.Context, DeletedSasDefinitionListResult) (DeletedSasDefinitionListResult, error)) DeletedSasDefinitionListResultPage {
-	return DeletedSasDefinitionListResultPage{fn: getNextPage}
 }
 
 // DeletedSecretBundle a Deleted Secret consisting of its previous id, attributes and its tags, as well as
@@ -1829,11 +1779,6 @@ func (iter DeletedSecretListResultIterator) Value() DeletedSecretItem {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the DeletedSecretListResultIterator type.
-func NewDeletedSecretListResultIterator(page DeletedSecretListResultPage) DeletedSecretListResultIterator {
-	return DeletedSecretListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (dslr DeletedSecretListResult) IsEmpty() bool {
 	return dslr.Value == nil || len(*dslr.Value) == 0
@@ -1901,11 +1846,6 @@ func (page DeletedSecretListResultPage) Values() []DeletedSecretItem {
 		return nil
 	}
 	return *page.dslr.Value
-}
-
-// Creates a new instance of the DeletedSecretListResultPage type.
-func NewDeletedSecretListResultPage(getNextPage func(context.Context, DeletedSecretListResult) (DeletedSecretListResult, error)) DeletedSecretListResultPage {
-	return DeletedSecretListResultPage{fn: getNextPage}
 }
 
 // DeletedStorageAccountItem the deleted storage account item containing metadata about the deleted storage
@@ -2084,11 +2024,6 @@ func (iter DeletedStorageListResultIterator) Value() DeletedStorageAccountItem {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the DeletedStorageListResultIterator type.
-func NewDeletedStorageListResultIterator(page DeletedStorageListResultPage) DeletedStorageListResultIterator {
-	return DeletedStorageListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (dslr DeletedStorageListResult) IsEmpty() bool {
 	return dslr.Value == nil || len(*dslr.Value) == 0
@@ -2156,11 +2091,6 @@ func (page DeletedStorageListResultPage) Values() []DeletedStorageAccountItem {
 		return nil
 	}
 	return *page.dslr.Value
-}
-
-// Creates a new instance of the DeletedStorageListResultPage type.
-func NewDeletedStorageListResultPage(getNextPage func(context.Context, DeletedStorageListResult) (DeletedStorageListResult, error)) DeletedStorageListResultPage {
-	return DeletedStorageListResultPage{fn: getNextPage}
 }
 
 // Error the key vault server error.
@@ -2467,11 +2397,6 @@ func (iter KeyListResultIterator) Value() KeyItem {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the KeyListResultIterator type.
-func NewKeyListResultIterator(page KeyListResultPage) KeyListResultIterator {
-	return KeyListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (klr KeyListResult) IsEmpty() bool {
 	return klr.Value == nil || len(*klr.Value) == 0
@@ -2539,11 +2464,6 @@ func (page KeyListResultPage) Values() []KeyItem {
 		return nil
 	}
 	return *page.klr.Value
-}
-
-// Creates a new instance of the KeyListResultPage type.
-func NewKeyListResultPage(getNextPage func(context.Context, KeyListResult) (KeyListResult, error)) KeyListResultPage {
-	return KeyListResultPage{fn: getNextPage}
 }
 
 // KeyOperationResult the key operation result.
@@ -2784,7 +2704,7 @@ type SasDefinitionListResult struct {
 	autorest.Response `json:"-"`
 	// Value - A response message containing a list of SAS definitions along with a link to the next page of SAS definitions.
 	Value *[]SasDefinitionItem `json:"value,omitempty"`
-	// NextLink - The URL to get the next set of SAS definitions.
+	// NextLink - The URL to get the next set of SAS defintions.
 	NextLink *string `json:"nextLink,omitempty"`
 }
 
@@ -2844,11 +2764,6 @@ func (iter SasDefinitionListResultIterator) Value() SasDefinitionItem {
 		return SasDefinitionItem{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the SasDefinitionListResultIterator type.
-func NewSasDefinitionListResultIterator(page SasDefinitionListResultPage) SasDefinitionListResultIterator {
-	return SasDefinitionListResultIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -2918,11 +2833,6 @@ func (page SasDefinitionListResultPage) Values() []SasDefinitionItem {
 		return nil
 	}
 	return *page.sdlr.Value
-}
-
-// Creates a new instance of the SasDefinitionListResultPage type.
-func NewSasDefinitionListResultPage(getNextPage func(context.Context, SasDefinitionListResult) (SasDefinitionListResult, error)) SasDefinitionListResultPage {
-	return SasDefinitionListResultPage{fn: getNextPage}
 }
 
 // SasDefinitionUpdateParameters the SAS definition update parameters.
@@ -3124,11 +3034,6 @@ func (iter SecretListResultIterator) Value() SecretItem {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the SecretListResultIterator type.
-func NewSecretListResultIterator(page SecretListResultPage) SecretListResultIterator {
-	return SecretListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (slr SecretListResult) IsEmpty() bool {
 	return slr.Value == nil || len(*slr.Value) == 0
@@ -3196,11 +3101,6 @@ func (page SecretListResultPage) Values() []SecretItem {
 		return nil
 	}
 	return *page.slr.Value
-}
-
-// Creates a new instance of the SecretListResultPage type.
-func NewSecretListResultPage(getNextPage func(context.Context, SecretListResult) (SecretListResult, error)) SecretListResultPage {
-	return SecretListResultPage{fn: getNextPage}
 }
 
 // SecretProperties properties of the key backing a certificate.
@@ -3507,11 +3407,6 @@ func (iter StorageListResultIterator) Value() StorageAccountItem {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the StorageListResultIterator type.
-func NewStorageListResultIterator(page StorageListResultPage) StorageListResultIterator {
-	return StorageListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (slr StorageListResult) IsEmpty() bool {
 	return slr.Value == nil || len(*slr.Value) == 0
@@ -3581,11 +3476,6 @@ func (page StorageListResultPage) Values() []StorageAccountItem {
 	return *page.slr.Value
 }
 
-// Creates a new instance of the StorageListResultPage type.
-func NewStorageListResultPage(getNextPage func(context.Context, StorageListResult) (StorageListResult, error)) StorageListResultPage {
-	return StorageListResultPage{fn: getNextPage}
-}
-
 // StorageRestoreParameters the secret restore parameters.
 type StorageRestoreParameters struct {
 	// StorageBundleBackup - The backup blob associated with a storage account. (a URL-encoded base64 string)
@@ -3620,6 +3510,6 @@ type X509CertificateProperties struct {
 	SubjectAlternativeNames *SubjectAlternativeNames `json:"sans,omitempty"`
 	// KeyUsage - List of key usages.
 	KeyUsage *[]KeyUsageType `json:"key_usage,omitempty"`
-	// ValidityInMonths - The duration that the certificate is valid in months.
+	// ValidityInMonths - The duration that the ceritifcate is valid in months.
 	ValidityInMonths *int32 `json:"validity_months,omitempty"`
 }

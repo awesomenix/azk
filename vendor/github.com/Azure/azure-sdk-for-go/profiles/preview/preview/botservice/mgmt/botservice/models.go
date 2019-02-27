@@ -1,6 +1,6 @@
 // +build go1.9
 
-// Copyright 2019 Microsoft Corporation
+// Copyright 2018 Microsoft Corporation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,16 +19,18 @@
 
 package botservice
 
-import (
-	"context"
+import original "github.com/Azure/azure-sdk-for-go/services/preview/botservice/mgmt/2018-07-12/botservice"
 
-	original "github.com/Azure/azure-sdk-for-go/services/preview/botservice/mgmt/2018-07-12/botservice"
-)
+type BotConnectionClient = original.BotConnectionClient
+type BotsClient = original.BotsClient
+type ChannelsClient = original.ChannelsClient
 
 const (
 	DefaultBaseURI = original.DefaultBaseURI
 )
 
+type BaseClient = original.BaseClient
+type EnterpriseChannelsClient = original.EnterpriseChannelsClient
 type ChannelName = original.ChannelName
 
 const (
@@ -113,21 +115,17 @@ const (
 	Standard SkuTier = original.Standard
 )
 
-type BaseClient = original.BaseClient
-type BasicChannel = original.BasicChannel
 type Bot = original.Bot
 type BotChannel = original.BotChannel
-type BotConnectionClient = original.BotConnectionClient
 type BotProperties = original.BotProperties
 type BotResponseList = original.BotResponseList
 type BotResponseListIterator = original.BotResponseListIterator
 type BotResponseListPage = original.BotResponseListPage
-type BotsClient = original.BotsClient
+type BasicChannel = original.BasicChannel
 type Channel = original.Channel
 type ChannelResponseList = original.ChannelResponseList
 type ChannelResponseListIterator = original.ChannelResponseListIterator
 type ChannelResponseListPage = original.ChannelResponseListPage
-type ChannelsClient = original.ChannelsClient
 type CheckNameAvailabilityRequestBody = original.CheckNameAvailabilityRequestBody
 type CheckNameAvailabilityResponseBody = original.CheckNameAvailabilityResponseBody
 type ConnectionItemName = original.ConnectionItemName
@@ -150,7 +148,6 @@ type EnterpriseChannelProperties = original.EnterpriseChannelProperties
 type EnterpriseChannelResponseList = original.EnterpriseChannelResponseList
 type EnterpriseChannelResponseListIterator = original.EnterpriseChannelResponseListIterator
 type EnterpriseChannelResponseListPage = original.EnterpriseChannelResponseListPage
-type EnterpriseChannelsClient = original.EnterpriseChannelsClient
 type EnterpriseChannelsCreateFuture = original.EnterpriseChannelsCreateFuture
 type EnterpriseChannelsDeleteFuture = original.EnterpriseChannelsDeleteFuture
 type EnterpriseChannelsUpdateFuture = original.EnterpriseChannelsUpdateFuture
@@ -168,7 +165,6 @@ type OperationEntity = original.OperationEntity
 type OperationEntityListResult = original.OperationEntityListResult
 type OperationEntityListResultIterator = original.OperationEntityListResultIterator
 type OperationEntityListResultPage = original.OperationEntityListResultPage
-type OperationsClient = original.OperationsClient
 type Resource = original.Resource
 type ServiceProvider = original.ServiceProvider
 type ServiceProviderParameter = original.ServiceProviderParameter
@@ -186,21 +182,13 @@ type TelegramChannelProperties = original.TelegramChannelProperties
 type WebChatChannel = original.WebChatChannel
 type WebChatChannelProperties = original.WebChatChannelProperties
 type WebChatSite = original.WebChatSite
+type OperationsClient = original.OperationsClient
 
-func New(subscriptionID string) BaseClient {
-	return original.New(subscriptionID)
-}
 func NewBotConnectionClient(subscriptionID string) BotConnectionClient {
 	return original.NewBotConnectionClient(subscriptionID)
 }
 func NewBotConnectionClientWithBaseURI(baseURI string, subscriptionID string) BotConnectionClient {
 	return original.NewBotConnectionClientWithBaseURI(baseURI, subscriptionID)
-}
-func NewBotResponseListIterator(page BotResponseListPage) BotResponseListIterator {
-	return original.NewBotResponseListIterator(page)
-}
-func NewBotResponseListPage(getNextPage func(context.Context, BotResponseList) (BotResponseList, error)) BotResponseListPage {
-	return original.NewBotResponseListPage(getNextPage)
 }
 func NewBotsClient(subscriptionID string) BotsClient {
 	return original.NewBotsClient(subscriptionID)
@@ -208,29 +196,17 @@ func NewBotsClient(subscriptionID string) BotsClient {
 func NewBotsClientWithBaseURI(baseURI string, subscriptionID string) BotsClient {
 	return original.NewBotsClientWithBaseURI(baseURI, subscriptionID)
 }
-func NewChannelResponseListIterator(page ChannelResponseListPage) ChannelResponseListIterator {
-	return original.NewChannelResponseListIterator(page)
-}
-func NewChannelResponseListPage(getNextPage func(context.Context, ChannelResponseList) (ChannelResponseList, error)) ChannelResponseListPage {
-	return original.NewChannelResponseListPage(getNextPage)
-}
 func NewChannelsClient(subscriptionID string) ChannelsClient {
 	return original.NewChannelsClient(subscriptionID)
 }
 func NewChannelsClientWithBaseURI(baseURI string, subscriptionID string) ChannelsClient {
 	return original.NewChannelsClientWithBaseURI(baseURI, subscriptionID)
 }
-func NewConnectionSettingResponseListIterator(page ConnectionSettingResponseListPage) ConnectionSettingResponseListIterator {
-	return original.NewConnectionSettingResponseListIterator(page)
+func New(subscriptionID string) BaseClient {
+	return original.New(subscriptionID)
 }
-func NewConnectionSettingResponseListPage(getNextPage func(context.Context, ConnectionSettingResponseList) (ConnectionSettingResponseList, error)) ConnectionSettingResponseListPage {
-	return original.NewConnectionSettingResponseListPage(getNextPage)
-}
-func NewEnterpriseChannelResponseListIterator(page EnterpriseChannelResponseListPage) EnterpriseChannelResponseListIterator {
-	return original.NewEnterpriseChannelResponseListIterator(page)
-}
-func NewEnterpriseChannelResponseListPage(getNextPage func(context.Context, EnterpriseChannelResponseList) (EnterpriseChannelResponseList, error)) EnterpriseChannelResponseListPage {
-	return original.NewEnterpriseChannelResponseListPage(getNextPage)
+func NewWithBaseURI(baseURI string, subscriptionID string) BaseClient {
+	return original.NewWithBaseURI(baseURI, subscriptionID)
 }
 func NewEnterpriseChannelsClient(subscriptionID string) EnterpriseChannelsClient {
 	return original.NewEnterpriseChannelsClient(subscriptionID)
@@ -238,26 +214,11 @@ func NewEnterpriseChannelsClient(subscriptionID string) EnterpriseChannelsClient
 func NewEnterpriseChannelsClientWithBaseURI(baseURI string, subscriptionID string) EnterpriseChannelsClient {
 	return original.NewEnterpriseChannelsClientWithBaseURI(baseURI, subscriptionID)
 }
-func NewOperationEntityListResultIterator(page OperationEntityListResultPage) OperationEntityListResultIterator {
-	return original.NewOperationEntityListResultIterator(page)
-}
-func NewOperationEntityListResultPage(getNextPage func(context.Context, OperationEntityListResult) (OperationEntityListResult, error)) OperationEntityListResultPage {
-	return original.NewOperationEntityListResultPage(getNextPage)
-}
-func NewOperationsClient(subscriptionID string) OperationsClient {
-	return original.NewOperationsClient(subscriptionID)
-}
-func NewOperationsClientWithBaseURI(baseURI string, subscriptionID string) OperationsClient {
-	return original.NewOperationsClientWithBaseURI(baseURI, subscriptionID)
-}
-func NewWithBaseURI(baseURI string, subscriptionID string) BaseClient {
-	return original.NewWithBaseURI(baseURI, subscriptionID)
+func PossibleChannelNameValues() []ChannelName {
+	return original.PossibleChannelNameValues()
 }
 func PossibleChannelNameBasicChannelValues() []ChannelNameBasicChannel {
 	return original.PossibleChannelNameBasicChannelValues()
-}
-func PossibleChannelNameValues() []ChannelName {
-	return original.PossibleChannelNameValues()
 }
 func PossibleEnterpriseChannelNodeStateValues() []EnterpriseChannelNodeState {
 	return original.PossibleEnterpriseChannelNodeStateValues()
@@ -273,6 +234,12 @@ func PossibleSkuNameValues() []SkuName {
 }
 func PossibleSkuTierValues() []SkuTier {
 	return original.PossibleSkuTierValues()
+}
+func NewOperationsClient(subscriptionID string) OperationsClient {
+	return original.NewOperationsClient(subscriptionID)
+}
+func NewOperationsClientWithBaseURI(baseURI string, subscriptionID string) OperationsClient {
+	return original.NewOperationsClientWithBaseURI(baseURI, subscriptionID)
 }
 func UserAgent() string {
 	return original.UserAgent() + " profiles/preview"

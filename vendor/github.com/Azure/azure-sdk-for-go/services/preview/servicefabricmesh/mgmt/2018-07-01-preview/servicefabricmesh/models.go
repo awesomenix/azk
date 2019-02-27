@@ -358,11 +358,6 @@ func (iter ApplicationResourceDescriptionListIterator) Value() ApplicationResour
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ApplicationResourceDescriptionListIterator type.
-func NewApplicationResourceDescriptionListIterator(page ApplicationResourceDescriptionListPage) ApplicationResourceDescriptionListIterator {
-	return ApplicationResourceDescriptionListIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (ardl ApplicationResourceDescriptionList) IsEmpty() bool {
 	return ardl.Value == nil || len(*ardl.Value) == 0
@@ -430,11 +425,6 @@ func (page ApplicationResourceDescriptionListPage) Values() []ApplicationResourc
 		return nil
 	}
 	return *page.ardl.Value
-}
-
-// Creates a new instance of the ApplicationResourceDescriptionListPage type.
-func NewApplicationResourceDescriptionListPage(getNextPage func(context.Context, ApplicationResourceDescriptionList) (ApplicationResourceDescriptionList, error)) ApplicationResourceDescriptionListPage {
-	return ApplicationResourceDescriptionListPage{fn: getNextPage}
 }
 
 // ApplicationResourceProperties this type describes properties of an application resource.
@@ -1043,11 +1033,6 @@ func (iter NetworkResourceDescriptionListIterator) Value() NetworkResourceDescri
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the NetworkResourceDescriptionListIterator type.
-func NewNetworkResourceDescriptionListIterator(page NetworkResourceDescriptionListPage) NetworkResourceDescriptionListIterator {
-	return NetworkResourceDescriptionListIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (nrdl NetworkResourceDescriptionList) IsEmpty() bool {
 	return nrdl.Value == nil || len(*nrdl.Value) == 0
@@ -1115,11 +1100,6 @@ func (page NetworkResourceDescriptionListPage) Values() []NetworkResourceDescrip
 		return nil
 	}
 	return *page.nrdl.Value
-}
-
-// Creates a new instance of the NetworkResourceDescriptionListPage type.
-func NewNetworkResourceDescriptionListPage(getNextPage func(context.Context, NetworkResourceDescriptionList) (NetworkResourceDescriptionList, error)) NetworkResourceDescriptionListPage {
-	return NetworkResourceDescriptionListPage{fn: getNextPage}
 }
 
 // NetworkResourceProperties describes properties of a network resource.
@@ -1201,11 +1181,6 @@ func (iter OperationListResultIterator) Value() OperationResult {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the OperationListResultIterator type.
-func NewOperationListResultIterator(page OperationListResultPage) OperationListResultIterator {
-	return OperationListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (olr OperationListResult) IsEmpty() bool {
 	return olr.Value == nil || len(*olr.Value) == 0
@@ -1273,11 +1248,6 @@ func (page OperationListResultPage) Values() []OperationResult {
 		return nil
 	}
 	return *page.olr.Value
-}
-
-// Creates a new instance of the OperationListResultPage type.
-func NewOperationListResultPage(getNextPage func(context.Context, OperationListResult) (OperationListResult, error)) OperationListResultPage {
-	return OperationListResultPage{fn: getNextPage}
 }
 
 // OperationResult list of operations available at the listed Azure resource provider.
@@ -1418,11 +1388,6 @@ func (iter ServiceListIterator) Value() ServiceResourceDescription {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ServiceListIterator type.
-func NewServiceListIterator(page ServiceListPage) ServiceListIterator {
-	return ServiceListIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (sl ServiceList) IsEmpty() bool {
 	return sl.Value == nil || len(*sl.Value) == 0
@@ -1490,11 +1455,6 @@ func (page ServiceListPage) Values() []ServiceResourceDescription {
 		return nil
 	}
 	return *page.sl.Value
-}
-
-// Creates a new instance of the ServiceListPage type.
-func NewServiceListPage(getNextPage func(context.Context, ServiceList) (ServiceList, error)) ServiceListPage {
-	return ServiceListPage{fn: getNextPage}
 }
 
 // ServiceReplicaDescription this type describes a replica of a service resource.
@@ -1580,11 +1540,6 @@ func (iter ServiceReplicaListIterator) Value() ServiceReplicaDescription {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ServiceReplicaListIterator type.
-func NewServiceReplicaListIterator(page ServiceReplicaListPage) ServiceReplicaListIterator {
-	return ServiceReplicaListIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (srl ServiceReplicaList) IsEmpty() bool {
 	return srl.Value == nil || len(*srl.Value) == 0
@@ -1652,11 +1607,6 @@ func (page ServiceReplicaListPage) Values() []ServiceReplicaDescription {
 		return nil
 	}
 	return *page.srl.Value
-}
-
-// Creates a new instance of the ServiceReplicaListPage type.
-func NewServiceReplicaListPage(getNextPage func(context.Context, ServiceReplicaList) (ServiceReplicaList, error)) ServiceReplicaListPage {
-	return ServiceReplicaListPage{fn: getNextPage}
 }
 
 // ServiceReplicaProperties describes the properties of a service replica.
@@ -2016,11 +1966,6 @@ func (iter VolumeResourceDescriptionListIterator) Value() VolumeResourceDescript
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the VolumeResourceDescriptionListIterator type.
-func NewVolumeResourceDescriptionListIterator(page VolumeResourceDescriptionListPage) VolumeResourceDescriptionListIterator {
-	return VolumeResourceDescriptionListIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (vrdl VolumeResourceDescriptionList) IsEmpty() bool {
 	return vrdl.Value == nil || len(*vrdl.Value) == 0
@@ -2088,11 +2033,6 @@ func (page VolumeResourceDescriptionListPage) Values() []VolumeResourceDescripti
 		return nil
 	}
 	return *page.vrdl.Value
-}
-
-// Creates a new instance of the VolumeResourceDescriptionListPage type.
-func NewVolumeResourceDescriptionListPage(getNextPage func(context.Context, VolumeResourceDescriptionList) (VolumeResourceDescriptionList, error)) VolumeResourceDescriptionListPage {
-	return VolumeResourceDescriptionListPage{fn: getNextPage}
 }
 
 // VolumeResourceProperties describes properties of a volume resource.

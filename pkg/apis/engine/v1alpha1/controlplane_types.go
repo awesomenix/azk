@@ -6,10 +6,13 @@ import (
 
 // ControlPlaneSpec defines the desired state of ControlPlane
 type ControlPlaneSpec struct {
+	KubernetesVersion string `json:"kubernetesVersion,omitempty"`
 }
 
 // ControlPlaneStatus defines the observed state of ControlPlane
 type ControlPlaneStatus struct {
+	KubernetesVersion string `json:"kubernetesVersion,omitempty"`
+	ProvisioningState string `json:"provisioningState,omitempty"`
 }
 
 // +genclient

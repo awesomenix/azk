@@ -649,11 +649,6 @@ func (iter ComputePolicyListResultIterator) Value() ComputePolicy {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ComputePolicyListResultIterator type.
-func NewComputePolicyListResultIterator(page ComputePolicyListResultPage) ComputePolicyListResultIterator {
-	return ComputePolicyListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (cplr ComputePolicyListResult) IsEmpty() bool {
 	return cplr.Value == nil || len(*cplr.Value) == 0
@@ -721,11 +716,6 @@ func (page ComputePolicyListResultPage) Values() []ComputePolicy {
 		return nil
 	}
 	return *page.cplr.Value
-}
-
-// Creates a new instance of the ComputePolicyListResultPage type.
-func NewComputePolicyListResultPage(getNextPage func(context.Context, ComputePolicyListResult) (ComputePolicyListResult, error)) ComputePolicyListResultPage {
-	return ComputePolicyListResultPage{fn: getNextPage}
 }
 
 // ComputePolicyProperties the compute policy properties.
@@ -1335,11 +1325,6 @@ func (iter DataLakeAnalyticsAccountListResultIterator) Value() DataLakeAnalytics
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the DataLakeAnalyticsAccountListResultIterator type.
-func NewDataLakeAnalyticsAccountListResultIterator(page DataLakeAnalyticsAccountListResultPage) DataLakeAnalyticsAccountListResultIterator {
-	return DataLakeAnalyticsAccountListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (dlaalr DataLakeAnalyticsAccountListResult) IsEmpty() bool {
 	return dlaalr.Value == nil || len(*dlaalr.Value) == 0
@@ -1407,11 +1392,6 @@ func (page DataLakeAnalyticsAccountListResultPage) Values() []DataLakeAnalyticsA
 		return nil
 	}
 	return *page.dlaalr.Value
-}
-
-// Creates a new instance of the DataLakeAnalyticsAccountListResultPage type.
-func NewDataLakeAnalyticsAccountListResultPage(getNextPage func(context.Context, DataLakeAnalyticsAccountListResult) (DataLakeAnalyticsAccountListResult, error)) DataLakeAnalyticsAccountListResultPage {
-	return DataLakeAnalyticsAccountListResultPage{fn: getNextPage}
 }
 
 // DataLakeAnalyticsAccountProperties the account specific properties that are associated with an
@@ -1630,11 +1610,6 @@ func (iter DataLakeStoreAccountInformationListResultIterator) Value() DataLakeSt
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the DataLakeStoreAccountInformationListResultIterator type.
-func NewDataLakeStoreAccountInformationListResultIterator(page DataLakeStoreAccountInformationListResultPage) DataLakeStoreAccountInformationListResultIterator {
-	return DataLakeStoreAccountInformationListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (dlsailr DataLakeStoreAccountInformationListResult) IsEmpty() bool {
 	return dlsailr.Value == nil || len(*dlsailr.Value) == 0
@@ -1702,11 +1677,6 @@ func (page DataLakeStoreAccountInformationListResultPage) Values() []DataLakeSto
 		return nil
 	}
 	return *page.dlsailr.Value
-}
-
-// Creates a new instance of the DataLakeStoreAccountInformationListResultPage type.
-func NewDataLakeStoreAccountInformationListResultPage(getNextPage func(context.Context, DataLakeStoreAccountInformationListResult) (DataLakeStoreAccountInformationListResult, error)) DataLakeStoreAccountInformationListResultPage {
-	return DataLakeStoreAccountInformationListResultPage{fn: getNextPage}
 }
 
 // DataLakeStoreAccountInformationProperties the Data Lake Store account properties.
@@ -1864,11 +1834,6 @@ func (iter FirewallRuleListResultIterator) Value() FirewallRule {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the FirewallRuleListResultIterator type.
-func NewFirewallRuleListResultIterator(page FirewallRuleListResultPage) FirewallRuleListResultIterator {
-	return FirewallRuleListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (frlr FirewallRuleListResult) IsEmpty() bool {
 	return frlr.Value == nil || len(*frlr.Value) == 0
@@ -1936,11 +1901,6 @@ func (page FirewallRuleListResultPage) Values() []FirewallRule {
 		return nil
 	}
 	return *page.frlr.Value
-}
-
-// Creates a new instance of the FirewallRuleListResultPage type.
-func NewFirewallRuleListResultPage(getNextPage func(context.Context, FirewallRuleListResult) (FirewallRuleListResult, error)) FirewallRuleListResultPage {
-	return FirewallRuleListResultPage{fn: getNextPage}
 }
 
 // FirewallRuleProperties the firewall rule properties.
@@ -2103,11 +2063,6 @@ func (iter SasTokenInformationListResultIterator) Value() SasTokenInformation {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the SasTokenInformationListResultIterator type.
-func NewSasTokenInformationListResultIterator(page SasTokenInformationListResultPage) SasTokenInformationListResultIterator {
-	return SasTokenInformationListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (stilr SasTokenInformationListResult) IsEmpty() bool {
 	return stilr.Value == nil || len(*stilr.Value) == 0
@@ -2175,11 +2130,6 @@ func (page SasTokenInformationListResultPage) Values() []SasTokenInformation {
 		return nil
 	}
 	return *page.stilr.Value
-}
-
-// Creates a new instance of the SasTokenInformationListResultPage type.
-func NewSasTokenInformationListResultPage(getNextPage func(context.Context, SasTokenInformationListResult) (SasTokenInformationListResult, error)) SasTokenInformationListResultPage {
-	return SasTokenInformationListResultPage{fn: getNextPage}
 }
 
 // StorageAccountInformation azure Storage account information.
@@ -2332,11 +2282,6 @@ func (iter StorageAccountInformationListResultIterator) Value() StorageAccountIn
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the StorageAccountInformationListResultIterator type.
-func NewStorageAccountInformationListResultIterator(page StorageAccountInformationListResultPage) StorageAccountInformationListResultIterator {
-	return StorageAccountInformationListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (sailr StorageAccountInformationListResult) IsEmpty() bool {
 	return sailr.Value == nil || len(*sailr.Value) == 0
@@ -2404,11 +2349,6 @@ func (page StorageAccountInformationListResultPage) Values() []StorageAccountInf
 		return nil
 	}
 	return *page.sailr.Value
-}
-
-// Creates a new instance of the StorageAccountInformationListResultPage type.
-func NewStorageAccountInformationListResultPage(getNextPage func(context.Context, StorageAccountInformationListResult) (StorageAccountInformationListResult, error)) StorageAccountInformationListResultPage {
-	return StorageAccountInformationListResultPage{fn: getNextPage}
 }
 
 // StorageAccountInformationProperties the Azure Storage account properties.
@@ -2567,11 +2507,6 @@ func (iter StorageContainerListResultIterator) Value() StorageContainer {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the StorageContainerListResultIterator type.
-func NewStorageContainerListResultIterator(page StorageContainerListResultPage) StorageContainerListResultIterator {
-	return StorageContainerListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (sclr StorageContainerListResult) IsEmpty() bool {
 	return sclr.Value == nil || len(*sclr.Value) == 0
@@ -2639,11 +2574,6 @@ func (page StorageContainerListResultPage) Values() []StorageContainer {
 		return nil
 	}
 	return *page.sclr.Value
-}
-
-// Creates a new instance of the StorageContainerListResultPage type.
-func NewStorageContainerListResultPage(getNextPage func(context.Context, StorageContainerListResult) (StorageContainerListResult, error)) StorageContainerListResultPage {
-	return StorageContainerListResultPage{fn: getNextPage}
 }
 
 // StorageContainerProperties azure Storage blob container properties information.

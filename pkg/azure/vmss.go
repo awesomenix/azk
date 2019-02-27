@@ -13,37 +13,24 @@ import (
 	"github.com/awesomenix/azkube/pkg/helpers"
 )
 
-func getEncodedStartupScript() string {
-	startupScript := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf(`
-sudo apt-get update && sudo apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-sudo apt-get install -y docker-ce=18.06.0~ce~3-0~ubuntu containerd.io
-curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-cat <<EOF >/tmp/kubernetes.list
-deb https://apt.kubernetes.io/ kubernetes-xenial main
-EOF
-sudo mv /tmp/kubernetes.list /etc/apt/sources.list.d/kubernetes.list
-sudo apt-get update && sudo apt-get install -y kubelet kubeadm kubectl
-sudo apt-mark hold kubelet kubeadm kubectl
-#Setup using kubeadm
-sudo kubeadm config images pull
-TOKEN=$(kubeadm token generate)
-#flannel
-#sudo sysctl net.bridge.bridge-nf-call-iptables=1
-#sudo kubeadm init --token $TOKEN --token-ttl 2h --pod-network-cider=10.244.0.0/16 --ignore-preflight-errors all
-#calico
-sudo kubeadm init --token $TOKEN --token-ttl 2h --pod-network-cidr=192.168.0.0/16 --ignore-preflight-errors all
-mkdir -p $HOME/.kube
-sudo cp -f /etc/kubernetes/admin.conf $HOME/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
-#calico
-kubectl apply -f https://docs.projectcalico.org/v3.5/getting-started/kubernetes/installation/hosted/etcd.yaml
-kubectl apply -f https://docs.projectcalico.org/v3.5/getting-started/kubernetes/installation/hosted/calico.yaml
-#flannel
-#kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
-`)))
-	return startupScript
+func GetCustomData(customData map[string]string) string {
+	customDataStr := fmt.Sprintf(`
+#cloud-config
+write_files:
+`)
+	for customDataKey, customDataValue := range customData {
+		customDataStr += fmt.Sprintf(`
+- path: %s
+  permissions: "0644"
+  encoding: base64
+  owner: root
+  content: |
+    %s
+`,
+			customDataKey,
+			base64.StdEncoding.EncodeToString([]byte(customDataValue)))
+	}
+	return base64.StdEncoding.EncodeToString([]byte(customDataStr))
 }
 
 func (c *CloudConfiguration) GetVMSSExtensionsClient() (compute.VirtualMachineScaleSetExtensionsClient, error) {
@@ -84,16 +71,16 @@ func (c *CloudConfiguration) GetVMSSVMsClient() (compute.VirtualMachineScaleSetV
 func (c *CloudConfiguration) CreateVMSS(ctx context.Context,
 	vmssName,
 	vnetName,
-	groupName,
-	groupLocation,
-	subnetName string) error {
+	subnetName,
+	startupScript,
+	customData string) error {
 
 	subnetClient, err := c.GetSubnetsClient()
 	if err != nil {
 		return err
 	}
 
-	subnet, err := subnetClient.Get(ctx, groupName, vnetName, subnetName, "")
+	subnet, err := subnetClient.Get(ctx, c.GroupName, vnetName, subnetName, "")
 	if err != nil {
 		return err
 	}
@@ -114,10 +101,10 @@ func (c *CloudConfiguration) CreateVMSS(ctx context.Context,
 
 	future, err := vmssClient.CreateOrUpdate(
 		ctx,
-		groupName,
+		c.GroupName,
 		vmssName,
 		compute.VirtualMachineScaleSet{
-			Location: to.StringPtr(groupLocation),
+			Location: to.StringPtr(c.GroupLocation),
 			Sku: &compute.Sku{
 				Name:     to.StringPtr(string("Standard_B2ms")),
 				Capacity: to.Int64Ptr(1),
@@ -133,11 +120,12 @@ func (c *CloudConfiguration) CreateVMSS(ctx context.Context,
 						ComputerNamePrefix: to.StringPtr(vmssName),
 						AdminUsername:      to.StringPtr("azureuser"),
 						AdminPassword:      to.StringPtr(helpers.GenerateRandomHexString(32)),
+						CustomData:         to.StringPtr(customData),
 						LinuxConfiguration: &compute.LinuxConfiguration{
 							SSH: &compute.SSHConfiguration{
 								PublicKeys: &[]compute.SSHPublicKey{
 									{
-										Path:    to.StringPtr("/Users/nishp/.ssh/authorized_keys"),
+										Path:    to.StringPtr("/home/azureuser/.ssh/authorized_keys"),
 										KeyData: to.StringPtr(sshKeyData),
 									},
 								},
@@ -148,7 +136,7 @@ func (c *CloudConfiguration) CreateVMSS(ctx context.Context,
 						ImageReference: &compute.ImageReference{
 							Offer:     to.StringPtr("UbuntuServer"),
 							Publisher: to.StringPtr("Canonical"),
-							Sku:       to.StringPtr("16.04-LTS"),
+							Sku:       to.StringPtr("18.04-LTS"),
 							Version:   to.StringPtr("latest"),
 						},
 					},
@@ -189,7 +177,7 @@ func (c *CloudConfiguration) CreateVMSS(ctx context.Context,
 									AutoUpgradeMinorVersion: to.BoolPtr(true),
 									Settings:                map[string]bool{"skipDos2Unix": true},
 									Publisher:               to.StringPtr("Microsoft.Azure.Extensions"),
-									ProtectedSettings:       map[string]string{"script": getEncodedStartupScript()},
+									ProtectedSettings:       map[string]string{"script": startupScript},
 								},
 							},
 						},
@@ -212,12 +200,12 @@ func (c *CloudConfiguration) CreateVMSS(ctx context.Context,
 }
 
 // GetVMSS gets the specified VMSS info
-func (c *CloudConfiguration) GetVMSS(ctx context.Context, groupName, vmssName string) (compute.VirtualMachineScaleSet, error) {
+func (c *CloudConfiguration) GetVMSS(ctx context.Context, vmssName string) (compute.VirtualMachineScaleSet, error) {
 	vmssClient, err := c.GetVMSSClient()
 	if err != nil {
 		return compute.VirtualMachineScaleSet{}, err
 	}
-	return vmssClient.Get(ctx, groupName, vmssName)
+	return vmssClient.Get(ctx, c.GroupName, vmssName)
 }
 
 // UpdateVMSS modifies the VMSS resource by getting it, updating it locally, and
@@ -248,54 +236,57 @@ func (c *CloudConfiguration) GetVMSS(ctx context.Context, groupName, vmssName st
 // 	return future.Result(vmssClient)
 // }
 
-// // DeallocateVMSS deallocates the selected VMSS
-// func (c *CloudConfiguration) ScaleVMSS(ctx context.Context, vmssName string, count int) (vmss compute.VirtualMachineScaleSet, err error) {
-// 	vmssClient := getVMSSClient()
+func (c *CloudConfiguration) ScaleVMSS(ctx context.Context, vmssName string, count int) error {
+	vmssClient, err := c.GetVMSSClient()
+	if err != nil {
+		return err
+	}
 
-// 	vmss, err = vmssClient.Get(ctx, groupName, vmssName)
-// 	if err != nil {
-// 		return vmss, fmt.Errorf("cannot update vmss: %v", err)
-// 	}
+	vmss, err := vmssClient.Get(ctx, c.GroupName, vmssName)
+	if err != nil {
+		return fmt.Errorf("cannot update vmss: %v", err)
+	}
 
-// 	if *vmss.Sku.Capacity == int64(count) {
-// 		log.Printf("No update required")
-// 		return vmss, nil
-// 	}
+	if *vmss.Sku.Capacity == int64(count) {
+		return nil
+	}
 
-// 	// passing nil instance ids will deallocate all VMs in the VMSS
-// 	future, err := vmssClient.Update(ctx, groupName, vmssName, compute.VirtualMachineScaleSetUpdate{
-// 		Sku: &compute.Sku{
-// 			Capacity: to.Int64Ptr(int64(count)),
-// 		},
-// 	})
-// 	if err != nil {
-// 		return vmss, fmt.Errorf("cannot update vmss: %v", err)
-// 	}
+	// passing nil instance ids will deallocate all VMs in the VMSS
+	future, err := vmssClient.Update(ctx, c.GroupName, vmssName, compute.VirtualMachineScaleSetUpdate{
+		Sku: &compute.Sku{
+			Capacity: to.Int64Ptr(int64(count)),
+		},
+	})
+	if err != nil {
+		return fmt.Errorf("cannot update vmss: %v", err)
+	}
 
-// 	err = future.WaitForCompletionRef(ctx, vmssClient.Client)
-// 	if err != nil {
-// 		return vmss, fmt.Errorf("cannot get the vmss update future response: %v", err)
-// 	}
+	err = future.WaitForCompletionRef(ctx, vmssClient.Client)
+	if err != nil {
+		return fmt.Errorf("cannot get the vmss update future response: %v", err)
+	}
 
-// 	return future.Result(vmssClient)
-// }
+	_, err = future.Result(vmssClient)
+	return err
+}
 
-// // DeallocateVMSS deallocates the selected VMSS
-// func (c *CloudConfiguration) DeleteVMSS(ctx context.Context, vmssName string) (osr autorest.Response, err error) {
-// 	vmssClient := getVMSSClient()
-// 	// passing nil instance ids will deallocate all VMs in the VMSS
-// 	future, err := vmssClient.Delete(ctx, groupName, vmssName)
-// 	if err != nil {
-// 		return osr, fmt.Errorf("cannot deallocate vmss: %v", err)
-// 	}
+// DeleteVMSS deallocates the selected VMSS
+func (c *CloudConfiguration) DeleteVMSS(ctx context.Context, vmssName string) error {
+	vmssClient, err := c.GetVMSSClient()
+	// passing nil instance ids will deallocate all VMs in the VMSS
+	future, err := vmssClient.Delete(ctx, c.GroupName, vmssName)
+	if err != nil {
+		return fmt.Errorf("cannot delete vmss: %v", err)
+	}
 
-// 	err = future.WaitForCompletionRef(ctx, vmssClient.Client)
-// 	if err != nil {
-// 		return osr, fmt.Errorf("cannot get the vmss deallocate future response: %v", err)
-// 	}
+	err = future.WaitForCompletionRef(ctx, vmssClient.Client)
+	if err != nil {
+		return fmt.Errorf("cannot get the vmss deallocate future response: %v", err)
+	}
 
-// 	return future.Result(vmssClient)
-// }
+	_, err = future.Result(vmssClient)
+	return err
+}
 
 // StartVMSS starts the selected VMSS
 // func (c *CloudConfiguration) StartVMSS(ctx context.Context, vmssName string) (osr autorest.Response, err error) {

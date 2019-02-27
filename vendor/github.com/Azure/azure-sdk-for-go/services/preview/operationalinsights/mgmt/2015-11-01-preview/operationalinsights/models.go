@@ -239,11 +239,6 @@ func (iter DataSourceListResultIterator) Value() DataSource {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the DataSourceListResultIterator type.
-func NewDataSourceListResultIterator(page DataSourceListResultPage) DataSourceListResultIterator {
-	return DataSourceListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (dslr DataSourceListResult) IsEmpty() bool {
 	return dslr.Value == nil || len(*dslr.Value) == 0
@@ -311,11 +306,6 @@ func (page DataSourceListResultPage) Values() []DataSource {
 		return nil
 	}
 	return *page.dslr.Value
-}
-
-// Creates a new instance of the DataSourceListResultPage type.
-func NewDataSourceListResultPage(getNextPage func(context.Context, DataSourceListResult) (DataSourceListResult, error)) DataSourceListResultPage {
-	return DataSourceListResultPage{fn: getNextPage}
 }
 
 // IntelligencePack intelligence Pack containing a string name and boolean indicating if it's enabled.
@@ -595,11 +585,6 @@ func (iter OperationListResultIterator) Value() Operation {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the OperationListResultIterator type.
-func NewOperationListResultIterator(page OperationListResultPage) OperationListResultIterator {
-	return OperationListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (olr OperationListResult) IsEmpty() bool {
 	return olr.Value == nil || len(*olr.Value) == 0
@@ -667,11 +652,6 @@ func (page OperationListResultPage) Values() []Operation {
 		return nil
 	}
 	return *page.olr.Value
-}
-
-// Creates a new instance of the OperationListResultPage type.
-func NewOperationListResultPage(getNextPage func(context.Context, OperationListResult) (OperationListResult, error)) OperationListResultPage {
-	return OperationListResultPage{fn: getNextPage}
 }
 
 // ProxyResource common properties of proxy resource.
@@ -894,7 +874,7 @@ func (w *Workspace) UnmarshalJSON(body []byte) error {
 	return nil
 }
 
-// WorkspaceListManagementGroupsResult the list workspace management groups operation response.
+// WorkspaceListManagementGroupsResult the list workspace managmement groups operation response.
 type WorkspaceListManagementGroupsResult struct {
 	autorest.Response `json:"-"`
 	// Value - Gets or sets a list of management groups attached to the workspace.

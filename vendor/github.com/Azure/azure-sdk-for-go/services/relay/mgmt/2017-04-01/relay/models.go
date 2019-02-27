@@ -301,11 +301,6 @@ func (iter AuthorizationRuleListResultIterator) Value() AuthorizationRule {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the AuthorizationRuleListResultIterator type.
-func NewAuthorizationRuleListResultIterator(page AuthorizationRuleListResultPage) AuthorizationRuleListResultIterator {
-	return AuthorizationRuleListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (arlr AuthorizationRuleListResult) IsEmpty() bool {
 	return arlr.Value == nil || len(*arlr.Value) == 0
@@ -373,11 +368,6 @@ func (page AuthorizationRuleListResultPage) Values() []AuthorizationRule {
 		return nil
 	}
 	return *page.arlr.Value
-}
-
-// Creates a new instance of the AuthorizationRuleListResultPage type.
-func NewAuthorizationRuleListResultPage(getNextPage func(context.Context, AuthorizationRuleListResult) (AuthorizationRuleListResult, error)) AuthorizationRuleListResultPage {
-	return AuthorizationRuleListResultPage{fn: getNextPage}
 }
 
 // AuthorizationRuleProperties authorization rule properties.
@@ -561,11 +551,6 @@ func (iter HybridConnectionListResultIterator) Value() HybridConnection {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the HybridConnectionListResultIterator type.
-func NewHybridConnectionListResultIterator(page HybridConnectionListResultPage) HybridConnectionListResultIterator {
-	return HybridConnectionListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (hclr HybridConnectionListResult) IsEmpty() bool {
 	return hclr.Value == nil || len(*hclr.Value) == 0
@@ -633,11 +618,6 @@ func (page HybridConnectionListResultPage) Values() []HybridConnection {
 		return nil
 	}
 	return *page.hclr.Value
-}
-
-// Creates a new instance of the HybridConnectionListResultPage type.
-func NewHybridConnectionListResultPage(getNextPage func(context.Context, HybridConnectionListResult) (HybridConnectionListResult, error)) HybridConnectionListResultPage {
-	return HybridConnectionListResultPage{fn: getNextPage}
 }
 
 // HybridConnectionProperties properties of the HybridConnection.
@@ -845,11 +825,6 @@ func (iter NamespaceListResultIterator) Value() Namespace {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the NamespaceListResultIterator type.
-func NewNamespaceListResultIterator(page NamespaceListResultPage) NamespaceListResultIterator {
-	return NamespaceListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (nlr NamespaceListResult) IsEmpty() bool {
 	return nlr.Value == nil || len(*nlr.Value) == 0
@@ -917,11 +892,6 @@ func (page NamespaceListResultPage) Values() []Namespace {
 		return nil
 	}
 	return *page.nlr.Value
-}
-
-// Creates a new instance of the NamespaceListResultPage type.
-func NewNamespaceListResultPage(getNextPage func(context.Context, NamespaceListResult) (NamespaceListResult, error)) NamespaceListResultPage {
-	return NamespaceListResultPage{fn: getNextPage}
 }
 
 // NamespaceProperties properties of the namespace.
@@ -1076,11 +1046,6 @@ func (iter OperationListResultIterator) Value() Operation {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the OperationListResultIterator type.
-func NewOperationListResultIterator(page OperationListResultPage) OperationListResultIterator {
-	return OperationListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (olr OperationListResult) IsEmpty() bool {
 	return olr.Value == nil || len(*olr.Value) == 0
@@ -1148,11 +1113,6 @@ func (page OperationListResultPage) Values() []Operation {
 		return nil
 	}
 	return *page.olr.Value
-}
-
-// Creates a new instance of the OperationListResultPage type.
-func NewOperationListResultPage(getNextPage func(context.Context, OperationListResult) (OperationListResult, error)) OperationListResultPage {
-	return OperationListResultPage{fn: getNextPage}
 }
 
 // RegenerateAccessKeyParameters parameters supplied to the regenerate authorization rule operation,
@@ -1525,11 +1485,6 @@ func (iter WcfRelaysListResultIterator) Value() WcfRelay {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the WcfRelaysListResultIterator type.
-func NewWcfRelaysListResultIterator(page WcfRelaysListResultPage) WcfRelaysListResultIterator {
-	return WcfRelaysListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (wrlr WcfRelaysListResult) IsEmpty() bool {
 	return wrlr.Value == nil || len(*wrlr.Value) == 0
@@ -1597,9 +1552,4 @@ func (page WcfRelaysListResultPage) Values() []WcfRelay {
 		return nil
 	}
 	return *page.wrlr.Value
-}
-
-// Creates a new instance of the WcfRelaysListResultPage type.
-func NewWcfRelaysListResultPage(getNextPage func(context.Context, WcfRelaysListResult) (WcfRelaysListResult, error)) WcfRelaysListResultPage {
-	return WcfRelaysListResultPage{fn: getNextPage}
 }

@@ -35,7 +35,12 @@ type EntitiesClient struct {
 
 // NewEntitiesClient creates an instance of the EntitiesClient client.
 func NewEntitiesClient() EntitiesClient {
-	return EntitiesClient{New()}
+	return NewEntitiesClientWithBaseURI(DefaultBaseURI)
+}
+
+// NewEntitiesClientWithBaseURI creates an instance of the EntitiesClient client.
+func NewEntitiesClientWithBaseURI(baseURI string) EntitiesClient {
+	return EntitiesClient{NewWithBaseURI(baseURI)}
 }
 
 // Search sends the search request.
@@ -174,10 +179,6 @@ func (client EntitiesClient) Search(ctx context.Context, query string, acceptLan
 
 // SearchPreparer prepares the Search request.
 func (client EntitiesClient) SearchPreparer(ctx context.Context, query string, acceptLanguage string, pragma string, userAgent string, clientID string, clientIP string, location string, countryCode string, market string, responseFilter []AnswerType, responseFormat []ResponseFormat, safeSearch SafeSearch, setLang string) (*http.Request, error) {
-	urlParameters := map[string]interface{}{
-		"Endpoint": client.Endpoint,
-	}
-
 	queryParameters := map[string]interface{}{
 		"q": autorest.Encode("query", query),
 	}
@@ -204,7 +205,7 @@ func (client EntitiesClient) SearchPreparer(ctx context.Context, query string, a
 
 	preparer := autorest.CreatePreparer(
 		autorest.AsGet(),
-		autorest.WithCustomBaseURL("{Endpoint}/bing/v7.0", urlParameters),
+		autorest.WithBaseURL(client.BaseURI),
 		autorest.WithPath("/entities"),
 		autorest.WithQueryParameters(queryParameters),
 		autorest.WithHeader("X-BingApis-SDK", "true"))

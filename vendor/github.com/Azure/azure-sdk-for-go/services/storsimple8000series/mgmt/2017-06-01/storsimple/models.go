@@ -1169,7 +1169,7 @@ type AlertErrorDetails struct {
 	ErrorCode *string `json:"errorCode,omitempty"`
 	// ErrorMessage - The error message
 	ErrorMessage *string `json:"errorMessage,omitempty"`
-	// Occurences - The number of occurrences
+	// Occurences - The number of occurences
 	Occurences *int32 `json:"occurences,omitempty"`
 }
 
@@ -1254,11 +1254,6 @@ func (iter AlertListIterator) Value() Alert {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the AlertListIterator type.
-func NewAlertListIterator(page AlertListPage) AlertListIterator {
-	return AlertListIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (al AlertList) IsEmpty() bool {
 	return al.Value == nil || len(*al.Value) == 0
@@ -1326,11 +1321,6 @@ func (page AlertListPage) Values() []Alert {
 		return nil
 	}
 	return *page.al.Value
-}
-
-// Creates a new instance of the AlertListPage type.
-func NewAlertListPage(getNextPage func(context.Context, AlertList) (AlertList, error)) AlertListPage {
-	return AlertListPage{fn: getNextPage}
 }
 
 // AlertNotificationProperties the properties of the alert notification settings.
@@ -1635,11 +1625,6 @@ func (iter AvailableProviderOperationListIterator) Value() AvailableProviderOper
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the AvailableProviderOperationListIterator type.
-func NewAvailableProviderOperationListIterator(page AvailableProviderOperationListPage) AvailableProviderOperationListIterator {
-	return AvailableProviderOperationListIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (apol AvailableProviderOperationList) IsEmpty() bool {
 	return apol.Value == nil || len(*apol.Value) == 0
@@ -1707,11 +1692,6 @@ func (page AvailableProviderOperationListPage) Values() []AvailableProviderOpera
 		return nil
 	}
 	return *page.apol.Value
-}
-
-// Creates a new instance of the AvailableProviderOperationListPage type.
-func NewAvailableProviderOperationListPage(getNextPage func(context.Context, AvailableProviderOperationList) (AvailableProviderOperationList, error)) AvailableProviderOperationListPage {
-	return AvailableProviderOperationListPage{fn: getNextPage}
 }
 
 // Backup the backup.
@@ -1904,11 +1884,6 @@ func (iter BackupListIterator) Value() Backup {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the BackupListIterator type.
-func NewBackupListIterator(page BackupListPage) BackupListIterator {
-	return BackupListIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (bl BackupList) IsEmpty() bool {
 	return bl.Value == nil || len(*bl.Value) == 0
@@ -1976,11 +1951,6 @@ func (page BackupListPage) Values() []Backup {
 		return nil
 	}
 	return *page.bl.Value
-}
-
-// Creates a new instance of the BackupListPage type.
-func NewBackupListPage(getNextPage func(context.Context, BackupList) (BackupList, error)) BackupListPage {
-	return BackupListPage{fn: getNextPage}
 }
 
 // BackupPoliciesBackupNowFuture an abstraction for monitoring and retrieving the results of a long-running
@@ -2171,7 +2141,7 @@ type BackupPolicyProperties struct {
 	LastBackupTime *date.Time `json:"lastBackupTime,omitempty"`
 	// SchedulesCount - The count of schedules the backup policy contains.
 	SchedulesCount *int64 `json:"schedulesCount,omitempty"`
-	// ScheduledBackupStatus - Indicates whether at least one of the schedules in the backup policy is active or not. Possible values include: 'ScheduledBackupStatusDisabled', 'ScheduledBackupStatusEnabled'
+	// ScheduledBackupStatus - Indicates whether atleast one of the schedules in the backup policy is active or not. Possible values include: 'ScheduledBackupStatusDisabled', 'ScheduledBackupStatusEnabled'
 	ScheduledBackupStatus ScheduledBackupStatus `json:"scheduledBackupStatus,omitempty"`
 	// BackupPolicyCreationType - The backup policy creation type. Indicates whether this was created through SaaS or through StorSimple Snapshot Manager. Possible values include: 'BackupPolicyCreationTypeBySaaS', 'BackupPolicyCreationTypeBySSM'
 	BackupPolicyCreationType BackupPolicyCreationType `json:"backupPolicyCreationType,omitempty"`
@@ -2446,7 +2416,7 @@ type BandwidthRateSettingProperties struct {
 
 // BandwidthSchedule the schedule for bandwidth setting.
 type BandwidthSchedule struct {
-	// Start - The start time of the schedule.
+	// Start - The start time of the schdule.
 	Start *Time `json:"start,omitempty"`
 	// Stop - The stop time of the schedule.
 	Stop *Time `json:"stop,omitempty"`
@@ -3728,7 +3698,7 @@ type FailoverTarget struct {
 	ModelDescription *string `json:"modelDescription,omitempty"`
 	// DeviceSoftwareVersion - The software version of the device.
 	DeviceSoftwareVersion *string `json:"deviceSoftwareVersion,omitempty"`
-	// DataContainersCount - The count of data containers on the device.
+	// DataContainersCount - The count of datacontainers on the device.
 	DataContainersCount *int32 `json:"dataContainersCount,omitempty"`
 	// VolumesCount - The count of volumes on the device.
 	VolumesCount *int32 `json:"volumesCount,omitempty"`
@@ -4183,11 +4153,6 @@ func (iter JobListIterator) Value() Job {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the JobListIterator type.
-func NewJobListIterator(page JobListPage) JobListIterator {
-	return JobListIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (jl JobList) IsEmpty() bool {
 	return jl.Value == nil || len(*jl.Value) == 0
@@ -4255,11 +4220,6 @@ func (page JobListPage) Values() []Job {
 		return nil
 	}
 	return *page.jl.Value
-}
-
-// Creates a new instance of the JobListPage type.
-func NewJobListPage(getNextPage func(context.Context, JobList) (JobList, error)) JobListPage {
-	return JobListPage{fn: getNextPage}
 }
 
 // JobProperties the properties of the job.
@@ -4584,7 +4544,7 @@ type ManagerExtendedInfoProperties struct {
 	Algorithm *string `json:"algorithm,omitempty"`
 }
 
-// ManagerIntrinsicSettings intrinsic settings which refers to the type of the StorSimple Manager.
+// ManagerIntrinsicSettings intrinsic settings which refers to the type of the Storsimple Manager.
 type ManagerIntrinsicSettings struct {
 	// Type - The type of StorSimple Manager. Possible values include: 'GardaV1', 'HelsinkiV1'
 	Type ManagerType `json:"type,omitempty"`
@@ -4593,7 +4553,7 @@ type ManagerIntrinsicSettings struct {
 // ManagerList the list of StorSimple Managers.
 type ManagerList struct {
 	autorest.Response `json:"-"`
-	// Value - The list of StorSimple managers.
+	// Value - The list of storsimple managers.
 	Value *[]Manager `json:"value,omitempty"`
 }
 

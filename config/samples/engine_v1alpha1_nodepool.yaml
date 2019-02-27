@@ -6,4 +6,5 @@ metadata:
   name: nodepool-sample
 spec:
   # Add fields here
-  foo: bar
+  kubernetesVersion: 1.11.6
+  replicas: 1

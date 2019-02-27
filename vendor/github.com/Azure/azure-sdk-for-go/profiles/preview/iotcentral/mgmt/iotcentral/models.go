@@ -1,6 +1,6 @@
 // +build go1.9
 
-// Copyright 2019 Microsoft Corporation
+// Copyright 2018 Microsoft Corporation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,16 +19,15 @@
 
 package iotcentral
 
-import (
-	"context"
+import original "github.com/Azure/azure-sdk-for-go/services/iotcentral/mgmt/2018-09-01/iotcentral"
 
-	original "github.com/Azure/azure-sdk-for-go/services/iotcentral/mgmt/2018-09-01/iotcentral"
-)
+type AppsClient = original.AppsClient
 
 const (
 	DefaultBaseURI = original.DefaultBaseURI
 )
 
+type BaseClient = original.BaseClient
 type AppSku = original.AppSku
 
 const (
@@ -43,12 +42,10 @@ type AppListResultIterator = original.AppListResultIterator
 type AppListResultPage = original.AppListResultPage
 type AppPatch = original.AppPatch
 type AppProperties = original.AppProperties
-type AppSkuInfo = original.AppSkuInfo
-type AppsClient = original.AppsClient
 type AppsCreateOrUpdateFuture = original.AppsCreateOrUpdateFuture
 type AppsDeleteFuture = original.AppsDeleteFuture
+type AppSkuInfo = original.AppSkuInfo
 type AppsUpdateFuture = original.AppsUpdateFuture
-type BaseClient = original.BaseClient
 type ErrorDetails = original.ErrorDetails
 type ErrorResponseBody = original.ErrorResponseBody
 type Operation = original.Operation
@@ -57,41 +54,29 @@ type OperationInputs = original.OperationInputs
 type OperationListResult = original.OperationListResult
 type OperationListResultIterator = original.OperationListResultIterator
 type OperationListResultPage = original.OperationListResultPage
-type OperationsClient = original.OperationsClient
 type Resource = original.Resource
+type OperationsClient = original.OperationsClient
 
-func New(subscriptionID string) BaseClient {
-	return original.New(subscriptionID)
-}
-func NewAppListResultIterator(page AppListResultPage) AppListResultIterator {
-	return original.NewAppListResultIterator(page)
-}
-func NewAppListResultPage(getNextPage func(context.Context, AppListResult) (AppListResult, error)) AppListResultPage {
-	return original.NewAppListResultPage(getNextPage)
-}
 func NewAppsClient(subscriptionID string) AppsClient {
 	return original.NewAppsClient(subscriptionID)
 }
 func NewAppsClientWithBaseURI(baseURI string, subscriptionID string) AppsClient {
 	return original.NewAppsClientWithBaseURI(baseURI, subscriptionID)
 }
-func NewOperationListResultIterator(page OperationListResultPage) OperationListResultIterator {
-	return original.NewOperationListResultIterator(page)
-}
-func NewOperationListResultPage(getNextPage func(context.Context, OperationListResult) (OperationListResult, error)) OperationListResultPage {
-	return original.NewOperationListResultPage(getNextPage)
-}
-func NewOperationsClient(subscriptionID string) OperationsClient {
-	return original.NewOperationsClient(subscriptionID)
-}
-func NewOperationsClientWithBaseURI(baseURI string, subscriptionID string) OperationsClient {
-	return original.NewOperationsClientWithBaseURI(baseURI, subscriptionID)
+func New(subscriptionID string) BaseClient {
+	return original.New(subscriptionID)
 }
 func NewWithBaseURI(baseURI string, subscriptionID string) BaseClient {
 	return original.NewWithBaseURI(baseURI, subscriptionID)
 }
 func PossibleAppSkuValues() []AppSku {
 	return original.PossibleAppSkuValues()
+}
+func NewOperationsClient(subscriptionID string) OperationsClient {
+	return original.NewOperationsClient(subscriptionID)
+}
+func NewOperationsClientWithBaseURI(baseURI string, subscriptionID string) OperationsClient {
+	return original.NewOperationsClientWithBaseURI(baseURI, subscriptionID)
 }
 func UserAgent() string {
 	return original.UserAgent() + " profiles/preview"

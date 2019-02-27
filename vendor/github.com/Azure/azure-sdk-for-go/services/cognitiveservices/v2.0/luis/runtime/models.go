@@ -384,7 +384,7 @@ type IntentModel struct {
 // LuisResult prediction, based on the input query, containing intent(s) and entities.
 type LuisResult struct {
 	autorest.Response `json:"-"`
-	// Query - The input utterance that was analyzed.
+	// Query - The input utterance that was analized.
 	Query *string `json:"query,omitempty"`
 	// AlteredQuery - The corrected utterance (when spell checking was enabled).
 	AlteredQuery     *string      `json:"alteredQuery,omitempty"`
@@ -394,9 +394,8 @@ type LuisResult struct {
 	// Entities - The entities extracted from the utterance.
 	Entities *[]EntityModel `json:"entities,omitempty"`
 	// CompositeEntities - The composite entities extracted from the utterance.
-	CompositeEntities      *[]CompositeEntityModel `json:"compositeEntities,omitempty"`
-	SentimentAnalysis      *Sentiment              `json:"sentimentAnalysis,omitempty"`
-	ConnectedServiceResult *LuisResult             `json:"connectedServiceResult,omitempty"`
+	CompositeEntities *[]CompositeEntityModel `json:"compositeEntities,omitempty"`
+	SentimentAnalysis *Sentiment              `json:"sentimentAnalysis,omitempty"`
 }
 
 // Sentiment sentiment of the input utterance.

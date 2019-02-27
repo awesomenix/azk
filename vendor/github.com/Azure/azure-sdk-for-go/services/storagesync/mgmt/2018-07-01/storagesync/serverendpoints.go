@@ -416,7 +416,7 @@ func (client ServerEndpointsClient) ListBySyncGroupResponder(resp *http.Response
 	return
 }
 
-// RecallAction recall a server endpoint.
+// RecallAction recall a serverendpoint.
 // Parameters:
 // resourceGroupName - the name of the resource group. The name is case insensitive.
 // storageSyncServiceName - name of Storage Sync Service resource.

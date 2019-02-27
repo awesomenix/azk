@@ -344,11 +344,6 @@ func (iter ListJobsResponseIterator) Value() JobResponse {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ListJobsResponseIterator type.
-func NewListJobsResponseIterator(page ListJobsResponsePage) ListJobsResponseIterator {
-	return ListJobsResponseIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (ljr ListJobsResponse) IsEmpty() bool {
 	return ljr.Value == nil || len(*ljr.Value) == 0
@@ -416,11 +411,6 @@ func (page ListJobsResponsePage) Values() []JobResponse {
 		return nil
 	}
 	return *page.ljr.Value
-}
-
-// Creates a new instance of the ListJobsResponsePage type.
-func NewListJobsResponsePage(getNextPage func(context.Context, ListJobsResponse) (ListJobsResponse, error)) ListJobsResponsePage {
-	return ListJobsResponsePage{fn: getNextPage}
 }
 
 // ListOperationsResponse list operations response

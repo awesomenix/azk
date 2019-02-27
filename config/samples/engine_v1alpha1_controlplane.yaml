@@ -5,5 +5,4 @@ metadata:
     controller-tools.k8s.io: "1.0"
   name: controlplane-sample
 spec:
-  # Add fields here
-  foo: bar
+  kubernetesVersion: 1.11.6

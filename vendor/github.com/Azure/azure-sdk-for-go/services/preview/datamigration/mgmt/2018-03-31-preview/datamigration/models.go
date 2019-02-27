@@ -932,7 +932,7 @@ type ConnectToSourceSQLServerTaskOutputAgentJobLevel struct {
 	JobOwner *string `json:"jobOwner,omitempty"`
 	// LastExecutedOn - UTC Date and time when the AgentJob was last executed.
 	LastExecutedOn *date.Time `json:"lastExecutedOn,omitempty"`
-	// MigrationEligibility - Information about eligibility of agent job for migration.
+	// MigrationEligibility - Information about eligiblity of agent job for migration.
 	MigrationEligibility *MigrationEligibilityInfo `json:"migrationEligibility,omitempty"`
 	// ID - Result identifier
 	ID *string `json:"id,omitempty"`
@@ -1089,7 +1089,7 @@ type ConnectToSourceSQLServerTaskOutputLoginLevel struct {
 	DefaultDatabase *string `json:"defaultDatabase,omitempty"`
 	// IsEnabled - The state of the login.
 	IsEnabled *bool `json:"isEnabled,omitempty"`
-	// MigrationEligibility - Information about eligibility of login for migration.
+	// MigrationEligibility - Information about eligiblity of login for migration.
 	MigrationEligibility *MigrationEligibilityInfo `json:"migrationEligibility,omitempty"`
 	// ID - Result identifier
 	ID *string `json:"id,omitempty"`
@@ -3719,11 +3719,6 @@ func (iter ProjectListIterator) Value() Project {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ProjectListIterator type.
-func NewProjectListIterator(page ProjectListPage) ProjectListIterator {
-	return ProjectListIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (pl ProjectList) IsEmpty() bool {
 	return pl.Value == nil || len(*pl.Value) == 0
@@ -3791,11 +3786,6 @@ func (page ProjectListPage) Values() []Project {
 		return nil
 	}
 	return *page.pl.Value
-}
-
-// Creates a new instance of the ProjectListPage type.
-func NewProjectListPage(getNextPage func(context.Context, ProjectList) (ProjectList, error)) ProjectListPage {
-	return ProjectListPage{fn: getNextPage}
 }
 
 // ProjectMetadata common metadata for migration projects
@@ -4233,11 +4223,6 @@ func (iter QuotaListIterator) Value() Quota {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the QuotaListIterator type.
-func NewQuotaListIterator(page QuotaListPage) QuotaListIterator {
-	return QuotaListIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (ql QuotaList) IsEmpty() bool {
 	return ql.Value == nil || len(*ql.Value) == 0
@@ -4307,11 +4292,6 @@ func (page QuotaListPage) Values() []Quota {
 	return *page.ql.Value
 }
 
-// Creates a new instance of the QuotaListPage type.
-func NewQuotaListPage(getNextPage func(context.Context, QuotaList) (QuotaList, error)) QuotaListPage {
-	return QuotaListPage{fn: getNextPage}
-}
-
 // QuotaName the name of the quota
 type QuotaName struct {
 	// LocalizedValue - The localized name of the quota
@@ -4372,7 +4352,7 @@ type ResourceSku struct {
 	Restrictions *[]ResourceSkuRestrictions `json:"restrictions,omitempty"`
 }
 
-// ResourceSkuCapabilities describes The SKU capabilities object.
+// ResourceSkuCapabilities describes The SKU capabilites object.
 type ResourceSkuCapabilities struct {
 	// Name - An invariant to describe the feature.
 	Name *string `json:"name,omitempty"`
@@ -4479,11 +4459,6 @@ func (iter ResourceSkusResultIterator) Value() ResourceSku {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ResourceSkusResultIterator type.
-func NewResourceSkusResultIterator(page ResourceSkusResultPage) ResourceSkusResultIterator {
-	return ResourceSkusResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (rsr ResourceSkusResult) IsEmpty() bool {
 	return rsr.Value == nil || len(*rsr.Value) == 0
@@ -4551,11 +4526,6 @@ func (page ResourceSkusResultPage) Values() []ResourceSku {
 		return nil
 	}
 	return *page.rsr.Value
-}
-
-// Creates a new instance of the ResourceSkusResultPage type.
-func NewResourceSkusResultPage(getNextPage func(context.Context, ResourceSkusResult) (ResourceSkusResult, error)) ResourceSkusResultPage {
-	return ResourceSkusResultPage{fn: getNextPage}
 }
 
 // SchemaComparisonValidationResult results for schema comparison between the source and target
@@ -4818,11 +4788,6 @@ func (iter ServiceListIterator) Value() Service {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ServiceListIterator type.
-func NewServiceListIterator(page ServiceListPage) ServiceListIterator {
-	return ServiceListIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (sl ServiceList) IsEmpty() bool {
 	return sl.Value == nil || len(*sl.Value) == 0
@@ -4890,11 +4855,6 @@ func (page ServiceListPage) Values() []Service {
 		return nil
 	}
 	return *page.sl.Value
-}
-
-// Creates a new instance of the ServiceListPage type.
-func NewServiceListPage(getNextPage func(context.Context, ServiceList) (ServiceList, error)) ServiceListPage {
-	return ServiceListPage{fn: getNextPage}
 }
 
 // ServiceOperation description of an action supported by the Data Migration Service
@@ -4984,11 +4944,6 @@ func (iter ServiceOperationListIterator) Value() ServiceOperation {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ServiceOperationListIterator type.
-func NewServiceOperationListIterator(page ServiceOperationListPage) ServiceOperationListIterator {
-	return ServiceOperationListIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (sol ServiceOperationList) IsEmpty() bool {
 	return sol.Value == nil || len(*sol.Value) == 0
@@ -5056,11 +5011,6 @@ func (page ServiceOperationListPage) Values() []ServiceOperation {
 		return nil
 	}
 	return *page.sol.Value
-}
-
-// Creates a new instance of the ServiceOperationListPage type.
-func NewServiceOperationListPage(getNextPage func(context.Context, ServiceOperationList) (ServiceOperationList, error)) ServiceOperationListPage {
-	return ServiceOperationListPage{fn: getNextPage}
 }
 
 // ServiceProperties properties of the Data Migration service instance
@@ -5206,11 +5156,6 @@ func (iter ServiceSkuListIterator) Value() AvailableServiceSku {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ServiceSkuListIterator type.
-func NewServiceSkuListIterator(page ServiceSkuListPage) ServiceSkuListIterator {
-	return ServiceSkuListIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (ssl ServiceSkuList) IsEmpty() bool {
 	return ssl.Value == nil || len(*ssl.Value) == 0
@@ -5278,11 +5223,6 @@ func (page ServiceSkuListPage) Values() []AvailableServiceSku {
 		return nil
 	}
 	return *page.ssl.Value
-}
-
-// Creates a new instance of the ServiceSkuListPage type.
-func NewServiceSkuListPage(getNextPage func(context.Context, ServiceSkuList) (ServiceSkuList, error)) ServiceSkuListPage {
-	return ServiceSkuListPage{fn: getNextPage}
 }
 
 // ServicesStartFuture an abstraction for monitoring and retrieving the results of a long-running
@@ -5523,11 +5463,6 @@ func (iter TaskListIterator) Value() ProjectTask {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the TaskListIterator type.
-func NewTaskListIterator(page TaskListPage) TaskListIterator {
-	return TaskListIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (tl TaskList) IsEmpty() bool {
 	return tl.Value == nil || len(*tl.Value) == 0
@@ -5595,11 +5530,6 @@ func (page TaskListPage) Values() []ProjectTask {
 		return nil
 	}
 	return *page.tl.Value
-}
-
-// Creates a new instance of the TaskListPage type.
-func NewTaskListPage(getNextPage func(context.Context, TaskList) (TaskList, error)) TaskListPage {
-	return TaskListPage{fn: getNextPage}
 }
 
 // TrackedResource ARM tracked top level resource.

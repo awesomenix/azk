@@ -178,11 +178,6 @@ func (iter ClassicAdministratorListResultIterator) Value() ClassicAdministrator 
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ClassicAdministratorListResultIterator type.
-func NewClassicAdministratorListResultIterator(page ClassicAdministratorListResultPage) ClassicAdministratorListResultIterator {
-	return ClassicAdministratorListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (calr ClassicAdministratorListResult) IsEmpty() bool {
 	return calr.Value == nil || len(*calr.Value) == 0
@@ -250,11 +245,6 @@ func (page ClassicAdministratorListResultPage) Values() []ClassicAdministrator {
 		return nil
 	}
 	return *page.calr.Value
-}
-
-// Creates a new instance of the ClassicAdministratorListResultPage type.
-func NewClassicAdministratorListResultPage(getNextPage func(context.Context, ClassicAdministratorListResult) (ClassicAdministratorListResult, error)) ClassicAdministratorListResultPage {
-	return ClassicAdministratorListResultPage{fn: getNextPage}
 }
 
 // ClassicAdministratorProperties classic Administrator properties.
@@ -344,11 +334,6 @@ func (iter PermissionGetResultIterator) Value() Permission {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the PermissionGetResultIterator type.
-func NewPermissionGetResultIterator(page PermissionGetResultPage) PermissionGetResultIterator {
-	return PermissionGetResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (pgr PermissionGetResult) IsEmpty() bool {
 	return pgr.Value == nil || len(*pgr.Value) == 0
@@ -416,11 +401,6 @@ func (page PermissionGetResultPage) Values() []Permission {
 		return nil
 	}
 	return *page.pgr.Value
-}
-
-// Creates a new instance of the PermissionGetResultPage type.
-func NewPermissionGetResultPage(getNextPage func(context.Context, PermissionGetResult) (PermissionGetResult, error)) PermissionGetResultPage {
-	return PermissionGetResultPage{fn: getNextPage}
 }
 
 // ProviderOperation operation
@@ -524,11 +504,6 @@ func (iter ProviderOperationsMetadataListResultIterator) Value() ProviderOperati
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ProviderOperationsMetadataListResultIterator type.
-func NewProviderOperationsMetadataListResultIterator(page ProviderOperationsMetadataListResultPage) ProviderOperationsMetadataListResultIterator {
-	return ProviderOperationsMetadataListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (pomlr ProviderOperationsMetadataListResult) IsEmpty() bool {
 	return pomlr.Value == nil || len(*pomlr.Value) == 0
@@ -596,11 +571,6 @@ func (page ProviderOperationsMetadataListResultPage) Values() []ProviderOperatio
 		return nil
 	}
 	return *page.pomlr.Value
-}
-
-// Creates a new instance of the ProviderOperationsMetadataListResultPage type.
-func NewProviderOperationsMetadataListResultPage(getNextPage func(context.Context, ProviderOperationsMetadataListResult) (ProviderOperationsMetadataListResult, error)) ProviderOperationsMetadataListResultPage {
-	return ProviderOperationsMetadataListResultPage{fn: getNextPage}
 }
 
 // ResourceType resource Type
@@ -738,7 +708,7 @@ func (racp *RoleAssignmentCreateParameters) UnmarshalJSON(body []byte) error {
 type RoleAssignmentFilter struct {
 	// PrincipalID - Returns role assignment of the specific principal.
 	PrincipalID *string `json:"principalId,omitempty"`
-	// CanDelegate - The Delegation flag for the role assignment
+	// CanDelegate - The Delegation flag for the roleassignment
 	CanDelegate *bool `json:"canDelegate,omitempty"`
 }
 
@@ -807,11 +777,6 @@ func (iter RoleAssignmentListResultIterator) Value() RoleAssignment {
 		return RoleAssignment{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the RoleAssignmentListResultIterator type.
-func NewRoleAssignmentListResultIterator(page RoleAssignmentListResultPage) RoleAssignmentListResultIterator {
-	return RoleAssignmentListResultIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -883,18 +848,13 @@ func (page RoleAssignmentListResultPage) Values() []RoleAssignment {
 	return *page.ralr.Value
 }
 
-// Creates a new instance of the RoleAssignmentListResultPage type.
-func NewRoleAssignmentListResultPage(getNextPage func(context.Context, RoleAssignmentListResult) (RoleAssignmentListResult, error)) RoleAssignmentListResultPage {
-	return RoleAssignmentListResultPage{fn: getNextPage}
-}
-
 // RoleAssignmentProperties role assignment properties.
 type RoleAssignmentProperties struct {
 	// RoleDefinitionID - The role definition ID used in the role assignment.
 	RoleDefinitionID *string `json:"roleDefinitionId,omitempty"`
 	// PrincipalID - The principal ID assigned to the role. This maps to the ID inside the Active Directory. It can point to a user, service principal, or security group.
 	PrincipalID *string `json:"principalId,omitempty"`
-	// CanDelegate - The delegation flag used for creating a role assignment
+	// CanDelegate - The delgation flag used for creating a role assignment
 	CanDelegate *bool `json:"canDelegate,omitempty"`
 }
 
@@ -906,7 +866,7 @@ type RoleAssignmentPropertiesWithScope struct {
 	RoleDefinitionID *string `json:"roleDefinitionId,omitempty"`
 	// PrincipalID - The principal ID.
 	PrincipalID *string `json:"principalId,omitempty"`
-	// CanDelegate - The Delegation flag for the role assignment
+	// CanDelegate - The Delegation flag for the roleassignment
 	CanDelegate *bool `json:"canDelegate,omitempty"`
 }
 
@@ -1067,11 +1027,6 @@ func (iter RoleDefinitionListResultIterator) Value() RoleDefinition {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the RoleDefinitionListResultIterator type.
-func NewRoleDefinitionListResultIterator(page RoleDefinitionListResultPage) RoleDefinitionListResultIterator {
-	return RoleDefinitionListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (rdlr RoleDefinitionListResult) IsEmpty() bool {
 	return rdlr.Value == nil || len(*rdlr.Value) == 0
@@ -1139,11 +1094,6 @@ func (page RoleDefinitionListResultPage) Values() []RoleDefinition {
 		return nil
 	}
 	return *page.rdlr.Value
-}
-
-// Creates a new instance of the RoleDefinitionListResultPage type.
-func NewRoleDefinitionListResultPage(getNextPage func(context.Context, RoleDefinitionListResult) (RoleDefinitionListResult, error)) RoleDefinitionListResultPage {
-	return RoleDefinitionListResultPage{fn: getNextPage}
 }
 
 // RoleDefinitionProperties role definition properties.

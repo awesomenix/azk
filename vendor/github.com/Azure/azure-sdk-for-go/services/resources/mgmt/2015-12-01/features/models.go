@@ -114,11 +114,6 @@ func (iter OperationListResultIterator) Value() Operation {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the OperationListResultIterator type.
-func NewOperationListResultIterator(page OperationListResultPage) OperationListResultIterator {
-	return OperationListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (olr OperationListResult) IsEmpty() bool {
 	return olr.Value == nil || len(*olr.Value) == 0
@@ -188,11 +183,6 @@ func (page OperationListResultPage) Values() []Operation {
 	return *page.olr.Value
 }
 
-// Creates a new instance of the OperationListResultPage type.
-func NewOperationListResultPage(getNextPage func(context.Context, OperationListResult) (OperationListResult, error)) OperationListResultPage {
-	return OperationListResultPage{fn: getNextPage}
-}
-
 // OperationsListResult list of previewed features.
 type OperationsListResult struct {
 	autorest.Response `json:"-"`
@@ -258,11 +248,6 @@ func (iter OperationsListResultIterator) Value() Result {
 		return Result{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the OperationsListResultIterator type.
-func NewOperationsListResultIterator(page OperationsListResultPage) OperationsListResultIterator {
-	return OperationsListResultIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -332,11 +317,6 @@ func (page OperationsListResultPage) Values() []Result {
 		return nil
 	}
 	return *page.olr.Value
-}
-
-// Creates a new instance of the OperationsListResultPage type.
-func NewOperationsListResultPage(getNextPage func(context.Context, OperationsListResult) (OperationsListResult, error)) OperationsListResultPage {
-	return OperationsListResultPage{fn: getNextPage}
 }
 
 // Properties information about feature.

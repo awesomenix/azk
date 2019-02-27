@@ -1328,7 +1328,7 @@ type AttachDiskProperties struct {
 
 // AttachNewDataDiskOptions properties to attach new disk to the Virtual Machine.
 type AttachNewDataDiskOptions struct {
-	// DiskSizeGiB - Size of the disk to be attached in Gibibytes.
+	// DiskSizeGiB - Size of the disk to be attached in GibiBytes.
 	DiskSizeGiB *int32 `json:"diskSizeGiB,omitempty"`
 	// DiskName - The name of the disk to be attached.
 	DiskName *string `json:"diskName,omitempty"`
@@ -1800,7 +1800,7 @@ func (d *Disk) UnmarshalJSON(body []byte) error {
 type DiskProperties struct {
 	// DiskType - The storage type for the disk (i.e. Standard, Premium). Possible values include: 'Standard', 'Premium'
 	DiskType StorageType `json:"diskType,omitempty"`
-	// DiskSizeGiB - The size of the disk in Gibibytes.
+	// DiskSizeGiB - The size of the disk in GibiBytes.
 	DiskSizeGiB *int32 `json:"diskSizeGiB,omitempty"`
 	// LeasedByLabVMID - The resource ID of the VM to which this disk is leased.
 	LeasedByLabVMID *string `json:"leasedByLabVmId,omitempty"`
@@ -2496,7 +2496,7 @@ type GenerateUploadURIParameter struct {
 	BlobName *string `json:"blobName,omitempty"`
 }
 
-// GenerateUploadURIResponse response body for generating an upload URI.
+// GenerateUploadURIResponse reponse body for generating an upload URI.
 type GenerateUploadURIResponse struct {
 	autorest.Response `json:"-"`
 	// UploadURI - The upload URI for the VHD.
@@ -4396,11 +4396,6 @@ func (iter ProviderOperationResultIterator) Value() OperationMetadata {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ProviderOperationResultIterator type.
-func NewProviderOperationResultIterator(page ProviderOperationResultPage) ProviderOperationResultIterator {
-	return ProviderOperationResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (por ProviderOperationResult) IsEmpty() bool {
 	return por.Value == nil || len(*por.Value) == 0
@@ -4468,11 +4463,6 @@ func (page ProviderOperationResultPage) Values() []OperationMetadata {
 		return nil
 	}
 	return *page.por.Value
-}
-
-// Creates a new instance of the ProviderOperationResultPage type.
-func NewProviderOperationResultPage(getNextPage func(context.Context, ProviderOperationResult) (ProviderOperationResult, error)) ProviderOperationResultPage {
-	return ProviderOperationResultPage{fn: getNextPage}
 }
 
 // Resource an Azure resource.
@@ -4577,11 +4567,6 @@ func (iter ResponseWithContinuationArmTemplateIterator) Value() ArmTemplate {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ResponseWithContinuationArmTemplateIterator type.
-func NewResponseWithContinuationArmTemplateIterator(page ResponseWithContinuationArmTemplatePage) ResponseWithContinuationArmTemplateIterator {
-	return ResponseWithContinuationArmTemplateIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (rwcAt ResponseWithContinuationArmTemplate) IsEmpty() bool {
 	return rwcAt.Value == nil || len(*rwcAt.Value) == 0
@@ -4651,11 +4636,6 @@ func (page ResponseWithContinuationArmTemplatePage) Values() []ArmTemplate {
 	return *page.rwcat.Value
 }
 
-// Creates a new instance of the ResponseWithContinuationArmTemplatePage type.
-func NewResponseWithContinuationArmTemplatePage(getNextPage func(context.Context, ResponseWithContinuationArmTemplate) (ResponseWithContinuationArmTemplate, error)) ResponseWithContinuationArmTemplatePage {
-	return ResponseWithContinuationArmTemplatePage{fn: getNextPage}
-}
-
 // ResponseWithContinuationArtifact the response of a list operation.
 type ResponseWithContinuationArtifact struct {
 	autorest.Response `json:"-"`
@@ -4721,11 +4701,6 @@ func (iter ResponseWithContinuationArtifactIterator) Value() Artifact {
 		return Artifact{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the ResponseWithContinuationArtifactIterator type.
-func NewResponseWithContinuationArtifactIterator(page ResponseWithContinuationArtifactPage) ResponseWithContinuationArtifactIterator {
-	return ResponseWithContinuationArtifactIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -4797,11 +4772,6 @@ func (page ResponseWithContinuationArtifactPage) Values() []Artifact {
 	return *page.rwca.Value
 }
 
-// Creates a new instance of the ResponseWithContinuationArtifactPage type.
-func NewResponseWithContinuationArtifactPage(getNextPage func(context.Context, ResponseWithContinuationArtifact) (ResponseWithContinuationArtifact, error)) ResponseWithContinuationArtifactPage {
-	return ResponseWithContinuationArtifactPage{fn: getNextPage}
-}
-
 // ResponseWithContinuationArtifactSource the response of a list operation.
 type ResponseWithContinuationArtifactSource struct {
 	autorest.Response `json:"-"`
@@ -4868,11 +4838,6 @@ func (iter ResponseWithContinuationArtifactSourceIterator) Value() ArtifactSourc
 		return ArtifactSource{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the ResponseWithContinuationArtifactSourceIterator type.
-func NewResponseWithContinuationArtifactSourceIterator(page ResponseWithContinuationArtifactSourcePage) ResponseWithContinuationArtifactSourceIterator {
-	return ResponseWithContinuationArtifactSourceIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -4944,11 +4909,6 @@ func (page ResponseWithContinuationArtifactSourcePage) Values() []ArtifactSource
 	return *page.rwcas.Value
 }
 
-// Creates a new instance of the ResponseWithContinuationArtifactSourcePage type.
-func NewResponseWithContinuationArtifactSourcePage(getNextPage func(context.Context, ResponseWithContinuationArtifactSource) (ResponseWithContinuationArtifactSource, error)) ResponseWithContinuationArtifactSourcePage {
-	return ResponseWithContinuationArtifactSourcePage{fn: getNextPage}
-}
-
 // ResponseWithContinuationCustomImage the response of a list operation.
 type ResponseWithContinuationCustomImage struct {
 	autorest.Response `json:"-"`
@@ -5014,11 +4974,6 @@ func (iter ResponseWithContinuationCustomImageIterator) Value() CustomImage {
 		return CustomImage{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the ResponseWithContinuationCustomImageIterator type.
-func NewResponseWithContinuationCustomImageIterator(page ResponseWithContinuationCustomImagePage) ResponseWithContinuationCustomImageIterator {
-	return ResponseWithContinuationCustomImageIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -5090,11 +5045,6 @@ func (page ResponseWithContinuationCustomImagePage) Values() []CustomImage {
 	return *page.rwcci.Value
 }
 
-// Creates a new instance of the ResponseWithContinuationCustomImagePage type.
-func NewResponseWithContinuationCustomImagePage(getNextPage func(context.Context, ResponseWithContinuationCustomImage) (ResponseWithContinuationCustomImage, error)) ResponseWithContinuationCustomImagePage {
-	return ResponseWithContinuationCustomImagePage{fn: getNextPage}
-}
-
 // ResponseWithContinuationDisk the response of a list operation.
 type ResponseWithContinuationDisk struct {
 	autorest.Response `json:"-"`
@@ -5160,11 +5110,6 @@ func (iter ResponseWithContinuationDiskIterator) Value() Disk {
 		return Disk{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the ResponseWithContinuationDiskIterator type.
-func NewResponseWithContinuationDiskIterator(page ResponseWithContinuationDiskPage) ResponseWithContinuationDiskIterator {
-	return ResponseWithContinuationDiskIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -5236,11 +5181,6 @@ func (page ResponseWithContinuationDiskPage) Values() []Disk {
 	return *page.rwcd.Value
 }
 
-// Creates a new instance of the ResponseWithContinuationDiskPage type.
-func NewResponseWithContinuationDiskPage(getNextPage func(context.Context, ResponseWithContinuationDisk) (ResponseWithContinuationDisk, error)) ResponseWithContinuationDiskPage {
-	return ResponseWithContinuationDiskPage{fn: getNextPage}
-}
-
 // ResponseWithContinuationDtlEnvironment the response of a list operation.
 type ResponseWithContinuationDtlEnvironment struct {
 	autorest.Response `json:"-"`
@@ -5307,11 +5247,6 @@ func (iter ResponseWithContinuationDtlEnvironmentIterator) Value() Environment {
 		return Environment{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the ResponseWithContinuationDtlEnvironmentIterator type.
-func NewResponseWithContinuationDtlEnvironmentIterator(page ResponseWithContinuationDtlEnvironmentPage) ResponseWithContinuationDtlEnvironmentIterator {
-	return ResponseWithContinuationDtlEnvironmentIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -5383,11 +5318,6 @@ func (page ResponseWithContinuationDtlEnvironmentPage) Values() []Environment {
 	return *page.rwcde.Value
 }
 
-// Creates a new instance of the ResponseWithContinuationDtlEnvironmentPage type.
-func NewResponseWithContinuationDtlEnvironmentPage(getNextPage func(context.Context, ResponseWithContinuationDtlEnvironment) (ResponseWithContinuationDtlEnvironment, error)) ResponseWithContinuationDtlEnvironmentPage {
-	return ResponseWithContinuationDtlEnvironmentPage{fn: getNextPage}
-}
-
 // ResponseWithContinuationFormula the response of a list operation.
 type ResponseWithContinuationFormula struct {
 	autorest.Response `json:"-"`
@@ -5453,11 +5383,6 @@ func (iter ResponseWithContinuationFormulaIterator) Value() Formula {
 		return Formula{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the ResponseWithContinuationFormulaIterator type.
-func NewResponseWithContinuationFormulaIterator(page ResponseWithContinuationFormulaPage) ResponseWithContinuationFormulaIterator {
-	return ResponseWithContinuationFormulaIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -5529,11 +5454,6 @@ func (page ResponseWithContinuationFormulaPage) Values() []Formula {
 	return *page.rwcf.Value
 }
 
-// Creates a new instance of the ResponseWithContinuationFormulaPage type.
-func NewResponseWithContinuationFormulaPage(getNextPage func(context.Context, ResponseWithContinuationFormula) (ResponseWithContinuationFormula, error)) ResponseWithContinuationFormulaPage {
-	return ResponseWithContinuationFormulaPage{fn: getNextPage}
-}
-
 // ResponseWithContinuationGalleryImage the response of a list operation.
 type ResponseWithContinuationGalleryImage struct {
 	autorest.Response `json:"-"`
@@ -5600,11 +5520,6 @@ func (iter ResponseWithContinuationGalleryImageIterator) Value() GalleryImage {
 		return GalleryImage{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the ResponseWithContinuationGalleryImageIterator type.
-func NewResponseWithContinuationGalleryImageIterator(page ResponseWithContinuationGalleryImagePage) ResponseWithContinuationGalleryImageIterator {
-	return ResponseWithContinuationGalleryImageIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -5676,11 +5591,6 @@ func (page ResponseWithContinuationGalleryImagePage) Values() []GalleryImage {
 	return *page.rwcgi.Value
 }
 
-// Creates a new instance of the ResponseWithContinuationGalleryImagePage type.
-func NewResponseWithContinuationGalleryImagePage(getNextPage func(context.Context, ResponseWithContinuationGalleryImage) (ResponseWithContinuationGalleryImage, error)) ResponseWithContinuationGalleryImagePage {
-	return ResponseWithContinuationGalleryImagePage{fn: getNextPage}
-}
-
 // ResponseWithContinuationLab the response of a list operation.
 type ResponseWithContinuationLab struct {
 	autorest.Response `json:"-"`
@@ -5746,11 +5656,6 @@ func (iter ResponseWithContinuationLabIterator) Value() Lab {
 		return Lab{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the ResponseWithContinuationLabIterator type.
-func NewResponseWithContinuationLabIterator(page ResponseWithContinuationLabPage) ResponseWithContinuationLabIterator {
-	return ResponseWithContinuationLabIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -5822,11 +5727,6 @@ func (page ResponseWithContinuationLabPage) Values() []Lab {
 	return *page.rwcl.Value
 }
 
-// Creates a new instance of the ResponseWithContinuationLabPage type.
-func NewResponseWithContinuationLabPage(getNextPage func(context.Context, ResponseWithContinuationLab) (ResponseWithContinuationLab, error)) ResponseWithContinuationLabPage {
-	return ResponseWithContinuationLabPage{fn: getNextPage}
-}
-
 // ResponseWithContinuationLabVhd the response of a list operation.
 type ResponseWithContinuationLabVhd struct {
 	autorest.Response `json:"-"`
@@ -5892,11 +5792,6 @@ func (iter ResponseWithContinuationLabVhdIterator) Value() LabVhd {
 		return LabVhd{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the ResponseWithContinuationLabVhdIterator type.
-func NewResponseWithContinuationLabVhdIterator(page ResponseWithContinuationLabVhdPage) ResponseWithContinuationLabVhdIterator {
-	return ResponseWithContinuationLabVhdIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -5968,11 +5863,6 @@ func (page ResponseWithContinuationLabVhdPage) Values() []LabVhd {
 	return *page.rwclv.Value
 }
 
-// Creates a new instance of the ResponseWithContinuationLabVhdPage type.
-func NewResponseWithContinuationLabVhdPage(getNextPage func(context.Context, ResponseWithContinuationLabVhd) (ResponseWithContinuationLabVhd, error)) ResponseWithContinuationLabVhdPage {
-	return ResponseWithContinuationLabVhdPage{fn: getNextPage}
-}
-
 // ResponseWithContinuationLabVirtualMachine the response of a list operation.
 type ResponseWithContinuationLabVirtualMachine struct {
 	autorest.Response `json:"-"`
@@ -6039,11 +5929,6 @@ func (iter ResponseWithContinuationLabVirtualMachineIterator) Value() LabVirtual
 		return LabVirtualMachine{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the ResponseWithContinuationLabVirtualMachineIterator type.
-func NewResponseWithContinuationLabVirtualMachineIterator(page ResponseWithContinuationLabVirtualMachinePage) ResponseWithContinuationLabVirtualMachineIterator {
-	return ResponseWithContinuationLabVirtualMachineIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -6115,11 +6000,6 @@ func (page ResponseWithContinuationLabVirtualMachinePage) Values() []LabVirtualM
 	return *page.rwclvm.Value
 }
 
-// Creates a new instance of the ResponseWithContinuationLabVirtualMachinePage type.
-func NewResponseWithContinuationLabVirtualMachinePage(getNextPage func(context.Context, ResponseWithContinuationLabVirtualMachine) (ResponseWithContinuationLabVirtualMachine, error)) ResponseWithContinuationLabVirtualMachinePage {
-	return ResponseWithContinuationLabVirtualMachinePage{fn: getNextPage}
-}
-
 // ResponseWithContinuationNotificationChannel the response of a list operation.
 type ResponseWithContinuationNotificationChannel struct {
 	autorest.Response `json:"-"`
@@ -6186,11 +6066,6 @@ func (iter ResponseWithContinuationNotificationChannelIterator) Value() Notifica
 		return NotificationChannel{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the ResponseWithContinuationNotificationChannelIterator type.
-func NewResponseWithContinuationNotificationChannelIterator(page ResponseWithContinuationNotificationChannelPage) ResponseWithContinuationNotificationChannelIterator {
-	return ResponseWithContinuationNotificationChannelIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -6262,11 +6137,6 @@ func (page ResponseWithContinuationNotificationChannelPage) Values() []Notificat
 	return *page.rwcnc.Value
 }
 
-// Creates a new instance of the ResponseWithContinuationNotificationChannelPage type.
-func NewResponseWithContinuationNotificationChannelPage(getNextPage func(context.Context, ResponseWithContinuationNotificationChannel) (ResponseWithContinuationNotificationChannel, error)) ResponseWithContinuationNotificationChannelPage {
-	return ResponseWithContinuationNotificationChannelPage{fn: getNextPage}
-}
-
 // ResponseWithContinuationPolicy the response of a list operation.
 type ResponseWithContinuationPolicy struct {
 	autorest.Response `json:"-"`
@@ -6332,11 +6202,6 @@ func (iter ResponseWithContinuationPolicyIterator) Value() Policy {
 		return Policy{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the ResponseWithContinuationPolicyIterator type.
-func NewResponseWithContinuationPolicyIterator(page ResponseWithContinuationPolicyPage) ResponseWithContinuationPolicyIterator {
-	return ResponseWithContinuationPolicyIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -6408,11 +6273,6 @@ func (page ResponseWithContinuationPolicyPage) Values() []Policy {
 	return *page.rwcp.Value
 }
 
-// Creates a new instance of the ResponseWithContinuationPolicyPage type.
-func NewResponseWithContinuationPolicyPage(getNextPage func(context.Context, ResponseWithContinuationPolicy) (ResponseWithContinuationPolicy, error)) ResponseWithContinuationPolicyPage {
-	return ResponseWithContinuationPolicyPage{fn: getNextPage}
-}
-
 // ResponseWithContinuationSchedule the response of a list operation.
 type ResponseWithContinuationSchedule struct {
 	autorest.Response `json:"-"`
@@ -6478,11 +6338,6 @@ func (iter ResponseWithContinuationScheduleIterator) Value() Schedule {
 		return Schedule{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the ResponseWithContinuationScheduleIterator type.
-func NewResponseWithContinuationScheduleIterator(page ResponseWithContinuationSchedulePage) ResponseWithContinuationScheduleIterator {
-	return ResponseWithContinuationScheduleIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -6554,11 +6409,6 @@ func (page ResponseWithContinuationSchedulePage) Values() []Schedule {
 	return *page.rwcs.Value
 }
 
-// Creates a new instance of the ResponseWithContinuationSchedulePage type.
-func NewResponseWithContinuationSchedulePage(getNextPage func(context.Context, ResponseWithContinuationSchedule) (ResponseWithContinuationSchedule, error)) ResponseWithContinuationSchedulePage {
-	return ResponseWithContinuationSchedulePage{fn: getNextPage}
-}
-
 // ResponseWithContinuationSecret the response of a list operation.
 type ResponseWithContinuationSecret struct {
 	autorest.Response `json:"-"`
@@ -6624,11 +6474,6 @@ func (iter ResponseWithContinuationSecretIterator) Value() Secret {
 		return Secret{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the ResponseWithContinuationSecretIterator type.
-func NewResponseWithContinuationSecretIterator(page ResponseWithContinuationSecretPage) ResponseWithContinuationSecretIterator {
-	return ResponseWithContinuationSecretIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -6700,11 +6545,6 @@ func (page ResponseWithContinuationSecretPage) Values() []Secret {
 	return *page.rwcs.Value
 }
 
-// Creates a new instance of the ResponseWithContinuationSecretPage type.
-func NewResponseWithContinuationSecretPage(getNextPage func(context.Context, ResponseWithContinuationSecret) (ResponseWithContinuationSecret, error)) ResponseWithContinuationSecretPage {
-	return ResponseWithContinuationSecretPage{fn: getNextPage}
-}
-
 // ResponseWithContinuationServiceRunner the response of a list operation.
 type ResponseWithContinuationServiceRunner struct {
 	autorest.Response `json:"-"`
@@ -6771,11 +6611,6 @@ func (iter ResponseWithContinuationServiceRunnerIterator) Value() ServiceRunner 
 		return ServiceRunner{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the ResponseWithContinuationServiceRunnerIterator type.
-func NewResponseWithContinuationServiceRunnerIterator(page ResponseWithContinuationServiceRunnerPage) ResponseWithContinuationServiceRunnerIterator {
-	return ResponseWithContinuationServiceRunnerIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -6847,11 +6682,6 @@ func (page ResponseWithContinuationServiceRunnerPage) Values() []ServiceRunner {
 	return *page.rwcsr.Value
 }
 
-// Creates a new instance of the ResponseWithContinuationServiceRunnerPage type.
-func NewResponseWithContinuationServiceRunnerPage(getNextPage func(context.Context, ResponseWithContinuationServiceRunner) (ResponseWithContinuationServiceRunner, error)) ResponseWithContinuationServiceRunnerPage {
-	return ResponseWithContinuationServiceRunnerPage{fn: getNextPage}
-}
-
 // ResponseWithContinuationUser the response of a list operation.
 type ResponseWithContinuationUser struct {
 	autorest.Response `json:"-"`
@@ -6917,11 +6747,6 @@ func (iter ResponseWithContinuationUserIterator) Value() User {
 		return User{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the ResponseWithContinuationUserIterator type.
-func NewResponseWithContinuationUserIterator(page ResponseWithContinuationUserPage) ResponseWithContinuationUserIterator {
-	return ResponseWithContinuationUserIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -6993,11 +6818,6 @@ func (page ResponseWithContinuationUserPage) Values() []User {
 	return *page.rwcu.Value
 }
 
-// Creates a new instance of the ResponseWithContinuationUserPage type.
-func NewResponseWithContinuationUserPage(getNextPage func(context.Context, ResponseWithContinuationUser) (ResponseWithContinuationUser, error)) ResponseWithContinuationUserPage {
-	return ResponseWithContinuationUserPage{fn: getNextPage}
-}
-
 // ResponseWithContinuationVirtualNetwork the response of a list operation.
 type ResponseWithContinuationVirtualNetwork struct {
 	autorest.Response `json:"-"`
@@ -7064,11 +6884,6 @@ func (iter ResponseWithContinuationVirtualNetworkIterator) Value() VirtualNetwor
 		return VirtualNetwork{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the ResponseWithContinuationVirtualNetworkIterator type.
-func NewResponseWithContinuationVirtualNetworkIterator(page ResponseWithContinuationVirtualNetworkPage) ResponseWithContinuationVirtualNetworkIterator {
-	return ResponseWithContinuationVirtualNetworkIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -7138,11 +6953,6 @@ func (page ResponseWithContinuationVirtualNetworkPage) Values() []VirtualNetwork
 		return nil
 	}
 	return *page.rwcvn.Value
-}
-
-// Creates a new instance of the ResponseWithContinuationVirtualNetworkPage type.
-func NewResponseWithContinuationVirtualNetworkPage(getNextPage func(context.Context, ResponseWithContinuationVirtualNetwork) (ResponseWithContinuationVirtualNetwork, error)) ResponseWithContinuationVirtualNetworkPage {
-	return ResponseWithContinuationVirtualNetworkPage{fn: getNextPage}
 }
 
 // RetargetScheduleProperties properties for retargeting a virtual machine schedule.

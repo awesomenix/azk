@@ -1,8 +1,9 @@
 // Package autosuggest implements the Azure ARM Autosuggest service API version 1.0.
 //
-// Autosuggest supplies search terms derived from a root text sent to the service.  The terms Autosuggest supplies are
-// related to the root text based on similarity and their frequency or ratings of usefulness in other searches. For
-// examples that show how to use Autosuggest, see [Search using
+// The AutoSuggest Search API lets you send a search query to Bing and get back a list of news that are relevant to the
+// search query. This section provides technical details about the query parameters and headers that you use to request
+// news and the JSON response objects that contain them. For examples that show how to make requests, see [Searching
+// the web for
 // AutoSuggest](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-autosuggest-api-v7-reference).
 package autosuggest
 
@@ -32,26 +33,26 @@ import (
 )
 
 const (
-	// DefaultEndpoint is the default value for endpoint
-	DefaultEndpoint = "https://api.cognitive.microsoft.com"
+	// DefaultBaseURI is the default URI used for the service Autosuggest
+	DefaultBaseURI = "https://api.cognitive.microsoft.com/bing/v7.0"
 )
 
 // BaseClient is the base client for Autosuggest.
 type BaseClient struct {
 	autorest.Client
-	Endpoint string
+	BaseURI string
 }
 
 // New creates an instance of the BaseClient client.
 func New() BaseClient {
-	return NewWithoutDefaults(DefaultEndpoint)
+	return NewWithBaseURI(DefaultBaseURI)
 }
 
-// NewWithoutDefaults creates an instance of the BaseClient client.
-func NewWithoutDefaults(endpoint string) BaseClient {
+// NewWithBaseURI creates an instance of the BaseClient client.
+func NewWithBaseURI(baseURI string) BaseClient {
 	return BaseClient{
-		Client:   autorest.NewClientWithUserAgent(UserAgent()),
-		Endpoint: endpoint,
+		Client:  autorest.NewClientWithUserAgent(UserAgent()),
+		BaseURI: baseURI,
 	}
 }
 
@@ -199,10 +200,6 @@ func (client BaseClient) AutoSuggest(ctx context.Context, query string, acceptLa
 
 // AutoSuggestPreparer prepares the AutoSuggest request.
 func (client BaseClient) AutoSuggestPreparer(ctx context.Context, query string, acceptLanguage string, pragma string, userAgent string, clientID string, clientIP string, location string, countryCode string, market string, safeSearch SafeSearch, setLang string, responseFormat []ResponseFormat) (*http.Request, error) {
-	urlParameters := map[string]interface{}{
-		"Endpoint": client.Endpoint,
-	}
-
 	queryParameters := map[string]interface{}{
 		"q": autorest.Encode("query", query),
 	}
@@ -226,7 +223,7 @@ func (client BaseClient) AutoSuggestPreparer(ctx context.Context, query string, 
 
 	preparer := autorest.CreatePreparer(
 		autorest.AsGet(),
-		autorest.WithCustomBaseURL("{Endpoint}/bing/v7.0", urlParameters),
+		autorest.WithBaseURL(client.BaseURI),
 		autorest.WithPath("/Suggestions"),
 		autorest.WithQueryParameters(queryParameters),
 		autorest.WithHeader("X-BingApis-SDK", "true"))

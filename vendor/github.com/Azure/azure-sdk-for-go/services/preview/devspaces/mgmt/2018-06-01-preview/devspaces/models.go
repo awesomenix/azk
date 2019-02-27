@@ -349,11 +349,6 @@ func (iter ControllerListIterator) Value() Controller {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ControllerListIterator type.
-func NewControllerListIterator(page ControllerListPage) ControllerListIterator {
-	return ControllerListIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (cl ControllerList) IsEmpty() bool {
 	return cl.Value == nil || len(*cl.Value) == 0
@@ -421,11 +416,6 @@ func (page ControllerListPage) Values() []Controller {
 		return nil
 	}
 	return *page.cl.Value
-}
-
-// Creates a new instance of the ControllerListPage type.
-func NewControllerListPage(getNextPage func(context.Context, ControllerList) (ControllerList, error)) ControllerListPage {
-	return ControllerListPage{fn: getNextPage}
 }
 
 // ControllerProperties ...
@@ -735,11 +725,6 @@ func (iter ResourceProviderOperationListIterator) Value() ResourceProviderOperat
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ResourceProviderOperationListIterator type.
-func NewResourceProviderOperationListIterator(page ResourceProviderOperationListPage) ResourceProviderOperationListIterator {
-	return ResourceProviderOperationListIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (rpol ResourceProviderOperationList) IsEmpty() bool {
 	return rpol.Value == nil || len(*rpol.Value) == 0
@@ -807,11 +792,6 @@ func (page ResourceProviderOperationListPage) Values() []ResourceProviderOperati
 		return nil
 	}
 	return *page.rpol.Value
-}
-
-// Creates a new instance of the ResourceProviderOperationListPage type.
-func NewResourceProviderOperationListPage(getNextPage func(context.Context, ResourceProviderOperationList) (ResourceProviderOperationList, error)) ResourceProviderOperationListPage {
-	return ResourceProviderOperationListPage{fn: getNextPage}
 }
 
 // SetObject ...

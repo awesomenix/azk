@@ -777,11 +777,6 @@ func (iter AccountListResultIterator) Value() Account {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the AccountListResultIterator type.
-func NewAccountListResultIterator(page AccountListResultPage) AccountListResultIterator {
-	return AccountListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (alr AccountListResult) IsEmpty() bool {
 	return alr.Value == nil || len(*alr.Value) == 0
@@ -849,11 +844,6 @@ func (page AccountListResultPage) Values() []Account {
 		return nil
 	}
 	return *page.alr.Value
-}
-
-// Creates a new instance of the AccountListResultPage type.
-func NewAccountListResultPage(getNextPage func(context.Context, AccountListResult) (AccountListResult, error)) AccountListResultPage {
-	return AccountListResultPage{fn: getNextPage}
 }
 
 // AccountProperties definition of the account property.
@@ -1094,11 +1084,6 @@ func (iter ActivityListResultIterator) Value() Activity {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ActivityListResultIterator type.
-func NewActivityListResultIterator(page ActivityListResultPage) ActivityListResultIterator {
-	return ActivityListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (alr ActivityListResult) IsEmpty() bool {
 	return alr.Value == nil || len(*alr.Value) == 0
@@ -1166,11 +1151,6 @@ func (page ActivityListResultPage) Values() []Activity {
 		return nil
 	}
 	return *page.alr.Value
-}
-
-// Creates a new instance of the ActivityListResultPage type.
-func NewActivityListResultPage(getNextPage func(context.Context, ActivityListResult) (ActivityListResult, error)) ActivityListResultPage {
-	return ActivityListResultPage{fn: getNextPage}
 }
 
 // ActivityOutputType definition of the activity output type.
@@ -1253,7 +1233,7 @@ type AdvancedScheduleMonthlyOccurrence struct {
 	Day ScheduleDay `json:"day,omitempty"`
 }
 
-// AgentRegistration definition of the agent registration information type.
+// AgentRegistration definition of the agent registration infomration type.
 type AgentRegistration struct {
 	autorest.Response `json:"-"`
 	// DscMetaConfiguration - Gets or sets the dsc meta configuration.
@@ -1519,11 +1499,6 @@ func (iter CertificateListResultIterator) Value() Certificate {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the CertificateListResultIterator type.
-func NewCertificateListResultIterator(page CertificateListResultPage) CertificateListResultIterator {
-	return CertificateListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (clr CertificateListResult) IsEmpty() bool {
 	return clr.Value == nil || len(*clr.Value) == 0
@@ -1591,11 +1566,6 @@ func (page CertificateListResultPage) Values() []Certificate {
 		return nil
 	}
 	return *page.clr.Value
-}
-
-// Creates a new instance of the CertificateListResultPage type.
-func NewCertificateListResultPage(getNextPage func(context.Context, CertificateListResult) (CertificateListResult, error)) CertificateListResultPage {
-	return CertificateListResultPage{fn: getNextPage}
 }
 
 // CertificateProperties properties of the certificate.
@@ -1900,11 +1870,6 @@ func (iter ConnectionListResultIterator) Value() Connection {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ConnectionListResultIterator type.
-func NewConnectionListResultIterator(page ConnectionListResultPage) ConnectionListResultIterator {
-	return ConnectionListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (clr ConnectionListResult) IsEmpty() bool {
 	return clr.Value == nil || len(*clr.Value) == 0
@@ -1972,11 +1937,6 @@ func (page ConnectionListResultPage) Values() []Connection {
 		return nil
 	}
 	return *page.clr.Value
-}
-
-// Creates a new instance of the ConnectionListResultPage type.
-func NewConnectionListResultPage(getNextPage func(context.Context, ConnectionListResult) (ConnectionListResult, error)) ConnectionListResultPage {
-	return ConnectionListResultPage{fn: getNextPage}
 }
 
 // ConnectionProperties definition of the connection properties.
@@ -2243,11 +2203,6 @@ func (iter ConnectionTypeListResultIterator) Value() ConnectionType {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ConnectionTypeListResultIterator type.
-func NewConnectionTypeListResultIterator(page ConnectionTypeListResultPage) ConnectionTypeListResultIterator {
-	return ConnectionTypeListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (ctlr ConnectionTypeListResult) IsEmpty() bool {
 	return ctlr.Value == nil || len(*ctlr.Value) == 0
@@ -2315,11 +2270,6 @@ func (page ConnectionTypeListResultPage) Values() []ConnectionType {
 		return nil
 	}
 	return *page.ctlr.Value
-}
-
-// Creates a new instance of the ConnectionTypeListResultPage type.
-func NewConnectionTypeListResultPage(getNextPage func(context.Context, ConnectionTypeListResult) (ConnectionTypeListResult, error)) ConnectionTypeListResultPage {
-	return ConnectionTypeListResultPage{fn: getNextPage}
 }
 
 // ConnectionTypeProperties properties of the connection type.
@@ -2595,7 +2545,7 @@ func (ccoup *CredentialCreateOrUpdateParameters) UnmarshalJSON(body []byte) erro
 	return nil
 }
 
-// CredentialCreateOrUpdateProperties the properties of the create credential operation.
+// CredentialCreateOrUpdateProperties the properties of the create cerdential operation.
 type CredentialCreateOrUpdateProperties struct {
 	// UserName - Gets or sets the user name of the credential.
 	UserName *string `json:"userName,omitempty"`
@@ -2672,11 +2622,6 @@ func (iter CredentialListResultIterator) Value() Credential {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the CredentialListResultIterator type.
-func NewCredentialListResultIterator(page CredentialListResultPage) CredentialListResultIterator {
-	return CredentialListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (clr CredentialListResult) IsEmpty() bool {
 	return clr.Value == nil || len(*clr.Value) == 0
@@ -2744,11 +2689,6 @@ func (page CredentialListResultPage) Values() []Credential {
 		return nil
 	}
 	return *page.clr.Value
-}
-
-// Creates a new instance of the CredentialListResultPage type.
-func NewCredentialListResultPage(getNextPage func(context.Context, CredentialListResult) (CredentialListResult, error)) CredentialListResultPage {
-	return CredentialListResultPage{fn: getNextPage}
 }
 
 // CredentialProperties definition of the credential properties
@@ -3081,11 +3021,6 @@ func (iter DscCompilationJobListResultIterator) Value() DscCompilationJob {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the DscCompilationJobListResultIterator type.
-func NewDscCompilationJobListResultIterator(page DscCompilationJobListResultPage) DscCompilationJobListResultIterator {
-	return DscCompilationJobListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (dcjlr DscCompilationJobListResult) IsEmpty() bool {
 	return dcjlr.Value == nil || len(*dcjlr.Value) == 0
@@ -3153,11 +3088,6 @@ func (page DscCompilationJobListResultPage) Values() []DscCompilationJob {
 		return nil
 	}
 	return *page.dcjlr.Value
-}
-
-// Creates a new instance of the DscCompilationJobListResultPage type.
-func NewDscCompilationJobListResultPage(getNextPage func(context.Context, DscCompilationJobListResult) (DscCompilationJobListResult, error)) DscCompilationJobListResultPage {
-	return DscCompilationJobListResultPage{fn: getNextPage}
 }
 
 // DscCompilationJobProperties definition of Dsc Compilation job properties.
@@ -3556,11 +3486,6 @@ func (iter DscConfigurationListResultIterator) Value() DscConfiguration {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the DscConfigurationListResultIterator type.
-func NewDscConfigurationListResultIterator(page DscConfigurationListResultPage) DscConfigurationListResultIterator {
-	return DscConfigurationListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (dclr DscConfigurationListResult) IsEmpty() bool {
 	return dclr.Value == nil || len(*dclr.Value) == 0
@@ -3630,16 +3555,11 @@ func (page DscConfigurationListResultPage) Values() []DscConfiguration {
 	return *page.dclr.Value
 }
 
-// Creates a new instance of the DscConfigurationListResultPage type.
-func NewDscConfigurationListResultPage(getNextPage func(context.Context, DscConfigurationListResult) (DscConfigurationListResult, error)) DscConfigurationListResultPage {
-	return DscConfigurationListResultPage{fn: getNextPage}
-}
-
 // DscConfigurationParameter definition of the configuration parameter type.
 type DscConfigurationParameter struct {
 	// Type - Gets or sets the type of the parameter.
 	Type *string `json:"type,omitempty"`
-	// IsMandatory - Gets or sets a Boolean value to indicate whether the parameter is mandatory or not.
+	// IsMandatory - Gets or sets a Boolean value to indicate whether the parameter is madatory or not.
 	IsMandatory *bool `json:"isMandatory,omitempty"`
 	// Position - Get or sets the position of the parameter.
 	Position *int32 `json:"position,omitempty"`
@@ -3839,9 +3759,9 @@ type DscNodeConfiguration struct {
 	Type *string `json:"type,omitempty"`
 }
 
-// DscNodeConfigurationAssociationProperty the dsc node configuration property associated with the entity.
+// DscNodeConfigurationAssociationProperty the dsc nodeconfiguration property associated with the entity.
 type DscNodeConfigurationAssociationProperty struct {
-	// Name - Gets or sets the name of the dsc node configuration.
+	// Name - Gets or sets the name of the dsc nodeconfiguration.
 	Name *string `json:"name,omitempty"`
 }
 
@@ -3926,11 +3846,6 @@ func (iter DscNodeConfigurationListResultIterator) Value() DscNodeConfiguration 
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the DscNodeConfigurationListResultIterator type.
-func NewDscNodeConfigurationListResultIterator(page DscNodeConfigurationListResultPage) DscNodeConfigurationListResultIterator {
-	return DscNodeConfigurationListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (dnclr DscNodeConfigurationListResult) IsEmpty() bool {
 	return dnclr.Value == nil || len(*dnclr.Value) == 0
@@ -3998,11 +3913,6 @@ func (page DscNodeConfigurationListResultPage) Values() []DscNodeConfiguration {
 		return nil
 	}
 	return *page.dnclr.Value
-}
-
-// Creates a new instance of the DscNodeConfigurationListResultPage type.
-func NewDscNodeConfigurationListResultPage(getNextPage func(context.Context, DscNodeConfigurationListResult) (DscNodeConfigurationListResult, error)) DscNodeConfigurationListResultPage {
-	return DscNodeConfigurationListResultPage{fn: getNextPage}
 }
 
 // DscNodeExtensionHandlerAssociationProperty the dsc extensionHandler property associated with the node
@@ -4080,11 +3990,6 @@ func (iter DscNodeListResultIterator) Value() DscNode {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the DscNodeListResultIterator type.
-func NewDscNodeListResultIterator(page DscNodeListResultPage) DscNodeListResultIterator {
-	return DscNodeListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (dnlr DscNodeListResult) IsEmpty() bool {
 	return dnlr.Value == nil || len(*dnlr.Value) == 0
@@ -4152,11 +4057,6 @@ func (page DscNodeListResultPage) Values() []DscNode {
 		return nil
 	}
 	return *page.dnlr.Value
-}
-
-// Creates a new instance of the DscNodeListResultPage type.
-func NewDscNodeListResultPage(getNextPage func(context.Context, DscNodeListResult) (DscNodeListResult, error)) DscNodeListResultPage {
-	return DscNodeListResultPage{fn: getNextPage}
 }
 
 // DscNodeReport definition of the dsc node report type.
@@ -4269,11 +4169,6 @@ func (iter DscNodeReportListResultIterator) Value() DscNodeReport {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the DscNodeReportListResultIterator type.
-func NewDscNodeReportListResultIterator(page DscNodeReportListResultPage) DscNodeReportListResultIterator {
-	return DscNodeReportListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (dnrlr DscNodeReportListResult) IsEmpty() bool {
 	return dnrlr.Value == nil || len(*dnrlr.Value) == 0
@@ -4341,11 +4236,6 @@ func (page DscNodeReportListResultPage) Values() []DscNodeReport {
 		return nil
 	}
 	return *page.dnrlr.Value
-}
-
-// Creates a new instance of the DscNodeReportListResultPage type.
-func NewDscNodeReportListResultPage(getNextPage func(context.Context, DscNodeReportListResult) (DscNodeReportListResult, error)) DscNodeReportListResultPage {
-	return DscNodeReportListResultPage{fn: getNextPage}
 }
 
 // DscNodeUpdateParameters the parameters supplied to the update dsc node operation.
@@ -4515,11 +4405,6 @@ func (iter HybridRunbookWorkerGroupsListResultIterator) Value() HybridRunbookWor
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the HybridRunbookWorkerGroupsListResultIterator type.
-func NewHybridRunbookWorkerGroupsListResultIterator(page HybridRunbookWorkerGroupsListResultPage) HybridRunbookWorkerGroupsListResultIterator {
-	return HybridRunbookWorkerGroupsListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (hrwglr HybridRunbookWorkerGroupsListResult) IsEmpty() bool {
 	return hrwglr.Value == nil || len(*hrwglr.Value) == 0
@@ -4587,11 +4472,6 @@ func (page HybridRunbookWorkerGroupsListResultPage) Values() []HybridRunbookWork
 		return nil
 	}
 	return *page.hrwglr.Value
-}
-
-// Creates a new instance of the HybridRunbookWorkerGroupsListResultPage type.
-func NewHybridRunbookWorkerGroupsListResultPage(getNextPage func(context.Context, HybridRunbookWorkerGroupsListResult) (HybridRunbookWorkerGroupsListResult, error)) HybridRunbookWorkerGroupsListResultPage {
-	return HybridRunbookWorkerGroupsListResultPage{fn: getNextPage}
 }
 
 // HybridRunbookWorkerGroupUpdateParameters parameters supplied to the update operation.
@@ -4785,11 +4665,6 @@ func (iter JobListResultIterator) Value() Job {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the JobListResultIterator type.
-func NewJobListResultIterator(page JobListResultPage) JobListResultIterator {
-	return JobListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (jlr JobListResult) IsEmpty() bool {
 	return jlr.Value == nil || len(*jlr.Value) == 0
@@ -4857,11 +4732,6 @@ func (page JobListResultPage) Values() []Job {
 		return nil
 	}
 	return *page.jlr.Value
-}
-
-// Creates a new instance of the JobListResultPage type.
-func NewJobListResultPage(getNextPage func(context.Context, JobListResult) (JobListResult, error)) JobListResultPage {
-	return JobListResultPage{fn: getNextPage}
 }
 
 // JobProperties definition of job properties.
@@ -5172,11 +5042,6 @@ func (iter JobScheduleListResultIterator) Value() JobSchedule {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the JobScheduleListResultIterator type.
-func NewJobScheduleListResultIterator(page JobScheduleListResultPage) JobScheduleListResultIterator {
-	return JobScheduleListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (jslr JobScheduleListResult) IsEmpty() bool {
 	return jslr.Value == nil || len(*jslr.Value) == 0
@@ -5244,11 +5109,6 @@ func (page JobScheduleListResultPage) Values() []JobSchedule {
 		return nil
 	}
 	return *page.jslr.Value
-}
-
-// Creates a new instance of the JobScheduleListResultPage type.
-func NewJobScheduleListResultPage(getNextPage func(context.Context, JobScheduleListResult) (JobScheduleListResult, error)) JobScheduleListResultPage {
-	return JobScheduleListResultPage{fn: getNextPage}
 }
 
 // JobScheduleProperties definition of job schedule parameters.
@@ -5407,11 +5267,6 @@ func (iter JobStreamListResultIterator) Value() JobStream {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the JobStreamListResultIterator type.
-func NewJobStreamListResultIterator(page JobStreamListResultPage) JobStreamListResultIterator {
-	return JobStreamListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (jslr JobStreamListResult) IsEmpty() bool {
 	return jslr.Value == nil || len(*jslr.Value) == 0
@@ -5479,11 +5334,6 @@ func (page JobStreamListResultPage) Values() []JobStream {
 		return nil
 	}
 	return *page.jslr.Value
-}
-
-// Creates a new instance of the JobStreamListResultPage type.
-func NewJobStreamListResultPage(getNextPage func(context.Context, JobStreamListResult) (JobStreamListResult, error)) JobStreamListResultPage {
-	return JobStreamListResultPage{fn: getNextPage}
 }
 
 // JobStreamProperties definition of the job stream.
@@ -5836,11 +5686,6 @@ func (iter ModuleListResultIterator) Value() Module {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ModuleListResultIterator type.
-func NewModuleListResultIterator(page ModuleListResultPage) ModuleListResultIterator {
-	return ModuleListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (mlr ModuleListResult) IsEmpty() bool {
 	return mlr.Value == nil || len(*mlr.Value) == 0
@@ -5908,11 +5753,6 @@ func (page ModuleListResultPage) Values() []Module {
 		return nil
 	}
 	return *page.mlr.Value
-}
-
-// Creates a new instance of the ModuleListResultPage type.
-func NewModuleListResultPage(getNextPage func(context.Context, ModuleListResult) (ModuleListResult, error)) ModuleListResultPage {
-	return ModuleListResultPage{fn: getNextPage}
 }
 
 // ModuleProperties definition of the module property type.
@@ -6079,7 +5919,7 @@ type Resource struct {
 	Type *string `json:"type,omitempty"`
 }
 
-// RunAsCredentialAssociationProperty definition of RunAs credential to use for hybrid worker.
+// RunAsCredentialAssociationProperty definition of runas credential to use for hybrid worker.
 type RunAsCredentialAssociationProperty struct {
 	// Name - Gets or sets the name of the credential.
 	Name *string `json:"name,omitempty"`
@@ -6221,7 +6061,7 @@ type RunbookCreateOrUpdateDraftParameters struct {
 	RunbookContent *string `json:"runbookContent,omitempty"`
 }
 
-// RunbookCreateOrUpdateDraftProperties the parameters supplied to the create or update draft runbook
+// RunbookCreateOrUpdateDraftProperties the parameters supplied to the create or update dratft runbook
 // properties.
 type RunbookCreateOrUpdateDraftProperties struct {
 	// LogVerbose - Gets or sets verbose log option.
@@ -6430,7 +6270,7 @@ func (future *RunbookDraftReplaceContentFuture) Result(client RunbookDraftClient
 	return
 }
 
-// RunbookDraftUndoEditResult the response model for the undo edit runbook operation.
+// RunbookDraftUndoEditResult the response model for the undoedit runbook operation.
 type RunbookDraftUndoEditResult struct {
 	autorest.Response `json:"-"`
 	// StatusCode - Possible values include: 'Continue', 'SwitchingProtocols', 'OK', 'Created', 'Accepted', 'NonAuthoritativeInformation', 'NoContent', 'ResetContent', 'PartialContent', 'MultipleChoices', 'Ambiguous', 'MovedPermanently', 'Moved', 'Found', 'Redirect', 'SeeOther', 'RedirectMethod', 'NotModified', 'UseProxy', 'Unused', 'TemporaryRedirect', 'RedirectKeepVerb', 'BadRequest', 'Unauthorized', 'PaymentRequired', 'Forbidden', 'NotFound', 'MethodNotAllowed', 'NotAcceptable', 'ProxyAuthenticationRequired', 'RequestTimeout', 'Conflict', 'Gone', 'LengthRequired', 'PreconditionFailed', 'RequestEntityTooLarge', 'RequestURITooLong', 'UnsupportedMediaType', 'RequestedRangeNotSatisfiable', 'ExpectationFailed', 'UpgradeRequired', 'InternalServerError', 'NotImplemented', 'BadGateway', 'ServiceUnavailable', 'GatewayTimeout', 'HTTPVersionNotSupported'
@@ -6505,11 +6345,6 @@ func (iter RunbookListResultIterator) Value() Runbook {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the RunbookListResultIterator type.
-func NewRunbookListResultIterator(page RunbookListResultPage) RunbookListResultIterator {
-	return RunbookListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (rlr RunbookListResult) IsEmpty() bool {
 	return rlr.Value == nil || len(*rlr.Value) == 0
@@ -6579,16 +6414,11 @@ func (page RunbookListResultPage) Values() []Runbook {
 	return *page.rlr.Value
 }
 
-// Creates a new instance of the RunbookListResultPage type.
-func NewRunbookListResultPage(getNextPage func(context.Context, RunbookListResult) (RunbookListResult, error)) RunbookListResultPage {
-	return RunbookListResultPage{fn: getNextPage}
-}
-
 // RunbookParameter definition of the runbook parameter type.
 type RunbookParameter struct {
 	// Type - Gets or sets the type of the parameter.
 	Type *string `json:"type,omitempty"`
-	// IsMandatory - Gets or sets a Boolean value to indicate whether the parameter is mandatory or not.
+	// IsMandatory - Gets or sets a Boolean value to indicate whether the parameter is madatory or not.
 	IsMandatory *bool `json:"isMandatory,omitempty"`
 	// Position - Get or sets the position of the parameter.
 	Position *int32 `json:"position,omitempty"`
@@ -7000,11 +6830,6 @@ func (iter ScheduleListResultIterator) Value() Schedule {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ScheduleListResultIterator type.
-func NewScheduleListResultIterator(page ScheduleListResultPage) ScheduleListResultIterator {
-	return ScheduleListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (slr ScheduleListResult) IsEmpty() bool {
 	return slr.Value == nil || len(*slr.Value) == 0
@@ -7072,11 +6897,6 @@ func (page ScheduleListResultPage) Values() []Schedule {
 		return nil
 	}
 	return *page.slr.Value
-}
-
-// Creates a new instance of the ScheduleListResultPage type.
-func NewScheduleListResultPage(getNextPage func(context.Context, ScheduleListResult) (ScheduleListResult, error)) ScheduleListResultPage {
-	return ScheduleListResultPage{fn: getNextPage}
 }
 
 // ScheduleProperties definition of schedule parameters.
@@ -7382,7 +7202,7 @@ type UsageListResult struct {
 	Value *[]Usage `json:"value,omitempty"`
 }
 
-// Variable definition of the variable.
+// Variable definition of the varible.
 type Variable struct {
 	autorest.Response `json:"-"`
 	// VariableProperties - Gets or sets the properties of the variable.
@@ -7594,11 +7414,6 @@ func (iter VariableListResultIterator) Value() Variable {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the VariableListResultIterator type.
-func NewVariableListResultIterator(page VariableListResultPage) VariableListResultIterator {
-	return VariableListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (vlr VariableListResult) IsEmpty() bool {
 	return vlr.Value == nil || len(*vlr.Value) == 0
@@ -7668,12 +7483,7 @@ func (page VariableListResultPage) Values() []Variable {
 	return *page.vlr.Value
 }
 
-// Creates a new instance of the VariableListResultPage type.
-func NewVariableListResultPage(getNextPage func(context.Context, VariableListResult) (VariableListResult, error)) VariableListResultPage {
-	return VariableListResultPage{fn: getNextPage}
-}
-
-// VariableProperties definition of the variable properties
+// VariableProperties definition of the varible properties
 type VariableProperties struct {
 	// Value - Gets or sets the value of the variable.
 	Value *string `json:"value,omitempty"`
@@ -7990,11 +7800,6 @@ func (iter WebhookListResultIterator) Value() Webhook {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the WebhookListResultIterator type.
-func NewWebhookListResultIterator(page WebhookListResultPage) WebhookListResultIterator {
-	return WebhookListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (wlr WebhookListResult) IsEmpty() bool {
 	return wlr.Value == nil || len(*wlr.Value) == 0
@@ -8062,11 +7867,6 @@ func (page WebhookListResultPage) Values() []Webhook {
 		return nil
 	}
 	return *page.wlr.Value
-}
-
-// Creates a new instance of the WebhookListResultPage type.
-func NewWebhookListResultPage(getNextPage func(context.Context, WebhookListResult) (WebhookListResult, error)) WebhookListResultPage {
-	return WebhookListResultPage{fn: getNextPage}
 }
 
 // WebhookProperties definition of the webhook properties

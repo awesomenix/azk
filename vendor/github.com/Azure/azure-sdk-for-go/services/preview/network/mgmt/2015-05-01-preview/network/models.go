@@ -1134,7 +1134,7 @@ func (agic *ApplicationGatewayIPConfiguration) UnmarshalJSON(body []byte) error 
 
 // ApplicationGatewayIPConfigurationPropertiesFormat properties of IP configuration of application gateway
 type ApplicationGatewayIPConfigurationPropertiesFormat struct {
-	// Subnet - Gets or sets the reference of the subnet resource.A subnet from where application gateway gets its private address
+	// Subnet - Gets or sets the reference of the subnet resource.A subnet from where appliation gateway gets its private address
 	Subnet *SubResource `json:"subnet,omitempty"`
 	// ProvisioningState - Gets or sets Provisioning state of the application gateway subnet resource Updating/Deleting/Failed
 	ProvisioningState *string `json:"provisioningState,omitempty"`
@@ -1207,11 +1207,6 @@ func (iter ApplicationGatewayListResultIterator) Value() ApplicationGateway {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ApplicationGatewayListResultIterator type.
-func NewApplicationGatewayListResultIterator(page ApplicationGatewayListResultPage) ApplicationGatewayListResultIterator {
-	return ApplicationGatewayListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (aglr ApplicationGatewayListResult) IsEmpty() bool {
 	return aglr.Value == nil || len(*aglr.Value) == 0
@@ -1279,11 +1274,6 @@ func (page ApplicationGatewayListResultPage) Values() []ApplicationGateway {
 		return nil
 	}
 	return *page.aglr.Value
-}
-
-// Creates a new instance of the ApplicationGatewayListResultPage type.
-func NewApplicationGatewayListResultPage(getNextPage func(context.Context, ApplicationGatewayListResult) (ApplicationGatewayListResult, error)) ApplicationGatewayListResultPage {
-	return ApplicationGatewayListResultPage{fn: getNextPage}
 }
 
 // ApplicationGatewayPropertiesFormat properties of Application Gateway
@@ -1678,11 +1668,6 @@ func (iter AuthorizationListResultIterator) Value() ExpressRouteCircuitAuthoriza
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the AuthorizationListResultIterator type.
-func NewAuthorizationListResultIterator(page AuthorizationListResultPage) AuthorizationListResultIterator {
-	return AuthorizationListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (alr AuthorizationListResult) IsEmpty() bool {
 	return alr.Value == nil || len(*alr.Value) == 0
@@ -1752,11 +1737,6 @@ func (page AuthorizationListResultPage) Values() []ExpressRouteCircuitAuthorizat
 	return *page.alr.Value
 }
 
-// Creates a new instance of the AuthorizationListResultPage type.
-func NewAuthorizationListResultPage(getNextPage func(context.Context, AuthorizationListResult) (AuthorizationListResult, error)) AuthorizationListResultPage {
-	return AuthorizationListResultPage{fn: getNextPage}
-}
-
 // AuthorizationPropertiesFormat ...
 type AuthorizationPropertiesFormat struct {
 	// AuthorizationKey - Gets or sets the authorization key
@@ -1768,7 +1748,7 @@ type AuthorizationPropertiesFormat struct {
 }
 
 // AzureAsyncOperationResult the response body contains the status of the specified asynchronous operation,
-// indicating whether it has succeeded, is in progress, or has failed. Note that this status is distinct
+// indicating whether it has succeeded, is inprogress, or has failed. Note that this status is distinct
 // from the HTTP status code returned for the Get Operation Status operation itself. If the asynchronous
 // operation succeeded, the response body includes the HTTP status code for the successful request. If the
 // asynchronous operation failed, the response body includes the HTTP status code for the failed request
@@ -1779,7 +1759,7 @@ type AzureAsyncOperationResult struct {
 	Error  *Error          `json:"error,omitempty"`
 }
 
-// BackendAddressPool pool of backend IP addresses
+// BackendAddressPool pool of backend IP addresseses
 type BackendAddressPool struct {
 	*BackendAddressPoolPropertiesFormat `json:"properties,omitempty"`
 	// Name - Gets name of the resource that is unique within a resource group. This name can be used to access the resource
@@ -1878,7 +1858,7 @@ type ConnectionResetSharedKey struct {
 	KeyLength *int64 `json:"keyLength,omitempty"`
 }
 
-// ConnectionSharedKey response for GetConnectionSharedKey Api service call
+// ConnectionSharedKey response for GetConnectionSharedKey Api servive call
 type ConnectionSharedKey struct {
 	autorest.Response `json:"-"`
 	// Value - The virtual network connection shared key value
@@ -1892,7 +1872,7 @@ type DhcpOptions struct {
 	DNSServers *[]string `json:"dnsServers,omitempty"`
 }
 
-// DNSNameAvailabilityResult response for CheckDnsNameAvailability Api service call
+// DNSNameAvailabilityResult response for CheckDnsNameAvailability Api servive call
 type DNSNameAvailabilityResult struct {
 	autorest.Response `json:"-"`
 	// Available - Domain availability (True/False)
@@ -2261,11 +2241,6 @@ func (iter ExpressRouteCircuitListResultIterator) Value() ExpressRouteCircuit {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ExpressRouteCircuitListResultIterator type.
-func NewExpressRouteCircuitListResultIterator(page ExpressRouteCircuitListResultPage) ExpressRouteCircuitListResultIterator {
-	return ExpressRouteCircuitListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (erclr ExpressRouteCircuitListResult) IsEmpty() bool {
 	return erclr.Value == nil || len(*erclr.Value) == 0
@@ -2333,11 +2308,6 @@ func (page ExpressRouteCircuitListResultPage) Values() []ExpressRouteCircuit {
 		return nil
 	}
 	return *page.erclr.Value
-}
-
-// Creates a new instance of the ExpressRouteCircuitListResultPage type.
-func NewExpressRouteCircuitListResultPage(getNextPage func(context.Context, ExpressRouteCircuitListResult) (ExpressRouteCircuitListResult, error)) ExpressRouteCircuitListResultPage {
-	return ExpressRouteCircuitListResultPage{fn: getNextPage}
 }
 
 // ExpressRouteCircuitPeering peering in a ExpressRouteCircuit resource
@@ -2421,7 +2391,7 @@ func (ercp *ExpressRouteCircuitPeering) UnmarshalJSON(body []byte) error {
 	return nil
 }
 
-// ExpressRouteCircuitPeeringConfig specifies the peering config
+// ExpressRouteCircuitPeeringConfig specfies the peering config
 type ExpressRouteCircuitPeeringConfig struct {
 	// AdvertisedPublicPrefixes - Gets or sets the reference of AdvertisedPublicPrefixes
 	AdvertisedPublicPrefixes *[]string `json:"advertisedPublicPrefixes,omitempty"`
@@ -2502,11 +2472,6 @@ func (iter ExpressRouteCircuitPeeringListResultIterator) Value() ExpressRouteCir
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ExpressRouteCircuitPeeringListResultIterator type.
-func NewExpressRouteCircuitPeeringListResultIterator(page ExpressRouteCircuitPeeringListResultPage) ExpressRouteCircuitPeeringListResultIterator {
-	return ExpressRouteCircuitPeeringListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (ercplr ExpressRouteCircuitPeeringListResult) IsEmpty() bool {
 	return ercplr.Value == nil || len(*ercplr.Value) == 0
@@ -2576,11 +2541,6 @@ func (page ExpressRouteCircuitPeeringListResultPage) Values() []ExpressRouteCirc
 	return *page.ercplr.Value
 }
 
-// Creates a new instance of the ExpressRouteCircuitPeeringListResultPage type.
-func NewExpressRouteCircuitPeeringListResultPage(getNextPage func(context.Context, ExpressRouteCircuitPeeringListResult) (ExpressRouteCircuitPeeringListResult, error)) ExpressRouteCircuitPeeringListResultPage {
-	return ExpressRouteCircuitPeeringListResultPage{fn: getNextPage}
-}
-
 // ExpressRouteCircuitPeeringPropertiesFormat ...
 type ExpressRouteCircuitPeeringPropertiesFormat struct {
 	// PeeringType - Gets or sets PeeringType. Possible values include: 'AzurePublicPeering', 'AzurePrivatePeering', 'MicrosoftPeering'
@@ -2603,7 +2563,7 @@ type ExpressRouteCircuitPeeringPropertiesFormat struct {
 	SharedKey *string `json:"sharedKey,omitempty"`
 	// VlanID - Gets or sets the vlan id
 	VlanID *int32 `json:"vlanId,omitempty"`
-	// MicrosoftPeeringConfig - Gets or sets the Microsoft peering config
+	// MicrosoftPeeringConfig - Gets or sets the mircosoft peering config
 	MicrosoftPeeringConfig *ExpressRouteCircuitPeeringConfig `json:"microsoftPeeringConfig,omitempty"`
 	// Stats - Gets or peering stats
 	Stats *ExpressRouteCircuitStats `json:"stats,omitempty"`
@@ -2764,11 +2724,6 @@ func (iter ExpressRouteCircuitsArpTableListResultIterator) Value() ExpressRouteC
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ExpressRouteCircuitsArpTableListResultIterator type.
-func NewExpressRouteCircuitsArpTableListResultIterator(page ExpressRouteCircuitsArpTableListResultPage) ExpressRouteCircuitsArpTableListResultIterator {
-	return ExpressRouteCircuitsArpTableListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (ercatlr ExpressRouteCircuitsArpTableListResult) IsEmpty() bool {
 	return ercatlr.Value == nil || len(*ercatlr.Value) == 0
@@ -2836,11 +2791,6 @@ func (page ExpressRouteCircuitsArpTableListResultPage) Values() []ExpressRouteCi
 		return nil
 	}
 	return *page.ercatlr.Value
-}
-
-// Creates a new instance of the ExpressRouteCircuitsArpTableListResultPage type.
-func NewExpressRouteCircuitsArpTableListResultPage(getNextPage func(context.Context, ExpressRouteCircuitsArpTableListResult) (ExpressRouteCircuitsArpTableListResult, error)) ExpressRouteCircuitsArpTableListResultPage {
-	return ExpressRouteCircuitsArpTableListResultPage{fn: getNextPage}
 }
 
 // ExpressRouteCircuitsCreateOrUpdateFuture an abstraction for monitoring and retrieving the results of a
@@ -2985,11 +2935,6 @@ func (iter ExpressRouteCircuitsRoutesTableListResultIterator) Value() ExpressRou
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ExpressRouteCircuitsRoutesTableListResultIterator type.
-func NewExpressRouteCircuitsRoutesTableListResultIterator(page ExpressRouteCircuitsRoutesTableListResultPage) ExpressRouteCircuitsRoutesTableListResultIterator {
-	return ExpressRouteCircuitsRoutesTableListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (ercrtlr ExpressRouteCircuitsRoutesTableListResult) IsEmpty() bool {
 	return ercrtlr.Value == nil || len(*ercrtlr.Value) == 0
@@ -3057,11 +3002,6 @@ func (page ExpressRouteCircuitsRoutesTableListResultPage) Values() []ExpressRout
 		return nil
 	}
 	return *page.ercrtlr.Value
-}
-
-// Creates a new instance of the ExpressRouteCircuitsRoutesTableListResultPage type.
-func NewExpressRouteCircuitsRoutesTableListResultPage(getNextPage func(context.Context, ExpressRouteCircuitsRoutesTableListResult) (ExpressRouteCircuitsRoutesTableListResult, error)) ExpressRouteCircuitsRoutesTableListResultPage {
-	return ExpressRouteCircuitsRoutesTableListResultPage{fn: getNextPage}
 }
 
 // ExpressRouteCircuitsStatsListResult response for ListStats from Express Route Circuits Api service call
@@ -3132,11 +3072,6 @@ func (iter ExpressRouteCircuitsStatsListResultIterator) Value() ExpressRouteCirc
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ExpressRouteCircuitsStatsListResultIterator type.
-func NewExpressRouteCircuitsStatsListResultIterator(page ExpressRouteCircuitsStatsListResultPage) ExpressRouteCircuitsStatsListResultIterator {
-	return ExpressRouteCircuitsStatsListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (ercslr ExpressRouteCircuitsStatsListResult) IsEmpty() bool {
 	return ercslr.Value == nil || len(*ercslr.Value) == 0
@@ -3204,11 +3139,6 @@ func (page ExpressRouteCircuitsStatsListResultPage) Values() []ExpressRouteCircu
 		return nil
 	}
 	return *page.ercslr.Value
-}
-
-// Creates a new instance of the ExpressRouteCircuitsStatsListResultPage type.
-func NewExpressRouteCircuitsStatsListResultPage(getNextPage func(context.Context, ExpressRouteCircuitsStatsListResult) (ExpressRouteCircuitsStatsListResult, error)) ExpressRouteCircuitsStatsListResultPage {
-	return ExpressRouteCircuitsStatsListResultPage{fn: getNextPage}
 }
 
 // ExpressRouteCircuitStats contains Stats associated with the peering
@@ -3306,11 +3236,6 @@ func (iter ExpressRouteServiceProviderListResultIterator) Value() ExpressRouteSe
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ExpressRouteServiceProviderListResultIterator type.
-func NewExpressRouteServiceProviderListResultIterator(page ExpressRouteServiceProviderListResultPage) ExpressRouteServiceProviderListResultIterator {
-	return ExpressRouteServiceProviderListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (ersplr ExpressRouteServiceProviderListResult) IsEmpty() bool {
 	return ersplr.Value == nil || len(*ersplr.Value) == 0
@@ -3378,11 +3303,6 @@ func (page ExpressRouteServiceProviderListResultPage) Values() []ExpressRouteSer
 		return nil
 	}
 	return *page.ersplr.Value
-}
-
-// Creates a new instance of the ExpressRouteServiceProviderListResultPage type.
-func NewExpressRouteServiceProviderListResultPage(getNextPage func(context.Context, ExpressRouteServiceProviderListResult) (ExpressRouteServiceProviderListResult, error)) ExpressRouteServiceProviderListResultPage {
-	return ExpressRouteServiceProviderListResultPage{fn: getNextPage}
 }
 
 // ExpressRouteServiceProviderPropertiesFormat properties of ExpressRouteServiceProvider
@@ -3481,7 +3401,7 @@ type FrontendIPConfigurationPropertiesFormat struct {
 	PrivateIPAddress *string `json:"privateIPAddress,omitempty"`
 	// PrivateIPAllocationMethod - Gets or sets PrivateIP allocation method (Static/Dynamic). Possible values include: 'Static', 'Dynamic'
 	PrivateIPAllocationMethod IPAllocationMethod `json:"privateIPAllocationMethod,omitempty"`
-	// Subnet - Gets or sets the reference of the subnet resource.A subnet from where the load balancer gets its private frontend address
+	// Subnet - Gets or sets the reference of the subnet resource.A subnet from wher the load balancer gets its private frontend address
 	Subnet *SubResource `json:"subnet,omitempty"`
 	// PublicIPAddress - Gets or sets the reference of the PublicIP resource
 	PublicIPAddress *SubResource `json:"publicIPAddress,omitempty"`
@@ -3581,13 +3501,13 @@ func (inp *InboundNatPool) UnmarshalJSON(body []byte) error {
 type InboundNatPoolPropertiesFormat struct {
 	// FrontendIPConfiguration - Gets or sets a reference to frontend IP Addresses
 	FrontendIPConfiguration *SubResource `json:"frontendIPConfiguration,omitempty"`
-	// Protocol - Gets or sets the transport protocol for the external endpoint. Possible values are Udp or Tcp. Possible values include: 'TransportProtocolUDP', 'TransportProtocolTCP'
+	// Protocol - Gets or sets the transport potocol for the external endpoint. Possible values are Udp or Tcp. Possible values include: 'TransportProtocolUDP', 'TransportProtocolTCP'
 	Protocol TransportProtocol `json:"protocol,omitempty"`
-	// FrontendPortRangeStart - Gets or sets the starting port range for the NAT pool. You can specify any port number you choose, but the port numbers specified for each role in the service must be unique. Possible values range between 1 and 65535, inclusive
+	// FrontendPortRangeStart - Gets or sets the starting port range for the NAT pool. You can spcify any port number you choose, but the port numbers specified for each role in the service must be unique. Possible values range between 1 and 65535, inclusive
 	FrontendPortRangeStart *int32 `json:"frontendPortRangeStart,omitempty"`
-	// FrontendPortRangeEnd - Gets or sets the ending port range for the NAT pool. You can specify any port number you choose, but the port numbers specified for each role in the service must be unique. Possible values range between 1 and 65535, inclusive
+	// FrontendPortRangeEnd - Gets or sets the ending port range for the NAT pool. You can spcify any port number you choose, but the port numbers specified for each role in the service must be unique. Possible values range between 1 and 65535, inclusive
 	FrontendPortRangeEnd *int32 `json:"frontendPortRangeEnd,omitempty"`
-	// BackendPort - Gets or sets a port used for internal connections on the endpoint. The localPort attribute maps the eternal port of the endpoint to an internal port on a role. This is useful in scenarios where a role must communicate to an internal component on a port that is different from the one that is exposed externally. If not specified, the value of localPort is the same as the port attribute. Set the value of localPort to '*' to automatically assign an unallocated port that is discoverable using the runtime API
+	// BackendPort - Gets or sets a port used for internal connections on the endpoint. The localPort attribute maps the eternal port of the endpoint to an internal port on a role. This is useful in scenarios where a role must communicate to an internal compotnent on a port that is different from the one that is exposed externally. If not specified, the value of localPort is the same as the port attribute. Set the value of localPort to '*' to automatically assign an unallocated port that is discoverable using the runtime API
 	BackendPort *int32 `json:"backendPort,omitempty"`
 	// ProvisioningState - Gets or sets Provisioning state of the PublicIP resource Updating/Deleting/Failed
 	ProvisioningState *string `json:"provisioningState,omitempty"`
@@ -3679,13 +3599,13 @@ type InboundNatRulePropertiesFormat struct {
 	FrontendIPConfiguration *SubResource `json:"frontendIPConfiguration,omitempty"`
 	// BackendIPConfiguration - Gets or sets a reference to a private ip address defined on a NetworkInterface of a VM. Traffic sent to frontendPort of each of the frontendIPConfigurations is forwarded to the backed IP
 	BackendIPConfiguration *SubResource `json:"backendIPConfiguration,omitempty"`
-	// Protocol - Gets or sets the transport protocol for the external endpoint. Possible values are Udp or Tcp. Possible values include: 'TransportProtocolUDP', 'TransportProtocolTCP'
+	// Protocol - Gets or sets the transport potocol for the external endpoint. Possible values are Udp or Tcp. Possible values include: 'TransportProtocolUDP', 'TransportProtocolTCP'
 	Protocol TransportProtocol `json:"protocol,omitempty"`
-	// FrontendPort - Gets or sets the port for the external endpoint. You can specify any port number you choose, but the port numbers specified for each role in the service must be unique. Possible values range between 1 and 65535, inclusive
+	// FrontendPort - Gets or sets the port for the external endpoint. You can spcify any port number you choose, but the port numbers specified for each role in the service must be unique. Possible values range between 1 and 65535, inclusive
 	FrontendPort *int32 `json:"frontendPort,omitempty"`
-	// BackendPort - Gets or sets a port used for internal connections on the endpoint. The localPort attribute maps the eternal port of the endpoint to an internal port on a role. This is useful in scenarios where a role must communicate to an internal component on a port that is different from the one that is exposed externally. If not specified, the value of localPort is the same as the port attribute. Set the value of localPort to '*' to automatically assign an unallocated port that is discoverable using the runtime API
+	// BackendPort - Gets or sets a port used for internal connections on the endpoint. The localPort attribute maps the eternal port of the endpoint to an internal port on a role. This is useful in scenarios where a role must communicate to an internal compotnent on a port that is different from the one that is exposed externally. If not specified, the value of localPort is the same as the port attribute. Set the value of localPort to '*' to automatically assign an unallocated port that is discoverable using the runtime API
 	BackendPort *int32 `json:"backendPort,omitempty"`
-	// IdleTimeoutInMinutes - Gets or sets the timeout for the Tcp idle connection. The value can be set between 4 and 30 minutes. The default value is 4 minutes. This element is only used when the protocol is set to Tcp
+	// IdleTimeoutInMinutes - Gets or sets the timeout for the Tcp idle connection. The value can be set between 4 and 30 minutes. The default value is 4 minutes. This emlement is only used when the protocol is set to Tcp
 	IdleTimeoutInMinutes *int32 `json:"idleTimeoutInMinutes,omitempty"`
 	// EnableFloatingIP - Configures a virtual machine's endpoint for the floating IP capability required to configure a SQL AlwaysOn availability Group. This setting is required when using the SQL Always ON availability Groups in SQL server. This setting can't be changed after you create the endpoint
 	EnableFloatingIP *bool `json:"enableFloatingIP,omitempty"`
@@ -3824,7 +3744,7 @@ type InterfaceDNSSettings struct {
 	AppliedDNSServers *[]string `json:"appliedDnsServers,omitempty"`
 	// InternalDNSNameLabel - Gets or sets the Internal DNS name
 	InternalDNSNameLabel *string `json:"internalDnsNameLabel,omitempty"`
-	// InternalFqdn - Gets or sets full IDNS name in the form, DnsName.VnetId.ZoneId.TopLevelSuffix. This is set when the NIC is associated to a VM
+	// InternalFqdn - Gets or sets full IDNS name in the form, DnsName.VnetId.ZoneId.TopleveSuffix. This is set when the NIC is associated to a VM
 	InternalFqdn *string `json:"internalFqdn,omitempty"`
 }
 
@@ -3993,11 +3913,6 @@ func (iter InterfaceListResultIterator) Value() Interface {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the InterfaceListResultIterator type.
-func NewInterfaceListResultIterator(page InterfaceListResultPage) InterfaceListResultIterator {
-	return InterfaceListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (ilr InterfaceListResult) IsEmpty() bool {
 	return ilr.Value == nil || len(*ilr.Value) == 0
@@ -4065,11 +3980,6 @@ func (page InterfaceListResultPage) Values() []Interface {
 		return nil
 	}
 	return *page.ilr.Value
-}
-
-// Creates a new instance of the InterfaceListResultPage type.
-func NewInterfaceListResultPage(getNextPage func(context.Context, InterfaceListResult) (InterfaceListResult, error)) InterfaceListResultPage {
-	return InterfaceListResultPage{fn: getNextPage}
 }
 
 // InterfacePropertiesFormat networkInterface properties.
@@ -4336,11 +4246,6 @@ func (iter LoadBalancerListResultIterator) Value() LoadBalancer {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the LoadBalancerListResultIterator type.
-func NewLoadBalancerListResultIterator(page LoadBalancerListResultPage) LoadBalancerListResultIterator {
-	return LoadBalancerListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (lblr LoadBalancerListResult) IsEmpty() bool {
 	return lblr.Value == nil || len(*lblr.Value) == 0
@@ -4410,18 +4315,13 @@ func (page LoadBalancerListResultPage) Values() []LoadBalancer {
 	return *page.lblr.Value
 }
 
-// Creates a new instance of the LoadBalancerListResultPage type.
-func NewLoadBalancerListResultPage(getNextPage func(context.Context, LoadBalancerListResult) (LoadBalancerListResult, error)) LoadBalancerListResultPage {
-	return LoadBalancerListResultPage{fn: getNextPage}
-}
-
 // LoadBalancerPropertiesFormat properties of Load Balancer
 type LoadBalancerPropertiesFormat struct {
 	// FrontendIPConfigurations - Gets or sets frontend IP addresses of the load balancer
 	FrontendIPConfigurations *[]FrontendIPConfiguration `json:"frontendIPConfigurations,omitempty"`
-	// BackendAddressPools - Gets or sets Pools of backend IP addresses
+	// BackendAddressPools - Gets or sets Pools of backend IP addresseses
 	BackendAddressPools *[]BackendAddressPool `json:"backendAddressPools,omitempty"`
-	// LoadBalancingRules - Gets or sets load balancing rules
+	// LoadBalancingRules - Gets or sets loadbalancing rules
 	LoadBalancingRules *[]LoadBalancingRule `json:"loadBalancingRules,omitempty"`
 	// Probes - Gets or sets list of Load balancer probes
 	Probes *[]Probe `json:"probes,omitempty"`
@@ -4583,9 +4483,9 @@ type LoadBalancingRulePropertiesFormat struct {
 	LoadDistribution LoadDistribution `json:"loadDistribution,omitempty"`
 	// FrontendPort - Gets or sets the port for the external endpoint. You can specify any port number you choose, but the port numbers specified for each role in the service must be unique. Possible values range between 1 and 65535, inclusive
 	FrontendPort *int32 `json:"frontendPort,omitempty"`
-	// BackendPort - Gets or sets a port used for internal connections on the endpoint. The localPort attribute maps the eternal port of the endpoint to an internal port on a role. This is useful in scenarios where a role must communicate to an internal component on a port that is different from the one that is exposed externally. If not specified, the value of localPort is the same as the port attribute. Set the value of localPort to '*' to automatically assign an unallocated port that is discoverable using the runtime API
+	// BackendPort - Gets or sets a port used for internal connections on the endpoint. The localPort attribute maps the eternal port of the endpoint to an internal port on a role. This is useful in scenarios where a role must communicate to an internal compotnent on a port that is different from the one that is exposed externally. If not specified, the value of localPort is the same as the port attribute. Set the value of localPort to '*' to automatically assign an unallocated port that is discoverable using the runtime API
 	BackendPort *int32 `json:"backendPort,omitempty"`
-	// IdleTimeoutInMinutes - Gets or sets the timeout for the Tcp idle connection. The value can be set between 4 and 30 minutes. The default value is 4 minutes. This element is only used when the protocol is set to Tcp
+	// IdleTimeoutInMinutes - Gets or sets the timeout for the Tcp idle connection. The value can be set between 4 and 30 minutes. The default value is 4 minutes. This emlement is only used when the protocol is set to Tcp
 	IdleTimeoutInMinutes *int32 `json:"idleTimeoutInMinutes,omitempty"`
 	// EnableFloatingIP - Configures a virtual machine's endpoint for the floating IP capability required to configure a SQL AlwaysOn availability Group. This setting is required when using the SQL Always ON availability Groups in SQL server. This setting can't be changed after you create the endpoint
 	EnableFloatingIP *bool `json:"enableFloatingIP,omitempty"`
@@ -4784,11 +4684,6 @@ func (iter LocalNetworkGatewayListResultIterator) Value() LocalNetworkGateway {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the LocalNetworkGatewayListResultIterator type.
-func NewLocalNetworkGatewayListResultIterator(page LocalNetworkGatewayListResultPage) LocalNetworkGatewayListResultIterator {
-	return LocalNetworkGatewayListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (lnglr LocalNetworkGatewayListResult) IsEmpty() bool {
 	return lnglr.Value == nil || len(*lnglr.Value) == 0
@@ -4856,11 +4751,6 @@ func (page LocalNetworkGatewayListResultPage) Values() []LocalNetworkGateway {
 		return nil
 	}
 	return *page.lnglr.Value
-}
-
-// Creates a new instance of the LocalNetworkGatewayListResultPage type.
-func NewLocalNetworkGatewayListResultPage(getNextPage func(context.Context, LocalNetworkGatewayListResult) (LocalNetworkGatewayListResult, error)) LocalNetworkGatewayListResultPage {
-	return LocalNetworkGatewayListResultPage{fn: getNextPage}
 }
 
 // LocalNetworkGatewayPropertiesFormat localNetworkGateway properties
@@ -5109,7 +4999,7 @@ type ProbePropertiesFormat struct {
 	Port *int32 `json:"port,omitempty"`
 	// IntervalInSeconds - Gets or sets the interval, in seconds, for how frequently to probe the endpoint for health status. Typically, the interval is slightly less than half the allocated timeout period (in seconds) which allows two full probes before taking the instance out of rotation. The default value is 15, the minimum value is 5
 	IntervalInSeconds *int32 `json:"intervalInSeconds,omitempty"`
-	// NumberOfProbes - Gets or sets the number of probes where if no response, will result in stopping further traffic from being delivered to the endpoint. This values allows endpoints to be taken out of rotation faster or slower than the typical times used in Azure.
+	// NumberOfProbes - Gets or sets the number of probes where if no response, will result in stopping further traffic from being delivered to the endpoint. This values allows endponints to be taken out of rotation faster or slower than the typical times used in Azure.
 	NumberOfProbes *int32 `json:"numberOfProbes,omitempty"`
 	// RequestPath - Gets or sets the URI used for requesting health status from the VM. Path is required if a protocol is set to http. Otherwise, it is not allowed. There is no default value
 	RequestPath *string `json:"requestPath,omitempty"`
@@ -5246,7 +5136,7 @@ type PublicIPAddressDNSSettings struct {
 	DomainNameLabel *string `json:"domainNameLabel,omitempty"`
 	// Fqdn - Gets the FQDN, Fully qualified domain name of the A DNS record associated with the public IP. This is the concatenation of the domainNameLabel and the regionalized DNS zone.
 	Fqdn *string `json:"fqdn,omitempty"`
-	// ReverseFqdn - Gets or Sets the Reverse FQDN. A user-visible, fully qualified domain name that resolves to this public IP address. If the reverseFqdn is specified, then a PTR DNS record is created pointing from the IP address in the in-addr.arpa domain to the reverse FQDN.
+	// ReverseFqdn - Gets or Sests the Reverse FQDN. A user-visible, fully qualified domain name that resolves to this public IP address. If the reverseFqdn is specified, then a PTR DNS record is created pointing from the IP address in the in-addr.arpa domain to the reverse FQDN.
 	ReverseFqdn *string `json:"reverseFqdn,omitempty"`
 }
 
@@ -5369,11 +5259,6 @@ func (iter PublicIPAddressListResultIterator) Value() PublicIPAddress {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the PublicIPAddressListResultIterator type.
-func NewPublicIPAddressListResultIterator(page PublicIPAddressListResultPage) PublicIPAddressListResultIterator {
-	return PublicIPAddressListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (pialr PublicIPAddressListResult) IsEmpty() bool {
 	return pialr.Value == nil || len(*pialr.Value) == 0
@@ -5443,11 +5328,6 @@ func (page PublicIPAddressListResultPage) Values() []PublicIPAddress {
 	return *page.pialr.Value
 }
 
-// Creates a new instance of the PublicIPAddressListResultPage type.
-func NewPublicIPAddressListResultPage(getNextPage func(context.Context, PublicIPAddressListResult) (PublicIPAddressListResult, error)) PublicIPAddressListResultPage {
-	return PublicIPAddressListResultPage{fn: getNextPage}
-}
-
 // PublicIPAddressPropertiesFormat publicIpAddress properties
 type PublicIPAddressPropertiesFormat struct {
 	// PublicIPAllocationMethod - Gets or sets PublicIP allocation method (Static/Dynamic). Possible values include: 'Static', 'Dynamic'
@@ -5458,7 +5338,7 @@ type PublicIPAddressPropertiesFormat struct {
 	DNSSettings *PublicIPAddressDNSSettings `json:"dnsSettings,omitempty"`
 	// IPAddress - Gets the assigned public IP address
 	IPAddress *string `json:"ipAddress,omitempty"`
-	// IdleTimeoutInMinutes - Gets or sets the idle timeout of the public IP address
+	// IdleTimeoutInMinutes - Gets or sets the Idletimeout of the public IP address
 	IdleTimeoutInMinutes *int32 `json:"idleTimeoutInMinutes,omitempty"`
 	// ResourceGUID - Gets or sets resource guid property of the PublicIP resource
 	ResourceGUID *string `json:"resourceGuid,omitempty"`
@@ -5582,7 +5462,7 @@ func (r *Route) UnmarshalJSON(body []byte) error {
 	return nil
 }
 
-// RouteListResult response for ListRoute Api service call
+// RouteListResult response for ListRoute Api servive call
 type RouteListResult struct {
 	autorest.Response `json:"-"`
 	// Value - Gets List of Routes in a resource group
@@ -5647,11 +5527,6 @@ func (iter RouteListResultIterator) Value() Route {
 		return Route{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the RouteListResultIterator type.
-func NewRouteListResultIterator(page RouteListResultPage) RouteListResultIterator {
-	return RouteListResultIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -5721,11 +5596,6 @@ func (page RouteListResultPage) Values() []Route {
 		return nil
 	}
 	return *page.rlr.Value
-}
-
-// Creates a new instance of the RouteListResultPage type.
-func NewRouteListResultPage(getNextPage func(context.Context, RouteListResult) (RouteListResult, error)) RouteListResultPage {
-	return RouteListResultPage{fn: getNextPage}
 }
 
 // RoutePropertiesFormat route resource
@@ -5914,7 +5784,7 @@ func (rt *RouteTable) UnmarshalJSON(body []byte) error {
 	return nil
 }
 
-// RouteTableListResult response for ListRouteTable Api service call
+// RouteTableListResult response for ListRouteTable Api servive call
 type RouteTableListResult struct {
 	autorest.Response `json:"-"`
 	// Value - Gets List of RouteTables in a resource group
@@ -5979,11 +5849,6 @@ func (iter RouteTableListResultIterator) Value() RouteTable {
 		return RouteTable{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the RouteTableListResultIterator type.
-func NewRouteTableListResultIterator(page RouteTableListResultPage) RouteTableListResultIterator {
-	return RouteTableListResultIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -6053,11 +5918,6 @@ func (page RouteTableListResultPage) Values() []RouteTable {
 		return nil
 	}
 	return *page.rtlr.Value
-}
-
-// Creates a new instance of the RouteTableListResultPage type.
-func NewRouteTableListResultPage(getNextPage func(context.Context, RouteTableListResult) (RouteTableListResult, error)) RouteTableListResultPage {
-	return RouteTableListResultPage{fn: getNextPage}
 }
 
 // RouteTablePropertiesFormat route Table resource
@@ -6245,7 +6105,7 @@ func (sg *SecurityGroup) UnmarshalJSON(body []byte) error {
 	return nil
 }
 
-// SecurityGroupListResult response for ListNetworkSecurityGroups Api service call
+// SecurityGroupListResult response for ListNetworkSecurityGroups Api servive call
 type SecurityGroupListResult struct {
 	autorest.Response `json:"-"`
 	// Value - Gets List of NetworkSecurityGroups in a resource group
@@ -6310,11 +6170,6 @@ func (iter SecurityGroupListResultIterator) Value() SecurityGroup {
 		return SecurityGroup{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the SecurityGroupListResultIterator type.
-func NewSecurityGroupListResultIterator(page SecurityGroupListResultPage) SecurityGroupListResultIterator {
-	return SecurityGroupListResultIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -6384,11 +6239,6 @@ func (page SecurityGroupListResultPage) Values() []SecurityGroup {
 		return nil
 	}
 	return *page.sglr.Value
-}
-
-// Creates a new instance of the SecurityGroupListResultPage type.
-func NewSecurityGroupListResultPage(getNextPage func(context.Context, SecurityGroupListResult) (SecurityGroupListResult, error)) SecurityGroupListResultPage {
-	return SecurityGroupListResultPage{fn: getNextPage}
 }
 
 // SecurityGroupPropertiesFormat network Security Group resource
@@ -6608,11 +6458,6 @@ func (iter SecurityRuleListResultIterator) Value() SecurityRule {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the SecurityRuleListResultIterator type.
-func NewSecurityRuleListResultIterator(page SecurityRuleListResultPage) SecurityRuleListResultIterator {
-	return SecurityRuleListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (srlr SecurityRuleListResult) IsEmpty() bool {
 	return srlr.Value == nil || len(*srlr.Value) == 0
@@ -6682,30 +6527,25 @@ func (page SecurityRuleListResultPage) Values() []SecurityRule {
 	return *page.srlr.Value
 }
 
-// Creates a new instance of the SecurityRuleListResultPage type.
-func NewSecurityRuleListResultPage(getNextPage func(context.Context, SecurityRuleListResult) (SecurityRuleListResult, error)) SecurityRuleListResultPage {
-	return SecurityRuleListResultPage{fn: getNextPage}
-}
-
 // SecurityRulePropertiesFormat ...
 type SecurityRulePropertiesFormat struct {
 	// Description - Gets or sets a description for this rule. Restricted to 140 chars.
 	Description *string `json:"description,omitempty"`
 	// Protocol - Gets or sets Network protocol this rule applies to. Can be Tcp, Udp or All(*). Possible values include: 'TCP', 'UDP', 'Asterisk'
 	Protocol SecurityRuleProtocol `json:"protocol,omitempty"`
-	// SourcePortRange - Gets or sets Source Port or Range. Integer or range between 0 and 65535. Asterisk '*' can also be used to match all ports.
+	// SourcePortRange - Gets or sets Source Port or Range. Integer or range between 0 and 65535. Asterix '*' can also be used to match all ports.
 	SourcePortRange *string `json:"sourcePortRange,omitempty"`
-	// DestinationPortRange - Gets or sets Destination Port or Range. Integer or range between 0 and 65535. Asterisk '*' can also be used to match all ports.
+	// DestinationPortRange - Gets or sets Destination Port or Range. Integer or range between 0 and 65535. Asterix '*' can also be used to match all ports.
 	DestinationPortRange *string `json:"destinationPortRange,omitempty"`
-	// SourceAddressPrefix - Gets or sets source address prefix. CIDR or source IP range. Asterisk '*' can also be used to match all source IPs. Default tags such as 'VirtualNetwork', 'AzureLoadBalancer' and 'Internet' can also be used. If this is an ingress rule, specifies where network traffic originates from.
+	// SourceAddressPrefix - Gets or sets source address prefix. CIDR or source IP range. Asterix '*' can also be used to match all source IPs. Default tags such as 'VirtualNetwork', 'AzureLoadBalancer' and 'Internet' can also be used. If this is an ingress rule, specifies where network traffic originates from.
 	SourceAddressPrefix *string `json:"sourceAddressPrefix,omitempty"`
-	// DestinationAddressPrefix - Gets or sets destination address prefix. CIDR or source IP range. Asterisk '*' can also be used to match all source IPs. Default tags such as 'VirtualNetwork', 'AzureLoadBalancer' and 'Internet' can also be used.
+	// DestinationAddressPrefix - Gets or sets destination address prefix. CIDR or source IP range. Asterix '*' can also be used to match all source IPs. Default tags such as 'VirtualNetwork', 'AzureLoadBalancer' and 'Internet' can also be used.
 	DestinationAddressPrefix *string `json:"destinationAddressPrefix,omitempty"`
 	// Access - Gets or sets network traffic is allowed or denied. Possible values are 'Allow' and 'Deny'. Possible values include: 'Allow', 'Deny'
 	Access SecurityRuleAccess `json:"access,omitempty"`
 	// Priority - Gets or sets the priority of the rule. The value can be between 100 and 4096. The priority number must be unique for each rule in the collection. The lower the priority number, the higher the priority of the rule.
 	Priority *int32 `json:"priority,omitempty"`
-	// Direction - Gets or sets the direction of the rule.InBound or Outbound. The direction specifies if rule will be evaluated on incoming or outgoing traffic. Possible values include: 'Inbound', 'Outbound'
+	// Direction - Gets or sets the direction of the rule.InBound or Outbound. The direction specifies if rule will be evaluated on incoming or outcoming traffic. Possible values include: 'Inbound', 'Outbound'
 	Direction SecurityRuleDirection `json:"direction,omitempty"`
 	// ProvisioningState - Gets or sets Provisioning state of the PublicIP resource Updating/Deleting/Failed
 	ProvisioningState *string `json:"provisioningState,omitempty"`
@@ -6763,7 +6603,7 @@ func (future *SecurityRulesDeleteFuture) Result(client SecurityRulesClient) (ar 
 	return
 }
 
-// Subnet subnet in a VirtualNetwork resource
+// Subnet subnet in a VirtualNework resource
 type Subnet struct {
 	autorest.Response       `json:"-"`
 	*SubnetPropertiesFormat `json:"properties,omitempty"`
@@ -6912,11 +6752,6 @@ func (iter SubnetListResultIterator) Value() Subnet {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the SubnetListResultIterator type.
-func NewSubnetListResultIterator(page SubnetListResultPage) SubnetListResultIterator {
-	return SubnetListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (slr SubnetListResult) IsEmpty() bool {
 	return slr.Value == nil || len(*slr.Value) == 0
@@ -6984,11 +6819,6 @@ func (page SubnetListResultPage) Values() []Subnet {
 		return nil
 	}
 	return *page.slr.Value
-}
-
-// Creates a new instance of the SubnetListResultPage type.
-func NewSubnetListResultPage(getNextPage func(context.Context, SubnetListResult) (SubnetListResult, error)) SubnetListResultPage {
-	return SubnetListResultPage{fn: getNextPage}
 }
 
 // SubnetPropertiesFormat ...
@@ -7150,11 +6980,6 @@ func (iter UsagesListResultIterator) Value() Usage {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the UsagesListResultIterator type.
-func NewUsagesListResultIterator(page UsagesListResultPage) UsagesListResultIterator {
-	return UsagesListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (ulr UsagesListResult) IsEmpty() bool {
 	return ulr.Value == nil || len(*ulr.Value) == 0
@@ -7222,11 +7047,6 @@ func (page UsagesListResultPage) Values() []Usage {
 		return nil
 	}
 	return *page.ulr.Value
-}
-
-// Creates a new instance of the UsagesListResultPage type.
-func NewUsagesListResultPage(getNextPage func(context.Context, UsagesListResult) (UsagesListResult, error)) UsagesListResultPage {
-	return UsagesListResultPage{fn: getNextPage}
 }
 
 // VirtualNetwork virtual Network resource
@@ -7667,11 +7487,6 @@ func (iter VirtualNetworkGatewayConnectionListResultIterator) Value() VirtualNet
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the VirtualNetworkGatewayConnectionListResultIterator type.
-func NewVirtualNetworkGatewayConnectionListResultIterator(page VirtualNetworkGatewayConnectionListResultPage) VirtualNetworkGatewayConnectionListResultIterator {
-	return VirtualNetworkGatewayConnectionListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (vngclr VirtualNetworkGatewayConnectionListResult) IsEmpty() bool {
 	return vngclr.Value == nil || len(*vngclr.Value) == 0
@@ -7741,21 +7556,16 @@ func (page VirtualNetworkGatewayConnectionListResultPage) Values() []VirtualNetw
 	return *page.vngclr.Value
 }
 
-// Creates a new instance of the VirtualNetworkGatewayConnectionListResultPage type.
-func NewVirtualNetworkGatewayConnectionListResultPage(getNextPage func(context.Context, VirtualNetworkGatewayConnectionListResult) (VirtualNetworkGatewayConnectionListResult, error)) VirtualNetworkGatewayConnectionListResultPage {
-	return VirtualNetworkGatewayConnectionListResultPage{fn: getNextPage}
-}
-
-// VirtualNetworkGatewayConnectionPropertiesFormat virtualNetworkGatewayConnection properties
+// VirtualNetworkGatewayConnectionPropertiesFormat virtualNeworkGatewayConnection properties
 type VirtualNetworkGatewayConnectionPropertiesFormat struct {
 	VirtualNetworkGateway1 *VirtualNetworkGateway `json:"virtualNetworkGateway1,omitempty"`
 	VirtualNetworkGateway2 *VirtualNetworkGateway `json:"virtualNetworkGateway2,omitempty"`
 	LocalNetworkGateway2   *LocalNetworkGateway   `json:"localNetworkGateway2,omitempty"`
-	// ConnectionType - Gateway connection type IPsec/Dedicated/VpnClient/Vnet2Vnet. Possible values include: 'IPsec', 'Vnet2Vnet', 'ExpressRoute', 'VPNClient'
+	// ConnectionType - Gateway connection type -Ipsec/Dedicated/VpnClient/Vnet2Vnet. Possible values include: 'IPsec', 'Vnet2Vnet', 'ExpressRoute', 'VPNClient'
 	ConnectionType VirtualNetworkGatewayConnectionType `json:"connectionType,omitempty"`
 	// RoutingWeight - The Routing weight.
 	RoutingWeight *int32 `json:"routingWeight,omitempty"`
-	// SharedKey - The IPsec share key.
+	// SharedKey - The Ipsec share key.
 	SharedKey *string `json:"sharedKey,omitempty"`
 	// ConnectionStatus - Virtual network Gateway connection status. Possible values include: 'Unknown', 'Connecting', 'Connected', 'NotConnected'
 	ConnectionStatus VirtualNetworkGatewayConnectionStatus `json:"connectionStatus,omitempty"`
@@ -8043,11 +7853,6 @@ func (iter VirtualNetworkGatewayListResultIterator) Value() VirtualNetworkGatewa
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the VirtualNetworkGatewayListResultIterator type.
-func NewVirtualNetworkGatewayListResultIterator(page VirtualNetworkGatewayListResultPage) VirtualNetworkGatewayListResultIterator {
-	return VirtualNetworkGatewayListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (vnglr VirtualNetworkGatewayListResult) IsEmpty() bool {
 	return vnglr.Value == nil || len(*vnglr.Value) == 0
@@ -8117,12 +7922,7 @@ func (page VirtualNetworkGatewayListResultPage) Values() []VirtualNetworkGateway
 	return *page.vnglr.Value
 }
 
-// Creates a new instance of the VirtualNetworkGatewayListResultPage type.
-func NewVirtualNetworkGatewayListResultPage(getNextPage func(context.Context, VirtualNetworkGatewayListResult) (VirtualNetworkGatewayListResult, error)) VirtualNetworkGatewayListResultPage {
-	return VirtualNetworkGatewayListResultPage{fn: getNextPage}
-}
-
-// VirtualNetworkGatewayPropertiesFormat virtualNetworkGateway properties
+// VirtualNetworkGatewayPropertiesFormat virtualNeworkGateay properties
 type VirtualNetworkGatewayPropertiesFormat struct {
 	// IPConfigurations - IpConfigurations for Virtual network gateway.
 	IPConfigurations *[]VirtualNetworkGatewayIPConfiguration `json:"ipConfigurations,omitempty"`
@@ -8221,7 +8021,7 @@ func (future *VirtualNetworkGatewaysResetFuture) Result(client VirtualNetworkGat
 	return
 }
 
-// VirtualNetworkListResult response for ListVirtualNetworks Api service call
+// VirtualNetworkListResult response for ListVirtualNetworks Api servive call
 type VirtualNetworkListResult struct {
 	autorest.Response `json:"-"`
 	// Value - Gets list of VirtualNetworks in a resource group
@@ -8286,11 +8086,6 @@ func (iter VirtualNetworkListResultIterator) Value() VirtualNetwork {
 		return VirtualNetwork{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the VirtualNetworkListResultIterator type.
-func NewVirtualNetworkListResultIterator(page VirtualNetworkListResultPage) VirtualNetworkListResultIterator {
-	return VirtualNetworkListResultIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -8360,11 +8155,6 @@ func (page VirtualNetworkListResultPage) Values() []VirtualNetwork {
 		return nil
 	}
 	return *page.vnlr.Value
-}
-
-// Creates a new instance of the VirtualNetworkListResultPage type.
-func NewVirtualNetworkListResultPage(getNextPage func(context.Context, VirtualNetworkListResult) (VirtualNetworkListResult, error)) VirtualNetworkListResultPage {
-	return VirtualNetworkListResultPage{fn: getNextPage}
 }
 
 // VirtualNetworkPropertiesFormat ...

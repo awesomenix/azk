@@ -25,7 +25,7 @@ import (
 	"net/http"
 )
 
-// ReportsClient is the REST APIs for Azure Active Directory Connect Health
+// ReportsClient is the REST APIs for Azure Active Drectory Connect Health
 type ReportsClient struct {
 	BaseClient
 }

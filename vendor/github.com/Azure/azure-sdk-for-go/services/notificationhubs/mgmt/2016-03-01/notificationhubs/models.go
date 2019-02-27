@@ -176,7 +176,7 @@ type ApnsCredentialProperties struct {
 	CertificateKey *string `json:"certificateKey,omitempty"`
 	// Endpoint - The endpoint of this credential.
 	Endpoint *string `json:"endpoint,omitempty"`
-	// Thumbprint - The APNS certificate Thumbprint
+	// Thumbprint - The Apns certificate Thumbprint
 	Thumbprint *string `json:"thumbprint,omitempty"`
 }
 
@@ -275,7 +275,7 @@ func (capVar CheckAvailabilityParameters) MarshalJSON() ([]byte, error) {
 	return json.Marshal(objectMap)
 }
 
-// CheckAvailabilityResult description of a CheckAvailability resource.
+// CheckAvailabilityResult description of a CheckAvailibility resource.
 type CheckAvailabilityResult struct {
 	autorest.Response `json:"-"`
 	// IsAvailiable - True if the name is available and can be used to create new Namespace/NotificationHub. Otherwise false.
@@ -558,11 +558,6 @@ func (iter ListResultIterator) Value() ResourceType {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ListResultIterator type.
-func NewListResultIterator(page ListResultPage) ListResultIterator {
-	return ListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (lr ListResult) IsEmpty() bool {
 	return lr.Value == nil || len(*lr.Value) == 0
@@ -632,11 +627,6 @@ func (page ListResultPage) Values() []ResourceType {
 	return *page.lr.Value
 }
 
-// Creates a new instance of the ListResultPage type.
-func NewListResultPage(getNextPage func(context.Context, ListResult) (ListResult, error)) ListResultPage {
-	return ListResultPage{fn: getNextPage}
-}
-
 // MpnsCredential description of a NotificationHub MpnsCredential.
 type MpnsCredential struct {
 	// MpnsCredentialProperties - Properties of NotificationHub MpnsCredential.
@@ -682,7 +672,7 @@ type MpnsCredentialProperties struct {
 	MpnsCertificate *string `json:"mpnsCertificate,omitempty"`
 	// CertificateKey - The certificate key for this credential.
 	CertificateKey *string `json:"certificateKey,omitempty"`
-	// Thumbprint - The MPNS certificate Thumbprint
+	// Thumbprint - The Mpns certificate Thumbprint
 	Thumbprint *string `json:"thumbprint,omitempty"`
 }
 
@@ -876,11 +866,6 @@ func (iter NamespaceListResultIterator) Value() NamespaceResource {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the NamespaceListResultIterator type.
-func NewNamespaceListResultIterator(page NamespaceListResultPage) NamespaceListResultIterator {
-	return NamespaceListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (nlr NamespaceListResult) IsEmpty() bool {
 	return nlr.Value == nil || len(*nlr.Value) == 0
@@ -948,11 +933,6 @@ func (page NamespaceListResultPage) Values() []NamespaceResource {
 		return nil
 	}
 	return *page.nlr.Value
-}
-
-// Creates a new instance of the NamespaceListResultPage type.
-func NewNamespaceListResultPage(getNextPage func(context.Context, NamespaceListResult) (NamespaceListResult, error)) NamespaceListResultPage {
-	return NamespaceListResultPage{fn: getNextPage}
 }
 
 // NamespacePatchParameters parameters supplied to the Patch Namespace operation.
@@ -1609,11 +1589,6 @@ func (iter SharedAccessAuthorizationRuleListResultIterator) Value() SharedAccess
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the SharedAccessAuthorizationRuleListResultIterator type.
-func NewSharedAccessAuthorizationRuleListResultIterator(page SharedAccessAuthorizationRuleListResultPage) SharedAccessAuthorizationRuleListResultIterator {
-	return SharedAccessAuthorizationRuleListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (saarlr SharedAccessAuthorizationRuleListResult) IsEmpty() bool {
 	return saarlr.Value == nil || len(*saarlr.Value) == 0
@@ -1684,11 +1659,6 @@ func (page SharedAccessAuthorizationRuleListResultPage) Values() []SharedAccessA
 	return *page.saarlr.Value
 }
 
-// Creates a new instance of the SharedAccessAuthorizationRuleListResultPage type.
-func NewSharedAccessAuthorizationRuleListResultPage(getNextPage func(context.Context, SharedAccessAuthorizationRuleListResult) (SharedAccessAuthorizationRuleListResult, error)) SharedAccessAuthorizationRuleListResultPage {
-	return SharedAccessAuthorizationRuleListResultPage{fn: getNextPage}
-}
-
 // SharedAccessAuthorizationRuleProperties sharedAccessAuthorizationRule properties.
 type SharedAccessAuthorizationRuleProperties struct {
 	// Rights - The rights associated with the rule.
@@ -1698,7 +1668,7 @@ type SharedAccessAuthorizationRuleProperties struct {
 // SharedAccessAuthorizationRuleResource description of a Namespace AuthorizationRules.
 type SharedAccessAuthorizationRuleResource struct {
 	autorest.Response `json:"-"`
-	// SharedAccessAuthorizationRuleProperties - Properties of the Namespace AuthorizationRule.
+	// SharedAccessAuthorizationRuleProperties - Pproperties of the Namespace AuthorizationRule.
 	*SharedAccessAuthorizationRuleProperties `json:"properties,omitempty"`
 	// ID - Resource Id
 	ID *string `json:"id,omitempty"`

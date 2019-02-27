@@ -228,7 +228,7 @@ func (a *Account) UnmarshalJSON(body []byte) error {
 	return nil
 }
 
-// AccountCheckNameAvailabilityParameters the parameters used to check the availability of the storage
+// AccountCheckNameAvailabilityParameters the parameters used to check the availabity of the storage
 // account name.
 type AccountCheckNameAvailabilityParameters struct {
 	Name *string `json:"name,omitempty"`
@@ -458,8 +458,8 @@ type CheckNameAvailabilityResult struct {
 type CustomDomain struct {
 	// Name - The custom domain name. Name is the CNAME source.
 	Name *string `json:"name,omitempty"`
-	// UseSubDomainName - Indicates whether indirect CName validation is enabled. Default value is false. This should only be set on updates
-	UseSubDomainName *bool `json:"useSubDomainName,omitempty"`
+	// UseSubDomain - Indicates whether indirect CName validation is enabled. Default value is false. This should only be set on updates
+	UseSubDomain *bool `json:"useSubDomain,omitempty"`
 }
 
 // Endpoints the URIs that are used to perform a retrieval of a public blob, queue or table object.

@@ -244,14 +244,14 @@ func (future *CapacitiesUpdateFuture) Result(client CapacitiesClient) (dc Dedica
 type CheckCapacityNameAvailabilityParameters struct {
 	// Name - Name for checking availability.
 	Name *string `json:"name,omitempty"`
-	// Type - The resource type of PowerBI dedicated.
+	// Type - The resource type of powerbi dedicated.
 	Type *string `json:"type,omitempty"`
 }
 
-// CheckCapacityNameAvailabilityResult the checking result of capacity name availability.
+// CheckCapacityNameAvailabilityResult the checking result of capacity name availibility.
 type CheckCapacityNameAvailabilityResult struct {
 	autorest.Response `json:"-"`
-	// NameAvailable - Indicator of availability of the capacity name.
+	// NameAvailable - Indicator of availablity of the capacity name.
 	NameAvailable *bool `json:"nameAvailable,omitempty"`
 	// Reason - The reason of unavailability.
 	Reason *string `json:"reason,omitempty"`
@@ -407,7 +407,7 @@ type DedicatedCapacityMutableProperties struct {
 type DedicatedCapacityProperties struct {
 	// State - The current state of PowerBI Dedicated resource. The state is to indicate more states outside of resource provisioning. Possible values include: 'StateDeleting', 'StateSucceeded', 'StateFailed', 'StatePaused', 'StateSuspended', 'StateProvisioning', 'StateUpdating', 'StateSuspending', 'StatePausing', 'StateResuming', 'StatePreparing', 'StateScaling'
 	State State `json:"state,omitempty"`
-	// ProvisioningState - The current deployment state of PowerBI Dedicated resource. The provisioningState is to indicate states for resource provisioning. Possible values include: 'Deleting', 'Succeeded', 'Failed', 'Paused', 'Suspended', 'Provisioning', 'Updating', 'Suspending', 'Pausing', 'Resuming', 'Preparing', 'Scaling'
+	// ProvisioningState - The current deployment state of PowerBI Dedicatedresource. The provisioningState is to indicate states for resource provisioning. Possible values include: 'Deleting', 'Succeeded', 'Failed', 'Paused', 'Suspended', 'Provisioning', 'Updating', 'Suspending', 'Pausing', 'Resuming', 'Preparing', 'Scaling'
 	ProvisioningState ProvisioningState `json:"provisioningState,omitempty"`
 	// Administration - A collection of Dedicated capacity administrators
 	Administration *DedicatedCapacityAdministrators `json:"administration,omitempty"`
@@ -574,11 +574,6 @@ func (iter OperationListResultIterator) Value() Operation {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the OperationListResultIterator type.
-func NewOperationListResultIterator(page OperationListResultPage) OperationListResultIterator {
-	return OperationListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (olr OperationListResult) IsEmpty() bool {
 	return olr.Value == nil || len(*olr.Value) == 0
@@ -646,11 +641,6 @@ func (page OperationListResultPage) Values() []Operation {
 		return nil
 	}
 	return *page.olr.Value
-}
-
-// Creates a new instance of the OperationListResultPage type.
-func NewOperationListResultPage(getNextPage func(context.Context, OperationListResult) (OperationListResult, error)) OperationListResultPage {
-	return OperationListResultPage{fn: getNextPage}
 }
 
 // Resource represents an instance of an PowerBI Dedicated resource.

@@ -436,11 +436,6 @@ func (iter AccountListResultIterator) Value() Account {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the AccountListResultIterator type.
-func NewAccountListResultIterator(page AccountListResultPage) AccountListResultIterator {
-	return AccountListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (alr AccountListResult) IsEmpty() bool {
 	return alr.Value == nil || len(*alr.Value) == 0
@@ -508,11 +503,6 @@ func (page AccountListResultPage) Values() []Account {
 		return nil
 	}
 	return *page.alr.Value
-}
-
-// Creates a new instance of the AccountListResultPage type.
-func NewAccountListResultPage(getNextPage func(context.Context, AccountListResult) (AccountListResult, error)) AccountListResultPage {
-	return AccountListResultPage{fn: getNextPage}
 }
 
 // AccountProperties ...
@@ -713,8 +703,8 @@ type CheckNameAvailabilityResult struct {
 type CustomDomain struct {
 	// Name - Gets or sets the custom domain name. Name is the CNAME source.
 	Name *string `json:"name,omitempty"`
-	// UseSubDomainName - Indicates whether indirect CName validation is enabled. Default value is false. This should only be set on updates
-	UseSubDomainName *bool `json:"useSubDomainName,omitempty"`
+	// UseSubDomain - Indicates whether indirect CName validation is enabled. Default value is false. This should only be set on updates
+	UseSubDomain *bool `json:"useSubDomain,omitempty"`
 }
 
 // Endpoints the URIs that are used to perform a retrieval of a public blob, queue or table object.

@@ -21,7 +21,6 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/Azure/go-autorest/autorest"
-	"github.com/Azure/go-autorest/autorest/azure"
 	"github.com/Azure/go-autorest/autorest/to"
 	"github.com/Azure/go-autorest/tracing"
 	"net/http"
@@ -104,15 +103,13 @@ const (
 	S768m HanaInstanceSizeNamesEnum = "S768m"
 	// S768xm ...
 	S768xm HanaInstanceSizeNamesEnum = "S768xm"
-	// S96 ...
-	S96 HanaInstanceSizeNamesEnum = "S96"
 	// S960m ...
 	S960m HanaInstanceSizeNamesEnum = "S960m"
 )
 
 // PossibleHanaInstanceSizeNamesEnumValues returns an array of possible values for the HanaInstanceSizeNamesEnum const type.
 func PossibleHanaInstanceSizeNamesEnumValues() []HanaInstanceSizeNamesEnum {
-	return []HanaInstanceSizeNamesEnum{S144, S144m, S192, S192m, S192xm, S384, S384m, S384xm, S384xxm, S576m, S576xm, S72, S72m, S768, S768m, S768xm, S96, S960m}
+	return []HanaInstanceSizeNamesEnum{S144, S144m, S192, S192m, S192xm, S384, S384m, S384xm, S384xxm, S576m, S576xm, S72, S72m, S768, S768m, S768xm, S960m}
 }
 
 // Disk specifies the disk information fo the HANA instance
@@ -271,10 +268,6 @@ type HanaInstanceProperties struct {
 	HanaInstanceID *string `json:"hanaInstanceId,omitempty"`
 	// PowerState - Resource power state. Possible values include: 'Starting', 'Started', 'Stopping', 'Stopped', 'Restarting', 'Unknown'
 	PowerState HanaInstancePowerStateEnum `json:"powerState,omitempty"`
-	// ProximityPlacementGroup - Resource proximity placement group
-	ProximityPlacementGroup *string `json:"proximityPlacementGroup,omitempty"`
-	// HwRevision - Hardware revision of a HANA instance
-	HwRevision *string `json:"hwRevision,omitempty"`
 }
 
 // HanaInstancesListResult the response from the List HANA Instances operation.
@@ -342,11 +335,6 @@ func (iter HanaInstancesListResultIterator) Value() HanaInstance {
 		return HanaInstance{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the HanaInstancesListResultIterator type.
-func NewHanaInstancesListResultIterator(page HanaInstancesListResultPage) HanaInstancesListResultIterator {
-	return HanaInstancesListResultIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -418,43 +406,15 @@ func (page HanaInstancesListResultPage) Values() []HanaInstance {
 	return *page.hilr.Value
 }
 
-// Creates a new instance of the HanaInstancesListResultPage type.
-func NewHanaInstancesListResultPage(getNextPage func(context.Context, HanaInstancesListResult) (HanaInstancesListResult, error)) HanaInstancesListResultPage {
-	return HanaInstancesListResultPage{fn: getNextPage}
-}
-
-// HanaInstancesRestartFuture an abstraction for monitoring and retrieving the results of a long-running
-// operation.
-type HanaInstancesRestartFuture struct {
-	azure.Future
-}
-
-// Result returns the result of the asynchronous operation.
-// If the operation has not completed it will return an error.
-func (future *HanaInstancesRestartFuture) Result(client HanaInstancesClient) (ar autorest.Response, err error) {
-	var done bool
-	done, err = future.Done(client)
-	if err != nil {
-		err = autorest.NewErrorWithError(err, "hanaonazure.HanaInstancesRestartFuture", "Result", future.Response(), "Polling failure")
-		return
-	}
-	if !done {
-		err = azure.NewAsyncOpIncompleteError("hanaonazure.HanaInstancesRestartFuture")
-		return
-	}
-	ar.Response = future.Response()
-	return
-}
-
 // HardwareProfile specifies the hardware settings for the HANA instance.
 type HardwareProfile struct {
 	// HardwareType - Name of the hardware type (vendor and/or their product name). Possible values include: 'CiscoUCS', 'HPE'
 	HardwareType HanaHardwareTypeNamesEnum `json:"hardwareType,omitempty"`
-	// HanaInstanceSize - Specifies the HANA instance SKU. Possible values include: 'S72m', 'S144m', 'S72', 'S144', 'S192', 'S192m', 'S192xm', 'S96', 'S384', 'S384m', 'S384xm', 'S384xxm', 'S576m', 'S576xm', 'S768', 'S768m', 'S768xm', 'S960m'
+	// HanaInstanceSize - Specifies the HANA instance SKU. Possible values include: 'S72m', 'S144m', 'S72', 'S144', 'S192', 'S192m', 'S192xm', 'S384', 'S384m', 'S384xm', 'S384xxm', 'S576m', 'S576xm', 'S768', 'S768m', 'S768xm', 'S960m'
 	HanaInstanceSize HanaInstanceSizeNamesEnum `json:"hanaInstanceSize,omitempty"`
 }
 
-// IPAddress specifies the IP address of the network interface.
+// IPAddress specifies the IP address of the network interaface.
 type IPAddress struct {
 	// IPAddress - Specifies the IP address of the network interface.
 	IPAddress *string `json:"ipAddress,omitempty"`
@@ -534,19 +494,4 @@ type StorageProfile struct {
 	NfsIPAddress *string `json:"nfsIpAddress,omitempty"`
 	// OsDisks - Specifies information about the operating system disk used by the hana instance.
 	OsDisks *[]Disk `json:"osDisks,omitempty"`
-}
-
-// Tags tags field of the HANA instance.
-type Tags struct {
-	// Tags - Tags field of the HANA instance.
-	Tags map[string]*string `json:"tags"`
-}
-
-// MarshalJSON is the custom marshaler for Tags.
-func (t Tags) MarshalJSON() ([]byte, error) {
-	objectMap := make(map[string]interface{})
-	if t.Tags != nil {
-		objectMap["tags"] = t.Tags
-	}
-	return json.Marshal(objectMap)
 }

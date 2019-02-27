@@ -274,7 +274,7 @@ func (ai AssetItem) MarshalJSON() ([]byte, error) {
 
 // AssetLocation describes the access location for a web service asset.
 type AssetLocation struct {
-	// URI - The URI where the asset is accessible from, (e.g. aml://abc for system assets or https://xyz for user assets
+	// URI - The URI where the asset is accessible from, (e.g. aml://abc for system assets or https://xyz for user asets
 	URI *string `json:"uri,omitempty"`
 	// Credentials - Access credentials for the asset, if applicable (e.g. asset specified by storage account connection string + blob URI)
 	Credentials *string `json:"credentials,omitempty"`
@@ -572,11 +572,6 @@ func (iter PaginatedWebServicesListIterator) Value() WebService {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the PaginatedWebServicesListIterator type.
-func NewPaginatedWebServicesListIterator(page PaginatedWebServicesListPage) PaginatedWebServicesListIterator {
-	return PaginatedWebServicesListIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (pwsl PaginatedWebServicesList) IsEmpty() bool {
 	return pwsl.Value == nil || len(*pwsl.Value) == 0
@@ -644,11 +639,6 @@ func (page PaginatedWebServicesListPage) Values() []WebService {
 		return nil
 	}
 	return *page.pwsl.Value
-}
-
-// Creates a new instance of the PaginatedWebServicesListPage type.
-func NewPaginatedWebServicesListPage(getNextPage func(context.Context, PaginatedWebServicesList) (PaginatedWebServicesList, error)) PaginatedWebServicesListPage {
-	return PaginatedWebServicesListPage{fn: getNextPage}
 }
 
 // PatchFuture an abstraction for monitoring and retrieving the results of a long-running operation.

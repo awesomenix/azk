@@ -1173,11 +1173,6 @@ func (iter PaginatedComputeResourcesListIterator) Value() ComputeResource {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the PaginatedComputeResourcesListIterator type.
-func NewPaginatedComputeResourcesListIterator(page PaginatedComputeResourcesListPage) PaginatedComputeResourcesListIterator {
-	return PaginatedComputeResourcesListIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (pcrl PaginatedComputeResourcesList) IsEmpty() bool {
 	return pcrl.Value == nil || len(*pcrl.Value) == 0
@@ -1245,11 +1240,6 @@ func (page PaginatedComputeResourcesListPage) Values() []ComputeResource {
 		return nil
 	}
 	return *page.pcrl.Value
-}
-
-// Creates a new instance of the PaginatedComputeResourcesListPage type.
-func NewPaginatedComputeResourcesListPage(getNextPage func(context.Context, PaginatedComputeResourcesList) (PaginatedComputeResourcesList, error)) PaginatedComputeResourcesListPage {
-	return PaginatedComputeResourcesListPage{fn: getNextPage}
 }
 
 // Password ...
@@ -1323,9 +1313,9 @@ type ScaleSettings struct {
 	AutoScaleEnabled *bool `json:"autoScaleEnabled,omitempty"`
 }
 
-// SslConfiguration the SSL configuration for scoring
+// SslConfiguration the ssl configugation for scoring
 type SslConfiguration struct {
-	// Status - Enable or disable SSL for scoring. Possible values include: 'Disabled', 'Enabled'
+	// Status - Enable or disable ssl for scoring. Possible values include: 'Disabled', 'Enabled'
 	Status Status `json:"status,omitempty"`
 	// Cert - Cert data
 	Cert *string `json:"cert,omitempty"`
@@ -1449,7 +1439,7 @@ type VirtualMachineProperties struct {
 
 // VirtualMachineSecrets secrets related to a Machine Learning compute based on AKS.
 type VirtualMachineSecrets struct {
-	// AdministratorAccount - Admin credentials for virtual machine.
+	// AdministratorAccount - Admin creadentials for virtual machine.
 	AdministratorAccount *VirtualMachineSSHCredentials `json:"administratorAccount,omitempty"`
 	// ComputeType - Possible values include: 'ComputeTypeBasicComputeSecretsComputeTypeComputeSecrets', 'ComputeTypeBasicComputeSecretsComputeTypeAKS', 'ComputeTypeBasicComputeSecretsComputeTypeVirtualMachine'
 	ComputeType ComputeTypeBasicComputeSecrets `json:"computeType,omitempty"`
@@ -1691,11 +1681,6 @@ func (iter WorkspaceListResultIterator) Value() Workspace {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the WorkspaceListResultIterator type.
-func NewWorkspaceListResultIterator(page WorkspaceListResultPage) WorkspaceListResultIterator {
-	return WorkspaceListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (wlr WorkspaceListResult) IsEmpty() bool {
 	return wlr.Value == nil || len(*wlr.Value) == 0
@@ -1763,11 +1748,6 @@ func (page WorkspaceListResultPage) Values() []Workspace {
 		return nil
 	}
 	return *page.wlr.Value
-}
-
-// Creates a new instance of the WorkspaceListResultPage type.
-func NewWorkspaceListResultPage(getNextPage func(context.Context, WorkspaceListResult) (WorkspaceListResult, error)) WorkspaceListResultPage {
-	return WorkspaceListResultPage{fn: getNextPage}
 }
 
 // WorkspaceProperties the properties of a machine learning workspace.

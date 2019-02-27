@@ -396,7 +396,7 @@ func (client DevicesClient) DeleteResponder(resp *http.Response) (result autores
 	return
 }
 
-// DownloadUpdates downloads updates on the device.
+// DownloadUpdates downloads udpates on the device.
 // Parameters:
 // deviceName - the device name.
 // resourceGroupName - the resource group name

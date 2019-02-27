@@ -1,6 +1,6 @@
 // +build go1.9
 
-// Copyright 2019 Microsoft Corporation
+// Copyright 2018 Microsoft Corporation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,30 +19,21 @@
 
 package alertsmanagement
 
-import (
-	"context"
+import original "github.com/Azure/azure-sdk-for-go/services/alertsmanagement/mgmt/2018-05-05/alertsmanagement"
 
-	original "github.com/Azure/azure-sdk-for-go/services/alertsmanagement/mgmt/2018-05-05/alertsmanagement"
-)
+type AlertsClient = original.AlertsClient
 
 const (
 	DefaultBaseURI = original.DefaultBaseURI
 )
 
+type BaseClient = original.BaseClient
 type AlertModificationEvent = original.AlertModificationEvent
 
 const (
 	AlertCreated           AlertModificationEvent = original.AlertCreated
 	MonitorConditionChange AlertModificationEvent = original.MonitorConditionChange
 	StateChange            AlertModificationEvent = original.StateChange
-)
-
-type AlertState = original.AlertState
-
-const (
-	AlertStateAcknowledged AlertState = original.AlertStateAcknowledged
-	AlertStateClosed       AlertState = original.AlertStateClosed
-	AlertStateNew          AlertState = original.AlertStateNew
 )
 
 type AlertsSortByFields = original.AlertsSortByFields
@@ -69,6 +60,14 @@ const (
 	AlertsSummaryGroupByFieldsMonitorService   AlertsSummaryGroupByFields = original.AlertsSummaryGroupByFieldsMonitorService
 	AlertsSummaryGroupByFieldsSeverity         AlertsSummaryGroupByFields = original.AlertsSummaryGroupByFieldsSeverity
 	AlertsSummaryGroupByFieldsSignalType       AlertsSummaryGroupByFields = original.AlertsSummaryGroupByFieldsSignalType
+)
+
+type AlertState = original.AlertState
+
+const (
+	AlertStateAcknowledged AlertState = original.AlertStateAcknowledged
+	AlertStateClosed       AlertState = original.AlertStateClosed
+	AlertStateNew          AlertState = original.AlertStateNew
 )
 
 type MonitorCondition = original.MonitorCondition
@@ -156,20 +155,17 @@ type AlertModification = original.AlertModification
 type AlertModificationItem = original.AlertModificationItem
 type AlertModificationProperties = original.AlertModificationProperties
 type AlertProperties = original.AlertProperties
-type AlertsClient = original.AlertsClient
 type AlertsList = original.AlertsList
 type AlertsListIterator = original.AlertsListIterator
 type AlertsListPage = original.AlertsListPage
 type AlertsSummary = original.AlertsSummary
 type AlertsSummaryGroup = original.AlertsSummaryGroup
 type AlertsSummaryGroupItem = original.AlertsSummaryGroupItem
-type BaseClient = original.BaseClient
 type ErrorResponse = original.ErrorResponse
 type ErrorResponseBody = original.ErrorResponseBody
 type Essentials = original.Essentials
 type Operation = original.Operation
 type OperationDisplay = original.OperationDisplay
-type OperationsClient = original.OperationsClient
 type OperationsList = original.OperationsList
 type OperationsListIterator = original.OperationsListIterator
 type OperationsListPage = original.OperationsListPage
@@ -180,41 +176,18 @@ type SmartGroupModification = original.SmartGroupModification
 type SmartGroupModificationItem = original.SmartGroupModificationItem
 type SmartGroupModificationProperties = original.SmartGroupModificationProperties
 type SmartGroupProperties = original.SmartGroupProperties
-type SmartGroupsClient = original.SmartGroupsClient
 type SmartGroupsList = original.SmartGroupsList
+type OperationsClient = original.OperationsClient
+type SmartGroupsClient = original.SmartGroupsClient
 
-func New(subscriptionID string) BaseClient {
-	return original.New(subscriptionID)
-}
 func NewAlertsClient(subscriptionID string) AlertsClient {
 	return original.NewAlertsClient(subscriptionID)
 }
 func NewAlertsClientWithBaseURI(baseURI string, subscriptionID string) AlertsClient {
 	return original.NewAlertsClientWithBaseURI(baseURI, subscriptionID)
 }
-func NewAlertsListIterator(page AlertsListPage) AlertsListIterator {
-	return original.NewAlertsListIterator(page)
-}
-func NewAlertsListPage(getNextPage func(context.Context, AlertsList) (AlertsList, error)) AlertsListPage {
-	return original.NewAlertsListPage(getNextPage)
-}
-func NewOperationsClient(subscriptionID string) OperationsClient {
-	return original.NewOperationsClient(subscriptionID)
-}
-func NewOperationsClientWithBaseURI(baseURI string, subscriptionID string) OperationsClient {
-	return original.NewOperationsClientWithBaseURI(baseURI, subscriptionID)
-}
-func NewOperationsListIterator(page OperationsListPage) OperationsListIterator {
-	return original.NewOperationsListIterator(page)
-}
-func NewOperationsListPage(getNextPage func(context.Context, OperationsList) (OperationsList, error)) OperationsListPage {
-	return original.NewOperationsListPage(getNextPage)
-}
-func NewSmartGroupsClient(subscriptionID string) SmartGroupsClient {
-	return original.NewSmartGroupsClient(subscriptionID)
-}
-func NewSmartGroupsClientWithBaseURI(baseURI string, subscriptionID string) SmartGroupsClient {
-	return original.NewSmartGroupsClientWithBaseURI(baseURI, subscriptionID)
+func New(subscriptionID string) BaseClient {
+	return original.New(subscriptionID)
 }
 func NewWithBaseURI(baseURI string, subscriptionID string) BaseClient {
 	return original.NewWithBaseURI(baseURI, subscriptionID)
@@ -222,14 +195,14 @@ func NewWithBaseURI(baseURI string, subscriptionID string) BaseClient {
 func PossibleAlertModificationEventValues() []AlertModificationEvent {
 	return original.PossibleAlertModificationEventValues()
 }
-func PossibleAlertStateValues() []AlertState {
-	return original.PossibleAlertStateValues()
-}
 func PossibleAlertsSortByFieldsValues() []AlertsSortByFields {
 	return original.PossibleAlertsSortByFieldsValues()
 }
 func PossibleAlertsSummaryGroupByFieldsValues() []AlertsSummaryGroupByFields {
 	return original.PossibleAlertsSummaryGroupByFieldsValues()
+}
+func PossibleAlertStateValues() []AlertState {
+	return original.PossibleAlertStateValues()
 }
 func PossibleMonitorConditionValues() []MonitorCondition {
 	return original.PossibleMonitorConditionValues()
@@ -254,6 +227,18 @@ func PossibleStateValues() []State {
 }
 func PossibleTimeRangeValues() []TimeRange {
 	return original.PossibleTimeRangeValues()
+}
+func NewOperationsClient(subscriptionID string) OperationsClient {
+	return original.NewOperationsClient(subscriptionID)
+}
+func NewOperationsClientWithBaseURI(baseURI string, subscriptionID string) OperationsClient {
+	return original.NewOperationsClientWithBaseURI(baseURI, subscriptionID)
+}
+func NewSmartGroupsClient(subscriptionID string) SmartGroupsClient {
+	return original.NewSmartGroupsClient(subscriptionID)
+}
+func NewSmartGroupsClientWithBaseURI(baseURI string, subscriptionID string) SmartGroupsClient {
+	return original.NewSmartGroupsClientWithBaseURI(baseURI, subscriptionID)
 }
 func UserAgent() string {
 	return original.UserAgent() + " profiles/preview"

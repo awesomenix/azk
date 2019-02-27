@@ -1,6 +1,6 @@
 // +build go1.9
 
-// Copyright 2019 Microsoft Corporation
+// Copyright 2018 Microsoft Corporation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ package training
 
 import original "github.com/Azure/azure-sdk-for-go/services/cognitiveservices/v2.2/customvision/training"
 
+type BaseClient = original.BaseClient
 type Classifier = original.Classifier
 
 const (
@@ -92,7 +93,6 @@ const (
 	Regular  TagType = original.Regular
 )
 
-type BaseClient = original.BaseClient
 type BoundingBox = original.BoundingBox
 type Domain = original.Domain
 type Export = original.Export

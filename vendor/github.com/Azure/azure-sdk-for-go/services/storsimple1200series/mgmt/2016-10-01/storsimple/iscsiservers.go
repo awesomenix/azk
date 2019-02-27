@@ -41,10 +41,10 @@ func NewIscsiServersClientWithBaseURI(baseURI string, subscriptionID string) Isc
 	return IscsiServersClient{NewWithBaseURI(baseURI, subscriptionID)}
 }
 
-// BackupNow backup the iSCSI server now.
+// BackupNow backup the iscsi server now.
 // Parameters:
 // deviceName - the device name.
-// iscsiServerName - the iSCSI server name.
+// iscsiServerName - the iscsi server name.
 // resourceGroupName - the resource group name
 // managerName - the manager name
 func (client IscsiServersClient) BackupNow(ctx context.Context, deviceName string, iscsiServerName string, resourceGroupName string, managerName string) (result IscsiServersBackupNowFuture, err error) {
@@ -128,11 +128,11 @@ func (client IscsiServersClient) BackupNowResponder(resp *http.Response) (result
 	return
 }
 
-// CreateOrUpdate creates or updates the iSCSI server.
+// CreateOrUpdate creates or updates the iscsi server.
 // Parameters:
 // deviceName - the device name.
-// iscsiServerName - the iSCSI server name.
-// iscsiServer - the iSCSI server.
+// iscsiServerName - the iscsi server name.
+// iscsiServer - the iscsi server.
 // resourceGroupName - the resource group name
 // managerName - the manager name
 func (client IscsiServersClient) CreateOrUpdate(ctx context.Context, deviceName string, iscsiServerName string, iscsiServer ISCSIServer, resourceGroupName string, managerName string) (result IscsiServersCreateOrUpdateFuture, err error) {
@@ -224,10 +224,10 @@ func (client IscsiServersClient) CreateOrUpdateResponder(resp *http.Response) (r
 	return
 }
 
-// Delete deletes the iSCSI server.
+// Delete deletes the iscsi server.
 // Parameters:
 // deviceName - the device name.
-// iscsiServerName - the iSCSI server name.
+// iscsiServerName - the iscsi server name.
 // resourceGroupName - the resource group name
 // managerName - the manager name
 func (client IscsiServersClient) Delete(ctx context.Context, deviceName string, iscsiServerName string, resourceGroupName string, managerName string) (result IscsiServersDeleteFuture, err error) {
@@ -311,10 +311,10 @@ func (client IscsiServersClient) DeleteResponder(resp *http.Response) (result au
 	return
 }
 
-// Get returns the properties of the specified iSCSI server name.
+// Get returns the properties of the specified iscsi server name.
 // Parameters:
 // deviceName - the device name.
-// iscsiServerName - the iSCSI server name.
+// iscsiServerName - the iscsi server name.
 // resourceGroupName - the resource group name
 // managerName - the manager name
 func (client IscsiServersClient) Get(ctx context.Context, deviceName string, iscsiServerName string, resourceGroupName string, managerName string) (result ISCSIServer, err error) {
@@ -399,7 +399,7 @@ func (client IscsiServersClient) GetResponder(resp *http.Response) (result ISCSI
 	return
 }
 
-// ListByDevice retrieves all the iSCSI in a device.
+// ListByDevice retrieves all the iscsi in a device.
 // Parameters:
 // deviceName - the device name.
 // resourceGroupName - the resource group name
@@ -485,7 +485,7 @@ func (client IscsiServersClient) ListByDeviceResponder(resp *http.Response) (res
 	return
 }
 
-// ListByManager retrieves all the iSCSI servers in a manager.
+// ListByManager retrieves all the iscsi servers in a manager.
 // Parameters:
 // resourceGroupName - the resource group name
 // managerName - the manager name
@@ -569,10 +569,10 @@ func (client IscsiServersClient) ListByManagerResponder(resp *http.Response) (re
 	return
 }
 
-// ListMetricDefinition retrieves metric definitions for all metrics aggregated at iSCSI server.
+// ListMetricDefinition retrieves metric definitions for all metrics aggregated at iscsi server.
 // Parameters:
-// deviceName - the device name.
-// iscsiServerName - the iSCSI server name.
+// deviceName - the devie name.
+// iscsiServerName - the iscsi server name.
 // resourceGroupName - the resource group name
 // managerName - the manager name
 func (client IscsiServersClient) ListMetricDefinition(ctx context.Context, deviceName string, iscsiServerName string, resourceGroupName string, managerName string) (result MetricDefinitionList, err error) {
@@ -657,10 +657,10 @@ func (client IscsiServersClient) ListMetricDefinitionResponder(resp *http.Respon
 	return
 }
 
-// ListMetrics gets the iSCSI server metrics
+// ListMetrics gets the iscsi server metrics
 // Parameters:
-// deviceName - the device name.
-// iscsiServerName - the iSCSI server name.
+// deviceName - the devie name.
+// iscsiServerName - the iscsi server name.
 // resourceGroupName - the resource group name
 // managerName - the manager name
 // filter - oData Filter options

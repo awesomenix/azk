@@ -14,8 +14,6 @@ type ClusterSpec struct {
 	TenantID          string `json:"tenantID,omitempty"`
 	ClientID          string `json:"clientID,omitempty"`
 	ClientSecret      string `json:"clientSecret,omitempty"`
-	VMType            string `json:"vmtype,omitempty"` // VMTypes are standard, vmss
-	PrivateCluster    bool   `json:"privateCluster,omitempty"`
 }
 
 // ClusterStatus defines the observed state of Cluster
@@ -30,6 +28,7 @@ type ClusterStatus struct {
 	EtcdCACertificate          string   `json:"etcdCACertificate,omitempty"`
 	EtcdCACertificateKey       string   `json:"etcdCACertificateKey,omitempty"`
 	AdminKubeConfig            string   `json:"adminKubeConfig,omitempty"`
+	CustomerKubeConfig         string   `json:"customerKubeConfig,omitempty"`
 	BootstrapToken             string   `json:"bootstrapToken,omitempty"`
 	DiscoveryHashes            []string `json:"discoveryHashes,omitempty"`
 }

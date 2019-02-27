@@ -111,7 +111,7 @@ type AddStorageAccountParameters struct {
 // asynchronous operation failed, the response body includes the HTTP status code for the failed request
 // and error information regarding the failure.
 type AzureAsyncOperationResult struct {
-	// Status - the status of the AzureAsyncOperation. Possible values include: 'OperationStatusInProgress', 'OperationStatusSucceeded', 'OperationStatusFailed'
+	// Status - the status of the AzureAsuncOperation. Possible values include: 'OperationStatusInProgress', 'OperationStatusSucceeded', 'OperationStatusFailed'
 	Status OperationStatus `json:"status,omitempty"`
 	Error  *Error          `json:"error,omitempty"`
 }
@@ -275,11 +275,6 @@ func (iter DataLakeAnalyticsAccountListDataLakeStoreResultIterator) Value() Data
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the DataLakeAnalyticsAccountListDataLakeStoreResultIterator type.
-func NewDataLakeAnalyticsAccountListDataLakeStoreResultIterator(page DataLakeAnalyticsAccountListDataLakeStoreResultPage) DataLakeAnalyticsAccountListDataLakeStoreResultIterator {
-	return DataLakeAnalyticsAccountListDataLakeStoreResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (dlaaldlsr DataLakeAnalyticsAccountListDataLakeStoreResult) IsEmpty() bool {
 	return dlaaldlsr.Value == nil || len(*dlaaldlsr.Value) == 0
@@ -347,11 +342,6 @@ func (page DataLakeAnalyticsAccountListDataLakeStoreResultPage) Values() []DataL
 		return nil
 	}
 	return *page.dlaaldlsr.Value
-}
-
-// Creates a new instance of the DataLakeAnalyticsAccountListDataLakeStoreResultPage type.
-func NewDataLakeAnalyticsAccountListDataLakeStoreResultPage(getNextPage func(context.Context, DataLakeAnalyticsAccountListDataLakeStoreResult) (DataLakeAnalyticsAccountListDataLakeStoreResult, error)) DataLakeAnalyticsAccountListDataLakeStoreResultPage {
-	return DataLakeAnalyticsAccountListDataLakeStoreResultPage{fn: getNextPage}
 }
 
 // DataLakeAnalyticsAccountListResult dataLakeAnalytics Account list information.
@@ -422,11 +412,6 @@ func (iter DataLakeAnalyticsAccountListResultIterator) Value() DataLakeAnalytics
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the DataLakeAnalyticsAccountListResultIterator type.
-func NewDataLakeAnalyticsAccountListResultIterator(page DataLakeAnalyticsAccountListResultPage) DataLakeAnalyticsAccountListResultIterator {
-	return DataLakeAnalyticsAccountListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (dlaalr DataLakeAnalyticsAccountListResult) IsEmpty() bool {
 	return dlaalr.Value == nil || len(*dlaalr.Value) == 0
@@ -494,11 +479,6 @@ func (page DataLakeAnalyticsAccountListResultPage) Values() []DataLakeAnalyticsA
 		return nil
 	}
 	return *page.dlaalr.Value
-}
-
-// Creates a new instance of the DataLakeAnalyticsAccountListResultPage type.
-func NewDataLakeAnalyticsAccountListResultPage(getNextPage func(context.Context, DataLakeAnalyticsAccountListResult) (DataLakeAnalyticsAccountListResult, error)) DataLakeAnalyticsAccountListResultPage {
-	return DataLakeAnalyticsAccountListResultPage{fn: getNextPage}
 }
 
 // DataLakeAnalyticsAccountListStorageAccountsResult azure Storage Account list information.
@@ -571,11 +551,6 @@ func (iter DataLakeAnalyticsAccountListStorageAccountsResultIterator) Value() St
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the DataLakeAnalyticsAccountListStorageAccountsResultIterator type.
-func NewDataLakeAnalyticsAccountListStorageAccountsResultIterator(page DataLakeAnalyticsAccountListStorageAccountsResultPage) DataLakeAnalyticsAccountListStorageAccountsResultIterator {
-	return DataLakeAnalyticsAccountListStorageAccountsResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (dlaalsar DataLakeAnalyticsAccountListStorageAccountsResult) IsEmpty() bool {
 	return dlaalsar.Value == nil || len(*dlaalsar.Value) == 0
@@ -643,11 +618,6 @@ func (page DataLakeAnalyticsAccountListStorageAccountsResultPage) Values() []Sto
 		return nil
 	}
 	return *page.dlaalsar.Value
-}
-
-// Creates a new instance of the DataLakeAnalyticsAccountListStorageAccountsResultPage type.
-func NewDataLakeAnalyticsAccountListStorageAccountsResultPage(getNextPage func(context.Context, DataLakeAnalyticsAccountListStorageAccountsResult) (DataLakeAnalyticsAccountListStorageAccountsResult, error)) DataLakeAnalyticsAccountListStorageAccountsResultPage {
-	return DataLakeAnalyticsAccountListStorageAccountsResultPage{fn: getNextPage}
 }
 
 // DataLakeAnalyticsAccountProperties the account specific properties that are associated with an
@@ -812,11 +782,6 @@ func (iter ListBlobContainersResultIterator) Value() BlobContainer {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ListBlobContainersResultIterator type.
-func NewListBlobContainersResultIterator(page ListBlobContainersResultPage) ListBlobContainersResultIterator {
-	return ListBlobContainersResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (lbcr ListBlobContainersResult) IsEmpty() bool {
 	return lbcr.Value == nil || len(*lbcr.Value) == 0
@@ -886,11 +851,6 @@ func (page ListBlobContainersResultPage) Values() []BlobContainer {
 	return *page.lbcr.Value
 }
 
-// Creates a new instance of the ListBlobContainersResultPage type.
-func NewListBlobContainersResultPage(getNextPage func(context.Context, ListBlobContainersResult) (ListBlobContainersResult, error)) ListBlobContainersResultPage {
-	return ListBlobContainersResultPage{fn: getNextPage}
-}
-
 // ListSasTokensResult the SAS response that contains the storage account, container and associated SAS
 // token for connection use.
 type ListSasTokensResult struct {
@@ -956,11 +916,6 @@ func (iter ListSasTokensResultIterator) Value() SasTokenInfo {
 		return SasTokenInfo{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the ListSasTokensResultIterator type.
-func NewListSasTokensResultIterator(page ListSasTokensResultPage) ListSasTokensResultIterator {
-	return ListSasTokensResultIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -1030,11 +985,6 @@ func (page ListSasTokensResultPage) Values() []SasTokenInfo {
 		return nil
 	}
 	return *page.lstr.Value
-}
-
-// Creates a new instance of the ListSasTokensResultPage type.
-func NewListSasTokensResultPage(getNextPage func(context.Context, ListSasTokensResult) (ListSasTokensResult, error)) ListSasTokensResultPage {
-	return ListSasTokensResultPage{fn: getNextPage}
 }
 
 // SasTokenInfo SAS token information.

@@ -4,19 +4,24 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // NodeSetSpec defines the desired state of NodeSet
 type NodeSetSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	KubernetesVersion string `json:"kubernetesVersion,omitempty"`
+	Replicas          *int32 `json:"replicas,omitempty"`
 }
 
 // NodeSetStatus defines the observed state of NodeSet
 type NodeSetStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	Replicas          int32             `json:"replicas,omitempty"`
+	KubernetesVersion string            `json:"kubernetesVersion,omitempty"`
+	ProvisioningState string            `json:"provisioningState,omitempty"`
+	Kubeconfig        string            `json:"kubeConfig,omitempty"`
+	NodeStatus        []NodeSetVMStatus `json:"nodeStatus,omitempty"`
+}
+
+type NodeSetVMStatus struct {
+	VMComputerName string `json:"vmComputerName,omitempty"`
+	VMInstanceID   string `json:"vmInstanceID,omitempty"`
 }
 
 // +genclient
@@ -25,6 +30,7 @@ type NodeSetStatus struct {
 // NodeSet is the Schema for the nodesets API
 // +k8s:openapi-gen=true
 // +kubebuilder:subresource:status
+// +kubebuilder:subresource:scale:specpath=.spec.replicas,statuspath=.status.replicas
 type NodeSet struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

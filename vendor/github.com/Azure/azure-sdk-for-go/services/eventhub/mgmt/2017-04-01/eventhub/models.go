@@ -363,11 +363,6 @@ func (iter ArmDisasterRecoveryListResultIterator) Value() ArmDisasterRecovery {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ArmDisasterRecoveryListResultIterator type.
-func NewArmDisasterRecoveryListResultIterator(page ArmDisasterRecoveryListResultPage) ArmDisasterRecoveryListResultIterator {
-	return ArmDisasterRecoveryListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (adrlr ArmDisasterRecoveryListResult) IsEmpty() bool {
 	return adrlr.Value == nil || len(*adrlr.Value) == 0
@@ -437,17 +432,12 @@ func (page ArmDisasterRecoveryListResultPage) Values() []ArmDisasterRecovery {
 	return *page.adrlr.Value
 }
 
-// Creates a new instance of the ArmDisasterRecoveryListResultPage type.
-func NewArmDisasterRecoveryListResultPage(getNextPage func(context.Context, ArmDisasterRecoveryListResult) (ArmDisasterRecoveryListResult, error)) ArmDisasterRecoveryListResultPage {
-	return ArmDisasterRecoveryListResultPage{fn: getNextPage}
-}
-
 // ArmDisasterRecoveryProperties properties required to the Create Or Update Alias(Disaster Recovery
 // configurations)
 type ArmDisasterRecoveryProperties struct {
 	// ProvisioningState - Provisioning state of the Alias(Disaster Recovery configuration) - possible values 'Accepted' or 'Succeeded' or 'Failed'. Possible values include: 'Accepted', 'Succeeded', 'Failed'
 	ProvisioningState ProvisioningStateDR `json:"provisioningState,omitempty"`
-	// PartnerNamespace - ARM Id of the Primary/Secondary eventhub namespace name, which is part of GEO DR pairing
+	// PartnerNamespace - ARM Id of the Primary/Secondary eventhub namespace name, which is part of GEO DR pairning
 	PartnerNamespace *string `json:"partnerNamespace,omitempty"`
 	// AlternateName - Alternate name specified when alias and namespace names are same.
 	AlternateName *string `json:"alternateName,omitempty"`
@@ -606,11 +596,6 @@ func (iter AuthorizationRuleListResultIterator) Value() AuthorizationRule {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the AuthorizationRuleListResultIterator type.
-func NewAuthorizationRuleListResultIterator(page AuthorizationRuleListResultPage) AuthorizationRuleListResultIterator {
-	return AuthorizationRuleListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (arlr AuthorizationRuleListResult) IsEmpty() bool {
 	return arlr.Value == nil || len(*arlr.Value) == 0
@@ -680,11 +665,6 @@ func (page AuthorizationRuleListResultPage) Values() []AuthorizationRule {
 	return *page.arlr.Value
 }
 
-// Creates a new instance of the AuthorizationRuleListResultPage type.
-func NewAuthorizationRuleListResultPage(getNextPage func(context.Context, AuthorizationRuleListResult) (AuthorizationRuleListResult, error)) AuthorizationRuleListResultPage {
-	return AuthorizationRuleListResultPage{fn: getNextPage}
-}
-
 // AuthorizationRuleProperties properties supplied to create or update AuthorizationRule
 type AuthorizationRuleProperties struct {
 	// Rights - The rights associated with the rule.
@@ -703,8 +683,6 @@ type CaptureDescription struct {
 	SizeLimitInBytes *int32 `json:"sizeLimitInBytes,omitempty"`
 	// Destination - Properties of Destination where capture will be stored. (Storage Account, Blob Names)
 	Destination *Destination `json:"destination,omitempty"`
-	// SkipEmptyArchives - A value that indicates whether to Skip Empty Archives
-	SkipEmptyArchives *bool `json:"skipEmptyArchives,omitempty"`
 }
 
 // CheckNameAvailabilityParameter parameter supplied to check Namespace name availability operation
@@ -873,11 +851,6 @@ func (iter ConsumerGroupListResultIterator) Value() ConsumerGroup {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ConsumerGroupListResultIterator type.
-func NewConsumerGroupListResultIterator(page ConsumerGroupListResultPage) ConsumerGroupListResultIterator {
-	return ConsumerGroupListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (cglr ConsumerGroupListResult) IsEmpty() bool {
 	return cglr.Value == nil || len(*cglr.Value) == 0
@@ -947,18 +920,13 @@ func (page ConsumerGroupListResultPage) Values() []ConsumerGroup {
 	return *page.cglr.Value
 }
 
-// Creates a new instance of the ConsumerGroupListResultPage type.
-func NewConsumerGroupListResultPage(getNextPage func(context.Context, ConsumerGroupListResult) (ConsumerGroupListResult, error)) ConsumerGroupListResultPage {
-	return ConsumerGroupListResultPage{fn: getNextPage}
-}
-
 // ConsumerGroupProperties single item in List or Get Consumer group operation
 type ConsumerGroupProperties struct {
 	// CreatedAt - Exact time the message was created.
 	CreatedAt *date.Time `json:"createdAt,omitempty"`
 	// UpdatedAt - The exact time the message was updated.
 	UpdatedAt *date.Time `json:"updatedAt,omitempty"`
-	// UserMetadata - User Metadata is a placeholder to store user-defined string data with maximum length 1024. e.g. it can be used to store descriptive data, such as list of teams and their contact information also user-defined configuration settings can be stored.
+	// UserMetadata - Usermetadata is a placeholder to store user-defined string data with maximum length 1024. e.g. it can be used to store descriptive data, such as list of teams and their contact information also user-defined configuration settings can be stored.
 	UserMetadata *string `json:"userMetadata,omitempty"`
 }
 
@@ -966,7 +934,7 @@ type ConsumerGroupProperties struct {
 type Destination struct {
 	// Name - Name for capture destination
 	Name *string `json:"name,omitempty"`
-	// DestinationProperties - Properties describing the storage account, blob container and archive name format for capture destination
+	// DestinationProperties - Properties describing the storage account, blob container and acrchive anme format for capture destination
 	*DestinationProperties `json:"properties,omitempty"`
 }
 
@@ -1015,7 +983,7 @@ func (d *Destination) UnmarshalJSON(body []byte) error {
 	return nil
 }
 
-// DestinationProperties properties describing the storage account, blob container and archive name format
+// DestinationProperties properties describing the storage account, blob container and acrchive anme format
 // for capture destination
 type DestinationProperties struct {
 	// StorageAccountResourceID - Resource id of the storage account to be used to create the blobs
@@ -1217,11 +1185,6 @@ func (iter EHNamespaceListResultIterator) Value() EHNamespace {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the EHNamespaceListResultIterator type.
-func NewEHNamespaceListResultIterator(page EHNamespaceListResultPage) EHNamespaceListResultIterator {
-	return EHNamespaceListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (enlr EHNamespaceListResult) IsEmpty() bool {
 	return enlr.Value == nil || len(*enlr.Value) == 0
@@ -1291,11 +1254,6 @@ func (page EHNamespaceListResultPage) Values() []EHNamespace {
 	return *page.enlr.Value
 }
 
-// Creates a new instance of the EHNamespaceListResultPage type.
-func NewEHNamespaceListResultPage(getNextPage func(context.Context, EHNamespaceListResult) (EHNamespaceListResult, error)) EHNamespaceListResultPage {
-	return EHNamespaceListResultPage{fn: getNextPage}
-}
-
 // EHNamespaceProperties namespace properties supplied for create namespace operation.
 type EHNamespaceProperties struct {
 	// ProvisioningState - Provisioning state of the Namespace.
@@ -1310,13 +1268,13 @@ type EHNamespaceProperties struct {
 	MetricID *string `json:"metricId,omitempty"`
 	// IsAutoInflateEnabled - Value that indicates whether AutoInflate is enabled for eventhub namespace.
 	IsAutoInflateEnabled *bool `json:"isAutoInflateEnabled,omitempty"`
-	// MaximumThroughputUnits - Upper limit of throughput units when AutoInflate is enabled, value should be within 0 to 20 throughput units. ( '0' if AutoInflateEnabled = true)
+	// MaximumThroughputUnits - Upper limit of throughput units when AutoInflate is enabled, vaule should be within 0 to 20 throughput units. ( '0' if AutoInflateEnabled = true)
 	MaximumThroughputUnits *int32 `json:"maximumThroughputUnits,omitempty"`
 	// KafkaEnabled - Value that indicates whether Kafka is enabled for eventhub namespace.
 	KafkaEnabled *bool `json:"kafkaEnabled,omitempty"`
 }
 
-// ErrorResponse error response indicates EventHub service is not able to process the incoming request. The
+// ErrorResponse error reponse indicates EventHub service is not able to process the incoming request. The
 // reason is provided in the error message.
 type ErrorResponse struct {
 	// Code - Error code.
@@ -1392,11 +1350,6 @@ func (iter ListResultIterator) Value() Model {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ListResultIterator type.
-func NewListResultIterator(page ListResultPage) ListResultIterator {
-	return ListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (lr ListResult) IsEmpty() bool {
 	return lr.Value == nil || len(*lr.Value) == 0
@@ -1464,11 +1417,6 @@ func (page ListResultPage) Values() []Model {
 		return nil
 	}
 	return *page.lr.Value
-}
-
-// Creates a new instance of the ListResultPage type.
-func NewListResultPage(getNextPage func(context.Context, ListResult) (ListResult, error)) ListResultPage {
-	return ListResultPage{fn: getNextPage}
 }
 
 // MessagingPlan messaging Plan for the namespace
@@ -1698,11 +1646,6 @@ func (iter MessagingRegionsListResultIterator) Value() MessagingRegions {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the MessagingRegionsListResultIterator type.
-func NewMessagingRegionsListResultIterator(page MessagingRegionsListResultPage) MessagingRegionsListResultIterator {
-	return MessagingRegionsListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (mrlr MessagingRegionsListResult) IsEmpty() bool {
 	return mrlr.Value == nil || len(*mrlr.Value) == 0
@@ -1770,11 +1713,6 @@ func (page MessagingRegionsListResultPage) Values() []MessagingRegions {
 		return nil
 	}
 	return *page.mrlr.Value
-}
-
-// Creates a new instance of the MessagingRegionsListResultPage type.
-func NewMessagingRegionsListResultPage(getNextPage func(context.Context, MessagingRegionsListResult) (MessagingRegionsListResult, error)) MessagingRegionsListResultPage {
-	return MessagingRegionsListResultPage{fn: getNextPage}
 }
 
 // MessagingRegionsProperties ...
@@ -2005,11 +1943,6 @@ func (iter OperationListResultIterator) Value() Operation {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the OperationListResultIterator type.
-func NewOperationListResultIterator(page OperationListResultPage) OperationListResultIterator {
-	return OperationListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (olr OperationListResult) IsEmpty() bool {
 	return olr.Value == nil || len(*olr.Value) == 0
@@ -2079,11 +2012,6 @@ func (page OperationListResultPage) Values() []Operation {
 	return *page.olr.Value
 }
 
-// Creates a new instance of the OperationListResultPage type.
-func NewOperationListResultPage(getNextPage func(context.Context, OperationListResult) (OperationListResult, error)) OperationListResultPage {
-	return OperationListResultPage{fn: getNextPage}
-}
-
 // Properties properties supplied to the Create Or Update Event Hub operation.
 type Properties struct {
 	// PartitionIds - Current number of shards on the Event Hub.
@@ -2103,7 +2031,7 @@ type Properties struct {
 }
 
 // RegenerateAccessKeyParameters parameters supplied to the Regenerate Authorization Rule operation,
-// specifies which key needs to be reset.
+// specifies which key neeeds to be reset.
 type RegenerateAccessKeyParameters struct {
 	// KeyType - The access key to regenerate. Possible values include: 'PrimaryKey', 'SecondaryKey'
 	KeyType KeyType `json:"keyType,omitempty"`
@@ -2127,7 +2055,7 @@ type Sku struct {
 	Name SkuName `json:"name,omitempty"`
 	// Tier - The billing tier of this particular SKU. Possible values include: 'SkuTierBasic', 'SkuTierStandard'
 	Tier SkuTier `json:"tier,omitempty"`
-	// Capacity - The Event Hubs throughput units, value should be 0 to 20 throughput units.
+	// Capacity - The Event Hubs throughput units, vaule should be 0 to 20 throughput units.
 	Capacity *int32 `json:"capacity,omitempty"`
 }
 

@@ -138,23 +138,19 @@ type ExecutionStatus string
 const (
 	// Completed ...
 	Completed ExecutionStatus = "Completed"
-	// DataNotAvailable ...
-	DataNotAvailable ExecutionStatus = "DataNotAvailable"
 	// Failed ...
 	Failed ExecutionStatus = "Failed"
 	// InProgress ...
 	InProgress ExecutionStatus = "InProgress"
-	// NewDataNotAvailable ...
-	NewDataNotAvailable ExecutionStatus = "NewDataNotAvailable"
-	// Queued ...
-	Queued ExecutionStatus = "Queued"
+	// Queud ...
+	Queud ExecutionStatus = "Queud"
 	// Timeout ...
 	Timeout ExecutionStatus = "Timeout"
 )
 
 // PossibleExecutionStatusValues returns an array of possible values for the ExecutionStatus const type.
 func PossibleExecutionStatusValues() []ExecutionStatus {
-	return []ExecutionStatus{Completed, DataNotAvailable, Failed, InProgress, NewDataNotAvailable, Queued, Timeout}
+	return []ExecutionStatus{Completed, Failed, InProgress, Queud, Timeout}
 }
 
 // ExecutionType enumerates the values for execution type.
@@ -191,13 +187,11 @@ type GranularityType string
 const (
 	// Daily ...
 	Daily GranularityType = "Daily"
-	// Hourly ...
-	Hourly GranularityType = "Hourly"
 )
 
 // PossibleGranularityTypeValues returns an array of possible values for the GranularityType const type.
 func PossibleGranularityTypeValues() []GranularityType {
-	return []GranularityType{Daily, Hourly}
+	return []GranularityType{Daily}
 }
 
 // RecurrenceType enumerates the values for recurrence type.
@@ -425,11 +419,6 @@ func (iter AlertListResultIterator) Value() Alert {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the AlertListResultIterator type.
-func NewAlertListResultIterator(page AlertListResultPage) AlertListResultIterator {
-	return AlertListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (alr AlertListResult) IsEmpty() bool {
 	return alr.Value == nil || len(*alr.Value) == 0
@@ -499,11 +488,6 @@ func (page AlertListResultPage) Values() []Alert {
 	return *page.alr.Value
 }
 
-// Creates a new instance of the AlertListResultPage type.
-func NewAlertListResultPage(getNextPage func(context.Context, AlertListResult) (AlertListResult, error)) AlertListResultPage {
-	return AlertListResultPage{fn: getNextPage}
-}
-
 // AlertProperties the properties of an Alert.
 type AlertProperties struct {
 	// CostEntityID - The id of the creating cost-entity (budget, invoice, credit).
@@ -520,16 +504,10 @@ type AlertProperties struct {
 	Details map[string]*string `json:"details"`
 	// CreationTime - The time when the alert was created.
 	CreationTime *date.Time `json:"creationTime,omitempty"`
-	// CloseTime - The time when the alert was closed (resolved / overridden).
+	// CloseTime - The time when the alert was closed (resolved / overriden).
 	CloseTime *date.Time `json:"closeTime,omitempty"`
 	// Status - The current status of the alert. Possible values include: 'Active', 'Overridden', 'Resolved', 'Dismissed'
 	Status AlertStatus `json:"status,omitempty"`
-	// StatusModificationTime - The current status when alert status was modified.
-	StatusModificationTime *date.Time `json:"statusModificationTime,omitempty"`
-	// ModificationTime - The current status when alert was modified.
-	ModificationTime *date.Time `json:"modificationTime,omitempty"`
-	// ModificationUsername - The username who modified the alert.
-	ModificationUsername *string `json:"modificationUsername,omitempty"`
 }
 
 // MarshalJSON is the custom marshaler for AlertProperties.
@@ -562,15 +540,6 @@ func (ap AlertProperties) MarshalJSON() ([]byte, error) {
 	if ap.Status != "" {
 		objectMap["status"] = ap.Status
 	}
-	if ap.StatusModificationTime != nil {
-		objectMap["statusModificationTime"] = ap.StatusModificationTime
-	}
-	if ap.ModificationTime != nil {
-		objectMap["modificationTime"] = ap.ModificationTime
-	}
-	if ap.ModificationUsername != nil {
-		objectMap["modificationUsername"] = ap.ModificationUsername
-	}
 	return json.Marshal(objectMap)
 }
 
@@ -590,7 +559,7 @@ type ConnectorCollectionErrorInfo struct {
 	ErrorMessage *string `json:"errorMessage,omitempty"`
 	// ErrorCode - Short error message
 	ErrorCode *string `json:"errorCode,omitempty"`
-	// ErrorStartTime - Time the error started occurring (Last time error occurred in lastRun)
+	// ErrorStartTime - Time the error started occuring (Last time error occurred in lastRun)
 	ErrorStartTime *date.Time `json:"errorStartTime,omitempty"`
 }
 
@@ -986,11 +955,6 @@ func (iter OperationListResultIterator) Value() Operation {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the OperationListResultIterator type.
-func NewOperationListResultIterator(page OperationListResultPage) OperationListResultIterator {
-	return OperationListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (olr OperationListResult) IsEmpty() bool {
 	return olr.Value == nil || len(*olr.Value) == 0
@@ -1058,11 +1022,6 @@ func (page OperationListResultPage) Values() []Operation {
 		return nil
 	}
 	return *page.olr.Value
-}
-
-// Creates a new instance of the OperationListResultPage type.
-func NewOperationListResultPage(getNextPage func(context.Context, OperationListResult) (OperationListResult, error)) OperationListResultPage {
-	return OperationListResultPage{fn: getNextPage}
 }
 
 // Query ...
@@ -1285,7 +1244,7 @@ type ReportAggregation struct {
 
 // ReportComparisonExpression the comparison expression to be used in the report.
 type ReportComparisonExpression struct {
-	// Name - The name of the column to use in comparison.
+	// Name - The name of the column to use in comaprison.
 	Name *string `json:"name,omitempty"`
 	// Operator - The operator to use for comparison.
 	Operator *string `json:"operator,omitempty"`
@@ -1295,13 +1254,13 @@ type ReportComparisonExpression struct {
 
 // ReportDataset the definition of data present in the report.
 type ReportDataset struct {
-	// Granularity - The granularity of rows in the report. Possible values include: 'Daily', 'Hourly'
+	// Granularity - The granularity of rows in the report. Possible values include: 'Daily'
 	Granularity GranularityType `json:"granularity,omitempty"`
 	// Configuration - Has configuration information for the data in the report. The configuration will be ignored if aggregation and grouping are provided.
 	Configuration *ReportDatasetConfiguration `json:"configuration,omitempty"`
-	// Aggregation - Dictionary of aggregation expression to use in the report. The key of each item in the dictionary is the alias for the aggregated column. Report can have up to 2 aggregation clauses.
+	// Aggregation - Dictionary of aggregation expression to use in the report. The key of each item in the dictionary is the alias for the aggregated column. Report can have upto 2 aggregation clauses.
 	Aggregation map[string]*ReportAggregation `json:"aggregation"`
-	// Grouping - Array of group by expression to use in the report. Report can have up to 2 group by clauses.
+	// Grouping - Array of group by expression to use in the report. Report can have upto 2 group by clauses.
 	Grouping *[]ReportGrouping `json:"grouping,omitempty"`
 	// Filter - Has filter expression to use in the report.
 	Filter *ReportFilter `json:"filter,omitempty"`
@@ -1362,7 +1321,7 @@ type ReportDeliveryInfo struct {
 	Destination *ReportDeliveryDestination `json:"destination,omitempty"`
 }
 
-// ReportExecution a report execution.
+// ReportExecution a report exeuction.
 type ReportExecution struct {
 	*ReportExecutionProperties `json:"properties,omitempty"`
 	// ID - Resource Id.
@@ -1467,7 +1426,7 @@ type ReportExecutionListResult struct {
 type ReportExecutionProperties struct {
 	// ExecutionType - The type of the report execution. Possible values include: 'OnDemand', 'Scheduled'
 	ExecutionType ExecutionType `json:"executionType,omitempty"`
-	// Status - The status of the report execution. Possible values include: 'Queued', 'InProgress', 'Completed', 'Failed', 'Timeout', 'NewDataNotAvailable', 'DataNotAvailable'
+	// Status - The status of the report execution. Possible values include: 'Queud', 'InProgress', 'Completed', 'Failed', 'Timeout'
 	Status ExecutionStatus `json:"status,omitempty"`
 	// SubmittedBy - The identifier for the entity that executed the report. For OnDemand executions, it is the email id. For Scheduled executions, it is the constant value - System.
 	SubmittedBy *string `json:"submittedBy,omitempty"`
@@ -1484,9 +1443,9 @@ type ReportExecutionProperties struct {
 
 // ReportFilter the filter expression to be used in the report.
 type ReportFilter struct {
-	// And - The logical "AND" expression. Must have at least 2 items.
+	// And - The logical "AND" expression. Must have atleast 2 items.
 	And *[]ReportFilter `json:"and,omitempty"`
-	// Or - The logical "OR" expression. Must have at least 2 items.
+	// Or - The logical "OR" expression. Must have atleast 2 items.
 	Or *[]ReportFilter `json:"or,omitempty"`
 	// Not - The logical "NOT" expression.
 	Not *ReportFilter `json:"not,omitempty"`

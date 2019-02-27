@@ -114,10 +114,10 @@ type DeltaOperationType string
 const (
 	// DeltaOperationTypeAdd ...
 	DeltaOperationTypeAdd DeltaOperationType = "Add"
+	// DeltaOperationTypeDeletAdd ...
+	DeltaOperationTypeDeletAdd DeltaOperationType = "DeletAdd"
 	// DeltaOperationTypeDelete ...
 	DeltaOperationTypeDelete DeltaOperationType = "Delete"
-	// DeltaOperationTypeDeleteAdd ...
-	DeltaOperationTypeDeleteAdd DeltaOperationType = "DeleteAdd"
 	// DeltaOperationTypeNone ...
 	DeltaOperationTypeNone DeltaOperationType = "None"
 	// DeltaOperationTypeObsolete ...
@@ -132,7 +132,7 @@ const (
 
 // PossibleDeltaOperationTypeValues returns an array of possible values for the DeltaOperationType const type.
 func PossibleDeltaOperationTypeValues() []DeltaOperationType {
-	return []DeltaOperationType{DeltaOperationTypeAdd, DeltaOperationTypeDelete, DeltaOperationTypeDeleteAdd, DeltaOperationTypeNone, DeltaOperationTypeObsolete, DeltaOperationTypeReplace, DeltaOperationTypeUndefined, DeltaOperationTypeUpdate}
+	return []DeltaOperationType{DeltaOperationTypeAdd, DeltaOperationTypeDeletAdd, DeltaOperationTypeDelete, DeltaOperationTypeNone, DeltaOperationTypeObsolete, DeltaOperationTypeReplace, DeltaOperationTypeUndefined, DeltaOperationTypeUpdate}
 }
 
 // HealthStatus enumerates the values for health status.
@@ -270,7 +270,7 @@ func PossibleValueTypeValues() []ValueType {
 	return []ValueType{ValueTypeBinary, ValueTypeBoolean, ValueTypeDn, ValueTypeInteger, ValueTypeString, ValueTypeUndefined}
 }
 
-// AdditionalInformation the additional information for a property.
+// AdditionalInformation the addtional information for a property.
 type AdditionalInformation struct {
 	// TitleName - The title name for the property.
 	TitleName *string `json:"titleName,omitempty"`
@@ -353,11 +353,6 @@ func (iter AddsConfigurationIterator) Value() Item {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the AddsConfigurationIterator type.
-func NewAddsConfigurationIterator(page AddsConfigurationPage) AddsConfigurationIterator {
-	return AddsConfigurationIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (ac AddsConfiguration) IsEmpty() bool {
 	return ac.Value == nil || len(*ac.Value) == 0
@@ -427,11 +422,6 @@ func (page AddsConfigurationPage) Values() []Item {
 	return *page.ac.Value
 }
 
-// Creates a new instance of the AddsConfigurationPage type.
-func NewAddsConfigurationPage(getNextPage func(context.Context, AddsConfiguration) (AddsConfiguration, error)) AddsConfigurationPage {
-	return AddsConfigurationPage{fn: getNextPage}
-}
-
 // AddsServiceMember the server details for ADDS service.
 type AddsServiceMember struct {
 	// DomainName - The domain name.
@@ -460,7 +450,7 @@ type AddsServiceMember struct {
 	ActiveAlerts *int32 `json:"activeAlerts,omitempty"`
 	// AdditionalInformation - The additional information, if any, for the server.
 	AdditionalInformation *string `json:"additionalInformation,omitempty"`
-	// CreatedDate - The date time , in UTC, when the server was onboarded to Azure Active Directory Connect Health.
+	// CreatedDate - The date time , in UTC, when the server was onboaraded to Azure Active Directory Connect Health.
 	CreatedDate *date.Time `json:"createdDate,omitempty"`
 	// Dimensions - The server specific configuration related dimensions.
 	Dimensions *[]Item `json:"dimensions,omitempty"`
@@ -476,7 +466,7 @@ type AddsServiceMember struct {
 	LastReboot *date.Time `json:"lastReboot,omitempty"`
 	// LastServerReportedMonitoringLevelChange - The date and time, in UTC, when the server's data monitoring configuration was last changed.
 	LastServerReportedMonitoringLevelChange *date.Time `json:"lastServerReportedMonitoringLevelChange,omitempty"`
-	// LastUpdated - The date and time, in UTC, when the server properties were last updated.
+	// LastUpdated - The date and time, in UTC, when the server proeprties were last updated.
 	LastUpdated *date.Time `json:"lastUpdated,omitempty"`
 	// MachineID - The id of the machine.
 	MachineID *string `json:"machineId,omitempty"`
@@ -575,11 +565,6 @@ func (iter AddsServiceMembersIterator) Value() AddsServiceMember {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the AddsServiceMembersIterator type.
-func NewAddsServiceMembersIterator(page AddsServiceMembersPage) AddsServiceMembersIterator {
-	return AddsServiceMembersIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (asm AddsServiceMembers) IsEmpty() bool {
 	return asm.Value == nil || len(*asm.Value) == 0
@@ -649,11 +634,6 @@ func (page AddsServiceMembersPage) Values() []AddsServiceMember {
 	return *page.asm.Value
 }
 
-// Creates a new instance of the AddsServiceMembersPage type.
-func NewAddsServiceMembersPage(getNextPage func(context.Context, AddsServiceMembers) (AddsServiceMembers, error)) AddsServiceMembersPage {
-	return AddsServiceMembersPage{fn: getNextPage}
-}
-
 // Agent the agent details.
 type Agent struct {
 	// TenantID - The tenant Id.
@@ -678,7 +658,7 @@ type Alert struct {
 	AlertID *uuid.UUID `json:"alertId,omitempty"`
 	// Level - The alert level which indicates the severity of the alert. Possible values include: 'LevelWarning', 'LevelError', 'LevelPreWarning'
 	Level Level `json:"level,omitempty"`
-	// State - The alert state which can be either active or resolved with multiple resolution types. Possible values include: 'Active', 'ResolvedByPositiveResult', 'ResolvedManually', 'ResolvedByTimer', 'ResolvedByStateChange'
+	// State - The alert state which can be either active or resolved with multile resolution types. Possible values include: 'Active', 'ResolvedByPositiveResult', 'ResolvedManually', 'ResolvedByTimer', 'ResolvedByStateChange'
 	State State `json:"state,omitempty"`
 	// ShortName - The alert short name.
 	ShortName *string `json:"shortName,omitempty"`
@@ -719,7 +699,7 @@ type AlertFeedback struct {
 	autorest.Response `json:"-"`
 	// Level - The alert level which indicates the severity of the alert.
 	Level *string `json:"level,omitempty"`
-	// State - The alert state which can be either active or resolved with multiple resolution types.
+	// State - The alert state which can be either active or resolved with multile resolution types.
 	State *string `json:"state,omitempty"`
 	// ShortName - The alert short name.
 	ShortName *string `json:"shortName,omitempty"`
@@ -813,11 +793,6 @@ func (iter AlertsIterator) Value() Alert {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the AlertsIterator type.
-func NewAlertsIterator(page AlertsPage) AlertsIterator {
-	return AlertsIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (a Alerts) IsEmpty() bool {
 	return a.Value == nil || len(*a.Value) == 0
@@ -885,11 +860,6 @@ func (page AlertsPage) Values() []Alert {
 		return nil
 	}
 	return *page.a.Value
-}
-
-// Creates a new instance of the AlertsPage type.
-func NewAlertsPage(getNextPage func(context.Context, Alerts) (Alerts, error)) AlertsPage {
-	return AlertsPage{fn: getNextPage}
 }
 
 // AssociatedObject object that hold sync object details.
@@ -974,7 +944,7 @@ type ChangeNotReimportedDelta struct {
 	DnAttributes *[]AttributeDelta `json:"dnAttributes,omitempty"`
 	// Attributes - The attributes.
 	Attributes *[]AttributeDelta `json:"attributes,omitempty"`
-	// OperationType - The operation type. Possible values include: 'DeltaOperationTypeUndefined', 'DeltaOperationTypeNone', 'DeltaOperationTypeAdd', 'DeltaOperationTypeReplace', 'DeltaOperationTypeUpdate', 'DeltaOperationTypeDelete', 'DeltaOperationTypeObsolete', 'DeltaOperationTypeDeleteAdd'
+	// OperationType - The operation type. Possible values include: 'DeltaOperationTypeUndefined', 'DeltaOperationTypeNone', 'DeltaOperationTypeAdd', 'DeltaOperationTypeReplace', 'DeltaOperationTypeUpdate', 'DeltaOperationTypeDelete', 'DeltaOperationTypeObsolete', 'DeltaOperationTypeDeletAdd'
 	OperationType DeltaOperationType `json:"operationType,omitempty"`
 }
 
@@ -986,7 +956,7 @@ type ChangeNotReimportedEntry struct {
 	ParentAnchor *string `json:"parentAnchor,omitempty"`
 	// PrimaryObjectClass - The primary object class.
 	PrimaryObjectClass *string `json:"primaryObjectClass,omitempty"`
-	// ObjectClasses - The list of object classes.
+	// ObjectClasses - The olist of object classes.
 	ObjectClasses *[]string `json:"objectClasses,omitempty"`
 	// DnAttributes - The delta attributes for distinguished names.
 	DnAttributes *[]AttributeDelta `json:"dnAttributes,omitempty"`
@@ -1044,7 +1014,7 @@ type ConnectorConnectionError struct {
 	ErrorCode *string `json:"errorCode,omitempty"`
 	// Message - The message for the connection error.
 	Message *string `json:"message,omitempty"`
-	// TimeOccured - The time when the connection error occurred.
+	// TimeOccured - The time when the connection error occured.
 	TimeOccured *date.Time `json:"timeOccured,omitempty"`
 	// Server - The server where the connection error happened.
 	Server *string `json:"server,omitempty"`
@@ -1070,13 +1040,13 @@ type ConnectorObjectError struct {
 	ErrorCode *string `json:"errorCode,omitempty"`
 	// Message - The message for the object error.
 	Message *string `json:"message,omitempty"`
-	// EntryNumber - The entry number for object error occurred.
+	// EntryNumber - The entry number for object error occured.
 	EntryNumber *int32 `json:"entryNumber,omitempty"`
 	// LineNumber - The line number for the object error.
 	LineNumber *int32 `json:"lineNumber,omitempty"`
 	// ColumnNumber - The column number for the object error.
 	ColumnNumber *int32 `json:"columnNumber,omitempty"`
-	// Dn - The distinguished name of the object.
+	// Dn - The distingished name of the object.
 	Dn *string `json:"dn,omitempty"`
 	// Anchor - The name for the anchor of the object.
 	Anchor *string `json:"anchor,omitempty"`
@@ -1218,11 +1188,6 @@ func (iter DimensionsIterator) Value() Dimension {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the DimensionsIterator type.
-func NewDimensionsIterator(page DimensionsPage) DimensionsIterator {
-	return DimensionsIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (d Dimensions) IsEmpty() bool {
 	return d.Value == nil || len(*d.Value) == 0
@@ -1290,11 +1255,6 @@ func (page DimensionsPage) Values() []Dimension {
 		return nil
 	}
 	return *page.d.Value
-}
-
-// Creates a new instance of the DimensionsPage type.
-func NewDimensionsPage(getNextPage func(context.Context, Dimensions) (Dimensions, error)) DimensionsPage {
-	return DimensionsPage{fn: getNextPage}
 }
 
 // Display displays the details related to operations supported by Azure Active Directory Connect Health.
@@ -1375,7 +1335,7 @@ type ExportError struct {
 	Message *string `json:"message,omitempty"`
 	// ServerErrorDetail - The server error detail.
 	ServerErrorDetail *string `json:"serverErrorDetail,omitempty"`
-	// TimeFirstOccured - The date and time when the export error first occurred.
+	// TimeFirstOccured - The date and time when the export error first occured.
 	TimeFirstOccured *date.Time `json:"timeFirstOccured,omitempty"`
 	// RetryCount - The retry count.
 	RetryCount *int32 `json:"retryCount,omitempty"`
@@ -1415,7 +1375,7 @@ type ExportError struct {
 	AdDistinguishedName *string `json:"adDistinguishedName,omitempty"`
 	// AdMail - The email for the AD object.
 	AdMail *string `json:"adMail,omitempty"`
-	// TimeOccured - The date and time of occurrence.
+	// TimeOccured - The date and time of occurance.
 	TimeOccured *date.Time `json:"timeOccured,omitempty"`
 	// AadObjectType - The AAD side object type.
 	AadObjectType *string `json:"aadObjectType,omitempty"`
@@ -1427,13 +1387,13 @@ type ExportError struct {
 	AadSourceOfAuthority *string `json:"aadSourceOfAuthority,omitempty"`
 	// AadUserPrincipalName - The AAD side user principal name.
 	AadUserPrincipalName *string `json:"aadUserPrincipalName,omitempty"`
-	// AadDistinguishedName - The AAD side distinguished name for the object.
-	AadDistinguishedName *string `json:"aadDistinguishedName,omitempty"`
+	// AadDistringuishedName - The AAD side distinguished name for the object.
+	AadDistringuishedName *string `json:"aadDistringuishedName,omitempty"`
 	// AadMail - The AAD side email for the object.
 	AadMail *string `json:"aadMail,omitempty"`
 	// LastDirSyncTime - The date and time of last sync run.
 	LastDirSyncTime *date.Time `json:"lastDirSyncTime,omitempty"`
-	// ModifiedAttributeValue - The modified attribute value.
+	// ModifiedAttributeValue - The modified atttribute value.
 	ModifiedAttributeValue *string `json:"modifiedAttributeValue,omitempty"`
 }
 
@@ -1526,11 +1486,6 @@ func (iter ExportStatusesIterator) Value() ExportStatus {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ExportStatusesIterator type.
-func NewExportStatusesIterator(page ExportStatusesPage) ExportStatusesIterator {
-	return ExportStatusesIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (es ExportStatuses) IsEmpty() bool {
 	return es.Value == nil || len(*es.Value) == 0
@@ -1598,11 +1553,6 @@ func (page ExportStatusesPage) Values() []ExportStatus {
 		return nil
 	}
 	return *page.es.Value
-}
-
-// Creates a new instance of the ExportStatusesPage type.
-func NewExportStatusesPage(getNextPage func(context.Context, ExportStatuses) (ExportStatuses, error)) ExportStatusesPage {
-	return ExportStatusesPage{fn: getNextPage}
 }
 
 // ExtensionErrorInfo the extension error details.
@@ -1719,7 +1669,7 @@ type ImportErrors struct {
 type InboundReplicationNeighbor struct {
 	// SourceDomainController - The name of the source domain controller.
 	SourceDomainController *string `json:"sourceDomainController,omitempty"`
-	// ConsecutiveFailureCount - The number of consecutive failure counts.
+	// ConsecutiveFailureCount - The number of consecutive faulire counts.
 	ConsecutiveFailureCount *int32 `json:"consecutiveFailureCount,omitempty"`
 	// NamingContext - The naming context.
 	NamingContext *string `json:"namingContext,omitempty"`
@@ -1794,7 +1744,7 @@ type MergedExportError struct {
 	IncomingObject *AssociatedObject `json:"incomingObject,omitempty"`
 	// ExistingObject - The existing object
 	ExistingObject *AssociatedObject `json:"existingObject,omitempty"`
-	// ModifiedOrRemovedAttributeValue - The modified or removed attribute value.
+	// ModifiedOrRemovedAttributeValue - The modified or removed attribute vlaue.
 	ModifiedOrRemovedAttributeValue *string `json:"modifiedOrRemovedAttributeValue,omitempty"`
 	// RunStepResultID - The run step result Id.
 	RunStepResultID *uuid.UUID `json:"runStepResultId,omitempty"`
@@ -1844,7 +1794,7 @@ type MetricMetadata struct {
 	DisplayName *string `json:"displayName,omitempty"`
 	// ValueKind - Indicates if the metrics is a rate,value, percent or duration type.
 	ValueKind *string `json:"valueKind,omitempty"`
-	// MinValue - The minimum value.
+	// MinValue - The minimun value.
 	MinValue *int32 `json:"minValue,omitempty"`
 	// MaxValue - The maximum value.
 	MaxValue *int32 `json:"maxValue,omitempty"`
@@ -1929,11 +1879,6 @@ func (iter MetricMetadataListIterator) Value() MetricMetadata {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the MetricMetadataListIterator type.
-func NewMetricMetadataListIterator(page MetricMetadataListPage) MetricMetadataListIterator {
-	return MetricMetadataListIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (mml MetricMetadataList) IsEmpty() bool {
 	return mml.Value == nil || len(*mml.Value) == 0
@@ -2001,11 +1946,6 @@ func (page MetricMetadataListPage) Values() []MetricMetadata {
 		return nil
 	}
 	return *page.mml.Value
-}
-
-// Creates a new instance of the MetricMetadataListPage type.
-func NewMetricMetadataListPage(getNextPage func(context.Context, MetricMetadataList) (MetricMetadataList, error)) MetricMetadataListPage {
-	return MetricMetadataListPage{fn: getNextPage}
 }
 
 // Metrics the list of metric items.
@@ -2097,11 +2037,6 @@ func (iter MetricsIterator) Value() Item {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the MetricsIterator type.
-func NewMetricsIterator(page MetricsPage) MetricsIterator {
-	return MetricsIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (mVar Metrics) IsEmpty() bool {
 	return mVar.Value == nil || len(*mVar.Value) == 0
@@ -2171,11 +2106,6 @@ func (page MetricsPage) Values() []Item {
 	return *page.mVar.Value
 }
 
-// Creates a new instance of the MetricsPage type.
-func NewMetricsPage(getNextPage func(context.Context, Metrics) (Metrics, error)) MetricsPage {
-	return MetricsPage{fn: getNextPage}
-}
-
 // ModuleConfiguration the module configuration as required by the Agent service.
 type ModuleConfiguration struct {
 	// AgentService - The name of agent service.
@@ -2207,7 +2137,7 @@ type ModuleConfigurations struct {
 	Value *[]ModuleConfiguration `json:"value,omitempty"`
 }
 
-// ObjectWithSyncError the objects with sync errors.
+// ObjectWithSyncError the objects withg sync errors.
 type ObjectWithSyncError struct {
 	// SourceOfAuthority - The source of authority.
 	SourceOfAuthority *string `json:"sourceOfAuthority,omitempty"`
@@ -2225,7 +2155,7 @@ type ObjectWithSyncError struct {
 	UserPrincipalName *string `json:"userPrincipalName,omitempty"`
 	// ObjectGUID - The object guid.
 	ObjectGUID *string `json:"objectGuid,omitempty"`
-	// AttributeMultiValues - Indicates if the attribute is multi-valued or not.
+	// AttributeMultiValues - Indicates if the atttibute is multi-valued or not.
 	AttributeMultiValues *bool `json:"attributeMultiValues,omitempty"`
 	// MinLimit - The minimum limit.
 	MinLimit *string `json:"minLimit,omitempty"`
@@ -2235,7 +2165,7 @@ type ObjectWithSyncError struct {
 	DistinguishedName *string `json:"distinguishedName,omitempty"`
 	// Mail - The email.
 	Mail *string `json:"mail,omitempty"`
-	// TimeOccured - The date and time of occurrence.
+	// TimeOccured - The date and time of occurance.
 	TimeOccured *date.Time `json:"timeOccured,omitempty"`
 	// ErrorType - The error type.
 	ErrorType *string `json:"errorType,omitempty"`
@@ -2257,9 +2187,9 @@ type OperationListResponse struct {
 	autorest.Response `json:"-"`
 	// NextLink - URL to get the next set of operation list results if there are any.
 	NextLink *string `json:"nextLink,omitempty"`
-	// Value - List of operations supported by the Microsoft.ADHybridHealthService resource provider.
+	// Value - List of operations supported by the Microsoft.ADHybridhHealthService resource provider.
 	Value *[]Operation `json:"value,omitempty"`
-	// TotalCount - The total count of operations.
+	// TotalCount - The total count of opertaions.
 	TotalCount *int32 `json:"totalCount,omitempty"`
 	// ContinuationToken - The continuation token to get next set of operations.
 	ContinuationToken *string `json:"continuationToken,omitempty"`
@@ -2321,11 +2251,6 @@ func (iter OperationListResponseIterator) Value() Operation {
 		return Operation{}
 	}
 	return iter.page.Values()[iter.i]
-}
-
-// Creates a new instance of the OperationListResponseIterator type.
-func NewOperationListResponseIterator(page OperationListResponsePage) OperationListResponseIterator {
-	return OperationListResponseIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -2397,11 +2322,6 @@ func (page OperationListResponsePage) Values() []Operation {
 	return *page.olr.Value
 }
 
-// Creates a new instance of the OperationListResponsePage type.
-func NewOperationListResponsePage(getNextPage func(context.Context, OperationListResponse) (OperationListResponse, error)) OperationListResponsePage {
-	return OperationListResponsePage{fn: getNextPage}
-}
-
 // Partition describes the partition in Synchronization service.
 type Partition struct {
 	// ID - The partition Id.
@@ -2452,7 +2372,7 @@ type PasswordManagementSettings struct {
 	ExtensionFilePath *string `json:"extensionFilePath,omitempty"`
 	// ConnectTo - Connection point of password management.
 	ConnectTo *string `json:"connectTo,omitempty"`
-	// ConnectionTimeout - Connection timeout for password extension.
+	// ConnectionTimeout - Connection timeoit for password extension.
 	ConnectionTimeout *int32 `json:"connectionTimeout,omitempty"`
 	// User - User to execute password extension.
 	User *string `json:"user,omitempty"`
@@ -2464,7 +2384,7 @@ type PasswordManagementSettings struct {
 	RetryIntervalInSeconds *int32 `json:"retryIntervalInSeconds,omitempty"`
 	// RequiresSecureConnection - Indicates if a secure connection is required for password management.
 	RequiresSecureConnection *bool `json:"requiresSecureConnection,omitempty"`
-	// UnlockAccount - Indicates if accounts should be unlocked when resetting password.
+	// UnlockAccount - Indicates if accounts should be unloacked when resetting password.
 	UnlockAccount *bool `json:"unlockAccount,omitempty"`
 }
 
@@ -2486,7 +2406,7 @@ type ReplicationStatus struct {
 	autorest.Response `json:"-"`
 	// ForestName - The forest name.
 	ForestName *string `json:"forestName,omitempty"`
-	// TotalDcCount - The total number of domain controllers for a given forest.
+	// TotalDcCount - The total numbe of domain controllers for a given forest.
 	TotalDcCount *int32 `json:"totalDcCount,omitempty"`
 	// ErrorDcCount - The total number of domain controllers with error in a given forest.
 	ErrorDcCount *int32 `json:"errorDcCount,omitempty"`
@@ -2558,13 +2478,13 @@ type RunProfiles struct {
 type RunStep struct {
 	// BatchSize - The batch size used by the run step.
 	BatchSize *int32 `json:"batchSize,omitempty"`
-	// ObjectProcessLimit - The object processing limit.
+	// ObjectProcessLimit - The obect processing limit.
 	ObjectProcessLimit *int32 `json:"objectProcessLimit,omitempty"`
 	// ObjectDeleteLimit - The object deletion limit.
 	ObjectDeleteLimit *int32 `json:"objectDeleteLimit,omitempty"`
 	// PageSize - The page size of the run step.
 	PageSize *int32 `json:"pageSize,omitempty"`
-	// PartitionID - The Id of the partition that a current run step operation is executing.
+	// PartitionID - The Id of the partition that a current run setp operation is executing.
 	PartitionID *string `json:"partitionId,omitempty"`
 	// OperationType - The run step operation types.
 	OperationType *int32 `json:"operationType,omitempty"`
@@ -2608,7 +2528,7 @@ type ServiceMember struct {
 	ActiveAlerts *int32 `json:"activeAlerts,omitempty"`
 	// AdditionalInformation - The additional information, if any, for the server.
 	AdditionalInformation *string `json:"additionalInformation,omitempty"`
-	// CreatedDate - The date time , in UTC, when the server was onboarded to Azure Active Directory Connect Health.
+	// CreatedDate - The date time , in UTC, when the server was onboaraded to Azure Active Directory Connect Health.
 	CreatedDate *date.Time `json:"createdDate,omitempty"`
 	// Dimensions - The server specific configuration related dimensions.
 	Dimensions interface{} `json:"dimensions,omitempty"`
@@ -2624,7 +2544,7 @@ type ServiceMember struct {
 	LastReboot *date.Time `json:"lastReboot,omitempty"`
 	// LastServerReportedMonitoringLevelChange - The date and time, in UTC, when the server's data monitoring configuration was last changed.
 	LastServerReportedMonitoringLevelChange *date.Time `json:"lastServerReportedMonitoringLevelChange,omitempty"`
-	// LastUpdated - The date and time, in UTC, when the server properties were last updated.
+	// LastUpdated - The date and time, in UTC, when the server proeprties were last updated.
 	LastUpdated *date.Time `json:"lastUpdated,omitempty"`
 	// MachineID - The id of the machine.
 	MachineID *string `json:"machineId,omitempty"`
@@ -2723,11 +2643,6 @@ func (iter ServiceMembersIterator) Value() ServiceMember {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ServiceMembersIterator type.
-func NewServiceMembersIterator(page ServiceMembersPage) ServiceMembersIterator {
-	return ServiceMembersIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (sm ServiceMembers) IsEmpty() bool {
 	return sm.Value == nil || len(*sm.Value) == 0
@@ -2797,11 +2712,6 @@ func (page ServiceMembersPage) Values() []ServiceMember {
 	return *page.sm.Value
 }
 
-// Creates a new instance of the ServiceMembersPage type.
-func NewServiceMembersPage(getNextPage func(context.Context, ServiceMembers) (ServiceMembers, error)) ServiceMembersPage {
-	return ServiceMembersPage{fn: getNextPage}
-}
-
 // ServiceProperties the service properties for a given service.
 type ServiceProperties struct {
 	autorest.Response `json:"-"`
@@ -2813,7 +2723,7 @@ type ServiceProperties struct {
 	AdditionalInformation *string `json:"additionalInformation,omitempty"`
 	// CreatedDate - The date and time, in UTC, when the service was onboarded to Azure Active Directory Connect Health.
 	CreatedDate *date.Time `json:"createdDate,omitempty"`
-	// CustomNotificationEmails - The list of additional emails that are configured to receive notifications about the service.
+	// CustomNotificationEmails - The list of additional emails that are configured to recieve notifications about the service.
 	CustomNotificationEmails *[]string `json:"customNotificationEmails,omitempty"`
 	// Disabled - Indicates if the service is disabled or not.
 	Disabled *bool `json:"disabled,omitempty"`
@@ -2926,11 +2836,6 @@ func (iter ServicesIterator) Value() ServiceProperties {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ServicesIterator type.
-func NewServicesIterator(page ServicesPage) ServicesIterator {
-	return ServicesIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (s Services) IsEmpty() bool {
 	return s.Value == nil || len(*s.Value) == 0
@@ -3000,11 +2905,6 @@ func (page ServicesPage) Values() []ServiceProperties {
 	return *page.s.Value
 }
 
-// Creates a new instance of the ServicesPage type.
-func NewServicesPage(getNextPage func(context.Context, Services) (Services, error)) ServicesPage {
-	return ServicesPage{fn: getNextPage}
-}
-
 // TabularExportError the details for export error.
 type TabularExportError struct {
 	// ServiceID - The service Id.
@@ -3028,7 +2928,7 @@ type Tenant struct {
 	AadPremium *bool `json:"aadPremium,omitempty"`
 	// AgentAutoUpdate - Indicates if the tenant is configured to automatically receive updates for Azure Active Directory Connect Health client side features.
 	AgentAutoUpdate *bool `json:"agentAutoUpdate,omitempty"`
-	// AlertSuppressionTimeInMins - The time in minutes after which an alert will be auto-suppressed.
+	// AlertSuppressionTimeInMins - The time in minutues after which an alert will be autosupressed.
 	AlertSuppressionTimeInMins *int32 `json:"alertSuppressionTimeInMins,omitempty"`
 	// ConsentedToMicrosoftDevOps - Indicates if the tenant data can be seen by Microsoft through Azure portal.
 	ConsentedToMicrosoftDevOps *bool `json:"consentedToMicrosoftDevOps,omitempty"`
@@ -3042,8 +2942,8 @@ type Tenant struct {
 	Disabled *bool `json:"disabled,omitempty"`
 	// DisabledReason - The reason due to which the tenant was disabled in Azure Active Directory Connect Health.
 	DisabledReason *int32 `json:"disabledReason,omitempty"`
-	// GlobalAdminsEmail - The list of global administrators for the tenant.
-	GlobalAdminsEmail *[]string `json:"globalAdminsEmail,omitempty"`
+	// GlobalAdminsEmail - The list of golbal administrators for the tenant.
+	GlobalAdminsEmail interface{} `json:"globalAdminsEmail,omitempty"`
 	// InitialDomain - The initial domain of the tenant.
 	InitialDomain *string `json:"initialDomain,omitempty"`
 	// LastDisabled - The date and time, in UTC, when the tenant was last disabled in Azure Active Directory Connect Health.

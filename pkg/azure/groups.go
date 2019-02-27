@@ -19,23 +19,23 @@ func (c *CloudConfiguration) GetGroupsClient() (resources.GroupsClient, error) {
 	return groupsClient, nil
 }
 
-func (c *CloudConfiguration) CreateOrUpdateResourceGroup(ctx context.Context, groupName, groupLocation string) error {
+func (c *CloudConfiguration) CreateOrUpdateResourceGroup(ctx context.Context) error {
 	groupsClient, err := c.GetGroupsClient()
 	if err != nil {
 		return err
 	}
 
-	_, err = groupsClient.CreateOrUpdate(ctx, groupName, resources.Group{Location: to.StringPtr(groupLocation)})
+	_, err = groupsClient.CreateOrUpdate(ctx, c.GroupName, resources.Group{Location: to.StringPtr(c.GroupLocation)})
 	return err
 }
 
-func (c *CloudConfiguration) DeleteResourceGroup(ctx context.Context, groupName string) error {
+func (c *CloudConfiguration) DeleteResourceGroup(ctx context.Context) error {
 	groupsClient, err := c.GetGroupsClient()
 	if err != nil {
 		return err
 	}
 
-	future, err := groupsClient.Delete(ctx, groupName)
+	future, err := groupsClient.Delete(ctx, c.GroupName)
 	if err != nil {
 		return err
 	}

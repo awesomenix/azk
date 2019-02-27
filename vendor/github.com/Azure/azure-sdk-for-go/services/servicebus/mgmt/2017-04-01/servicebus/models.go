@@ -429,11 +429,6 @@ func (iter ArmDisasterRecoveryListResultIterator) Value() ArmDisasterRecovery {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the ArmDisasterRecoveryListResultIterator type.
-func NewArmDisasterRecoveryListResultIterator(page ArmDisasterRecoveryListResultPage) ArmDisasterRecoveryListResultIterator {
-	return ArmDisasterRecoveryListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (adrlr ArmDisasterRecoveryListResult) IsEmpty() bool {
 	return adrlr.Value == nil || len(*adrlr.Value) == 0
@@ -503,11 +498,6 @@ func (page ArmDisasterRecoveryListResultPage) Values() []ArmDisasterRecovery {
 	return *page.adrlr.Value
 }
 
-// Creates a new instance of the ArmDisasterRecoveryListResultPage type.
-func NewArmDisasterRecoveryListResultPage(getNextPage func(context.Context, ArmDisasterRecoveryListResult) (ArmDisasterRecoveryListResult, error)) ArmDisasterRecoveryListResultPage {
-	return ArmDisasterRecoveryListResultPage{fn: getNextPage}
-}
-
 // ArmDisasterRecoveryProperties properties required to the Create Or Update Alias(Disaster Recovery
 // configurations)
 type ArmDisasterRecoveryProperties struct {
@@ -515,9 +505,9 @@ type ArmDisasterRecoveryProperties struct {
 	ProvisioningState ProvisioningStateDR `json:"provisioningState,omitempty"`
 	// PendingReplicationOperationsCount - Number of entities pending to be replicated.
 	PendingReplicationOperationsCount *int64 `json:"pendingReplicationOperationsCount,omitempty"`
-	// PartnerNamespace - ARM Id of the Primary/Secondary eventhub namespace name, which is part of GEO DR pairing
+	// PartnerNamespace - ARM Id of the Primary/Secondary eventhub namespace name, which is part of GEO DR pairning
 	PartnerNamespace *string `json:"partnerNamespace,omitempty"`
-	// AlternateName - Primary/Secondary eventhub namespace name, which is part of GEO DR pairing
+	// AlternateName - Primary/Secondary eventhub namespace name, which is part of GEO DR pairning
 	AlternateName *string `json:"alternateName,omitempty"`
 	// Role - role of namespace in GEO DR - possible values 'Primary' or 'PrimaryNotReplicating' or 'Secondary'. Possible values include: 'Primary', 'PrimaryNotReplicating', 'Secondary'
 	Role RoleDisasterRecovery `json:"role,omitempty"`
@@ -545,7 +535,7 @@ type CaptureDescription struct {
 
 // CheckNameAvailability description of a Check Name availability request properties.
 type CheckNameAvailability struct {
-	// Name - The Name to check the namespace name availability and The namespace name can contain only letters, numbers, and hyphens. The namespace must start with a letter, and it must end with a letter or number.
+	// Name - The Name to check the namespce name availability and The namespace name can contain only letters, numbers, and hyphens. The namespace must start with a letter, and it must end with a letter or number.
 	Name *string `json:"name,omitempty"`
 }
 
@@ -624,7 +614,7 @@ func (cf CorrelationFilter) MarshalJSON() ([]byte, error) {
 type Destination struct {
 	// Name - Name for capture destination
 	Name *string `json:"name,omitempty"`
-	// DestinationProperties - Properties describing the storage account, blob container and archive name format for capture destination
+	// DestinationProperties - Properties describing the storage account, blob container and acrchive name format for capture destination
 	*DestinationProperties `json:"properties,omitempty"`
 }
 
@@ -673,7 +663,7 @@ func (d *Destination) UnmarshalJSON(body []byte) error {
 	return nil
 }
 
-// DestinationProperties properties describing the storage account, blob container and archive name format
+// DestinationProperties properties describing the storage account, blob container and acrchive name format
 // for capture destination
 type DestinationProperties struct {
 	// StorageAccountResourceID - Resource id of the storage account to be used to create the blobs
@@ -684,7 +674,7 @@ type DestinationProperties struct {
 	ArchiveNameFormat *string `json:"archiveNameFormat,omitempty"`
 }
 
-// ErrorResponse error response indicates ServiceBus service is not able to process the incoming request.
+// ErrorResponse error reponse indicates ServiceBus service is not able to process the incoming request.
 // The reason is provided in the error message.
 type ErrorResponse struct {
 	// Code - Error code.
@@ -841,11 +831,6 @@ func (iter EventHubListResultIterator) Value() Eventhub {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the EventHubListResultIterator type.
-func NewEventHubListResultIterator(page EventHubListResultPage) EventHubListResultIterator {
-	return EventHubListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (ehlr EventHubListResult) IsEmpty() bool {
 	return ehlr.Value == nil || len(*ehlr.Value) == 0
@@ -913,11 +898,6 @@ func (page EventHubListResultPage) Values() []Eventhub {
 		return nil
 	}
 	return *page.ehlr.Value
-}
-
-// Creates a new instance of the EventHubListResultPage type.
-func NewEventHubListResultPage(getNextPage func(context.Context, EventHubListResult) (EventHubListResult, error)) EventHubListResultPage {
-	return EventHubListResultPage{fn: getNextPage}
 }
 
 // EventhubProperties properties supplied to the Create Or Update Event Hub operation.
@@ -1214,11 +1194,6 @@ func (iter MigrationConfigListResultIterator) Value() MigrationConfigProperties 
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the MigrationConfigListResultIterator type.
-func NewMigrationConfigListResultIterator(page MigrationConfigListResultPage) MigrationConfigListResultIterator {
-	return MigrationConfigListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (mclr MigrationConfigListResult) IsEmpty() bool {
 	return mclr.Value == nil || len(*mclr.Value) == 0
@@ -1286,11 +1261,6 @@ func (page MigrationConfigListResultPage) Values() []MigrationConfigProperties {
 		return nil
 	}
 	return *page.mclr.Value
-}
-
-// Creates a new instance of the MigrationConfigListResultPage type.
-func NewMigrationConfigListResultPage(getNextPage func(context.Context, MigrationConfigListResult) (MigrationConfigListResult, error)) MigrationConfigListResultPage {
-	return MigrationConfigListResultPage{fn: getNextPage}
 }
 
 // MigrationConfigProperties single item in List or Get Migration Config operation
@@ -1556,11 +1526,6 @@ func (iter OperationListResultIterator) Value() Operation {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the OperationListResultIterator type.
-func NewOperationListResultIterator(page OperationListResultPage) OperationListResultIterator {
-	return OperationListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (olr OperationListResult) IsEmpty() bool {
 	return olr.Value == nil || len(*olr.Value) == 0
@@ -1628,11 +1593,6 @@ func (page OperationListResultPage) Values() []Operation {
 		return nil
 	}
 	return *page.olr.Value
-}
-
-// Creates a new instance of the OperationListResultPage type.
-func NewOperationListResultPage(getNextPage func(context.Context, OperationListResult) (OperationListResult, error)) OperationListResultPage {
-	return OperationListResultPage{fn: getNextPage}
 }
 
 // PremiumMessagingRegions premium Messaging Region
@@ -1742,11 +1702,6 @@ func (iter PremiumMessagingRegionsListResultIterator) Value() PremiumMessagingRe
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the PremiumMessagingRegionsListResultIterator type.
-func NewPremiumMessagingRegionsListResultIterator(page PremiumMessagingRegionsListResultPage) PremiumMessagingRegionsListResultIterator {
-	return PremiumMessagingRegionsListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (pmrlr PremiumMessagingRegionsListResult) IsEmpty() bool {
 	return pmrlr.Value == nil || len(*pmrlr.Value) == 0
@@ -1816,11 +1771,6 @@ func (page PremiumMessagingRegionsListResultPage) Values() []PremiumMessagingReg
 	return *page.pmrlr.Value
 }
 
-// Creates a new instance of the PremiumMessagingRegionsListResultPage type.
-func NewPremiumMessagingRegionsListResultPage(getNextPage func(context.Context, PremiumMessagingRegionsListResult) (PremiumMessagingRegionsListResult, error)) PremiumMessagingRegionsListResultPage {
-	return PremiumMessagingRegionsListResultPage{fn: getNextPage}
-}
-
 // PremiumMessagingRegionsProperties ...
 type PremiumMessagingRegionsProperties struct {
 	// Code - Region code
@@ -1830,7 +1780,7 @@ type PremiumMessagingRegionsProperties struct {
 }
 
 // RegenerateAccessKeyParameters parameters supplied to the Regenerate Authorization Rule operation,
-// specifies which key needs to be reset.
+// specifies which key neeeds to be reset.
 type RegenerateAccessKeyParameters struct {
 	// KeyType - The access key to regenerate. Possible values include: 'PrimaryKey', 'SecondaryKey'
 	KeyType KeyType `json:"keyType,omitempty"`
@@ -2032,11 +1982,6 @@ func (iter RuleListResultIterator) Value() Rule {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the RuleListResultIterator type.
-func NewRuleListResultIterator(page RuleListResultPage) RuleListResultIterator {
-	return RuleListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (rlr RuleListResult) IsEmpty() bool {
 	return rlr.Value == nil || len(*rlr.Value) == 0
@@ -2104,11 +2049,6 @@ func (page RuleListResultPage) Values() []Rule {
 		return nil
 	}
 	return *page.rlr.Value
-}
-
-// Creates a new instance of the RuleListResultPage type.
-func NewRuleListResultPage(getNextPage func(context.Context, RuleListResult) (RuleListResult, error)) RuleListResultPage {
-	return RuleListResultPage{fn: getNextPage}
 }
 
 // Ruleproperties description of Rule Resource.
@@ -2273,11 +2213,6 @@ func (iter SBAuthorizationRuleListResultIterator) Value() SBAuthorizationRule {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the SBAuthorizationRuleListResultIterator type.
-func NewSBAuthorizationRuleListResultIterator(page SBAuthorizationRuleListResultPage) SBAuthorizationRuleListResultIterator {
-	return SBAuthorizationRuleListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (sarlr SBAuthorizationRuleListResult) IsEmpty() bool {
 	return sarlr.Value == nil || len(*sarlr.Value) == 0
@@ -2347,11 +2282,6 @@ func (page SBAuthorizationRuleListResultPage) Values() []SBAuthorizationRule {
 	return *page.sarlr.Value
 }
 
-// Creates a new instance of the SBAuthorizationRuleListResultPage type.
-func NewSBAuthorizationRuleListResultPage(getNextPage func(context.Context, SBAuthorizationRuleListResult) (SBAuthorizationRuleListResult, error)) SBAuthorizationRuleListResultPage {
-	return SBAuthorizationRuleListResultPage{fn: getNextPage}
-}
-
 // SBAuthorizationRuleProperties authorizationRule properties.
 type SBAuthorizationRuleProperties struct {
 	// Rights - The rights associated with the rule.
@@ -2361,7 +2291,7 @@ type SBAuthorizationRuleProperties struct {
 // SBNamespace description of a namespace resource.
 type SBNamespace struct {
 	autorest.Response `json:"-"`
-	// Sku - Properties of Sku
+	// Sku - Porperties of Sku
 	Sku *SBSku `json:"sku,omitempty"`
 	// SBNamespaceProperties - Properties of the namespace.
 	*SBNamespaceProperties `json:"properties,omitempty"`
@@ -2549,11 +2479,6 @@ func (iter SBNamespaceListResultIterator) Value() SBNamespace {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the SBNamespaceListResultIterator type.
-func NewSBNamespaceListResultIterator(page SBNamespaceListResultPage) SBNamespaceListResultIterator {
-	return SBNamespaceListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (snlr SBNamespaceListResult) IsEmpty() bool {
 	return snlr.Value == nil || len(*snlr.Value) == 0
@@ -2623,11 +2548,6 @@ func (page SBNamespaceListResultPage) Values() []SBNamespace {
 	return *page.snlr.Value
 }
 
-// Creates a new instance of the SBNamespaceListResultPage type.
-func NewSBNamespaceListResultPage(getNextPage func(context.Context, SBNamespaceListResult) (SBNamespaceListResult, error)) SBNamespaceListResultPage {
-	return SBNamespaceListResultPage{fn: getNextPage}
-}
-
 // SBNamespaceMigrate namespace Migrate Object
 type SBNamespaceMigrate struct {
 	// TargetNamespaceType - Type of namespaces. Possible values include: 'Messaging', 'NotificationHub', 'Mixed', 'EventHub', 'Relay'
@@ -2650,7 +2570,7 @@ type SBNamespaceProperties struct {
 
 // SBNamespaceUpdateParameters description of a namespace resource.
 type SBNamespaceUpdateParameters struct {
-	// Sku - Properties of Sku
+	// Sku - Porperties of Sku
 	Sku *SBSku `json:"sku,omitempty"`
 	// SBNamespaceProperties - Properties of the namespace.
 	*SBNamespaceProperties `json:"properties,omitempty"`
@@ -2920,11 +2840,6 @@ func (iter SBQueueListResultIterator) Value() SBQueue {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the SBQueueListResultIterator type.
-func NewSBQueueListResultIterator(page SBQueueListResultPage) SBQueueListResultIterator {
-	return SBQueueListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (sqlr SBQueueListResult) IsEmpty() bool {
 	return sqlr.Value == nil || len(*sqlr.Value) == 0
@@ -2992,11 +2907,6 @@ func (page SBQueueListResultPage) Values() []SBQueue {
 		return nil
 	}
 	return *page.sqlr.Value
-}
-
-// Creates a new instance of the SBQueueListResultPage type.
-func NewSBQueueListResultPage(getNextPage func(context.Context, SBQueueListResult) (SBQueueListResult, error)) SBQueueListResultPage {
-	return SBQueueListResultPage{fn: getNextPage}
 }
 
 // SBQueueProperties the Queue Properties definition.
@@ -3204,11 +3114,6 @@ func (iter SBSubscriptionListResultIterator) Value() SBSubscription {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the SBSubscriptionListResultIterator type.
-func NewSBSubscriptionListResultIterator(page SBSubscriptionListResultPage) SBSubscriptionListResultIterator {
-	return SBSubscriptionListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (sslr SBSubscriptionListResult) IsEmpty() bool {
 	return sslr.Value == nil || len(*sslr.Value) == 0
@@ -3276,11 +3181,6 @@ func (page SBSubscriptionListResultPage) Values() []SBSubscription {
 		return nil
 	}
 	return *page.sslr.Value
-}
-
-// Creates a new instance of the SBSubscriptionListResultPage type.
-func NewSBSubscriptionListResultPage(getNextPage func(context.Context, SBSubscriptionListResult) (SBSubscriptionListResult, error)) SBSubscriptionListResultPage {
-	return SBSubscriptionListResultPage{fn: getNextPage}
 }
 
 // SBSubscriptionProperties description of Subscription Resource.
@@ -3470,11 +3370,6 @@ func (iter SBTopicListResultIterator) Value() SBTopic {
 	return iter.page.Values()[iter.i]
 }
 
-// Creates a new instance of the SBTopicListResultIterator type.
-func NewSBTopicListResultIterator(page SBTopicListResultPage) SBTopicListResultIterator {
-	return SBTopicListResultIterator{page: page}
-}
-
 // IsEmpty returns true if the ListResult contains no values.
 func (stlr SBTopicListResult) IsEmpty() bool {
 	return stlr.Value == nil || len(*stlr.Value) == 0
@@ -3544,12 +3439,7 @@ func (page SBTopicListResultPage) Values() []SBTopic {
 	return *page.stlr.Value
 }
 
-// Creates a new instance of the SBTopicListResultPage type.
-func NewSBTopicListResultPage(getNextPage func(context.Context, SBTopicListResult) (SBTopicListResult, error)) SBTopicListResultPage {
-	return SBTopicListResultPage{fn: getNextPage}
-}
-
-// SBTopicProperties the Topic Properties definition.
+// SBTopicProperties the Tpoic Properties definition.
 type SBTopicProperties struct {
 	// SizeInBytes - Size of the topic, in bytes.
 	SizeInBytes *int64 `json:"sizeInBytes,omitempty"`
@@ -3561,7 +3451,7 @@ type SBTopicProperties struct {
 	AccessedAt *date.Time `json:"accessedAt,omitempty"`
 	// SubscriptionCount - Number of subscriptions.
 	SubscriptionCount *int32 `json:"subscriptionCount,omitempty"`
-	// CountDetails - Message count details
+	// CountDetails - Message count deatils
 	CountDetails *MessageCountDetails `json:"countDetails,omitempty"`
 	// DefaultMessageTimeToLive - ISO 8601 Default message timespan to live value. This is the duration after which the message expires, starting from when the message is sent to Service Bus. This is the default value used when TimeToLive is not set on a message itself.
 	DefaultMessageTimeToLive *string `json:"defaultMessageTimeToLive,omitempty"`

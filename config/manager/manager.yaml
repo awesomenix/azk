@@ -34,6 +34,7 @@ spec:
       control-plane: controller-manager
       controller-tools.k8s.io: "1.0"
   serviceName: controller-manager-service
+  replicas: 3
   template:
     metadata:
       labels:

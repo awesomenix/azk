@@ -32,7 +32,7 @@ func init() {
 	createControlPlaneCmd.MarkFlagRequired("resourcegroup")
 
 	// Optional flags
-	createControlPlaneCmd.Flags().StringVarP(&ccpo.MasterKubernetesVersion, "kubernetesversion", "k", "Stable", "Master Kubernetes version, Optional, Uses Stable version as default.")
+	createControlPlaneCmd.Flags().StringVarP(&ccpo.MasterKubernetesVersion, "kubernetesversion", "k", "stable", "Master Kubernetes version, Optional, Uses Stable version as default.")
 
 	controlPlaneCmd.AddCommand(createControlPlaneCmd)
 

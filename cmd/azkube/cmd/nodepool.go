@@ -88,8 +88,7 @@ func init() {
 	createNodepoolCmd.Flags().Int32VarP(&cnpo.Count, "count", "c", 1, "Nodepool Count, Optional, default 1")
 
 	// Optional flags
-	createNodepoolCmd.Flags().StringVarP(&cnpo.AgentKubernetesVersion, "kubernetesversion", "k", "Stable", "Agent Kubernetes version, Optional, Uses Stable version as default.")
-	//createNodepoolCmd.Flags().StringVarP(&co.KubeconfigOutput, "kubeconfig-out", "", "kubeconfig", "Where to output the kubeconfig for the provisioned cluster")
+	createNodepoolCmd.Flags().StringVarP(&cnpo.AgentKubernetesVersion, "kubernetesversion", "k", "stable", "Agent Kubernetes version, Optional, Uses stable version as default.")
 
 	nodepoolCmd.AddCommand(createNodepoolCmd)
 
@@ -123,7 +122,7 @@ func init() {
 	upgradeNodepoolCmd.MarkFlagRequired("resourcegroup")
 	upgradeNodepoolCmd.Flags().StringVarP(&unpo.Name, "name", "n", "", "Nodepool Name Required.")
 	upgradeNodepoolCmd.MarkFlagRequired("name")
-	upgradeNodepoolCmd.Flags().StringVarP(&unpo.AgentKubernetesVersion, "kubernetesversion", "k", "Stable", "Nodepool Kubernetes Version, Default. Stable")
+	upgradeNodepoolCmd.Flags().StringVarP(&unpo.AgentKubernetesVersion, "kubernetesversion", "k", "stable", "Nodepool Kubernetes Version, Default. stable")
 	upgradeNodepoolCmd.MarkFlagRequired("kubernetesversion")
 
 	nodepoolCmd.AddCommand(upgradeNodepoolCmd)
@@ -346,7 +345,7 @@ func UpgradeNodePool(unpo *UpgradeNodePoolOptions) error {
 
 	nodePool.Spec.KubernetesVersion = unpo.AgentKubernetesVersion
 	if err := kClient.Update(context.TODO(), nodePool); err != nil {
-		log.Error(err, "Failed to scale nodepool", "Name", unpo.Name)
+		log.Error(err, "Failed to upgrade nodepool", "Name", unpo.Name)
 		return err
 	}
 
@@ -365,7 +364,7 @@ func UpgradeNodePool(unpo *UpgradeNodePoolOptions) error {
 	}
 	s.Stop()
 
-	fmt.Fprintf(s.Writer, " ✗ Failed to Scale Nodepool %s, timedout\n", unpo.Name)
+	fmt.Fprintf(s.Writer, " ✗ Failed to Upgrade Nodepool %s, timedout\n", unpo.Name)
 
 	return nil
 }

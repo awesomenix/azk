@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"hash/fnv"
-	"io/ioutil"
 	"os"
 	"strings"
 	"time"
@@ -43,7 +42,6 @@ func init() {
 	createClusterCmd.MarkFlagRequired("location")
 
 	// Optional flags
-	createClusterCmd.Flags().StringVarP(&co.MasterKubernetesVersion, "kubernetesversion", "k", "Stable", "Master Kubernetes version, Optional, Uses Stable version as default.")
 	createClusterCmd.Flags().StringVarP(&co.KubeconfigOutput, "kubeconfigout", "o", "kubeconfig", "Where to output the kubeconfig for the provisioned cluster")
 
 	clusterCmd.AddCommand(createClusterCmd)
@@ -55,8 +53,6 @@ func init() {
 	deleteClusterCmd.MarkFlagRequired("resourcegroup")
 
 	clusterCmd.AddCommand(deleteClusterCmd)
-
-	// Upgrade
 }
 
 var createClusterCmd = &cobra.Command{
@@ -84,14 +80,13 @@ var deleteClusterCmd = &cobra.Command{
 }
 
 type CreateOptions struct {
-	SubscriptionID          string
-	ClientID                string
-	ClientSecret            string
-	TenantID                string
-	ResourceGroup           string
-	ResourceLocation        string
-	MasterKubernetesVersion string
-	KubeconfigOutput        string
+	SubscriptionID   string
+	ClientID         string
+	ClientSecret     string
+	TenantID         string
+	ResourceGroup    string
+	ResourceLocation string
+	KubeconfigOutput string
 }
 
 type DeleteOptions struct {
@@ -185,49 +180,6 @@ func RunCreate(co *CreateOptions) error {
 	}
 
 	fmt.Fprintf(s.Writer, " ✓ Successfully Created Cluster %s in %s\n", clusterName, time.Since(start))
-
-	if co.KubeconfigOutput != "" {
-		ioutil.WriteFile(co.KubeconfigOutput, []byte(cluster.Status.CustomerKubeConfig), 0644)
-	}
-
-	controlPlane := &enginev1alpha1.ControlPlane{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      clusterName,
-			Namespace: clusterName,
-		},
-		Spec: enginev1alpha1.ControlPlaneSpec{
-			KubernetesVersion: co.MasterKubernetesVersion,
-		},
-	}
-
-	s = spinner.New(spinner.CharSets[11], 200*time.Millisecond)
-	s.Color("green")
-	s.Suffix = fmt.Sprintf(" Creating ControlPlane %s with kubernetes version %s .. timeout 15m0s", clusterName, co.MasterKubernetesVersion)
-	s.Start()
-
-	if err := kClient.Create(context.TODO(), controlPlane); err != nil {
-		fmt.Fprintf(s.Writer, " ✗ Failed to Create ControlPlane %v\n", err)
-		return err
-	}
-
-	start = time.Now()
-	controlPlane = &enginev1alpha1.ControlPlane{}
-	for i := 0; i < 30; i++ {
-		if err := kClient.Get(context.TODO(), types.NamespacedName{Namespace: clusterName, Name: clusterName}, controlPlane); err == nil {
-			if controlPlane.Status.ProvisioningState == "Succeeded" {
-				break
-			}
-		}
-		time.Sleep(30 * time.Second)
-	}
-	s.Stop()
-
-	if cluster.Status.ProvisioningState != "Succeeded" {
-		fmt.Fprintf(s.Writer, " ✗ Failed to Create Control Plane %v\n", err)
-		return err
-	}
-
-	fmt.Fprintf(s.Writer, " ✓ Successfully Created ControlPlane with Kubernetes Version %s in %s\n", co.MasterKubernetesVersion, time.Since(start))
 
 	return nil
 }

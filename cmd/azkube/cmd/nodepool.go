@@ -22,6 +22,59 @@ var nodepoolCmd = &cobra.Command{
 	Long:  `Manage a Node Pool in Kubernetes Cluster on Azure with one command`,
 }
 
+var cnpo = &CreateNodePoolOptions{}
+var dnpo = &DeleteNodePoolOptions{}
+var snpo = &ScaleNodePoolOptions{}
+var unpo = &UpgradeNodePoolOptions{}
+
+var createNodepoolCmd = &cobra.Command{
+	Use:   "create",
+	Short: "Create Node Pool",
+	Long:  `Create a Node Pool with one command`,
+	Run: func(cmd *cobra.Command, args []string) {
+		if err := CreateNodePool(cnpo); err != nil {
+			log.Error(err, "Failed to create cluster")
+			os.Exit(1)
+		}
+	},
+}
+
+var deleteNodepoolCmd = &cobra.Command{
+	Use:   "delete",
+	Short: "Delete Node Pool",
+	Long:  `Delete a node pool with one command`,
+	Run: func(cmd *cobra.Command, args []string) {
+		if err := DeleteNodePool(dnpo); err != nil {
+			log.Error(err, "Failed to delete cluster")
+			os.Exit(1)
+		}
+	},
+}
+
+var scaleNodepoolCmd = &cobra.Command{
+	Use:   "scale",
+	Short: "Scale Node Pool",
+	Long:  `Scale a node pool with one command`,
+	Run: func(cmd *cobra.Command, args []string) {
+		if err := ScaleNodePool(snpo); err != nil {
+			log.Error(err, "Failed to delete cluster")
+			os.Exit(1)
+		}
+	},
+}
+
+var upgradeNodepoolCmd = &cobra.Command{
+	Use:   "upgrade",
+	Short: "Upgrade Node Pool",
+	Long:  `Upgrade a node pool with one command`,
+	Run: func(cmd *cobra.Command, args []string) {
+		if err := UpgradeNodePool(unpo); err != nil {
+			log.Error(err, "Failed to upgrade cluster")
+			os.Exit(1)
+		}
+	},
+}
+
 func init() {
 	RootCmd.AddCommand(nodepoolCmd)
 
@@ -64,6 +117,17 @@ func init() {
 	nodepoolCmd.AddCommand(scaleNodepoolCmd)
 
 	// Upgrade
+	upgradeNodepoolCmd.Flags().StringVarP(&unpo.SubscriptionID, "subscriptionid", "s", "", "SubscriptionID Required.")
+	upgradeNodepoolCmd.MarkFlagRequired("subscriptionid")
+	upgradeNodepoolCmd.Flags().StringVarP(&unpo.ResourceGroup, "resourcegroup", "r", "", "Resource Group Name, in which all resources are created Required.")
+	upgradeNodepoolCmd.MarkFlagRequired("resourcegroup")
+	upgradeNodepoolCmd.Flags().StringVarP(&unpo.Name, "name", "n", "", "Nodepool Name Required.")
+	upgradeNodepoolCmd.MarkFlagRequired("name")
+	upgradeNodepoolCmd.Flags().StringVarP(&unpo.AgentKubernetesVersion, "kubernetesversion", "k", "Stable", "Nodepool Kubernetes Version, Default. Stable")
+	upgradeNodepoolCmd.MarkFlagRequired("kubernetesversion")
+
+	nodepoolCmd.AddCommand(upgradeNodepoolCmd)
+
 }
 
 type CreateNodePoolOptions struct {
@@ -87,44 +151,11 @@ type ScaleNodePoolOptions struct {
 	Count          int32
 }
 
-var cnpo = &CreateNodePoolOptions{}
-var dnpo = &DeleteNodePoolOptions{}
-var snpo = &ScaleNodePoolOptions{}
-
-var createNodepoolCmd = &cobra.Command{
-	Use:   "create",
-	Short: "Create Node Pool",
-	Long:  `Create a Node Pool with one command`,
-	Run: func(cmd *cobra.Command, args []string) {
-		if err := CreateNodePool(cnpo); err != nil {
-			log.Error(err, "Failed to create cluster")
-			os.Exit(1)
-		}
-	},
-}
-
-var deleteNodepoolCmd = &cobra.Command{
-	Use:   "delete",
-	Short: "Delete Node Pool",
-	Long:  `Delete a node pool with one command`,
-	Run: func(cmd *cobra.Command, args []string) {
-		if err := DeleteNodePool(dnpo); err != nil {
-			log.Error(err, "Failed to delete cluster")
-			os.Exit(1)
-		}
-	},
-}
-
-var scaleNodepoolCmd = &cobra.Command{
-	Use:   "scale",
-	Short: "Scale Node Pool",
-	Long:  `Scale a node pool with one command`,
-	Run: func(cmd *cobra.Command, args []string) {
-		if err := ScaleNodePool(snpo); err != nil {
-			log.Error(err, "Failed to delete cluster")
-			os.Exit(1)
-		}
-	},
+type UpgradeNodePoolOptions struct {
+	SubscriptionID         string
+	ResourceGroup          string
+	Name                   string
+	AgentKubernetesVersion string
 }
 
 func CreateNodePool(cnpo *CreateNodePoolOptions) error {
@@ -280,6 +311,61 @@ func ScaleNodePool(snpo *ScaleNodePoolOptions) error {
 	s.Stop()
 
 	fmt.Fprintf(s.Writer, " ✗ Failed to Scale Nodepool %s, timedout\n", snpo.Name)
+
+	return nil
+}
+
+func UpgradeNodePool(unpo *UpgradeNodePoolOptions) error {
+	log.Info("setting up client for scale")
+	cfg, err := clientcmd.BuildConfigFromFlags("", os.Getenv("KUBECONFIG"))
+	if err != nil {
+		log.Error(err, "Failed to create config from KUBECONFIG")
+		return err
+	}
+
+	kClient, err := client.New(cfg, client.Options{})
+	if err != nil {
+		log.Error(err, "Failed to create kube client from config")
+		return err
+	}
+
+	h := fnv.New64a()
+	h.Write([]byte(fmt.Sprintf("%s/%s", unpo.SubscriptionID, unpo.ResourceGroup)))
+	clusterName := fmt.Sprintf("%x", h.Sum64())
+
+	nodePool := &enginev1alpha1.NodePool{}
+	if err := kClient.Get(context.TODO(), types.NamespacedName{Namespace: clusterName, Name: unpo.Name}, nodePool); err != nil {
+		log.Error(err, "Failed to get nodepool", "Name", unpo.Name)
+		return err
+	}
+
+	s := spinner.New(spinner.CharSets[11], 200*time.Millisecond)
+	s.Color("green")
+	s.Suffix = fmt.Sprintf(" Upgrading Nodepool %s from %s to %s .. timeout 15m0s", unpo.Name, nodePool.Status.KubernetesVersion, unpo.AgentKubernetesVersion)
+	s.Start()
+
+	nodePool.Spec.KubernetesVersion = unpo.AgentKubernetesVersion
+	if err := kClient.Update(context.TODO(), nodePool); err != nil {
+		log.Error(err, "Failed to scale nodepool", "Name", unpo.Name)
+		return err
+	}
+
+	start := time.Now()
+	nodePool = &enginev1alpha1.NodePool{}
+	for i := 0; i < 30; i++ {
+		if err := kClient.Get(context.TODO(), types.NamespacedName{Namespace: clusterName, Name: unpo.Name}, nodePool); err == nil {
+			if nodePool.Status.ProvisioningState == "Succeeded" &&
+				nodePool.Status.KubernetesVersion == unpo.AgentKubernetesVersion {
+				s.Stop()
+				fmt.Fprintf(s.Writer, " ✓ Successfully Upgraded Nodepool %s in %s\n", unpo.Name, time.Since(start))
+				return nil
+			}
+		}
+		time.Sleep(30 * time.Second)
+	}
+	s.Stop()
+
+	fmt.Fprintf(s.Writer, " ✗ Failed to Scale Nodepool %s, timedout\n", unpo.Name)
 
 	return nil
 }

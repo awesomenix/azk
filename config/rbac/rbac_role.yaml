@@ -47,6 +47,26 @@ rules:
 - apiGroups:
   - engine.azkube.io
   resources:
+  - nodesets
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - engine.azkube.io
+  resources:
+  - nodesets/status
+  verbs:
+  - get
+  - update
+  - patch
+- apiGroups:
+  - engine.azkube.io
+  resources:
   - nodepools
   verbs:
   - get

@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	debugruntime "runtime"
+	"runtime/debug"
 	"time"
 
 	enginev1alpha1 "github.com/awesomenix/azkube/pkg/apis/engine/v1alpha1"
@@ -84,6 +86,14 @@ type ReconcileCluster struct {
 // +kubebuilder:rbac:groups=engine.azkube.io,resources=clusters,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=engine.azkube.io,resources=clusters/status,verbs=get;update;patch
 func (r *ReconcileCluster) Reconcile(request reconcile.Request) (reconcile.Result, error) {
+	defer func() {
+		// recover from panic if one occured. Set err to nil otherwise.
+		if r := recover(); r != nil {
+			_, file, line, _ := debugruntime.Caller(3)
+			stack := string(debug.Stack())
+			log.Error(fmt.Errorf("Panic: %+v, file: %s, line: %d, stacktrace: '%s'", r, file, line, stack), "Panic Observed")
+		}
+	}()
 	// Fetch the Cluster instance
 	instance := &enginev1alpha1.Cluster{}
 	err := r.Get(context.TODO(), request.NamespacedName, instance)

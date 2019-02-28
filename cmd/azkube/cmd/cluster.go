@@ -167,6 +167,7 @@ func RunCreate(co *CreateOptions) error {
 		return err
 	}
 
+	start := time.Now()
 	cluster = &enginev1alpha1.Cluster{}
 	for i := 0; i < 12; i++ {
 		if err := kClient.Get(context.TODO(), types.NamespacedName{Namespace: clusterName, Name: clusterName}, cluster); err == nil {
@@ -183,7 +184,7 @@ func RunCreate(co *CreateOptions) error {
 		return err
 	}
 
-	fmt.Fprintf(s.Writer, " ✓ Successfully Created Cluster %s\n", clusterName)
+	fmt.Fprintf(s.Writer, " ✓ Successfully Created Cluster %s in %s\n", clusterName, time.Since(start))
 
 	if co.KubeconfigOutput != "" {
 		ioutil.WriteFile(co.KubeconfigOutput, []byte(cluster.Status.CustomerKubeConfig), 0644)
@@ -209,6 +210,7 @@ func RunCreate(co *CreateOptions) error {
 		return err
 	}
 
+	start = time.Now()
 	controlPlane = &enginev1alpha1.ControlPlane{}
 	for i := 0; i < 30; i++ {
 		if err := kClient.Get(context.TODO(), types.NamespacedName{Namespace: clusterName, Name: clusterName}, controlPlane); err == nil {
@@ -225,7 +227,7 @@ func RunCreate(co *CreateOptions) error {
 		return err
 	}
 
-	fmt.Fprintf(s.Writer, " ✓ Successfully Created ControlPlane with Kubernetes Version %s\n", co.MasterKubernetesVersion)
+	fmt.Fprintf(s.Writer, " ✓ Successfully Created ControlPlane with Kubernetes Version %s in %s\n", co.MasterKubernetesVersion, time.Since(start))
 
 	return nil
 }

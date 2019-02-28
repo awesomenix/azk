@@ -166,6 +166,7 @@ func CreateNodePool(cnpo *CreateNodePoolOptions) error {
 		return err
 	}
 
+	start := time.Now()
 	nodePool = &enginev1alpha1.NodePool{}
 	for i := 0; i < 20; i++ {
 		if err := kClient.Get(context.TODO(), types.NamespacedName{Namespace: clusterName, Name: cnpo.Name}, nodePool); err == nil {
@@ -182,7 +183,7 @@ func CreateNodePool(cnpo *CreateNodePoolOptions) error {
 		return err
 	}
 
-	fmt.Fprintf(s.Writer, " ✓ Successfully Created NodePool %s with Kubernetes Version %s\n", cnpo.Name, cnpo.AgentKubernetesVersion)
+	fmt.Fprintf(s.Writer, " ✓ Successfully Created NodePool %s with Kubernetes Version %s in %s\n", cnpo.Name, cnpo.AgentKubernetesVersion, time.Since(start))
 
 	return nil
 }
@@ -263,13 +264,14 @@ func ScaleNodePool(snpo *ScaleNodePoolOptions) error {
 		return err
 	}
 
+	start := time.Now()
 	nodePool = &enginev1alpha1.NodePool{}
 	for i := 0; i < 20; i++ {
 		if err := kClient.Get(context.TODO(), types.NamespacedName{Namespace: clusterName, Name: snpo.Name}, nodePool); err == nil {
 			if nodePool.Status.ProvisioningState == "Succeeded" &&
 				nodePool.Status.VMReplicas == snpo.Count {
 				s.Stop()
-				fmt.Fprintf(s.Writer, " ✓ Successfully Scaled Nodepool %s\n", snpo.Name)
+				fmt.Fprintf(s.Writer, " ✓ Successfully Scaled Nodepool %s in %s\n", snpo.Name, time.Since(start))
 				return nil
 			}
 		}

@@ -279,31 +279,28 @@ func updateNodeSet(instance *enginev1alpha1.NodeSet, cloudConfig azhelpers.Cloud
 func scaleNodeSet(ctx context.Context, instance *enginev1alpha1.NodeSet, cloudConfig azhelpers.CloudConfiguration) error {
 	vmssName := instance.Name + "-agentvmss"
 	expectedCount := int(*instance.Spec.Replicas)
-	if len(instance.Status.NodeStatus) < expectedCount {
-		curCount := 0
-		vmssName := instance.Name + "-agentvmss"
-		for _, nodeStatus := range instance.Status.NodeStatus {
-			if curCount < expectedCount {
-				curCount++
-				continue
-			}
+	curCount := 0
+	for _, nodeStatus := range instance.Status.NodeStatus {
+		if curCount < expectedCount {
+			curCount++
+			continue
+		}
 
-			err := cordonDrainAndDeleteNode(instance.Status.Kubeconfig, nodeStatus.VMComputerName)
-			if err != nil {
-				return err
-			}
+		err := cordonDrainAndDeleteNode(instance.Status.Kubeconfig, nodeStatus.VMComputerName)
+		if err != nil {
+			return err
+		}
 
-			vmssClient, err := cloudConfig.GetVMSSVMsClient()
-			if err != nil {
-				return err
-			}
+		vmssClient, err := cloudConfig.GetVMSSVMsClient()
+		if err != nil {
+			return err
+		}
 
-			log.Info("Scaling down", "VMSS", nodeStatus.VMInstanceID)
+		log.Info("Scaling down", "VMSS", nodeStatus.VMInstanceID)
 
-			_, err = vmssClient.Delete(ctx, cloudConfig.GroupName, vmssName, nodeStatus.VMInstanceID)
-			if err != nil {
-				return err
-			}
+		_, err = vmssClient.Delete(ctx, cloudConfig.GroupName, vmssName, nodeStatus.VMInstanceID)
+		if err != nil {
+			return err
 		}
 	}
 	return cloudConfig.ScaleVMSS(ctx, vmssName, expectedCount)

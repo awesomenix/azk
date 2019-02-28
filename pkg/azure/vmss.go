@@ -73,7 +73,8 @@ func (c *CloudConfiguration) CreateVMSS(ctx context.Context,
 	vnetName,
 	subnetName,
 	startupScript,
-	customData string) error {
+	customData string,
+	count int) error {
 
 	subnetClient, err := c.GetSubnetsClient()
 	if err != nil {
@@ -107,7 +108,7 @@ func (c *CloudConfiguration) CreateVMSS(ctx context.Context,
 			Location: to.StringPtr(c.GroupLocation),
 			Sku: &compute.Sku{
 				Name:     to.StringPtr(string("Standard_B2ms")),
-				Capacity: to.Int64Ptr(1),
+				Capacity: to.Int64Ptr(int64(count)),
 			},
 			VirtualMachineScaleSetProperties: &compute.VirtualMachineScaleSetProperties{
 				Overprovision: to.BoolPtr(false),

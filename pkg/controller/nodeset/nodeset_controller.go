@@ -181,6 +181,7 @@ func (r *ReconcileNodeSet) Reconcile(request reconcile.Request) (reconcile.Resul
 			"agent-subnet",
 			getEncodedNodeSetStartupScript(cluster.Status.BootstrapToken, cluster.Status.DiscoveryHashes[0]),
 			azhelpers.GetCustomData(customData),
+			int(*instance.Spec.Replicas),
 		); err != nil {
 			return reconcile.Result{}, err
 		}

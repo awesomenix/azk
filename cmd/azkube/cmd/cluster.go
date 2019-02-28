@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"hash/fnv"
+	"io/ioutil"
 	"os"
 	"strings"
 	"time"
@@ -137,49 +138,58 @@ func RunCreate(co *CreateOptions) error {
 
 	fmt.Fprintf(s.Writer, " ✓ Successfully Created Namespace %s\n", clusterName)
 
-	cluster := &enginev1alpha1.Cluster{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      clusterName,
-			Namespace: clusterName,
-		},
-		Spec: enginev1alpha1.ClusterSpec{
-			SubscriptionID:    co.SubscriptionID,
-			ClientID:          co.ClientID,
-			ClientSecret:      co.ClientSecret,
-			TenantID:          co.TenantID,
-			ResourceGroupName: co.ResourceGroup,
-			Location:          co.ResourceLocation,
-		},
-	}
-
-	s = spinner.New(spinner.CharSets[11], 200*time.Millisecond)
-	s.Color("green")
-	s.Suffix = fmt.Sprintf(" Creating Cluster %s with group %s in %s .. timeout 1m0s", clusterName, co.ResourceGroup, co.ResourceLocation)
-	s.Start()
-
-	if err := kClient.Create(context.TODO(), cluster); err != nil {
-		fmt.Fprintf(s.Writer, " ✗ Failed to Create Cluster %v\n", err)
-		return err
-	}
-
-	start := time.Now()
-	cluster = &enginev1alpha1.Cluster{}
-	for i := 0; i < 12; i++ {
-		if err := kClient.Get(context.TODO(), types.NamespacedName{Namespace: clusterName, Name: clusterName}, cluster); err == nil {
-			if cluster.Status.ProvisioningState == "Succeeded" {
-				break
-			}
+	cluster := &enginev1alpha1.Cluster{}
+	if err := kClient.Get(context.TODO(), types.NamespacedName{Namespace: clusterName, Name: clusterName}, cluster); err == nil {
+		if cluster.Status.ProvisioningState == "Succeeded" {
+			fmt.Fprintf(s.Writer, " ✓ Already Created Cluster %s\n", clusterName)
 		}
-		time.Sleep(5 * time.Second)
-	}
-	s.Stop()
+	} else {
+		cluster = &enginev1alpha1.Cluster{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      clusterName,
+				Namespace: clusterName,
+			},
+			Spec: enginev1alpha1.ClusterSpec{
+				SubscriptionID:    co.SubscriptionID,
+				ClientID:          co.ClientID,
+				ClientSecret:      co.ClientSecret,
+				TenantID:          co.TenantID,
+				ResourceGroupName: co.ResourceGroup,
+				Location:          co.ResourceLocation,
+			},
+		}
 
-	if cluster.Status.ProvisioningState != "Succeeded" {
-		fmt.Fprintf(s.Writer, " ✗ Failed to Create Cluster %v\n", err)
-		return err
+		s = spinner.New(spinner.CharSets[11], 200*time.Millisecond)
+		s.Color("green")
+		s.Suffix = fmt.Sprintf(" Creating Cluster %s with group %s in %s .. timeout 1m0s", clusterName, co.ResourceGroup, co.ResourceLocation)
+		s.Start()
+
+		if err := kClient.Create(context.TODO(), cluster); err != nil {
+			fmt.Fprintf(s.Writer, " ✗ Failed to Create Cluster %v\n", err)
+			return err
+		}
+
+		start := time.Now()
+		cluster = &enginev1alpha1.Cluster{}
+		for i := 0; i < 12; i++ {
+			if err := kClient.Get(context.TODO(), types.NamespacedName{Namespace: clusterName, Name: clusterName}, cluster); err == nil {
+				if cluster.Status.ProvisioningState == "Succeeded" {
+					break
+				}
+			}
+			time.Sleep(5 * time.Second)
+		}
+		s.Stop()
+		if cluster.Status.ProvisioningState != "Succeeded" {
+			fmt.Fprintf(s.Writer, " ✗ Failed to Create Cluster %v\n", err)
+			return err
+		}
+		fmt.Fprintf(s.Writer, " ✓ Successfully Created Cluster %s in %s\n", clusterName, time.Since(start))
 	}
 
-	fmt.Fprintf(s.Writer, " ✓ Successfully Created Cluster %s in %s\n", clusterName, time.Since(start))
+	if co.KubeconfigOutput != "" {
+		ioutil.WriteFile(co.KubeconfigOutput, []byte(cluster.Status.CustomerKubeConfig), 0644)
+	}
 
 	return nil
 }

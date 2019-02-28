@@ -216,34 +216,34 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 	}
 	log.Info("Successfully Created", "AvailabilitySet", masterAvailabilitySetName)
 
-	var wg sync.WaitGroup
-
 	var globalErr error
-	for i := 0; i < 3; i++ {
-		wg.Add(1)
-		go func(vmIndex int) {
-			defer wg.Done()
-			vmName := fmt.Sprintf("%s-mastervm-%d", instance.Name, vmIndex)
-			log.Info("Creating", "VM", vmName)
-			if err := cloudConfig.CreateVMWithLoadBalancer(
-				context.TODO(),
-				vmName,
-				"azkube-lb",
-				"azkube-vnet",
-				"master-subnet",
-				fmt.Sprintf("192.0.0.%d", vmIndex+4),
-				azhelpers.GetCustomData(customData),
-				masterAvailabilitySetName,
-				vmIndex); err != nil {
-				log.Error(err, "Creation Failed", "VM", vmName)
-				globalErr = err
-				return
-			}
-			log.Info("Successfully Created", "VM", vmName)
-		}(i)
+	{
+		var wg sync.WaitGroup
+		for i := 0; i < 3; i++ {
+			wg.Add(1)
+			go func(vmIndex int) {
+				defer wg.Done()
+				vmName := fmt.Sprintf("%s-mastervm-%d", instance.Name, vmIndex)
+				log.Info("Creating", "VM", vmName)
+				if err := cloudConfig.CreateVMWithLoadBalancer(
+					context.TODO(),
+					vmName,
+					"azkube-lb",
+					"azkube-vnet",
+					"master-subnet",
+					fmt.Sprintf("192.0.0.%d", vmIndex+4),
+					azhelpers.GetCustomData(customData),
+					masterAvailabilitySetName,
+					vmIndex); err != nil {
+					log.Error(err, "Creation Failed", "VM", vmName)
+					globalErr = err
+					return
+				}
+				log.Info("Successfully Created", "VM", vmName)
+			}(i)
+		}
+		wg.Wait()
 	}
-
-	wg.Wait()
 
 	if globalErr != nil {
 		return reconcile.Result{}, globalErr
@@ -260,18 +260,29 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 	}
 	log.Info("Successfully Executed Custom Script Extension", "VM", vmName)
 
-	for i := 1; i < 3; i++ {
-		vmName = fmt.Sprintf("%s-mastervm-%d", instance.Name, i)
-		log.Info("Running Custom Script Extension", "VM", vmName)
-		if err := cloudConfig.AddCustomScriptsExtension(
-			context.TODO(),
-			vmName,
-			getEncodedSecondaryMasterStartupScript(cluster.Status.BootstrapToken, cluster.Status.DiscoveryHashes[0])); err != nil {
-			log.Error(err, "Error Executing Custom Script Extension", "VM", vmName)
-			return reconcile.Result{}, err
+	{
+		var wg sync.WaitGroup
+		for i := 1; i < 3; i++ {
+			wg.Add(1)
+			go func(vmIndex int) {
+				vmName = fmt.Sprintf("%s-mastervm-%d", instance.Name, vmIndex)
+				log.Info("Running Custom Script Extension", "VM", vmName)
+				if err := cloudConfig.AddCustomScriptsExtension(
+					context.TODO(),
+					vmName,
+					getEncodedSecondaryMasterStartupScript(cluster.Status.BootstrapToken, cluster.Status.DiscoveryHashes[0])); err != nil {
+					log.Error(err, "Error Executing Custom Script Extension", "VM", vmName)
+					globalErr = err
+					return
+				}
+				log.Info("Successfully Executed Custom Script Extension", "VM", vmName)
+			}(i)
 		}
+		wg.Wait()
 	}
-	log.Info("Successfully Executed Custom Script Extension", "VM", vmName)
+	if globalErr != nil {
+		return reconcile.Result{}, globalErr
+	}
 
 	instance.Status.KubernetesVersion = instance.Spec.KubernetesVersion
 	instance.Status.ProvisioningState = "Succeeded"

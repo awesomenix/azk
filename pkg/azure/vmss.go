@@ -154,12 +154,6 @@ func (c *CloudConfiguration) CreateVMSS(ctx context.Context,
 												Subnet: &compute.APIEntityReference{
 													ID: subnet.ID,
 												},
-												PublicIPAddressConfiguration: &compute.VirtualMachineScaleSetPublicIPAddressConfiguration{
-													Name: to.StringPtr("vmsspublicip"),
-													VirtualMachineScaleSetPublicIPAddressConfigurationProperties: &compute.VirtualMachineScaleSetPublicIPAddressConfigurationProperties{
-														IdleTimeoutInMinutes: to.Int32Ptr(15),
-													},
-												},
 											},
 										},
 									},

@@ -11,6 +11,5 @@ spec:
   clientID: ""
   clientSecret: ""
   resourceGroupName: resourcegroup
-  resourceName: myresourcename
   dnsPrefix: mydnsprefix
   location: eastus2

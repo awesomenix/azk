@@ -185,7 +185,7 @@ func (r *ReconcileNodeSet) Reconcile(request reconcile.Request) (reconcile.Resul
 			return reconcile.Result{}, err
 		}
 		return reconcile.Result{Requeue: true}, nil
-	} else if *instance.Spec.Replicas != instance.Status.Replicas {
+	} else if int(*instance.Spec.Replicas) != len(instance.Status.NodeStatus) {
 		instance.Status.ProvisioningState = "Scaling"
 		if err := r.Status().Update(context.TODO(), instance); err != nil {
 			return reconcile.Result{}, err

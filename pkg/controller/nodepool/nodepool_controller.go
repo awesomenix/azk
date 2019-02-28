@@ -129,6 +129,7 @@ func (r *ReconcileNodePool) Reconcile(request reconcile.Request) (reconcile.Resu
 	instance.Status.NodeSetName = nodeSetName
 	//instance.Status.PrevNodeSetName = nodeSetName
 	instance.Status.Replicas = foundNodeSet.Status.Replicas
+	instance.Status.VMReplicas = int32(len(foundNodeSet.Status.NodeStatus))
 	instance.Status.KubernetesVersion = foundNodeSet.Status.KubernetesVersion
 	instance.Status.ProvisioningState = foundNodeSet.Status.ProvisioningState
 	if err := r.Status().Update(context.TODO(), instance); err != nil {

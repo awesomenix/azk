@@ -8,7 +8,6 @@ import (
 type ClusterSpec struct {
 	SubscriptionID    string `json:"subscriptionID,omitempty"`
 	ResourceGroupName string `json:"resourceGroupName,omitempty"`
-	ResourceName      string `json:"resourceName,omitempty"`
 	DNSPrefix         string `json:"dnsPrefix,omitempty"`
 	Location          string `json:"location,omitempty"`
 	TenantID          string `json:"tenantID,omitempty"`
@@ -31,6 +30,7 @@ type ClusterStatus struct {
 	CustomerKubeConfig         string   `json:"customerKubeConfig,omitempty"`
 	BootstrapToken             string   `json:"bootstrapToken,omitempty"`
 	DiscoveryHashes            []string `json:"discoveryHashes,omitempty"`
+	PublicIPAddress            string   `json:"publicIPAddress,omitempty"`
 }
 
 // +genclient

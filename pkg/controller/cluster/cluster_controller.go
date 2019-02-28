@@ -5,6 +5,7 @@ import (
 	"crypto/x509"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"time"
 
 	enginev1alpha1 "github.com/awesomenix/azkube/pkg/apis/engine/v1alpha1"
@@ -183,6 +184,8 @@ func (r *ReconcileCluster) Reconcile(request reconcile.Request) (reconcile.Resul
 		publicAddress = *pip.PublicIPAddressPropertiesFormat.IPAddress
 	}
 
+	defer os.RemoveAll(tmpDir + instance.Name)
+
 	v1beta1cfg := &kubeadmv1beta1.InitConfiguration{}
 	kubeadmscheme.Scheme.Default(v1beta1cfg)
 	v1beta1cfg.CertificatesDir = tmpDir + request.Name + "/certs"
@@ -207,21 +210,24 @@ func (r *ReconcileCluster) Reconcile(request reconcile.Request) (reconcile.Resul
 		return reconcile.Result{RequeueAfter: 3 * time.Second}, err
 	}
 
+	if err := updateStatus(instance); err != nil {
+		log.Error(err, "Error Updating Status")
+		return reconcile.Result{RequeueAfter: 3 * time.Second}, err
+	}
+
 	if publicAddress != "" {
+		os.Remove(tmpDir + instance.Name + "/kubeconfigs/admin.conf")
+		cfg.LocalAPIEndpoint = kubeadmapi.APIEndpoint{AdvertiseAddress: publicAddress, BindPort: 443}
 		cfg.ControlPlaneEndpoint = fmt.Sprintf("%s:443", publicAddress)
-		if err := kubeconfigphase.CreateKubeConfigFile("customer-kubeconfig.conf", kubeConfigDir, cfg); err != nil {
+		if err := kubeconfigphase.CreateKubeConfigFile(kubeadmconstants.AdminKubeConfigFileName, kubeConfigDir, cfg); err != nil {
 			return reconcile.Result{RequeueAfter: 3 * time.Second}, err
 		}
-		buf, err := ioutil.ReadFile(tmpDir + instance.Name + "/kubeconfigs/customer-kubeconfig.conf")
+		buf, err := ioutil.ReadFile(tmpDir + instance.Name + "/kubeconfigs/admin.conf")
 		if err != nil {
 			return reconcile.Result{RequeueAfter: 3 * time.Second}, err
 		}
 		instance.Status.CustomerKubeConfig = string(buf)
-	}
-
-	if err := updateStatus(instance); err != nil {
-		log.Error(err, "Error Updating Status")
-		return reconcile.Result{RequeueAfter: 3 * time.Second}, err
+		instance.Status.PublicIPAddress = publicAddress
 	}
 
 	instance.Status.ProvisioningState = "Succeeded"

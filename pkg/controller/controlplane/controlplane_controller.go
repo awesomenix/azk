@@ -27,7 +27,7 @@ const (
 	masterAvailabilitySetName = "azkube-masters-availabilityset"
 )
 
-func getEncodedPrimaryMasterStartupScript(bootstrapToken string) string {
+func getEncodedPrimaryMasterStartupScript(bootstrapToken, publicIPAddress string) string {
 	startupScript := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf(`
 sudo apt-get update && sudo apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -54,6 +54,9 @@ kind: InitConfiguration
 ---
 apiVersion: kubeadm.k8s.io/v1beta1
 kind: ClusterConfiguration
+apiServer:
+  certSANs:
+  - "%[2]s"
 kubernetesVersion: stable
 controlPlaneEndpoint: "192.0.0.4:6443"
 networking:
@@ -75,7 +78,7 @@ sudo kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f https://docs.proje
 sudo kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f https://docs.projectcalico.org/v3.5/getting-started/kubernetes/installation/hosted/calico.yaml
 #flannel
 #sudo kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
-`, bootstrapToken)))
+`, bootstrapToken, publicIPAddress)))
 	return startupScript
 }
 
@@ -251,7 +254,7 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 	if err := cloudConfig.AddCustomScriptsExtension(
 		context.TODO(),
 		vmName,
-		getEncodedPrimaryMasterStartupScript(cluster.Status.BootstrapToken)); err != nil {
+		getEncodedPrimaryMasterStartupScript(cluster.Status.BootstrapToken, cluster.Status.PublicIPAddress)); err != nil {
 		log.Error(err, "Error Executing Custom Script Extension", "VM", vmName)
 		return reconcile.Result{}, err
 	}

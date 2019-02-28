@@ -15,6 +15,7 @@ type NodePoolStatus struct {
 	NodeSetName string `json:"nodesetName,omitempty"`
 	//PrevNodeSetName   string `json:"prevNodeSetName,omitempty"`
 	Replicas          int32  `json:"replicas,omitempty"`
+	VMReplicas        int32  `json:"vmreplicas,omitempty"`
 	KubernetesVersion string `json:"kubernetesVersion,omitempty"`
 	ProvisioningState string `json:"provisioningState,omitempty"`
 }

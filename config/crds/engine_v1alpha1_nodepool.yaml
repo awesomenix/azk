@@ -51,6 +51,9 @@ spec:
               description: PrevNodeSetName   string `json:"prevNodeSetName,omitempty"`
               format: int32
               type: integer
+            vmreplicas:
+              format: int32
+              type: integer
           type: object
   version: v1alpha1
 status:

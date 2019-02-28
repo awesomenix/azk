@@ -40,8 +40,6 @@ spec:
               type: string
             resourceGroupName:
               type: string
-            resourceName:
-              type: string
             subscriptionID:
               type: string
             tenantID:
@@ -72,6 +70,8 @@ spec:
             frontProxyCACertificateKey:
               type: string
             provisioningState:
+              type: string
+            publicIPAddress:
               type: string
             serviceAccountKey:
               type: string

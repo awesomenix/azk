@@ -169,8 +169,8 @@ func CreateControlPlane(ccpo *CreateControlPlaneOptions) error {
 	}
 	s.Stop()
 
-	if cluster.Status.ProvisioningState != "Succeeded" {
-		fmt.Fprintf(s.Writer, " ✗ Failed to Create Control Plane %v\n", err)
+	if controlPlane.Status.ProvisioningState != "Succeeded" {
+		fmt.Fprintf(s.Writer, " ✗ Failed to Create Control Plane timedout\n")
 		return err
 	}
 

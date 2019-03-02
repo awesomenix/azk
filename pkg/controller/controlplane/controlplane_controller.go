@@ -59,8 +59,9 @@ kind: ClusterConfiguration
 apiServer:
   certSANs:
   - "%[2]s"
+  - "192.0.0.100"
 kubernetesVersion: stable
-controlPlaneEndpoint: "192.0.0.4:6443"
+controlPlaneEndpoint: "%[2]s:443"
 networking:
   podSubnet: "192.168.0.0/16"
 EOF
@@ -69,8 +70,7 @@ sudo kubeadm config images pull
 #flannel
 #sudo sysctl net.bridge.bridge-nf-call-iptables=1
 #use 10.244.0.0/16 as podsubnet above
-#sudo kubeadm init --config /tmp/kubeadm-config.yaml
-#calico
+#sudo rm -f /etc/kubernetes/admin.conf
 sudo kubeadm init --config /tmp/kubeadm-config.yaml
 mkdir -p $HOME/.kube
 sudo cp -f /etc/kubernetes/admin.conf $HOME/.kube/config
@@ -215,7 +215,7 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 		"/etc/kubernetes/pki/front-proxy-ca.key": cluster.Status.FrontProxyCACertificateKey,
 		"/etc/kubernetes/pki/etcd/ca.crt":        cluster.Status.EtcdCACertificate,
 		"/etc/kubernetes/pki/etcd/ca.key":        cluster.Status.EtcdCACertificateKey,
-		"/etc/kubernetes/admin.conf":             cluster.Status.AdminKubeConfig,
+		//"/etc/kubernetes/admin.conf":             cluster.Status.AdminKubeConfig,
 	}
 
 	log.Info("Creating", "AvailabilitySet", masterAvailabilitySetName)
@@ -239,6 +239,7 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 					context.TODO(),
 					vmName,
 					"azkube-lb",
+					"azkube-internal-lb",
 					"azkube-vnet",
 					"master-subnet",
 					fmt.Sprintf("192.0.0.%d", vmIndex+4),
@@ -275,7 +276,8 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 		for i := 1; i < 3; i++ {
 			wg.Add(1)
 			go func(vmIndex int) {
-				vmName = fmt.Sprintf("%s-mastervm-%d", instance.Name, vmIndex)
+				defer wg.Done()
+				vmName := fmt.Sprintf("%s-mastervm-%d", instance.Name, vmIndex)
 				log.Info("Running Custom Script Extension", "VM", vmName)
 				if err := cloudConfig.AddCustomScriptsExtension(
 					context.TODO(),

@@ -3,6 +3,7 @@ package azhelpers
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/services/network/mgmt/2018-01-01/network"
 	"github.com/Azure/go-autorest/autorest/to"
@@ -152,16 +153,22 @@ func (c *CloudConfiguration) CreatePublicIP(ctx context.Context, ipName string) 
 	if err != nil {
 		return network.PublicIPAddress{}, err
 	}
+	dnsName := fmt.Sprintf("%s.%s.cloudapp.azure.com", strings.ToLower(ipName), strings.ToLower(c.GroupLocation))
 	future, err := ipClient.CreateOrUpdate(
 		ctx,
 		c.GroupName,
 		ipName,
 		network.PublicIPAddress{
+			Sku:      &network.PublicIPAddressSku{Name: network.PublicIPAddressSkuNameBasic},
 			Name:     to.StringPtr(ipName),
 			Location: to.StringPtr(c.GroupLocation),
 			PublicIPAddressPropertiesFormat: &network.PublicIPAddressPropertiesFormat{
 				PublicIPAddressVersion:   network.IPv4,
 				PublicIPAllocationMethod: network.Static,
+				DNSSettings: &network.PublicIPAddressDNSSettings{
+					DomainNameLabel: to.StringPtr(strings.ToLower(ipName)),
+					Fqdn:            to.StringPtr(dnsName),
+				},
 			},
 		},
 	)
@@ -198,6 +205,7 @@ func (c *CloudConfiguration) CreateLoadBalancer(ctx context.Context, lbName, pip
 		c.GroupName,
 		lbName,
 		network.LoadBalancer{
+			Sku:      &network.LoadBalancerSku{Name: network.LoadBalancerSkuNameBasic},
 			Location: to.StringPtr(c.GroupLocation),
 			LoadBalancerPropertiesFormat: &network.LoadBalancerPropertiesFormat{
 				FrontendIPConfigurations: &[]network.FrontendIPConfiguration{
@@ -304,13 +312,110 @@ func (c *CloudConfiguration) CreateLoadBalancer(ctx context.Context, lbName, pip
 	return err
 }
 
-func (c *CloudConfiguration) CreateNICWithLoadBalancer(ctx context.Context, lbName, vnetName, subnetName, staticIPAddress, nicName string, natRule int) (nic network.Interface, err error) {
+// CreateLoadBalancer creates a load balancer with 2 inbound NAT rules.
+func (c *CloudConfiguration) CreateInternalLoadBalancer(ctx context.Context, vnetName, subnetName, lbName string) error {
+	probeName := "tcpHTTPSProbe"
+	frontEndIPConfigName := "master-internal-lbFrontEnd"
+	backEndAddressPoolName := "master-internal-backEndPool"
+	idPrefix := fmt.Sprintf("/subscriptions/%s/resourceGroups/%s/providers/Microsoft.Network/loadBalancers", c.SubscriptionID, c.GroupName)
+
+	subnetClient, err := c.GetSubnetsClient()
+	if err != nil {
+		return err
+	}
+
+	subnet, err := subnetClient.Get(ctx, c.GroupName, vnetName, subnetName, "")
+	if err != nil {
+		return err
+	}
+
+	lbClient, err := c.GetLBClient()
+	if err != nil {
+		return err
+	}
+	future, err := lbClient.CreateOrUpdate(ctx,
+		c.GroupName,
+		lbName,
+		network.LoadBalancer{
+			Sku:      &network.LoadBalancerSku{Name: network.LoadBalancerSkuNameBasic},
+			Location: to.StringPtr(c.GroupLocation),
+			LoadBalancerPropertiesFormat: &network.LoadBalancerPropertiesFormat{
+				FrontendIPConfigurations: &[]network.FrontendIPConfiguration{
+					{
+						Name: &frontEndIPConfigName,
+						FrontendIPConfigurationPropertiesFormat: &network.FrontendIPConfigurationPropertiesFormat{
+							PrivateIPAllocationMethod: network.Static,
+							Subnet:                    &subnet,
+							PrivateIPAddress:          to.StringPtr("192.0.0.100"),
+						},
+					},
+				},
+				BackendAddressPools: &[]network.BackendAddressPool{
+					{
+						Name: &backEndAddressPoolName,
+					},
+				},
+				Probes: &[]network.Probe{
+					{
+						Name: &probeName,
+						ProbePropertiesFormat: &network.ProbePropertiesFormat{
+							Protocol:          network.ProbeProtocolTCP,
+							Port:              to.Int32Ptr(6443),
+							IntervalInSeconds: to.Int32Ptr(15),
+							NumberOfProbes:    to.Int32Ptr(4),
+						},
+					},
+				},
+				LoadBalancingRules: &[]network.LoadBalancingRule{
+					{
+						Name: to.StringPtr("LBRuleHTTPS"),
+						LoadBalancingRulePropertiesFormat: &network.LoadBalancingRulePropertiesFormat{
+							Protocol:             network.TransportProtocolTCP,
+							FrontendPort:         to.Int32Ptr(443),
+							BackendPort:          to.Int32Ptr(6443),
+							IdleTimeoutInMinutes: to.Int32Ptr(4),
+							EnableFloatingIP:     to.BoolPtr(false),
+							LoadDistribution:     network.Default,
+							FrontendIPConfiguration: &network.SubResource{
+								ID: to.StringPtr(fmt.Sprintf("/%s/%s/frontendIPConfigurations/%s", idPrefix, lbName, frontEndIPConfigName)),
+							},
+							BackendAddressPool: &network.SubResource{
+								ID: to.StringPtr(fmt.Sprintf("/%s/%s/backendAddressPools/%s", idPrefix, lbName, backEndAddressPoolName)),
+							},
+							Probe: &network.SubResource{
+								ID: to.StringPtr(fmt.Sprintf("/%s/%s/probes/%s", idPrefix, lbName, probeName)),
+							},
+						},
+					},
+				},
+			},
+		})
+
+	if err != nil {
+		return fmt.Errorf("cannot create load balancer: %v", err)
+	}
+
+	err = future.WaitForCompletionRef(ctx, lbClient.Client)
+	if err != nil {
+		return fmt.Errorf("cannot get load balancer create or update future response: %v", err)
+	}
+
+	_, err = future.Result(lbClient)
+	return err
+}
+
+func (c *CloudConfiguration) CreateNICWithLoadBalancer(ctx context.Context, lbName, internallbName, vnetName, subnetName, staticIPAddress, nicName string, natRule int) (nic network.Interface, err error) {
 	subnet, err := c.GetVirtualNetworkSubnet(ctx, vnetName, subnetName)
 	if err != nil {
 		return
 	}
 
 	lb, err := c.GetLoadBalancer(ctx, lbName)
+	if err != nil {
+		return
+	}
+
+	internallb, err := c.GetLoadBalancer(ctx, internallbName)
 	if err != nil {
 		return
 	}
@@ -337,6 +442,9 @@ func (c *CloudConfiguration) CreateNICWithLoadBalancer(ctx context.Context, lbNa
 							LoadBalancerBackendAddressPools: &[]network.BackendAddressPool{
 								{
 									ID: (*lb.BackendAddressPools)[0].ID,
+								},
+								{
+									ID: (*internallb.BackendAddressPools)[0].ID,
 								},
 							},
 							LoadBalancerInboundNatRules: &[]network.InboundNatRule{

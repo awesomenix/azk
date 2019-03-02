@@ -45,7 +45,7 @@ sudo apt-get update && sudo apt-get install -y kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
 #Setup using kubeadm
 sudo kubeadm config images pull
-sudo kubeadm join 192.0.0.4:6443 --token %[1]s --discovery-token-ca-cert-hash %[2]s
+sudo kubeadm join 192.0.0.100:443 --token %[1]s --discovery-token-ca-cert-hash %[2]s
 `, bootstrapToken, discoveryHash)))
 	return startupScript
 }

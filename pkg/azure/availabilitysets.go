@@ -82,6 +82,7 @@ func (c *CloudConfiguration) CreateVMWithLoadBalancer(
 	ctx context.Context,
 	vmName,
 	lbName,
+	internallbName,
 	vnetName,
 	subnetName,
 	staticIPAddress,
@@ -102,7 +103,7 @@ func (c *CloudConfiguration) CreateVMWithLoadBalancer(
 		return nil
 	}
 
-	nic, err := c.CreateNICWithLoadBalancer(ctx, lbName, vnetName, subnetName, staticIPAddress, nicName, natRule)
+	nic, err := c.CreateNICWithLoadBalancer(ctx, lbName, internallbName, vnetName, subnetName, staticIPAddress, nicName, natRule)
 	if err != nil {
 		return err
 	}

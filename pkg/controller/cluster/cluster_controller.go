@@ -4,10 +4,12 @@ import (
 	"context"
 	"crypto/x509"
 	"fmt"
+	"hash/fnv"
 	"io/ioutil"
 	"os"
 	debugruntime "runtime"
 	"runtime/debug"
+	"strings"
 	"time"
 
 	enginev1alpha1 "github.com/awesomenix/azkube/pkg/apis/engine/v1alpha1"
@@ -36,10 +38,11 @@ import (
 )
 
 const (
-	tmpDir                 = "/tmp/kubeadm/"
-	groupsFinalizerName    = "groups.finalizers.engine.azkube.io"
-	azkubeLoadBalancerName = "azkube-lb"
-	azkubePublicIPName     = "azkube-publicip"
+	tmpDir                         = "/tmp/kubeadm/"
+	groupsFinalizerName            = "groups.finalizers.engine.azkube.io"
+	azkubeLoadBalancerName         = "azkube-lb"
+	azkubeInternalLoadBalancerName = "azkube-internal-lb"
+	azkubePublicIPName             = "azkube-publicip"
 )
 
 var log = logf.Log.WithName("controller")
@@ -178,16 +181,30 @@ func (r *ReconcileCluster) Reconcile(request reconcile.Request) (reconcile.Resul
 		return reconcile.Result{}, err
 	}
 
+	h := fnv.New32a()
+	h.Write([]byte(fmt.Sprintf("%s-%s", azkubePublicIPName, instance.Name)))
+	publicIPName := fmt.Sprintf("%x", h.Sum32())
+	publicIPName = instance.Spec.DNSPrefix + publicIPName
+
 	publicAddress := ""
+	dnsName := fmt.Sprintf("%s.%s.cloudapp.azure.com", strings.ToLower(publicIPName), strings.ToLower(instance.Spec.Location))
 	if cloudConfig.IsValid() {
-		if err := cloudConfig.CreateLoadBalancer(
+		if err := cloudConfig.CreateInternalLoadBalancer(
 			context.TODO(),
-			azkubeLoadBalancerName,
-			azkubePublicIPName); err != nil {
+			"azkube-vnet",
+			"master-subnet",
+			azkubeInternalLoadBalancerName); err != nil {
 			return reconcile.Result{}, err
 		}
 
-		pip, err := cloudConfig.GetPublicIP(context.TODO(), azkubePublicIPName)
+		if err := cloudConfig.CreateLoadBalancer(
+			context.TODO(),
+			azkubeLoadBalancerName,
+			publicIPName); err != nil {
+			return reconcile.Result{}, err
+		}
+
+		pip, err := cloudConfig.GetPublicIP(context.TODO(), publicIPName)
 		if err != nil {
 			return reconcile.Result{}, err
 		}
@@ -201,8 +218,9 @@ func (r *ReconcileCluster) Reconcile(request reconcile.Request) (reconcile.Resul
 	v1beta1cfg.CertificatesDir = tmpDir + request.Name + "/certs"
 	v1beta1cfg.Etcd.Local = &kubeadmv1beta1.LocalEtcd{}
 	v1beta1cfg.LocalAPIEndpoint = kubeadmv1beta1.APIEndpoint{AdvertiseAddress: "192.0.0.4", BindPort: 6443}
+	v1beta1cfg.ControlPlaneEndpoint = "192.0.0.4:6443"
 	if publicAddress != "" {
-		v1beta1cfg.APIServer.CertSANs = []string{publicAddress}
+		v1beta1cfg.APIServer.CertSANs = []string{publicAddress, dnsName}
 	}
 	v1beta1cfg.NodeRegistration.Name = "fakenode" + request.Name
 	cfg := &kubeadmapi.InitConfiguration{}
@@ -227,8 +245,8 @@ func (r *ReconcileCluster) Reconcile(request reconcile.Request) (reconcile.Resul
 
 	if publicAddress != "" {
 		os.Remove(tmpDir + instance.Name + "/kubeconfigs/admin.conf")
-		cfg.LocalAPIEndpoint = kubeadmapi.APIEndpoint{AdvertiseAddress: publicAddress, BindPort: 443}
-		cfg.ControlPlaneEndpoint = fmt.Sprintf("%s:443", publicAddress)
+		cfg.LocalAPIEndpoint = kubeadmapi.APIEndpoint{AdvertiseAddress: "192.0.0.4", BindPort: 443}
+		cfg.ControlPlaneEndpoint = fmt.Sprintf("%s:443", dnsName)
 		if err := kubeconfigphase.CreateKubeConfigFile(kubeadmconstants.AdminKubeConfigFileName, kubeConfigDir, cfg); err != nil {
 			return reconcile.Result{RequeueAfter: 3 * time.Second}, err
 		}
@@ -237,7 +255,7 @@ func (r *ReconcileCluster) Reconcile(request reconcile.Request) (reconcile.Resul
 			return reconcile.Result{RequeueAfter: 3 * time.Second}, err
 		}
 		instance.Status.CustomerKubeConfig = string(buf)
-		instance.Status.PublicIPAddress = publicAddress
+		instance.Status.PublicIPAddress = dnsName
 	}
 
 	instance.Status.ProvisioningState = "Succeeded"

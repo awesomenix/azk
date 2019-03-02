@@ -41,6 +41,8 @@ func init() {
 	createClusterCmd.MarkFlagRequired("resourcegroup")
 	createClusterCmd.Flags().StringVarP(&co.ResourceLocation, "location", "l", "", "Resource Group Location, in which all resources are created Required.")
 	createClusterCmd.MarkFlagRequired("location")
+	createClusterCmd.Flags().StringVarP(&co.DNSPrefix, "dnsprefix", "d", "dnsprefix", "DNS prefix for public loadbalancer")
+	createClusterCmd.MarkFlagRequired("location")
 
 	// Optional flags
 	createClusterCmd.Flags().StringVarP(&co.KubeconfigOutput, "kubeconfigout", "o", "kubeconfig", "Where to output the kubeconfig for the provisioned cluster")
@@ -87,6 +89,7 @@ type CreateOptions struct {
 	TenantID         string
 	ResourceGroup    string
 	ResourceLocation string
+	DNSPrefix        string
 	KubeconfigOutput string
 }
 
@@ -156,6 +159,7 @@ func RunCreate(co *CreateOptions) error {
 				TenantID:          co.TenantID,
 				ResourceGroupName: co.ResourceGroup,
 				Location:          co.ResourceLocation,
+				DNSPrefix:         co.DNSPrefix,
 			},
 		}
 

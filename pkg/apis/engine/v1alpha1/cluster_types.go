@@ -30,7 +30,9 @@ type ClusterStatus struct {
 	CustomerKubeConfig         string   `json:"customerKubeConfig,omitempty"`
 	BootstrapToken             string   `json:"bootstrapToken,omitempty"`
 	DiscoveryHashes            []string `json:"discoveryHashes,omitempty"`
-	PublicIPAddress            string   `json:"publicIPAddress,omitempty"`
+	PublicDNSName              string   `json:"publicDNSName,omitempty"`
+	InternalDNSName            string   `json:"internalDNSName,omitempty"`
+	CloudConfig                string   `json:"cloudConfig,omitempty"`
 }
 
 // +genclient

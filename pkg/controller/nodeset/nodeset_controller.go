@@ -30,7 +30,7 @@ const (
 
 var log = logf.Log.WithName("controller")
 
-func getEncodedNodeSetStartupScript(bootstrapToken, discoveryHash string) string {
+func getEncodedNodeSetStartupScript(cluster *enginev1alpha1.Cluster) string {
 	startupScript := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf(`
 sudo apt-get update && sudo apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -43,10 +43,15 @@ EOF
 sudo mv /tmp/kubernetes.list /etc/apt/sources.list.d/kubernetes.list
 sudo apt-get update && sudo apt-get install -y kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
+sudo cp -f /etc/hosts /tmp/hostsupdate
+sudo chown $(id -u):$(id -g) /tmp/hostsupdate
+echo '192.0.0.100 %[3]s' >> /tmp/hostsupdate
+sudo mv /etc/hosts /etc/hosts.bak
+sudo mv /tmp/hostsupdate /etc/hosts
 #Setup using kubeadm
 sudo kubeadm config images pull
-sudo kubeadm join 192.0.0.100:443 --token %[1]s --discovery-token-ca-cert-hash %[2]s
-`, bootstrapToken, discoveryHash)))
+sudo kubeadm join %[3]s:6443 --token %[1]s --discovery-token-ca-cert-hash %[2]s
+`, cluster.Status.BootstrapToken, cluster.Status.DiscoveryHashes[0], cluster.Status.InternalDNSName)))
 	return startupScript
 }
 
@@ -174,8 +179,7 @@ func (r *ReconcileNodeSet) Reconcile(request reconcile.Request) (reconcile.Resul
 	}
 
 	customData := map[string]string{
-		"/tmp/ca.crt": cluster.Status.CACertificate,
-		"/tmp/ca.key": cluster.Status.CACertificateKey,
+		"/etc/kubernetes/azure.json": cluster.Status.CloudConfig,
 	}
 
 	if err := updateNodeSet(instance, cloudConfig); err != nil {

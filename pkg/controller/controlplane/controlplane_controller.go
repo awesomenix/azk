@@ -29,7 +29,7 @@ const (
 	masterAvailabilitySetName = "azkube-masters-availabilityset"
 )
 
-func getEncodedPrimaryMasterStartupScript(bootstrapToken, publicIPAddress string) string {
+func getEncodedPrimaryMasterStartupScript(cluster *enginev1alpha1.Cluster) string {
 	startupScript := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf(`
 sudo apt-get update && sudo apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -42,8 +42,17 @@ EOF
 sudo mv /tmp/kubernetes.list /etc/apt/sources.list.d/kubernetes.list
 sudo apt-get update && sudo apt-get install -y kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
+sudo cp -f /etc/hosts /tmp/hostsupdate
+sudo chown $(id -u):$(id -g) /tmp/hostsupdate
+echo '192.0.0.4 %[3]s' >> /tmp/hostsupdate
+sudo mv /etc/hosts /etc/hosts.bak
+sudo mv /tmp/hostsupdate /etc/hosts
 cat <<EOF >/tmp/kubeadm-config.yaml
 apiVersion: kubeadm.k8s.io/v1beta1
+nodeRegistration:
+  kubeletExtraArgs:
+    cloud-provider: azure
+    cloud-config: /etc/kubernetes/azure.json
 bootstrapTokens:
 - groups:
   - system:bootstrappers:kubeadm:default-node-token
@@ -59,9 +68,27 @@ kind: ClusterConfiguration
 apiServer:
   certSANs:
   - "%[2]s"
+  - "%[3]s"
   - "192.0.0.100"
+  extraArgs:
+    cloud-config: /etc/kubernetes/azure.json
+    cloud-provider: azure
+  extraVolumes:
+  - hostPath: /etc/kubernetes/azure.json
+    mountPath: /etc/kubernetes/azure.json
+    name: cloud-config
+    readOnly: true
+controllerManager:
+  extraArgs:
+    cloud-config: /etc/kubernetes/azure.json
+    cloud-provider: azure
+  extraVolumes:
+  - hostPath: /etc/kubernetes/azure.json
+    mountPath: /etc/kubernetes/azure.json
+    name: cloud-config
+    readOnly: true
 kubernetesVersion: stable
-controlPlaneEndpoint: "%[2]s:443"
+controlPlaneEndpoint: "%[3]s:6443"
 networking:
   podSubnet: "192.168.0.0/16"
 EOF
@@ -80,11 +107,11 @@ sudo kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f https://docs.proje
 sudo kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f https://docs.projectcalico.org/v3.5/getting-started/kubernetes/installation/hosted/calico.yaml
 #flannel
 #sudo kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
-`, bootstrapToken, publicIPAddress)))
+`, cluster.Status.BootstrapToken, cluster.Status.PublicDNSName, cluster.Status.InternalDNSName)))
 	return startupScript
 }
 
-func getEncodedSecondaryMasterStartupScript(bootstrapToken, discoveryHash string) string {
+func getEncodedSecondaryMasterStartupScript(cluster *enginev1alpha1.Cluster) string {
 	startupScript := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf(`
 sudo apt-get update && sudo apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -97,10 +124,19 @@ EOF
 sudo mv /tmp/kubernetes.list /etc/apt/sources.list.d/kubernetes.list
 sudo apt-get update && sudo apt-get install -y kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
+sudo cp -f /etc/hosts /tmp/hostsupdate
+sudo chown $(id -u):$(id -g) /tmp/hostsupdate
+echo '192.0.0.4 %[3]s' >> /tmp/hostsupdate
+sudo mv /etc/hosts /etc/hosts.bak
+sudo mv /tmp/hostsupdate /etc/hosts
 #Setup using kubeadm
 sudo kubeadm config images pull
 sudo kubeadm join 192.0.0.4:6443 --token %[1]s --discovery-token-ca-cert-hash %[2]s --experimental-control-plane
-`, bootstrapToken, discoveryHash)))
+sudo cp -f /etc/hosts.bak /tmp/hostsupdate
+sudo chown $(id -u):$(id -g) /tmp/hostsupdate
+echo '127.0.0.1 %[3]s' >> /tmp/hostsupdate
+sudo mv /tmp/hostsupdate /etc/hosts
+`, cluster.Status.BootstrapToken, cluster.Status.DiscoveryHashes[0], cluster.Status.InternalDNSName)))
 	return startupScript
 }
 
@@ -215,6 +251,7 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 		"/etc/kubernetes/pki/front-proxy-ca.key": cluster.Status.FrontProxyCACertificateKey,
 		"/etc/kubernetes/pki/etcd/ca.crt":        cluster.Status.EtcdCACertificate,
 		"/etc/kubernetes/pki/etcd/ca.key":        cluster.Status.EtcdCACertificateKey,
+		"/etc/kubernetes/azure.json":             cluster.Status.CloudConfig,
 		//"/etc/kubernetes/admin.conf":             cluster.Status.AdminKubeConfig,
 	}
 
@@ -265,7 +302,7 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 	if err := cloudConfig.AddCustomScriptsExtension(
 		context.TODO(),
 		vmName,
-		getEncodedPrimaryMasterStartupScript(cluster.Status.BootstrapToken, cluster.Status.PublicIPAddress)); err != nil {
+		getEncodedPrimaryMasterStartupScript(cluster)); err != nil {
 		log.Error(err, "Error Executing Custom Script Extension", "VM", vmName)
 		return reconcile.Result{}, err
 	}
@@ -282,7 +319,7 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 				if err := cloudConfig.AddCustomScriptsExtension(
 					context.TODO(),
 					vmName,
-					getEncodedSecondaryMasterStartupScript(cluster.Status.BootstrapToken, cluster.Status.DiscoveryHashes[0])); err != nil {
+					getEncodedSecondaryMasterStartupScript(cluster)); err != nil {
 					log.Error(err, "Error Executing Custom Script Extension", "VM", vmName)
 					globalErr = err
 					return

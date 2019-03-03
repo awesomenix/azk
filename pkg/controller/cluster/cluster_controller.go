@@ -187,7 +187,8 @@ func (r *ReconcileCluster) Reconcile(request reconcile.Request) (reconcile.Resul
 	publicIPName = instance.Spec.DNSPrefix + publicIPName
 
 	publicAddress := ""
-	dnsName := fmt.Sprintf("%s.%s.cloudapp.azure.com", strings.ToLower(publicIPName), strings.ToLower(instance.Spec.Location))
+	publicDNSName := fmt.Sprintf("%s.%s.cloudapp.azure.com", strings.ToLower(publicIPName), strings.ToLower(instance.Spec.Location))
+	internalDNSName := fmt.Sprintf("%s.internal", strings.ToLower(publicIPName))
 	if cloudConfig.IsValid() {
 		if err := cloudConfig.CreateInternalLoadBalancer(
 			context.TODO(),
@@ -218,9 +219,9 @@ func (r *ReconcileCluster) Reconcile(request reconcile.Request) (reconcile.Resul
 	v1beta1cfg.CertificatesDir = tmpDir + request.Name + "/certs"
 	v1beta1cfg.Etcd.Local = &kubeadmv1beta1.LocalEtcd{}
 	v1beta1cfg.LocalAPIEndpoint = kubeadmv1beta1.APIEndpoint{AdvertiseAddress: "192.0.0.4", BindPort: 6443}
-	v1beta1cfg.ControlPlaneEndpoint = "192.0.0.4:6443"
+	v1beta1cfg.ControlPlaneEndpoint = fmt.Sprintf("%s:6443", internalDNSName)
 	if publicAddress != "" {
-		v1beta1cfg.APIServer.CertSANs = []string{publicAddress, dnsName}
+		v1beta1cfg.APIServer.CertSANs = []string{"192.0.0.100", publicDNSName, internalDNSName}
 	}
 	v1beta1cfg.NodeRegistration.Name = "fakenode" + request.Name
 	cfg := &kubeadmapi.InitConfiguration{}
@@ -245,8 +246,8 @@ func (r *ReconcileCluster) Reconcile(request reconcile.Request) (reconcile.Resul
 
 	if publicAddress != "" {
 		os.Remove(tmpDir + instance.Name + "/kubeconfigs/admin.conf")
-		cfg.LocalAPIEndpoint = kubeadmapi.APIEndpoint{AdvertiseAddress: "192.0.0.4", BindPort: 443}
-		cfg.ControlPlaneEndpoint = fmt.Sprintf("%s:443", dnsName)
+		cfg.LocalAPIEndpoint = kubeadmapi.APIEndpoint{AdvertiseAddress: "192.0.0.4", BindPort: 6443}
+		cfg.ControlPlaneEndpoint = fmt.Sprintf("%s:443", publicDNSName)
 		if err := kubeconfigphase.CreateKubeConfigFile(kubeadmconstants.AdminKubeConfigFileName, kubeConfigDir, cfg); err != nil {
 			return reconcile.Result{RequeueAfter: 3 * time.Second}, err
 		}
@@ -255,9 +256,10 @@ func (r *ReconcileCluster) Reconcile(request reconcile.Request) (reconcile.Resul
 			return reconcile.Result{RequeueAfter: 3 * time.Second}, err
 		}
 		instance.Status.CustomerKubeConfig = string(buf)
-		instance.Status.PublicIPAddress = dnsName
+		instance.Status.PublicDNSName = publicDNSName
 	}
 
+	instance.Status.InternalDNSName = internalDNSName
 	instance.Status.ProvisioningState = "Succeeded"
 	if err := r.Status().Update(context.TODO(), instance); err != nil {
 		return reconcile.Result{}, err
@@ -352,6 +354,9 @@ func updateStatus(instance *enginev1alpha1.Cluster) error {
 		return err
 	}
 	instance.Status.DiscoveryHashes = discoveryHashes
+
+	cloudConfig := getCloudConfig(instance)
+	instance.Status.CloudConfig = cloudConfig
 	return nil
 }
 
@@ -390,4 +395,48 @@ func getDiscoveryHashes(kubeConfigFile string) ([]string, error) {
 		publicKeyPins = append(publicKeyPins, pubkeypin.Hash(caCert))
 	}
 	return publicKeyPins, nil
+}
+
+func getCloudConfig(instance *enginev1alpha1.Cluster) string {
+	return fmt.Sprintf(`{
+"cloud":"AzurePublicCloud",
+"tenantId": "%[1]s",
+"subscriptionId": "%[2]s",
+"aadClientId": "%[3]s",
+"aadClientSecret": "%[4]s",
+"resourceGroup": "%[5]s",
+"location": "%[6]s",
+"vmType": "vmss",
+"subnetName": "agent-subnet",
+"securityGroupName": "azkube-nsg",
+"vnetName": "azkube-vnet",
+"vnetResourceGroup": "%[5]s",
+"routeTableName": "azkube-routetable",
+"primaryAvailabilitySetName": "",
+"primaryScaleSetName": "",
+"cloudProviderBackoff": true,
+"cloudProviderBackoffRetries": 6,
+"cloudProviderBackoffExponent": 1.5,
+"cloudProviderBackoffDuration": 5,
+"cloudProviderBackoffJitter": 1.0,
+"cloudProviderRatelimit": true,
+"cloudProviderRateLimitQPS": 3.0,
+"cloudProviderRateLimitBucket": 10,
+"useManagedIdentityExtension": false,
+"userAssignedIdentityID": "",
+"useInstanceMetadata": true,
+"loadBalancerSku": "Standard",
+"excludeMasterFromStandardLB": true,
+"providerVaultName": "",
+"maximumLoadBalancerRuleCount": 250,
+"providerKeyName": "k8s",
+"providerKeyVersion": ""
+}`,
+		instance.Spec.TenantID,
+		instance.Spec.SubscriptionID,
+		instance.Spec.ClientID,
+		instance.Spec.ClientSecret,
+		instance.Spec.ResourceGroupName,
+		instance.Spec.Location,
+	)
 }

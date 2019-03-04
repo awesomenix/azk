@@ -100,6 +100,7 @@ func (r *ReconcileNodePool) Reconcile(request reconcile.Request) (reconcile.Resu
 		Spec: enginev1alpha1.NodeSetSpec{
 			KubernetesVersion: instance.Spec.KubernetesVersion,
 			Replicas:          instance.Spec.Replicas,
+			VMSKUType:         instance.Spec.VMSKUType,
 		},
 	}
 	if err := controllerutil.SetControllerReference(instance, nodeSet, r.scheme); err != nil {

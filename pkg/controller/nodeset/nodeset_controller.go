@@ -193,6 +193,11 @@ func (r *ReconcileNodeSet) Reconcile(request reconcile.Request) (reconcile.Resul
 		return reconcile.Result{}, nil
 	}
 
+	vmSKUType := instance.Spec.VMSKUType
+	if vmSKUType == "" {
+		vmSKUType = "Standard_DS2_v2"
+	}
+
 	customData := map[string]string{
 		"/etc/kubernetes/azure.json": cluster.Status.CloudConfig,
 	}
@@ -210,6 +215,7 @@ func (r *ReconcileNodeSet) Reconcile(request reconcile.Request) (reconcile.Resul
 			"agent-subnet",
 			getEncodedNodeSetStartupScript(cluster),
 			azhelpers.GetCustomData(customData),
+			vmSKUType,
 			int(*instance.Spec.Replicas),
 		); err != nil {
 			return reconcile.Result{}, err

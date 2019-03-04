@@ -11,6 +11,7 @@ import (
 
 	enginev1alpha1 "github.com/awesomenix/azkube/pkg/apis/engine/v1alpha1"
 	azhelpers "github.com/awesomenix/azkube/pkg/azure"
+	"github.com/awesomenix/azkube/pkg/helpers"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -27,6 +28,7 @@ var log = logf.Log.WithName("controller")
 
 const (
 	masterAvailabilitySetName = "azkube-masters-availabilityset"
+	controlPlaneFinalizerName = "controlplane.finalizers.engine.azkube.io"
 )
 
 func getEncodedPrimaryMasterStartupScript(cluster *enginev1alpha1.Cluster) string {
@@ -219,13 +221,64 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 		return reconcile.Result{}, err
 	}
 
-	if instance.Spec.KubernetesVersion == instance.Status.KubernetesVersion {
-		return reconcile.Result{}, nil
-	}
-
 	cluster, err := r.getCluster(context.TODO(), instance.Namespace)
 	if err != nil {
 		return reconcile.Result{}, err
+	}
+
+	cloudConfig := azhelpers.CloudConfiguration{
+		CloudName:      azhelpers.AzurePublicCloudName,
+		SubscriptionID: cluster.Spec.SubscriptionID,
+		ClientID:       cluster.Spec.ClientID,
+		ClientSecret:   cluster.Spec.ClientSecret,
+		TenantID:       cluster.Spec.TenantID,
+		GroupName:      cluster.Spec.ResourceGroupName,
+		GroupLocation:  cluster.Spec.Location,
+		UserAgent:      "azkube",
+	}
+
+	if instance.ObjectMeta.DeletionTimestamp.IsZero() {
+		// The object is not being deleted, so if it does not have our finalizer,
+		// then lets add the finalizer and update the object.
+		update := false
+		if !helpers.ContainsFinalizer(instance.ObjectMeta.Finalizers, controlPlaneFinalizerName) {
+			instance.ObjectMeta.Finalizers = append(instance.ObjectMeta.Finalizers, controlPlaneFinalizerName)
+			update = true
+		}
+
+		if update {
+			if err := r.Update(context.TODO(), instance); err != nil {
+				return reconcile.Result{Requeue: true}, err
+			}
+			// Once updates object changes we need to requeue
+			return reconcile.Result{Requeue: true}, nil
+		}
+
+	} else {
+		if helpers.ContainsFinalizer(instance.ObjectMeta.Finalizers, controlPlaneFinalizerName) {
+			if cloudConfig.IsValid() {
+				resourceName := fmt.Sprintf("%s-mastervm", instance.Name)
+				log.Info("Deleting Resources", "Name", resourceName)
+				// our finalizer is present, so lets handle our external dependency
+				if err := cloudConfig.DeleteResources(context.TODO(), resourceName); err != nil {
+					// if fail to delete the external dependency here, return with error
+					// so that it can be retried
+					// meh! its fine if it fails, we definitely need to wait here for it to be deleted
+				}
+			}
+
+			// remove our finalizer from the list and update it.
+			instance.ObjectMeta.Finalizers = helpers.RemoveFinalizer(instance.ObjectMeta.Finalizers, controlPlaneFinalizerName)
+			if err := r.Update(context.TODO(), instance); err != nil {
+				return reconcile.Result{Requeue: true}, nil
+			}
+		}
+
+		return reconcile.Result{}, nil
+	}
+
+	if instance.Spec.KubernetesVersion == instance.Status.KubernetesVersion {
+		return reconcile.Result{}, nil
 	}
 
 	if cluster.Status.ProvisioningState != "Succeeded" {
@@ -245,17 +298,6 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 	instance.Status.ProvisioningState = "Updating"
 	if err := r.Status().Update(context.TODO(), instance); err != nil {
 		return reconcile.Result{}, err
-	}
-
-	cloudConfig := azhelpers.CloudConfiguration{
-		CloudName:      azhelpers.AzurePublicCloudName,
-		SubscriptionID: cluster.Spec.SubscriptionID,
-		ClientID:       cluster.Spec.ClientID,
-		ClientSecret:   cluster.Spec.ClientSecret,
-		TenantID:       cluster.Spec.TenantID,
-		GroupName:      cluster.Spec.ResourceGroupName,
-		GroupLocation:  cluster.Spec.Location,
-		UserAgent:      "azkube",
 	}
 
 	customData := map[string]string{
@@ -279,6 +321,11 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 	}
 	log.Info("Successfully Created", "AvailabilitySet", masterAvailabilitySetName)
 
+	vmSKUType := instance.Spec.VMSKUType
+	if vmSKUType == "" {
+		vmSKUType = "Standard_DS2_v2"
+	}
+
 	var globalErr error
 	{
 		var wg sync.WaitGroup
@@ -298,6 +345,7 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 					fmt.Sprintf("192.0.0.%d", vmIndex+4),
 					azhelpers.GetCustomData(customData),
 					masterAvailabilitySetName,
+					vmSKUType,
 					vmIndex); err != nil {
 					log.Error(err, "Creation Failed", "VM", vmName)
 					globalErr = err

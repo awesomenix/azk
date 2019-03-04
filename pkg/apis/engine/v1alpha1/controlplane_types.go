@@ -7,6 +7,7 @@ import (
 // ControlPlaneSpec defines the desired state of ControlPlane
 type ControlPlaneSpec struct {
 	KubernetesVersion string `json:"kubernetesVersion,omitempty"`
+	VMSKUType         string `json:"vmSKUType,omitempty"`
 }
 
 // ControlPlaneStatus defines the observed state of ControlPlane

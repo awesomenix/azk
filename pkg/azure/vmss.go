@@ -2,15 +2,15 @@ package azhelpers
 
 import (
 	"context"
+	"crypto/rand"
+	"crypto/rsa"
 	"encoding/base64"
 	"fmt"
-	"io/ioutil"
-	"log"
-	"os"
 
 	"github.com/Azure/azure-sdk-for-go/services/compute/mgmt/2018-04-01/compute"
 	"github.com/Azure/go-autorest/autorest/to"
 	"github.com/awesomenix/azkube/pkg/helpers"
+	"golang.org/x/crypto/ssh"
 )
 
 func GetCustomData(customData map[string]string) string {
@@ -73,7 +73,8 @@ func (c *CloudConfiguration) CreateVMSS(ctx context.Context,
 	vnetName,
 	subnetName,
 	startupScript,
-	customData string,
+	customData,
+	vmSKUType string,
 	count int) error {
 
 	subnetClient, err := c.GetSubnetsClient()
@@ -86,14 +87,17 @@ func (c *CloudConfiguration) CreateVMSS(ctx context.Context,
 		return err
 	}
 
-	var sshKeyData string
-	if _, err = os.Stat("/Users/nishp/.ssh/id_rsa.pub"); err == nil {
-		sshBytes, err := ioutil.ReadFile("/Users/nishp/.ssh/id_rsa.pub")
-		if err != nil {
-			log.Fatalf("failed to read SSH key data: %v", err)
-		}
-		sshKeyData = string(sshBytes)
+	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
+	if err != nil {
+		return err
 	}
+
+	publicRsaKey, err := ssh.NewPublicKey(&privateKey.PublicKey)
+	if err != nil {
+		return err
+	}
+
+	sshKeyData := string(ssh.MarshalAuthorizedKey(publicRsaKey))
 
 	vmssClient, err := c.GetVMSSClient()
 	if err != nil {
@@ -107,7 +111,7 @@ func (c *CloudConfiguration) CreateVMSS(ctx context.Context,
 		compute.VirtualMachineScaleSet{
 			Location: to.StringPtr(c.GroupLocation),
 			Sku: &compute.Sku{
-				Name:     to.StringPtr(string("Standard_B2ms")),
+				Name:     to.StringPtr(vmSKUType),
 				Capacity: to.Int64Ptr(int64(count)),
 			},
 			VirtualMachineScaleSetProperties: &compute.VirtualMachineScaleSetProperties{

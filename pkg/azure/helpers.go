@@ -2,7 +2,7 @@ package azhelpers
 
 import (
 	"github.com/Azure/azure-sdk-for-go/services/compute/mgmt/2018-04-01/compute"
-	"github.com/Azure/azure-sdk-for-go/services/resources/mgmt/2017-05-10/resources"
+	"github.com/Azure/azure-sdk-for-go/services/resources/mgmt/2018-05-01/resources"
 	"github.com/Azure/go-autorest/autorest"
 	"github.com/Azure/go-autorest/autorest/adal"
 	"github.com/Azure/go-autorest/autorest/azure"

@@ -55,6 +55,8 @@ spec:
               type: string
             caCertificateKey:
               type: string
+            cloudConfig:
+              type: string
             customerKubeConfig:
               type: string
             discoveryHashes:
@@ -69,9 +71,11 @@ spec:
               type: string
             frontProxyCACertificateKey:
               type: string
+            internalDNSName:
+              type: string
             provisioningState:
               type: string
-            publicIPAddress:
+            publicDNSName:
               type: string
             serviceAccountKey:
               type: string

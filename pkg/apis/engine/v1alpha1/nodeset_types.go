@@ -8,6 +8,7 @@ import (
 type NodeSetSpec struct {
 	KubernetesVersion string `json:"kubernetesVersion,omitempty"`
 	Replicas          *int32 `json:"replicas,omitempty"`
+	VMSKUType         string `json:"vmSKUType,omitempty"`
 }
 
 // NodeSetStatus defines the observed state of NodeSet

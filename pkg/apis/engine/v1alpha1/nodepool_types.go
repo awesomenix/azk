@@ -8,6 +8,7 @@ import (
 type NodePoolSpec struct {
 	KubernetesVersion string `json:"kubernetesVersion,omitempty"`
 	Replicas          *int32 `json:"replicas,omitempty"`
+	VMSKUType         string `json:"vmSKUType,omitempty"`
 }
 
 // NodePoolStatus defines the observed state of NodePool

@@ -2,14 +2,17 @@ package azhelpers
 
 import (
 	"context"
+	"crypto/rand"
+	"crypto/rsa"
 	"fmt"
-	"io/ioutil"
-	"log"
-	"os"
+	"strings"
+	"time"
 
 	"github.com/Azure/azure-sdk-for-go/services/compute/mgmt/2018-10-01/compute"
+	"github.com/Azure/azure-sdk-for-go/services/resources/mgmt/2018-05-01/resources"
 	"github.com/Azure/go-autorest/autorest/to"
 	"github.com/awesomenix/azkube/pkg/helpers"
+	"golang.org/x/crypto/ssh"
 )
 
 func (c *CloudConfiguration) GetAvailabilitySetsClient() (compute.AvailabilitySetsClient, error) {
@@ -87,7 +90,8 @@ func (c *CloudConfiguration) CreateVMWithLoadBalancer(
 	subnetName,
 	staticIPAddress,
 	customData,
-	availabilitySetName string,
+	availabilitySetName,
+	vmSKUType string,
 	natRule int) error {
 
 	nicName := fmt.Sprintf("nic-%s", vmName)
@@ -113,14 +117,17 @@ func (c *CloudConfiguration) CreateVMWithLoadBalancer(
 		return err
 	}
 
-	var sshKeyData string
-	if _, err = os.Stat("/Users/nishp/.ssh/id_rsa.pub"); err == nil {
-		sshBytes, err := ioutil.ReadFile("/Users/nishp/.ssh/id_rsa.pub")
-		if err != nil {
-			log.Fatalf("failed to read SSH key data: %v", err)
-		}
-		sshKeyData = string(sshBytes)
+	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
+	if err != nil {
+		return err
 	}
+
+	publicRsaKey, err := ssh.NewPublicKey(&privateKey.PublicKey)
+	if err != nil {
+		return err
+	}
+
+	sshKeyData := string(ssh.MarshalAuthorizedKey(publicRsaKey))
 
 	future, err := vmClient.CreateOrUpdate(
 		ctx,
@@ -130,7 +137,7 @@ func (c *CloudConfiguration) CreateVMWithLoadBalancer(
 			Location: to.StringPtr(c.GroupLocation),
 			VirtualMachineProperties: &compute.VirtualMachineProperties{
 				HardwareProfile: &compute.HardwareProfile{
-					VMSize: compute.VirtualMachineSizeTypesStandardDS2V2,
+					VMSize: compute.VirtualMachineSizeTypes(vmSKUType),
 				},
 				StorageProfile: &compute.StorageProfile{
 					ImageReference: &compute.ImageReference{
@@ -221,4 +228,80 @@ func (c *CloudConfiguration) AddCustomScriptsExtension(ctx context.Context, vmNa
 
 	_, err = future.Result(extensionsClient)
 	return err
+}
+
+func (c *CloudConfiguration) DeleteResources(ctx context.Context, resourceName string) error {
+	resourcesClient, err := c.GetResourcesClient()
+	if err != nil {
+		return err
+	}
+
+	for i := 0; i < 5; i++ {
+		deleteCallback := func(ctx context.Context, resource resources.GenericResource) error {
+			if strings.Contains(strings.ToLower(*resource.Name), strings.ToLower(resourceName)) {
+				if strings.Contains(strings.ToLower(*resource.Type), strings.ToLower("scaleset")) {
+					return nil
+				} else if strings.Contains(strings.ToLower(*resource.Type), strings.ToLower("virtualmachines")) {
+					//log.Info("Deleting", "VM", *resource.Name)
+
+					vmClient, err := c.GetVMClient()
+					if err != nil {
+						return err
+					}
+					future, err := vmClient.Delete(ctx, c.GroupName, *resource.Name)
+					if err != nil {
+						return err
+					}
+					future.WaitForCompletionRef(ctx, vmClient.Client)
+				} else if strings.Contains(strings.ToLower(*resource.Type), strings.ToLower("availabilityset")) {
+					//log.Info("Deleting", "AvailabilitySet", *resource.Name)
+					asClient, err := c.GetAvailabilitySetsClient()
+					if err != nil {
+						return err
+					}
+					_, err = asClient.Delete(ctx, c.GroupName, *resource.Name)
+					if err != nil {
+						return err
+					}
+				} else if strings.Contains(strings.ToLower(*resource.Type), strings.ToLower("disk")) {
+					//log.Info("Deleting", "Disk", *resource.Name)
+					disksClient, err := c.GetDisksClient()
+					if err != nil {
+						return err
+					}
+
+					future, err := disksClient.Delete(ctx, c.GroupName, *resource.Name)
+					if err != nil {
+						return err
+					}
+					future.WaitForCompletionRef(ctx, disksClient.Client)
+				} else {
+					_, err := resourcesClient.Delete(ctx, c.GroupName, "", "", *resource.Type, *resource.Name)
+					return err
+				}
+			}
+			return nil
+		}
+
+		err = listResources(ctx, resourcesClient, c.GroupName, deleteCallback)
+		time.Sleep(3 * time.Second)
+	}
+
+	return err
+}
+
+func listResources(ctx context.Context, resourcesClient resources.Client, resourceGroupName string, callback func(ctx context.Context, resource resources.GenericResource) error) error {
+	resourcesList, err := resourcesClient.ListByResourceGroup(ctx, resourceGroupName, "", "", nil)
+	if err != nil {
+		return err
+	}
+	var topErr error
+	topErr = nil
+	for _, resource := range resourcesList.Values() {
+		if err := callback(ctx, resource); err != nil {
+			topErr = err
+		}
+	}
+
+	return topErr
 }

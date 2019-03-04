@@ -32,6 +32,8 @@ spec:
           properties:
             kubernetesVersion:
               type: string
+            vmSKUType:
+              type: string
           type: object
         status:
           properties:

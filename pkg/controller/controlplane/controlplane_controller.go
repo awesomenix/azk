@@ -129,9 +129,25 @@ sudo chown $(id -u):$(id -g) /tmp/hostsupdate
 echo '192.0.0.4 %[3]s' >> /tmp/hostsupdate
 sudo mv /etc/hosts /etc/hosts.bak
 sudo mv /tmp/hostsupdate /etc/hosts
+cat <<EOF >/tmp/kubeadm-config.yaml
+apiVersion: kubeadm.k8s.io/v1beta1
+kind: JoinConfiguration
+nodeRegistration:
+  kubeletExtraArgs:
+    cloud-provider: azure
+    cloud-config: /etc/kubernetes/azure.json
+discovery:
+  bootstrapToken:
+    token: %[1]s
+    apiServerEndpoint: "%[3]s:6443"
+    caCertHashes:
+    - %[2]s
+controlPlane:
+  localAPIEndpoint:
+EOF
 #Setup using kubeadm
 sudo kubeadm config images pull
-sudo kubeadm join 192.0.0.4:6443 --token %[1]s --discovery-token-ca-cert-hash %[2]s --experimental-control-plane
+sudo kubeadm join --config /tmp/kubeadm-config.yaml
 sudo cp -f /etc/hosts.bak /tmp/hostsupdate
 sudo chown $(id -u):$(id -g) /tmp/hostsupdate
 echo '127.0.0.1 %[3]s' >> /tmp/hostsupdate

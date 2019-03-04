@@ -49,8 +49,23 @@ echo '192.0.0.100 %[3]s' >> /tmp/hostsupdate
 sudo mv /etc/hosts /etc/hosts.bak
 sudo mv /tmp/hostsupdate /etc/hosts
 #Setup using kubeadm
+cat <<EOF >/tmp/kubeadm-config.yaml
+apiVersion: kubeadm.k8s.io/v1beta1
+kind: JoinConfiguration
+nodeRegistration:
+  kubeletExtraArgs:
+    cloud-provider: azure
+    cloud-config: /etc/kubernetes/azure.json
+discovery:
+  bootstrapToken:
+    token: %[1]s
+    apiServerEndpoint: "%[3]s:6443"
+    caCertHashes:
+    - %[2]s
+EOF
+#Setup using kubeadm
 sudo kubeadm config images pull
-sudo kubeadm join %[3]s:6443 --token %[1]s --discovery-token-ca-cert-hash %[2]s
+sudo kubeadm join --config /tmp/kubeadm-config.yaml
 `, cluster.Status.BootstrapToken, cluster.Status.DiscoveryHashes[0], cluster.Status.InternalDNSName)))
 	return startupScript
 }
@@ -193,7 +208,7 @@ func (r *ReconcileNodeSet) Reconcile(request reconcile.Request) (reconcile.Resul
 			instance.Name+"-agentvmss",
 			"azkube-vnet",
 			"agent-subnet",
-			getEncodedNodeSetStartupScript(cluster.Status.BootstrapToken, cluster.Status.DiscoveryHashes[0]),
+			getEncodedNodeSetStartupScript(cluster),
 			azhelpers.GetCustomData(customData),
 			int(*instance.Spec.Replicas),
 		); err != nil {

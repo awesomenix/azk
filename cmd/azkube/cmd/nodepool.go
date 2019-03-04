@@ -181,8 +181,10 @@ func CreateNodePool(cnpo *CreateNodePoolOptions) error {
 			Namespace: clusterName,
 		},
 		Spec: enginev1alpha1.NodePoolSpec{
-			KubernetesVersion: cnpo.AgentKubernetesVersion,
-			Replicas:          &(cnpo.Count),
+			NodeSetSpec: enginev1alpha1.NodeSetSpec{
+				KubernetesVersion: cnpo.AgentKubernetesVersion,
+				Replicas:          &(cnpo.Count),
+			},
 		},
 	}
 

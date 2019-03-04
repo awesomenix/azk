@@ -6,19 +6,15 @@ import (
 
 // NodePoolSpec defines the desired state of NodePool
 type NodePoolSpec struct {
-	KubernetesVersion string `json:"kubernetesVersion,omitempty"`
-	Replicas          *int32 `json:"replicas,omitempty"`
-	VMSKUType         string `json:"vmSKUType,omitempty"`
+	NodeSetSpec `json:",inline"`
 }
 
 // NodePoolStatus defines the observed state of NodePool
 type NodePoolStatus struct {
 	NodeSetName string `json:"nodesetName,omitempty"`
 	//PrevNodeSetName   string `json:"prevNodeSetName,omitempty"`
-	Replicas          int32  `json:"replicas,omitempty"`
-	VMReplicas        int32  `json:"vmreplicas,omitempty"`
-	KubernetesVersion string `json:"kubernetesVersion,omitempty"`
-	ProvisioningState string `json:"provisioningState,omitempty"`
+	VMReplicas    int32 `json:"vmreplicas,omitempty"`
+	NodeSetStatus `json:",inline"`
 }
 
 // +genclient

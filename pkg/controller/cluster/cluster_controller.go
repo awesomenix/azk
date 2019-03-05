@@ -129,14 +129,18 @@ func (r *ReconcileCluster) Reconcile(request reconcile.Request) (reconcile.Resul
 		if !helpers.ContainsFinalizer(instance.ObjectMeta.Finalizers, groupsFinalizerName) {
 			instance.ObjectMeta.Finalizers = append(instance.ObjectMeta.Finalizers, groupsFinalizerName)
 			if cloudConfig.IsValid() {
+				log.Info("Creating", "ResourceGroup", instance.Spec.ResourceGroupName, "Location", instance.Spec.Location)
 				err := cloudConfig.CreateOrUpdateResourceGroup(context.TODO())
 				if err != nil {
 					return reconcile.Result{Requeue: true}, err
 				}
+				log.Info("Successfully Created", "ResourceGroup", instance.Spec.ResourceGroupName, "Location", instance.Spec.Location)
+				log.Info("Creating", "VNET", "azkube-vnet", "Location")
 				err = cloudConfig.CreateVirtualNetworkAndSubnets(context.TODO(), "azkube-vnet")
 				if err != nil {
 					return reconcile.Result{Requeue: true}, err
 				}
+				log.Info("Successfully Created", "VNET", "azkube-vnet", "Location")
 			}
 			update = true
 		}
@@ -158,6 +162,9 @@ func (r *ReconcileCluster) Reconcile(request reconcile.Request) (reconcile.Resul
 					// if fail to delete the external dependency here, return with error
 					// so that it can be retried
 					// meh! its fine if it fails, we definitely need to wait here for it to be deleted
+					log.Error(err, "Error Deleting Resource Group", "Name", instance.Spec.ResourceGroupName)
+				} else {
+					log.Info("Successfully Deleted Resource Group", "Name", instance.Spec.ResourceGroupName)
 				}
 			}
 
@@ -190,6 +197,7 @@ func (r *ReconcileCluster) Reconcile(request reconcile.Request) (reconcile.Resul
 	publicDNSName := fmt.Sprintf("%s.%s.cloudapp.azure.com", strings.ToLower(publicIPName), strings.ToLower(instance.Spec.Location))
 	internalDNSName := fmt.Sprintf("%s.internal", strings.ToLower(publicIPName))
 	if cloudConfig.IsValid() {
+		log.Info("Creating Internal Load Balancer", "Name", azkubeInternalLoadBalancerName)
 		if err := cloudConfig.CreateInternalLoadBalancer(
 			context.TODO(),
 			"azkube-vnet",
@@ -197,19 +205,23 @@ func (r *ReconcileCluster) Reconcile(request reconcile.Request) (reconcile.Resul
 			azkubeInternalLoadBalancerName); err != nil {
 			return reconcile.Result{}, err
 		}
+		log.Info("Successfully Created Internal Load Balancer", "Name", azkubeInternalLoadBalancerName)
 
+		log.Info("Creating Public Load Balancer", "Name", azkubeLoadBalancerName, "PublicIPName", publicIPName)
 		if err := cloudConfig.CreateLoadBalancer(
 			context.TODO(),
 			azkubeLoadBalancerName,
 			publicIPName); err != nil {
 			return reconcile.Result{}, err
 		}
+		log.Info("Successfully Created Public Load Balancer", "Name", azkubeLoadBalancerName, "PublicIPName", publicIPName)
 
 		pip, err := cloudConfig.GetPublicIP(context.TODO(), publicIPName)
 		if err != nil {
 			return reconcile.Result{}, err
 		}
 		publicAddress = *pip.PublicIPAddressPropertiesFormat.IPAddress
+		log.Info("Successfully Established Public IP", "Name", publicIPName, "Address", publicAddress)
 	}
 
 	defer os.RemoveAll(tmpDir + instance.Name)
@@ -228,16 +240,20 @@ func (r *ReconcileCluster) Reconcile(request reconcile.Request) (reconcile.Resul
 	kubeadmscheme.Scheme.Default(cfg)
 	kubeadmscheme.Scheme.Convert(v1beta1cfg, cfg, nil)
 
+	log.Info("Creating PKI Certificates", "InternalDNS", internalDNSName)
 	if err := createCertificates(cfg); err != nil {
 		log.Error(err, "Error Generating Certificates")
 		return reconcile.Result{RequeueAfter: 3 * time.Second}, err
 	}
+	log.Info("Successfully Created PKI Certificates", "InternalDNS", internalDNSName)
 
+	log.Info("Creating Kubeconfigs")
 	kubeConfigDir := tmpDir + request.Name + "/kubeconfigs"
 	if err := createKubeconfigs(cfg, kubeConfigDir); err != nil {
 		log.Error(err, "Error Generating Kubeconfigs")
 		return reconcile.Result{RequeueAfter: 3 * time.Second}, err
 	}
+	log.Info("Successfully Created Kubeconfigs")
 
 	if err := updateStatus(instance); err != nil {
 		log.Error(err, "Error Updating Status")
@@ -245,6 +261,7 @@ func (r *ReconcileCluster) Reconcile(request reconcile.Request) (reconcile.Resul
 	}
 
 	if publicAddress != "" {
+		log.Info("Creating Customer Kubeconfig", "DNS", publicDNSName)
 		os.Remove(tmpDir + instance.Name + "/kubeconfigs/admin.conf")
 		cfg.LocalAPIEndpoint = kubeadmapi.APIEndpoint{AdvertiseAddress: "192.0.0.4", BindPort: 6443}
 		cfg.ControlPlaneEndpoint = fmt.Sprintf("%s:443", publicDNSName)
@@ -257,6 +274,7 @@ func (r *ReconcileCluster) Reconcile(request reconcile.Request) (reconcile.Resul
 		}
 		instance.Status.CustomerKubeConfig = string(buf)
 		instance.Status.PublicDNSName = publicDNSName
+		log.Info("Created Customer Kubeconfig", "DNS", publicDNSName)
 	}
 
 	instance.Status.InternalDNSName = internalDNSName

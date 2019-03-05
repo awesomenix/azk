@@ -30,25 +30,8 @@ const (
 
 var log = logf.Log.WithName("controller")
 
-func getEncodedNodeSetStartupScript(cluster *enginev1alpha1.Cluster) string {
-	startupScript := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf(`
-sudo apt-get update && sudo apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-sudo apt-get install -y docker-ce=18.06.0~ce~3-0~ubuntu containerd.io
-curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-cat <<EOF >/tmp/kubernetes.list
-deb https://apt.kubernetes.io/ kubernetes-xenial main
-EOF
-sudo mv /tmp/kubernetes.list /etc/apt/sources.list.d/kubernetes.list
-sudo apt-get update && sudo apt-get install -y kubelet kubeadm kubectl
-sudo apt-mark hold kubelet kubeadm kubectl
-sudo cp -f /etc/hosts /tmp/hostsupdate
-sudo chown $(id -u):$(id -g) /tmp/hostsupdate
-echo '192.0.0.100 %[3]s' >> /tmp/hostsupdate
-sudo mv /etc/hosts /etc/hosts.bak
-sudo mv /tmp/hostsupdate /etc/hosts
-#Setup using kubeadm
+func kubeadmJoinConfig(cluster *enginev1alpha1.Cluster) string {
+	return fmt.Sprintf(`
 cat <<EOF >/tmp/kubeadm-config.yaml
 apiVersion: kubeadm.k8s.io/v1beta1
 kind: JoinConfiguration
@@ -59,14 +42,31 @@ nodeRegistration:
 discovery:
   bootstrapToken:
     token: %[1]s
-    apiServerEndpoint: "%[3]s:6443"
+    apiServerEndpoint: "%[2]s:6443"
     caCertHashes:
-    - %[2]s
+    - %[3]s
 EOF
+`, cluster.Status.BootstrapToken,
+		cluster.Status.InternalDNSName,
+		cluster.Status.DiscoveryHashes[0],
+	)
+}
+
+func getEncodedNodeSetStartupScript(cluster *enginev1alpha1.Cluster, instance *enginev1alpha1.NodeSet) string {
+	startupScript := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf(`
+%[1]s
+sudo cp -f /etc/hosts /tmp/hostsupdate
+sudo chown $(id -u):$(id -g) /tmp/hostsupdate
+echo '192.0.0.100 %[2]s' >> /tmp/hostsupdate
+sudo mv /etc/hosts /etc/hosts.bak
+sudo mv /tmp/hostsupdate /etc/hosts
+%[3]s
 #Setup using kubeadm
-sudo kubeadm config images pull
 sudo kubeadm join --config /tmp/kubeadm-config.yaml
-`, cluster.Status.BootstrapToken, cluster.Status.DiscoveryHashes[0], cluster.Status.InternalDNSName)))
+`, helpers.PreRequisitesInstallScript(instance.Spec.KubernetesVersion),
+		cluster.Status.InternalDNSName,
+		kubeadmJoinConfig(cluster),
+	)))
 	return startupScript
 }
 
@@ -213,7 +213,7 @@ func (r *ReconcileNodeSet) Reconcile(request reconcile.Request) (reconcile.Resul
 			instance.Name+"-agentvmss",
 			"azkube-vnet",
 			"agent-subnet",
-			getEncodedNodeSetStartupScript(cluster),
+			getEncodedNodeSetStartupScript(cluster, instance),
 			azhelpers.GetCustomData(customData),
 			vmSKUType,
 			int(*instance.Spec.Replicas),

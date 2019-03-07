@@ -260,7 +260,7 @@ func RunCreate(co *CreateOptions) error {
 		fmt.Fprintf(s.Writer, " ✓ Successfully Created Cluster %s\n", clusterName)
 	}
 
-	log.Info("Creating Control Plane and Node pool, using in cluster operators")
+	log.Info("Creating Control Plane and Node pool, using in-cluster operators")
 
 	var cpError, npError error
 	wg := &sync.WaitGroup{}
@@ -277,13 +277,10 @@ func RunCreate(co *CreateOptions) error {
 			},
 		}
 
-		s = spinner.New(spinner.CharSets[11], 200*time.Millisecond)
-		s.Color("green")
-		s.Suffix = fmt.Sprintf(" Creating ControlPlane %s with kubernetes version %s .. timeout 15m0s\n", clusterName, co.KubernetesVersion)
-		s.Start()
+		log.Info("Creating ControlPlane .. timeout 15m0s", "ClusterName", clusterName, "KubernetesVersion", co.KubernetesVersion)
 
 		if err := kClient.Create(context.TODO(), controlPlane); err != nil {
-			fmt.Fprintf(s.Writer, " ✗ Failed to Create ControlPlane %v\n", err)
+			log.Error(err, " ✗ Failed to Create ControlPlane")
 			cpError = err
 			return
 		}
@@ -301,12 +298,12 @@ func RunCreate(co *CreateOptions) error {
 		s.Stop()
 
 		if controlPlane.Status.ProvisioningState != "Succeeded" {
-			fmt.Fprintf(s.Writer, " ✗ Failed to Create Control Plane timedout\n")
+			log.Error(err, " ✗ Failed to Create ControlPlane, timedout")
 			cpError = err
 			return
 		}
 
-		fmt.Fprintf(s.Writer, " ✓ Successfully Created ControlPlane with Kubernetes Version %s in %s\n", co.KubernetesVersion, time.Since(start))
+		log.Info("✓ Successfully Created ControlPlane", "ClusterName", clusterName, "KubernetesVersion", co.KubernetesVersion, "TotalTime", time.Since(start))
 	}()
 
 	wg.Add(1)
@@ -325,13 +322,10 @@ func RunCreate(co *CreateOptions) error {
 			},
 		}
 
-		s := spinner.New(spinner.CharSets[11], 200*time.Millisecond)
-		s.Color("green")
-		s.Suffix = fmt.Sprintf(" Creating Nodepool %s with kubernetes version %s .. timeout 10m0s\n", co.NodePoolName, co.KubernetesVersion)
-		s.Start()
+		log.Info("Creating Nodepool .. timeout 10m0s", "Name", co.NodePoolName, "KubernetesVersion", co.KubernetesVersion)
 
 		if err := kClient.Create(context.TODO(), nodePool); err != nil {
-			fmt.Fprintf(s.Writer, " ✗ Failed to Create Nodepool %v\n", err)
+			log.Error(err, " ✗ Failed to Create Nodepool")
 			npError = err
 			return
 		}
@@ -349,12 +343,12 @@ func RunCreate(co *CreateOptions) error {
 		s.Stop()
 
 		if nodePool.Status.ProvisioningState != "Succeeded" {
-			fmt.Fprintf(s.Writer, " ✗ Failed to Create NodePool %v\n", err)
+			log.Error(err, " ✗ Failed to Create NodePool, timedout", "Name", co.NodePoolName, "KubernetesVersion", co.KubernetesVersion)
 			npError = err
 			return
 		}
 
-		fmt.Fprintf(s.Writer, " ✓ Successfully Created NodePool %s with Kubernetes Version %s in %s\n", co.NodePoolName, co.KubernetesVersion, time.Since(start))
+		log.Info(" ✓ Successfully Created NodePool", "Name", co.NodePoolName, "KubernetesVersion", co.KubernetesVersion, "TotalTime", time.Since(start))
 	}()
 
 	wg.Wait()
@@ -369,7 +363,7 @@ func RunCreate(co *CreateOptions) error {
 		return npError
 	}
 
-	fmt.Fprintf(s.Writer, " ✓ Successfully Created Cluster %s in %s\n", clusterName, time.Since(clusterStart))
+	fmt.Fprintf(s.Writer, "\n ✓ Successfully Created Cluster %s in %s\n", clusterName, time.Since(clusterStart))
 
 	return nil
 }

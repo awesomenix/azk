@@ -13,7 +13,7 @@ import (
 	"golang.org/x/crypto/ssh"
 )
 
-func GetCustomData(customData map[string]string) string {
+func GetCustomData(customData map[string]string, customRunData map[string]string) string {
 	customDataStr := fmt.Sprintf(`
 #cloud-config
 write_files:
@@ -30,7 +30,28 @@ write_files:
 			customDataKey,
 			base64.StdEncoding.EncodeToString([]byte(customDataValue)))
 	}
-	return base64.StdEncoding.EncodeToString([]byte(customDataStr))
+	for customDataKey, customDataValue := range customRunData {
+		customDataStr += fmt.Sprintf(`
+- path: %s
+  permissions: "0755"
+  encoding: base64
+  owner: root
+  content: |
+    %s
+`,
+			customDataKey,
+			base64.StdEncoding.EncodeToString([]byte(customDataValue)))
+	}
+	customDataStr += fmt.Sprintf(`
+runcmd:
+`)
+	for customDataKey := range customRunData {
+		customDataStr += fmt.Sprintf(`
+ - sudo %s
+`, customDataKey)
+	}
+
+	return customDataStr
 }
 
 func (c *CloudConfiguration) GetVMSSExtensionsClient() (compute.VirtualMachineScaleSetExtensionsClient, error) {
@@ -72,7 +93,7 @@ func (c *CloudConfiguration) CreateVMSS(ctx context.Context,
 	vmssName,
 	vnetName,
 	subnetName,
-	startupScript,
+	//startupScript,
 	customData,
 	vmSKUType string,
 	count int) error {
@@ -166,21 +187,21 @@ func (c *CloudConfiguration) CreateVMSS(ctx context.Context,
 							},
 						},
 					},
-					ExtensionProfile: &compute.VirtualMachineScaleSetExtensionProfile{
-						Extensions: &[]compute.VirtualMachineScaleSetExtension{
-							{
-								Name: to.StringPtr("startup_script"),
-								VirtualMachineScaleSetExtensionProperties: &compute.VirtualMachineScaleSetExtensionProperties{
-									Type:                    to.StringPtr("CustomScript"),
-									TypeHandlerVersion:      to.StringPtr("2.0"),
-									AutoUpgradeMinorVersion: to.BoolPtr(true),
-									Settings:                map[string]bool{"skipDos2Unix": true},
-									Publisher:               to.StringPtr("Microsoft.Azure.Extensions"),
-									ProtectedSettings:       map[string]string{"script": startupScript},
-								},
-							},
-						},
-					},
+					// ExtensionProfile: &compute.VirtualMachineScaleSetExtensionProfile{
+					// 	Extensions: &[]compute.VirtualMachineScaleSetExtension{
+					// 		{
+					// 			Name: to.StringPtr("startup_script"),
+					// 			VirtualMachineScaleSetExtensionProperties: &compute.VirtualMachineScaleSetExtensionProperties{
+					// 				Type:                    to.StringPtr("CustomScript"),
+					// 				TypeHandlerVersion:      to.StringPtr("2.0"),
+					// 				AutoUpgradeMinorVersion: to.BoolPtr(true),
+					// 				Settings:                map[string]bool{"skipDos2Unix": true},
+					// 				Publisher:               to.StringPtr("Microsoft.Azure.Extensions"),
+					// 				ProtectedSettings:       map[string]string{"script": startupScript},
+					// 			},
+					// 		},
+					// 	},
+					// },
 				},
 			},
 		},

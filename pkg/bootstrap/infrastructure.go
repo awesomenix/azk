@@ -82,7 +82,11 @@ EOF
 }
 
 func (spec *Spec) GetEncodedPrimaryMasterStartupScript(kubernetesVersion string) string {
-	startupScript := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf(`
+	return base64.StdEncoding.EncodeToString([]byte(spec.GetPrimaryMasterStartupScript(kubernetesVersion)))
+}
+
+func (spec *Spec) GetPrimaryMasterStartupScript(kubernetesVersion string) string {
+	return fmt.Sprintf(`
 %[1]s
 %[2]s
 sudo kubeadm init --config /tmp/kubeadm-config.yaml
@@ -92,8 +96,7 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 %[3]s
 `, spec.kubeadmInitConfig(kubernetesVersion),
 		spec.preRequisites(kubernetesVersion),
-		helpers.CalicoCNI())))
-	return startupScript
+		helpers.CalicoCNI())
 }
 
 func (spec *Spec) CreateBaseInfrastructure() error {
@@ -171,6 +174,10 @@ func (spec *Spec) CreateInfrastructure() error {
 		//"/etc/kubernetes/admin.conf":             status.AdminKubeConfig,
 	}
 
+	customRunData := map[string]string{
+		"/etc/kubernetes/init-azure-bootstrap.sh": spec.GetPrimaryMasterStartupScript(spec.BootstrapKubernetesVersion),
+	}
+
 	vmName := fmt.Sprintf("%s-mastervm-0", spec.ClusterName)
 	log.Info("Creating", "VM", vmName)
 	if err := spec.CreateVMWithLoadBalancer(
@@ -181,7 +188,7 @@ func (spec *Spec) CreateInfrastructure() error {
 		"azkube-vnet",
 		"master-subnet",
 		fmt.Sprintf("192.0.0.4"),
-		azhelpers.GetCustomData(customData),
+		base64.StdEncoding.EncodeToString([]byte(azhelpers.GetCustomData(customData, customRunData))),
 		masterAvailabilitySetName,
 		vmSKUType,
 		0); err != nil {
@@ -190,14 +197,5 @@ func (spec *Spec) CreateInfrastructure() error {
 	}
 	log.Info("Successfully Created", "VM", vmName)
 
-	log.Info("Running Custom Script Extension", "VM", vmName)
-	if err := spec.AddCustomScriptsExtension(
-		context.TODO(),
-		vmName,
-		spec.GetEncodedPrimaryMasterStartupScript(spec.BootstrapKubernetesVersion)); err != nil {
-		log.Error(err, "Error Executing Custom Script Extension", "VM", vmName)
-		return err
-	}
-	log.Info("Successfully Executed Custom Script Extension", "VM", vmName)
 	return nil
 }

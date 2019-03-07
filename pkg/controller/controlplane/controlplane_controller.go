@@ -66,8 +66,8 @@ EOF
 	)
 }
 
-func getEncodedSecondaryMasterStartupScript(cluster *enginev1alpha1.Cluster, instance *enginev1alpha1.ControlPlane) string {
-	startupScript := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf(`
+func getSecondaryMasterStartupScript(cluster *enginev1alpha1.Cluster, instance *enginev1alpha1.ControlPlane) string {
+	return fmt.Sprintf(`
 %[1]s
 %[2]s
 #Setup using kubeadm
@@ -79,8 +79,7 @@ sudo mv /tmp/hostsupdate /etc/hosts
 `, preRequisites(cluster, instance),
 		kubeadmJoinConfig(cluster),
 		cluster.Spec.InternalDNSName,
-	)))
-	return startupScript
+	)
 }
 
 // Add creates a new ControlPlane Controller and adds it to the Manager with default RBAC. The Manager will set fields on the Controller
@@ -252,6 +251,14 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 			wg.Add(1)
 			go func(vmIndex int) {
 				defer wg.Done()
+				customRunData := map[string]string{
+					"/etc/kubernetes/init-azure-bootstrap.sh": cluster.Spec.GetPrimaryMasterStartupScript(instance.Spec.KubernetesVersion),
+				}
+				if vmIndex > 0 {
+					customRunData = map[string]string{
+						"/etc/kubernetes/init-azure-bootstrap.sh": getSecondaryMasterStartupScript(cluster, instance),
+					}
+				}
 				vmName := fmt.Sprintf("%s-mastervm-%d", instance.Name, vmIndex)
 				log.Info("Creating", "VM", vmName)
 				if err := cluster.Spec.CreateVMWithLoadBalancer(
@@ -262,7 +269,7 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 					"azkube-vnet",
 					"master-subnet",
 					fmt.Sprintf("192.0.0.%d", vmIndex+4),
-					azhelpers.GetCustomData(customData),
+					base64.StdEncoding.EncodeToString([]byte(azhelpers.GetCustomData(customData, customRunData))),
 					masterAvailabilitySetName,
 					vmSKUType,
 					vmIndex); err != nil {
@@ -276,42 +283,6 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 		wg.Wait()
 	}
 
-	if globalErr != nil {
-		return reconcile.Result{}, globalErr
-	}
-
-	vmName := fmt.Sprintf("%s-mastervm-%d", instance.Name, 0)
-	log.Info("Running Custom Script Extension", "VM", vmName)
-	if err := cluster.Spec.AddCustomScriptsExtension(
-		context.TODO(),
-		vmName,
-		cluster.Spec.GetEncodedPrimaryMasterStartupScript(instance.Spec.KubernetesVersion)); err != nil {
-		log.Error(err, "Error Executing Custom Script Extension", "VM", vmName)
-		return reconcile.Result{}, err
-	}
-	log.Info("Successfully Executed Custom Script Extension", "VM", vmName)
-
-	{
-		var wg sync.WaitGroup
-		for i := 1; i < 3; i++ {
-			wg.Add(1)
-			go func(vmIndex int) {
-				defer wg.Done()
-				vmName := fmt.Sprintf("%s-mastervm-%d", instance.Name, vmIndex)
-				log.Info("Running Custom Script Extension", "VM", vmName)
-				if err := cluster.Spec.AddCustomScriptsExtension(
-					context.TODO(),
-					vmName,
-					getEncodedSecondaryMasterStartupScript(cluster, instance)); err != nil {
-					log.Error(err, "Error Executing Custom Script Extension", "VM", vmName)
-					globalErr = err
-					return
-				}
-				log.Info("Successfully Executed Custom Script Extension", "VM", vmName)
-			}(i)
-		}
-		wg.Wait()
-	}
 	if globalErr != nil {
 		return reconcile.Result{}, globalErr
 	}

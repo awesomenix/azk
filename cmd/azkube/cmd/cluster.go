@@ -165,22 +165,6 @@ func RunCreate(co *CreateOptions) error {
 		ioutil.WriteFile(co.KubeconfigOutput, []byte(spec.CustomerKubeConfig), 0644)
 	}
 
-	s = spinner.New(spinner.CharSets[11], 200*time.Millisecond)
-	s.Color("green")
-	s.Suffix = fmt.Sprintf(" Waiting for Stabilization ... 30s")
-	s.Start()
-	time.Sleep(30 * time.Second)
-	s.Stop()
-	fmt.Fprintf(s.Writer, " ✓ Done")
-
-	if err := kubectlApply("config/crds", spec.CustomerKubeConfig); err != nil {
-		log.Error(err, "Failed to apply crds to cluster")
-	}
-
-	if err := kubectlApply("config/deployment", spec.CustomerKubeConfig); err != nil {
-		log.Error(err, "Failed to apply manager deployment to cluster")
-	}
-
 	// Get a config to talk to the apiserver
 
 	clientcfg, err := clientcmd.NewClientConfigFromBytes([]byte(spec.CustomerKubeConfig))
@@ -191,14 +175,39 @@ func RunCreate(co *CreateOptions) error {
 
 	cfg, err := clientcfg.ClientConfig()
 	if err != nil {
-		log.Error(err, "Failed to get client config")
+		log.Error(err, " ✗ Failed to get client config")
 		return err
 	}
 
-	kClient, err := client.New(cfg, client.Options{})
-	if err != nil {
-		log.Error(err, "Failed to create kube client from config")
-		return err
+	s = spinner.New(spinner.CharSets[11], 200*time.Millisecond)
+	s.Color("green")
+	s.Suffix = fmt.Sprintf(" Waiting for Stabilization ... 5m0s")
+	s.Start()
+
+	var loopErr error
+	for i := 0; i < 100; i++ {
+		if _, err := client.New(cfg, client.Options{}); err != nil {
+			loopErr = err
+			time.Sleep(3 * time.Second)
+			continue
+		}
+		loopErr = nil
+		break
+	}
+	s.Stop()
+
+	if loopErr != nil {
+		log.Error(loopErr, " ✗ Failed to create kube client from config")
+		return loopErr
+	}
+	fmt.Fprintf(s.Writer, " ✓ Done")
+
+	if err := kubectlApply("config/crds", spec.CustomerKubeConfig); err != nil {
+		log.Error(err, "Failed to apply crds to cluster")
+	}
+
+	if err := kubectlApply("config/deployment", spec.CustomerKubeConfig); err != nil {
+		log.Error(err, "Failed to apply manager deployment to cluster")
 	}
 
 	h := fnv.New64a()
@@ -213,6 +222,12 @@ func RunCreate(co *CreateOptions) error {
 			Name:      clusterName,
 			Namespace: clusterName,
 		},
+	}
+
+	kClient, err := client.New(cfg, client.Options{})
+	if err != nil {
+		log.Error(err, "Failed to create kube client from config")
+		loopErr = err
 	}
 
 	s.Start()
@@ -234,6 +249,7 @@ func RunCreate(co *CreateOptions) error {
 			fmt.Fprintf(s.Writer, " ✓ Already Created Cluster %s\n", clusterName)
 		}
 	} else {
+		time.Sleep(3 * time.Second)
 		cluster = &enginev1alpha1.Cluster{
 			ObjectMeta: metav1.ObjectMeta{
 				Name:      clusterName,
@@ -249,7 +265,14 @@ func RunCreate(co *CreateOptions) error {
 		s.Suffix = fmt.Sprintf(" Creating Cluster %s with group %s in %s", clusterName, co.ResourceGroup, co.ResourceLocation)
 
 		s.Start()
-		err = kClient.Create(context.TODO(), cluster)
+		for i := 0; i < 10; i++ {
+			err = kClient.Create(context.TODO(), cluster)
+			if err != nil {
+				time.Sleep(3 * time.Second)
+				continue
+			}
+			break
+		}
 		s.Stop()
 
 		if err != nil {

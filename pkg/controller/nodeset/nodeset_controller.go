@@ -52,8 +52,8 @@ EOF
 	)
 }
 
-func getEncodedNodeSetStartupScript(cluster *enginev1alpha1.Cluster, instance *enginev1alpha1.NodeSet) string {
-	startupScript := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf(`
+func getNodeSetStartupScript(cluster *enginev1alpha1.Cluster, instance *enginev1alpha1.NodeSet) string {
+	return fmt.Sprintf(`
 %[1]s
 sudo cp -f /etc/hosts /tmp/hostsupdate
 sudo chown $(id -u):$(id -g) /tmp/hostsupdate
@@ -66,8 +66,7 @@ sudo kubeadm join --config /tmp/kubeadm-config.yaml
 `, helpers.PreRequisitesInstallScript(instance.Spec.KubernetesVersion),
 		cluster.Spec.InternalDNSName,
 		kubeadmJoinConfig(cluster),
-	)))
-	return startupScript
+	)
 }
 
 // Add creates a new NodeSet Controller and adds it to the Manager with default RBAC. The Manager will set fields on the Controller
@@ -202,6 +201,10 @@ func (r *ReconcileNodeSet) Reconcile(request reconcile.Request) (reconcile.Resul
 		"/etc/kubernetes/azure.json": cluster.Spec.AzureCloudProviderConfig,
 	}
 
+	customRunData := map[string]string{
+		"/etc/kubernetes/init-azure-bootstrap.sh": getNodeSetStartupScript(cluster, instance),
+	}
+
 	if err := updateNodeSet(instance, cloudConfig); err != nil {
 		instance.Status.ProvisioningState = "Updating"
 		if err := r.Status().Update(context.TODO(), instance); err != nil {
@@ -213,8 +216,7 @@ func (r *ReconcileNodeSet) Reconcile(request reconcile.Request) (reconcile.Resul
 			instance.Name+"-agentvmss",
 			"azkube-vnet",
 			"agent-subnet",
-			getEncodedNodeSetStartupScript(cluster, instance),
-			azhelpers.GetCustomData(customData),
+			base64.StdEncoding.EncodeToString([]byte(azhelpers.GetCustomData(customData, customRunData))),
 			vmSKUType,
 			int(*instance.Spec.Replicas),
 		); err != nil {

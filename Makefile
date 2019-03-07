@@ -39,6 +39,7 @@ vet:
 
 # Generate code
 generate:
+	go get -u github.com/shurcooL/vfsgen/cmd/vfsgendev
 	go generate ./pkg/... ./cmd/...
 
 # Build the docker image

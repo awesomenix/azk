@@ -30,32 +30,21 @@ spec:
           type: object
         spec:
           properties:
-            clientID:
-              type: string
-            clientSecret:
-              type: string
-            dnsPrefix:
-              type: string
-            location:
-              type: string
-            resourceGroupName:
-              type: string
-            subscriptionID:
-              type: string
-            tenantID:
-              type: string
-          type: object
-        status:
-          properties:
             adminKubeConfig:
               type: string
+            azureCloudProviderConfig:
+              type: string
+            bootstrapKubernetesVersion:
+              type: string
             bootstrapToken:
+              type: string
+            bootstrapVMSKUType:
               type: string
             caCertificate:
               type: string
             caCertificateKey:
               type: string
-            cloudConfig:
+            clusterName:
               type: string
             customerKubeConfig:
               type: string
@@ -63,6 +52,8 @@ spec:
               items:
                 type: string
               type: array
+            dnsPrefix:
+              type: string
             etcdCACertificate:
               type: string
             etcdCACertificateKey:
@@ -71,15 +62,22 @@ spec:
               type: string
             frontProxyCACertificateKey:
               type: string
+            inline:
+              type: object
             internalDNSName:
-              type: string
-            provisioningState:
               type: string
             publicDNSName:
               type: string
             serviceAccountKey:
               type: string
             serviceAccountPub:
+              type: string
+          required:
+          - inline
+          type: object
+        status:
+          properties:
+            provisioningState:
               type: string
           type: object
   version: v1alpha1

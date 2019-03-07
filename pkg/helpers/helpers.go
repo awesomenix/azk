@@ -1,7 +1,13 @@
 package helpers
 
 import (
+	"fmt"
+	"io/ioutil"
 	"math/rand"
+	"net/http"
+	"strings"
+
+	"github.com/Masterminds/semver"
 )
 
 var letterRunes = []rune("0123456789abcdef")
@@ -32,4 +38,65 @@ func RemoveFinalizer(slice []string, s string) (result []string) {
 		result = append(result, item)
 	}
 	return
+}
+
+func GetKubernetesVersion(version string) (string, error) {
+	if version == "stable" || version == "latest" {
+		resp, err := http.Get("https://storage.googleapis.com/kubernetes-release/release/" + version + ".txt")
+		if err != nil {
+			return version, err
+		}
+		defer resp.Body.Close()
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return version, err
+		}
+
+		return strings.TrimSpace(string(body[1:])), nil
+	}
+	return version, nil
+}
+
+func GetStableUpgradeKubernetesVersion(version string) (string, error) {
+	if version == "stable" || version == "latest" {
+		return GetKubernetesVersion(version)
+	}
+	ver, err := semver.NewVersion(version)
+	if err != nil {
+		return version, err
+	}
+	queryVersion := fmt.Sprintf("%d.%d", ver.Major(), ver.Minor())
+	resp, err := http.Get("https://storage.googleapis.com/kubernetes-release/release/stable-" + queryVersion + ".txt")
+	if err != nil {
+		return version, err
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return version, err
+	}
+
+	return strings.TrimSpace(string(body[1:])), nil
+}
+
+func GetLatestUpgradeKubernetesVersion(version string) (string, error) {
+	if version == "stable" || version == "latest" {
+		return GetKubernetesVersion(version)
+	}
+	ver, err := semver.NewVersion(version)
+	if err != nil {
+		return version, err
+	}
+	queryVersion := fmt.Sprintf("%d.%d", ver.Major(), ver.Minor())
+	resp, err := http.Get("https://storage.googleapis.com/kubernetes-release/release/latest-" + queryVersion + ".txt")
+	if err != nil {
+		return version, err
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return version, err
+	}
+
+	return strings.TrimSpace(string(body[1:])), nil
 }

@@ -8,6 +8,7 @@ import (
 	"time"
 
 	enginev1alpha1 "github.com/awesomenix/azkube/pkg/apis/engine/v1alpha1"
+	"github.com/awesomenix/azkube/pkg/helpers"
 	"github.com/briandowns/spinner"
 	"github.com/spf13/cobra"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -158,6 +159,13 @@ type UpgradeNodePoolOptions struct {
 }
 
 func CreateNodePool(cnpo *CreateNodePoolOptions) error {
+	kubernetesVersion, err := helpers.GetKubernetesVersion(cnpo.AgentKubernetesVersion)
+	if err != nil {
+		log.Error(err, "Failed to determine valid kubernetes version")
+		return err
+	}
+	cnpo.AgentKubernetesVersion = kubernetesVersion
+
 	log.Info("setting up client for create")
 	cfg, err := clientcmd.BuildConfigFromFlags("", os.Getenv("KUBECONFIG"))
 	if err != nil {

@@ -39,60 +39,7 @@ sudo chown $(id -u):$(id -g) /tmp/hostsupdate
 echo '192.0.0.4 %[2]s' >> /tmp/hostsupdate
 sudo mv /etc/hosts /etc/hosts.bak
 sudo mv /tmp/hostsupdate /etc/hosts
-`, helpers.PreRequisitesInstallScript(instance.Spec.KubernetesVersion), cluster.Status.InternalDNSName)
-}
-
-func kubeadmInitConfig(cluster *enginev1alpha1.Cluster, instance *enginev1alpha1.ControlPlane) string {
-	return fmt.Sprintf(`
-cat <<EOF >/tmp/kubeadm-config.yaml
-apiVersion: kubeadm.k8s.io/v1beta1
-nodeRegistration:
-  kubeletExtraArgs:
-    cloud-provider: azure
-    cloud-config: /etc/kubernetes/azure.json
-bootstrapTokens:
-- groups:
-  - system:bootstrappers:kubeadm:default-node-token
-  token: %[1]s
-  ttl: 48h0m0s
-  usages:
-  - signing
-  - authentication
-kind: InitConfiguration
----
-apiVersion: kubeadm.k8s.io/v1beta1
-kind: ClusterConfiguration
-apiServer:
-  certSANs:
-  - "%[2]s"
-  - "%[3]s"
-  - "192.0.0.100"
-  extraArgs:
-    cloud-config: /etc/kubernetes/azure.json
-    cloud-provider: azure
-  extraVolumes:
-  - hostPath: /etc/kubernetes/azure.json
-    mountPath: /etc/kubernetes/azure.json
-    name: cloud-config
-    readOnly: true
-controllerManager:
-  extraArgs:
-    cloud-config: /etc/kubernetes/azure.json
-    cloud-provider: azure
-  extraVolumes:
-  - hostPath: /etc/kubernetes/azure.json
-    mountPath: /etc/kubernetes/azure.json
-    name: cloud-config
-    readOnly: true
-kubernetesVersion: %[4]s
-controlPlaneEndpoint: "%[3]s:6443"
-networking:
-  podSubnet: "192.168.0.0/16"
-EOF
-`, cluster.Status.BootstrapToken,
-		cluster.Status.PublicDNSName,
-		cluster.Status.InternalDNSName,
-		instance.Spec.KubernetesVersion)
+`, helpers.PreRequisitesInstallScript(instance.Spec.KubernetesVersion), cluster.Spec.InternalDNSName)
 }
 
 func kubeadmJoinConfig(cluster *enginev1alpha1.Cluster) string {
@@ -113,25 +60,10 @@ discovery:
 controlPlane:
   localAPIEndpoint:
 EOF
-`, cluster.Status.BootstrapToken,
-		cluster.Status.InternalDNSName,
-		cluster.Status.DiscoveryHashes[0],
+`, cluster.Spec.BootstrapToken,
+		cluster.Spec.InternalDNSName,
+		cluster.Spec.DiscoveryHashes[0],
 	)
-}
-
-func getEncodedPrimaryMasterStartupScript(cluster *enginev1alpha1.Cluster, instance *enginev1alpha1.ControlPlane) string {
-	startupScript := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf(`
-%[1]s
-%[2]s
-sudo kubeadm init --config /tmp/kubeadm-config.yaml
-mkdir -p $HOME/.kube
-sudo cp -f /etc/kubernetes/admin.conf $HOME/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
-%[3]s
-`, kubeadmInitConfig(cluster, instance),
-		preRequisites(cluster, instance),
-		helpers.KuberouterCNI())))
-	return startupScript
 }
 
 func getEncodedSecondaryMasterStartupScript(cluster *enginev1alpha1.Cluster, instance *enginev1alpha1.ControlPlane) string {
@@ -146,7 +78,7 @@ echo '127.0.0.1 %[3]s' >> /tmp/hostsupdate
 sudo mv /tmp/hostsupdate /etc/hosts
 `, preRequisites(cluster, instance),
 		kubeadmJoinConfig(cluster),
-		cluster.Status.InternalDNSName,
+		cluster.Spec.InternalDNSName,
 	)))
 	return startupScript
 }
@@ -214,22 +146,6 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 		return reconcile.Result{}, err
 	}
 
-	cluster, err := r.getCluster(context.TODO(), instance.Namespace)
-	if err != nil {
-		return reconcile.Result{}, err
-	}
-
-	cloudConfig := azhelpers.CloudConfiguration{
-		CloudName:      azhelpers.AzurePublicCloudName,
-		SubscriptionID: cluster.Spec.SubscriptionID,
-		ClientID:       cluster.Spec.ClientID,
-		ClientSecret:   cluster.Spec.ClientSecret,
-		TenantID:       cluster.Spec.TenantID,
-		GroupName:      cluster.Spec.ResourceGroupName,
-		GroupLocation:  cluster.Spec.Location,
-		UserAgent:      "azkube",
-	}
-
 	if instance.ObjectMeta.DeletionTimestamp.IsZero() {
 		// The object is not being deleted, so if it does not have our finalizer,
 		// then lets add the finalizer and update the object.
@@ -249,18 +165,20 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 
 	} else {
 		if helpers.ContainsFinalizer(instance.ObjectMeta.Finalizers, controlPlaneFinalizerName) {
-			if cloudConfig.IsValid() {
-				resourceName := fmt.Sprintf("%s-mastervm", instance.Name)
-				log.Info("Deleting Resources", "Name", resourceName)
+			cluster, err := r.getCluster(context.TODO(), instance.Namespace)
+
+			if err == nil && cluster.Spec.IsValid() {
+				// resourceName := fmt.Sprintf("%s-mastervm", instance.Name)
+				// log.Info("Deleting Resources", "Name", resourceName)
 				// our finalizer is present, so lets handle our external dependency
-				if err := cloudConfig.DeleteResources(context.TODO(), resourceName); err != nil {
-					// if fail to delete the external dependency here, return with error
-					// so that it can be retried
-					// meh! its fine if it fails, we definitely need to wait here for it to be deleted
-					log.Error(err, "Error Deleting Resources", "Name", resourceName)
-				} else {
-					log.Info("Successfully Deleted Resources", "Name", resourceName)
-				}
+				// if err := cluster.Spec.DeleteResources(context.TODO(), resourceName); err != nil {
+				// 	// if fail to delete the external dependency here, return with error
+				// 	// so that it can be retried
+				// 	// meh! its fine if it fails, we definitely need to wait here for it to be deleted
+				// 	log.Error(err, "Error Deleting Resources", "Name", resourceName)
+				// } else {
+				// 	log.Info("Successfully Deleted Resources", "Name", resourceName)
+				// }
 			}
 
 			// remove our finalizer from the list and update it.
@@ -275,6 +193,11 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 
 	if instance.Spec.KubernetesVersion == instance.Status.KubernetesVersion {
 		return reconcile.Result{}, nil
+	}
+
+	cluster, err := r.getCluster(context.TODO(), instance.Namespace)
+	if err != nil {
+		return reconcile.Result{}, err
 	}
 
 	if cluster.Status.ProvisioningState != "Succeeded" {
@@ -297,20 +220,20 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 	}
 
 	customData := map[string]string{
-		"/etc/kubernetes/pki/ca.crt":             cluster.Status.CACertificate,
-		"/etc/kubernetes/pki/ca.key":             cluster.Status.CACertificateKey,
-		"/etc/kubernetes/pki/sa.key":             cluster.Status.ServiceAccountKey,
-		"/etc/kubernetes/pki/sa.pub":             cluster.Status.ServiceAccountPub,
-		"/etc/kubernetes/pki/front-proxy-ca.crt": cluster.Status.FrontProxyCACertificate,
-		"/etc/kubernetes/pki/front-proxy-ca.key": cluster.Status.FrontProxyCACertificateKey,
-		"/etc/kubernetes/pki/etcd/ca.crt":        cluster.Status.EtcdCACertificate,
-		"/etc/kubernetes/pki/etcd/ca.key":        cluster.Status.EtcdCACertificateKey,
-		"/etc/kubernetes/azure.json":             cluster.Status.CloudConfig,
+		"/etc/kubernetes/pki/ca.crt":             cluster.Spec.CACertificate,
+		"/etc/kubernetes/pki/ca.key":             cluster.Spec.CACertificateKey,
+		"/etc/kubernetes/pki/sa.key":             cluster.Spec.ServiceAccountKey,
+		"/etc/kubernetes/pki/sa.pub":             cluster.Spec.ServiceAccountPub,
+		"/etc/kubernetes/pki/front-proxy-ca.crt": cluster.Spec.FrontProxyCACertificate,
+		"/etc/kubernetes/pki/front-proxy-ca.key": cluster.Spec.FrontProxyCACertificateKey,
+		"/etc/kubernetes/pki/etcd/ca.crt":        cluster.Spec.EtcdCACertificate,
+		"/etc/kubernetes/pki/etcd/ca.key":        cluster.Spec.EtcdCACertificateKey,
+		"/etc/kubernetes/azure.json":             cluster.Spec.AzureCloudProviderConfig,
 		//"/etc/kubernetes/admin.conf":             cluster.Status.AdminKubeConfig,
 	}
 
 	log.Info("Creating", "AvailabilitySet", masterAvailabilitySetName)
-	if _, err := cloudConfig.CreateAvailabilitySet(
+	if _, err := cluster.Spec.CreateAvailabilitySet(
 		context.TODO(),
 		masterAvailabilitySetName); err != nil {
 		return reconcile.Result{}, err
@@ -331,7 +254,7 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 				defer wg.Done()
 				vmName := fmt.Sprintf("%s-mastervm-%d", instance.Name, vmIndex)
 				log.Info("Creating", "VM", vmName)
-				if err := cloudConfig.CreateVMWithLoadBalancer(
+				if err := cluster.Spec.CreateVMWithLoadBalancer(
 					context.TODO(),
 					vmName,
 					"azkube-lb",
@@ -359,10 +282,10 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 
 	vmName := fmt.Sprintf("%s-mastervm-%d", instance.Name, 0)
 	log.Info("Running Custom Script Extension", "VM", vmName)
-	if err := cloudConfig.AddCustomScriptsExtension(
+	if err := cluster.Spec.AddCustomScriptsExtension(
 		context.TODO(),
 		vmName,
-		getEncodedPrimaryMasterStartupScript(cluster, instance)); err != nil {
+		cluster.Spec.GetEncodedPrimaryMasterStartupScript(instance.Spec.KubernetesVersion)); err != nil {
 		log.Error(err, "Error Executing Custom Script Extension", "VM", vmName)
 		return reconcile.Result{}, err
 	}
@@ -376,7 +299,7 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 				defer wg.Done()
 				vmName := fmt.Sprintf("%s-mastervm-%d", instance.Name, vmIndex)
 				log.Info("Running Custom Script Extension", "VM", vmName)
-				if err := cloudConfig.AddCustomScriptsExtension(
+				if err := cluster.Spec.AddCustomScriptsExtension(
 					context.TODO(),
 					vmName,
 					getEncodedSecondaryMasterStartupScript(cluster, instance)); err != nil {

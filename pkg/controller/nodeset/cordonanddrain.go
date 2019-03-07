@@ -3,51 +3,14 @@ package nodeset
 import (
 	"fmt"
 	"os"
-	"time"
 
-	"k8s.io/apimachinery/pkg/api/meta"
+	"github.com/awesomenix/azkube/pkg/helpers"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
-	"k8s.io/client-go/discovery"
-	"k8s.io/client-go/rest"
-	"k8s.io/client-go/restmapper"
 	"k8s.io/client-go/tools/clientcmd"
 	kubectldrain "k8s.io/kubernetes/pkg/kubectl/cmd/drain"
 	cmdutil "k8s.io/kubernetes/pkg/kubectl/cmd/util"
 )
-
-type restClientGetter struct {
-	config clientcmd.ClientConfig
-}
-
-func (r *restClientGetter) ToRESTConfig() (*rest.Config, error) {
-	clientConfig, err := r.ToRawKubeConfigLoader().ClientConfig()
-	if err != nil {
-		return nil, err
-	}
-	clientConfig.Timeout = 5 * time.Second
-	return clientConfig, err
-}
-
-func (r *restClientGetter) ToDiscoveryClient() (discovery.CachedDiscoveryInterface, error) {
-	config, err := r.ToRESTConfig()
-	if err != nil {
-		return nil, err
-	}
-	return discovery.NewCachedDiscoveryClientForConfig(config, os.TempDir(), "", 10*time.Minute)
-}
-
-func (r *restClientGetter) ToRESTMapper() (meta.RESTMapper, error) {
-	client, err := r.ToDiscoveryClient()
-	if err != nil {
-		return nil, err
-	}
-	return restmapper.NewDeferredDiscoveryRESTMapper(client), nil
-}
-
-func (r *restClientGetter) ToRawKubeConfigLoader() clientcmd.ClientConfig {
-	return r.config
-}
 
 func cordonDrainAndDeleteNode(kubeconfig string, vmName string) error {
 	if kubeconfig == "" {
@@ -59,7 +22,7 @@ func cordonDrainAndDeleteNode(kubeconfig string, vmName string) error {
 	if err != nil {
 		return fmt.Errorf("error setting up kubeconfig: %v", err)
 	}
-	f := cmdutil.NewFactory(&restClientGetter{config: clientConfig})
+	f := cmdutil.NewFactory(&helpers.RestClientGetter{Config: clientConfig})
 
 	streams := genericclioptions.IOStreams{
 		Out:    os.Stdout,

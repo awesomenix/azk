@@ -43,17 +43,28 @@ spec:
           type: object
         status:
           properties:
+            kubeConfig:
+              type: string
             kubernetesVersion:
               type: string
+            nodeStatus:
+              items:
+                properties:
+                  vmComputerName:
+                    type: string
+                  vmInstanceID:
+                    type: string
+                type: object
+              type: array
             nodesetName:
               type: string
             provisioningState:
               type: string
             replicas:
-              description: PrevNodeSetName   string `json:"prevNodeSetName,omitempty"`
               format: int32
               type: integer
             vmreplicas:
+              description: PrevNodeSetName   string `json:"prevNodeSetName,omitempty"`
               format: int32
               type: integer
           type: object

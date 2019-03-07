@@ -83,3 +83,45 @@ func (c *CloudConfiguration) CreateNICWithLoadBalancer(ctx context.Context, lbNa
 
 	return future.Result(nicClient)
 }
+
+func (c *CloudConfiguration) CreateNIC(ctx context.Context, vnetName, subnetName, staticIPAddress, nicName string) (nic network.Interface, err error) {
+	subnet, err := c.GetSubnet(ctx, vnetName, subnetName)
+	if err != nil {
+		return
+	}
+
+	nicClient, err := c.GetNICClient()
+	if err != nil {
+		return network.Interface{}, err
+	}
+	future, err := nicClient.CreateOrUpdate(ctx,
+		c.GroupName,
+		nicName,
+		network.Interface{
+			Location: to.StringPtr(c.GroupLocation),
+			InterfacePropertiesFormat: &network.InterfacePropertiesFormat{
+				IPConfigurations: &[]network.InterfaceIPConfiguration{
+					{
+						Name: to.StringPtr("pipConfig"),
+						InterfaceIPConfigurationPropertiesFormat: &network.InterfaceIPConfigurationPropertiesFormat{
+							Subnet: &network.Subnet{
+								ID: subnet.ID,
+							},
+							PrivateIPAllocationMethod: network.IPAllocationMethod("Static"),
+							PrivateIPAddress:          to.StringPtr(staticIPAddress),
+						},
+					},
+				},
+			},
+		})
+	if err != nil {
+		return nic, fmt.Errorf("cannot create nic: %v", err)
+	}
+
+	err = future.WaitForCompletionRef(ctx, nicClient.Client)
+	if err != nil {
+		return nic, fmt.Errorf("cannot get nic create or update future response: %v", err)
+	}
+
+	return future.Result(nicClient)
+}

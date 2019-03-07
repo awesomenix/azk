@@ -78,6 +78,33 @@ func (c *CloudConfiguration) GetAvailabilitySet(ctx context.Context, asName stri
 	return asClient.Get(ctx, c.GroupName, asName)
 }
 
+// CreateVMWithNIC creates a new VM in an availability set. It also
+// creates and configures the VM's NIC.
+func (c *CloudConfiguration) CreateVMWithNIC(
+	ctx context.Context,
+	vmName,
+	vnetName,
+	subnetName,
+	staticIPAddress,
+	customData,
+	availabilitySetName,
+	vmSKUType string) error {
+
+	nic, err := c.CreateNIC(ctx, vnetName, subnetName, staticIPAddress, fmt.Sprintf("nic-%s", vmName))
+	if err != nil {
+		return err
+	}
+
+	return c.CreateVMInAvailabilitySet(
+		ctx,
+		vmName,
+		availabilitySetName,
+		vmSKUType,
+		*nic.ID,
+		customData,
+	)
+}
+
 // CreateVMWithLoadBalancer creates a new VM in an availability set. It also
 // creates and configures a load balancer and associates that with the VM's
 // NIC.
@@ -94,22 +121,36 @@ func (c *CloudConfiguration) CreateVMWithLoadBalancer(
 	vmSKUType string,
 	natRule int) error {
 
-	nicName := fmt.Sprintf("nic-%s", vmName)
-	//publicipName := fmt.Sprintf("publicip-%s", vmName)
+	nic, err := c.CreateNICWithLoadBalancer(ctx, lbName, internallbName, vnetName, subnetName, staticIPAddress, fmt.Sprintf("nic-%s", vmName), natRule)
+	if err != nil {
+		return err
+	}
 
+	return c.CreateVMInAvailabilitySet(
+		ctx,
+		vmName,
+		availabilitySetName,
+		vmSKUType,
+		*nic.ID,
+		customData,
+	)
+}
+
+func (c *CloudConfiguration) CreateVMInAvailabilitySet(
+	ctx context.Context,
+	vmName,
+	availabilitySetName,
+	vmSKUType,
+	nicID,
+	customData string) error {
 	vmClient, err := c.GetVMClient()
 	if err != nil {
 		return err
 	}
 
 	if _, err := vmClient.Get(ctx, c.GroupName, vmName, ""); err == nil {
-		// vm already created
+		// VM already exists
 		return nil
-	}
-
-	nic, err := c.CreateNICWithLoadBalancer(ctx, lbName, internallbName, vnetName, subnetName, staticIPAddress, nicName, natRule)
-	if err != nil {
-		return err
 	}
 
 	as, err := c.GetAvailabilitySet(ctx, availabilitySetName)
@@ -170,7 +211,7 @@ func (c *CloudConfiguration) CreateVMWithLoadBalancer(
 				NetworkProfile: &compute.NetworkProfile{
 					NetworkInterfaces: &[]compute.NetworkInterfaceReference{
 						{
-							ID: nic.ID,
+							ID: to.StringPtr(nicID),
 							NetworkInterfaceReferenceProperties: &compute.NetworkInterfaceReferenceProperties{
 								Primary: to.BoolPtr(true),
 							},

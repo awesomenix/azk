@@ -41,6 +41,9 @@ spec:
         control-plane: controller-manager
         controller-tools.k8s.io: "1.0"
     spec:
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
       containers:
       - command:
         - /manager

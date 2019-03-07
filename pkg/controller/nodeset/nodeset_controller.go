@@ -46,9 +46,9 @@ discovery:
     caCertHashes:
     - %[3]s
 EOF
-`, cluster.Status.BootstrapToken,
-		cluster.Status.InternalDNSName,
-		cluster.Status.DiscoveryHashes[0],
+`, cluster.Spec.BootstrapToken,
+		cluster.Spec.InternalDNSName,
+		cluster.Spec.DiscoveryHashes[0],
 	)
 }
 
@@ -64,7 +64,7 @@ sudo mv /tmp/hostsupdate /etc/hosts
 #Setup using kubeadm
 sudo kubeadm join --config /tmp/kubeadm-config.yaml
 `, helpers.PreRequisitesInstallScript(instance.Spec.KubernetesVersion),
-		cluster.Status.InternalDNSName,
+		cluster.Spec.InternalDNSName,
 		kubeadmJoinConfig(cluster),
 	)))
 	return startupScript
@@ -149,8 +149,8 @@ func (r *ReconcileNodeSet) Reconcile(request reconcile.Request) (reconcile.Resul
 		ClientID:       cluster.Spec.ClientID,
 		ClientSecret:   cluster.Spec.ClientSecret,
 		TenantID:       cluster.Spec.TenantID,
-		GroupName:      cluster.Spec.ResourceGroupName,
-		GroupLocation:  cluster.Spec.Location,
+		GroupName:      cluster.Spec.GroupName,
+		GroupLocation:  cluster.Spec.GroupLocation,
 		UserAgent:      "azkube",
 	}
 
@@ -199,7 +199,7 @@ func (r *ReconcileNodeSet) Reconcile(request reconcile.Request) (reconcile.Resul
 	}
 
 	customData := map[string]string{
-		"/etc/kubernetes/azure.json": cluster.Status.CloudConfig,
+		"/etc/kubernetes/azure.json": cluster.Spec.AzureCloudProviderConfig,
 	}
 
 	if err := updateNodeSet(instance, cloudConfig); err != nil {
@@ -235,7 +235,7 @@ func (r *ReconcileNodeSet) Reconcile(request reconcile.Request) (reconcile.Resul
 
 	instance.Status.KubernetesVersion = instance.Spec.KubernetesVersion
 	instance.Status.ProvisioningState = "Succeeded"
-	instance.Status.Kubeconfig = cluster.Status.CustomerKubeConfig
+	instance.Status.Kubeconfig = cluster.Spec.CustomerKubeConfig
 	instance.Status.Replicas = int32(len(instance.Status.NodeStatus))
 	if err := r.Status().Update(context.TODO(), instance); err != nil {
 		return reconcile.Result{}, err

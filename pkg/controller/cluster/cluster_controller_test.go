@@ -67,42 +67,4 @@ func TestReconcile(t *testing.T) {
 		return nil
 	}, 20*time.Second).
 		Should(gomega.Succeed())
-
-	g.Eventually(func() error {
-		if instance.Status.CACertificate == "" {
-			return fmt.Errorf("Expected non empty CACertificate")
-		}
-		if instance.Status.CACertificateKey == "" {
-			return fmt.Errorf("Expected non empty CACertificateKey")
-		}
-		if instance.Status.ServiceAccountKey == "" {
-			return fmt.Errorf("Expected non empty ServiceAccountKey")
-		}
-		if instance.Status.ServiceAccountPub == "" {
-			return fmt.Errorf("Expected non empty ServiceAccountPub")
-		}
-		if instance.Status.FrontProxyCACertificate == "" {
-			return fmt.Errorf("Expected non empty FrontProxyCACertificate")
-		}
-		if instance.Status.FrontProxyCACertificateKey == "" {
-			return fmt.Errorf("Expected non empty FrontProxyCACertificateKey")
-		}
-		if instance.Status.EtcdCACertificate == "" {
-			return fmt.Errorf("Expected non empty EtcdCACertificate")
-		}
-		if instance.Status.EtcdCACertificateKey == "" {
-			return fmt.Errorf("Expected non empty EtcdCACertificateKey")
-		}
-		if instance.Status.AdminKubeConfig == "" {
-			return fmt.Errorf("Expected non empty AdminKubeConfig")
-		}
-		if instance.Status.BootstrapToken == "" {
-			return fmt.Errorf("Expected non empty BootstrapToken")
-		}
-		if instance.Status.DiscoveryHashes == nil || len(instance.Status.DiscoveryHashes) <= 0 {
-			return fmt.Errorf("Expected non empty DiscoveryHashes")
-		}
-		return nil
-	}, timeout).
-		Should(gomega.Succeed())
 }

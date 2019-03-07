@@ -8,6 +8,7 @@ import (
 	"time"
 
 	enginev1alpha1 "github.com/awesomenix/azkube/pkg/apis/engine/v1alpha1"
+	"github.com/awesomenix/azkube/pkg/helpers"
 	"github.com/briandowns/spinner"
 	"github.com/spf13/cobra"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -36,14 +37,6 @@ func init() {
 
 	controlPlaneCmd.AddCommand(createControlPlaneCmd)
 
-	// Delete
-	deleteControlPlaneCmd.Flags().StringVarP(&dcpo.SubscriptionID, "subscriptionid", "s", "", "SubscriptionID Required.")
-	deleteControlPlaneCmd.MarkFlagRequired("subscriptionid")
-	deleteControlPlaneCmd.Flags().StringVarP(&dcpo.ResourceGroup, "resourcegroup", "r", "", "Resource Group Name, in which all resources are created Required.")
-	deleteControlPlaneCmd.MarkFlagRequired("resourcegroup")
-
-	controlPlaneCmd.AddCommand(deleteControlPlaneCmd)
-
 	// Upgrade
 	upgradeControlPlaneCmd.Flags().StringVarP(&ucpo.SubscriptionID, "subscriptionid", "s", "", "SubscriptionID Required.")
 	upgradeControlPlaneCmd.MarkFlagRequired("subscriptionid")
@@ -51,7 +44,7 @@ func init() {
 	upgradeControlPlaneCmd.MarkFlagRequired("resourcegroup")
 
 	// Optional flags
-	upgradeControlPlaneCmd.Flags().StringVarP(&ucpo.MasterKubernetesVersion, "kubernetesversion", "k", "Stable", "Master Kubernetes version, Optional, Uses Stable version as default.")
+	upgradeControlPlaneCmd.Flags().StringVarP(&ucpo.MasterKubernetesVersion, "kubernetesversion", "k", "stable", "Master Kubernetes version, Optional, Uses Stable version as default.")
 	controlPlaneCmd.AddCommand(upgradeControlPlaneCmd)
 }
 
@@ -62,18 +55,6 @@ var createControlPlaneCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		if err := CreateControlPlane(ccpo); err != nil {
 			log.Error(err, "Failed to create cluster")
-			os.Exit(1)
-		}
-	},
-}
-
-var deleteControlPlaneCmd = &cobra.Command{
-	Use:   "delete",
-	Short: "Delete kubernetes control plane",
-	Long:  `Delete a kubernetes control plane with one command`,
-	Run: func(cmd *cobra.Command, args []string) {
-		if err := DeleteControlPlane(dcpo); err != nil {
-			log.Error(err, "Failed to delete control plane")
 			os.Exit(1)
 		}
 	},
@@ -97,11 +78,6 @@ type CreateControlPlaneOptions struct {
 	MasterKubernetesVersion string
 }
 
-type DeleteControlPlaneOptions struct {
-	SubscriptionID string
-	ResourceGroup  string
-}
-
 type UpgradeControlPlaneOptions struct {
 	SubscriptionID          string
 	ResourceGroup           string
@@ -109,10 +85,17 @@ type UpgradeControlPlaneOptions struct {
 }
 
 var ccpo = &CreateControlPlaneOptions{}
-var dcpo = &DeleteControlPlaneOptions{}
 var ucpo = &UpgradeControlPlaneOptions{}
 
 func CreateControlPlane(ccpo *CreateControlPlaneOptions) error {
+
+	kubernetesVersion, err := helpers.GetKubernetesVersion(ccpo.MasterKubernetesVersion)
+	if err != nil {
+		log.Error(err, "Failed to determine valid kubernetes version")
+		return err
+	}
+	ccpo.MasterKubernetesVersion = kubernetesVersion
+
 	// Get a config to talk to the apiserver
 	log.Info("setting up client for create")
 	cfg, err := clientcmd.BuildConfigFromFlags("", os.Getenv("KUBECONFIG"))
@@ -175,42 +158,6 @@ func CreateControlPlane(ccpo *CreateControlPlaneOptions) error {
 	}
 
 	fmt.Fprintf(s.Writer, " ✓ Successfully Created ControlPlane with Kubernetes Version %s in %s\n", ccpo.MasterKubernetesVersion, time.Since(start))
-
-	return nil
-}
-
-func DeleteControlPlane(dcpo *DeleteControlPlaneOptions) error {
-	log.Info("setting up client for delete")
-	cfg, err := clientcmd.BuildConfigFromFlags("", os.Getenv("KUBECONFIG"))
-	if err != nil {
-		log.Error(err, "Failed to create config from KUBECONFIG")
-		return err
-	}
-
-	kClient, err := client.New(cfg, client.Options{})
-	if err != nil {
-		log.Error(err, "Failed to create kube client from config")
-		return err
-	}
-
-	h := fnv.New64a()
-	h.Write([]byte(fmt.Sprintf("%s/%s", dcpo.SubscriptionID, dcpo.ResourceGroup)))
-	clusterName := fmt.Sprintf("%x", h.Sum64())
-
-	log.Info("getting control plane", "Name", clusterName)
-
-	controlPlane := &enginev1alpha1.ControlPlane{}
-
-	if err := kClient.Get(context.TODO(), types.NamespacedName{Namespace: clusterName, Name: clusterName}, controlPlane); err == nil {
-		log.Error(err, "failed to get control plane", "Name", clusterName)
-	}
-
-	log.Info("deleting control plane", "Name", clusterName)
-
-	if err := kClient.Delete(context.TODO(), controlPlane); err != nil {
-		log.Error(err, "failed to delete control plane", "Name", clusterName)
-	}
-	log.Info("successfully deleted control plane", "Name", clusterName)
 
 	return nil
 }

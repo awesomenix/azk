@@ -22,12 +22,10 @@
   name = "github.com/Azure/azure-sdk-for-go"
   packages = [
     "profiles/latest/compute/mgmt/compute",
-    "profiles/latest/resources/mgmt/resources",
     "services/compute/mgmt/2018-04-01/compute",
     "services/compute/mgmt/2018-10-01/compute",
     "services/network/mgmt/2018-01-01/network",
     "services/resources/mgmt/2017-05-10/resources",
-    "services/resources/mgmt/2018-02-01/resources",
     "services/resources/mgmt/2018-05-01/resources",
     "version",
   ]
@@ -70,6 +68,14 @@
   packages = ["."]
   pruneopts = "T"
   revision = "e9091a26100e9cfb2b6a8f470085bfa541931a91"
+
+[[projects]]
+  digest = "1:55388fd080150b9a072912f97b1f5891eb0b50df43401f8b75fb4273d3fec9fc"
+  name = "github.com/Masterminds/semver"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "c7af12943936e8c39859482e61f0574c2fd7fc75"
+  version = "v1.4.2"
 
 [[projects]]
   digest = "1:bd3632deea7c224314b504dc51fbd244a59163e89c0cb730877d51bb13f5f74a"
@@ -200,6 +206,14 @@
   packages = ["."]
   pruneopts = "T"
   revision = "d6023ce2651d8eafb5c75bb0c7167536102ec9f5"
+
+[[projects]]
+  digest = "1:bbc4aacabe6880bdbce849c64cb061b7eddf39f132af4ea2853ddd32f85fbec3"
+  name = "github.com/fatih/camelcase"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "44e46d280b43ec1531bb25252440e34f1b800b65"
+  version = "v1.0.0"
 
 [[projects]]
   digest = "1:865079840386857c809b72ce300be7580cb50d3d3129ce11bf9aa6ca2bc1934a"
@@ -402,6 +416,14 @@
   pruneopts = "T"
   revision = "23d116af351c84513e1946b527c88823e476be13"
   version = "v1.3.0"
+
+[[projects]]
+  digest = "1:75ab90ae3f5d876167e60f493beadfe66f0ed861a710f283fb06c86437a09538"
+  name = "github.com/jonboulle/clockwork"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "2eee05ed794112d45db504eb05aa693efd2b8b09"
+  version = "v0.1.0"
 
 [[projects]]
   digest = "1:5d713dbcad44f3358fec51fd5573d4f733c02cac5a40dcb177787ad5ffe9272f"
@@ -1036,6 +1058,7 @@
   digest = "1:a7b151b4238f885a02d292c665ce15407429d748619a9c5f29078f63db0b1f78"
   name = "k8s.io/apimachinery"
   packages = [
+    "pkg/api/equality",
     "pkg/api/errors",
     "pkg/api/meta",
     "pkg/api/resource",
@@ -1062,12 +1085,14 @@
     "pkg/util/cache",
     "pkg/util/clock",
     "pkg/util/diff",
+    "pkg/util/duration",
     "pkg/util/errors",
     "pkg/util/framer",
     "pkg/util/httpstream",
     "pkg/util/httpstream/spdy",
     "pkg/util/intstr",
     "pkg/util/json",
+    "pkg/util/jsonmergepatch",
     "pkg/util/mergepatch",
     "pkg/util/naming",
     "pkg/util/net",
@@ -1182,6 +1207,7 @@
     "tools/record",
     "tools/reference",
     "tools/remotecommand",
+    "tools/watch",
     "transport",
     "transport/spdy",
     "util/buffer",
@@ -1283,13 +1309,33 @@
     "cmd/kubeadm/app/util/pkiutil",
     "cmd/kubeadm/app/util/pubkeypin",
     "pkg/apis/core",
+    "pkg/kubectl",
+    "pkg/kubectl/apps",
+    "pkg/kubectl/cmd/apply",
+    "pkg/kubectl/cmd/delete",
     "pkg/kubectl/cmd/drain",
     "pkg/kubectl/cmd/util",
+    "pkg/kubectl/cmd/util/editor",
+    "pkg/kubectl/cmd/util/editor/crlf",
     "pkg/kubectl/cmd/util/openapi",
     "pkg/kubectl/cmd/util/openapi/validation",
+    "pkg/kubectl/cmd/wait",
+    "pkg/kubectl/describe",
+    "pkg/kubectl/describe/versioned",
     "pkg/kubectl/generated",
     "pkg/kubectl/scheme",
+    "pkg/kubectl/util",
+    "pkg/kubectl/util/certificate",
+    "pkg/kubectl/util/deployment",
+    "pkg/kubectl/util/event",
+    "pkg/kubectl/util/fieldpath",
     "pkg/kubectl/util/i18n",
+    "pkg/kubectl/util/podutils",
+    "pkg/kubectl/util/qos",
+    "pkg/kubectl/util/rbac",
+    "pkg/kubectl/util/resource",
+    "pkg/kubectl/util/slice",
+    "pkg/kubectl/util/storage",
     "pkg/kubectl/util/templates",
     "pkg/kubectl/util/term",
     "pkg/kubectl/validation",
@@ -1401,7 +1447,6 @@
   analyzer-version = 1
   input-imports = [
     "github.com/Azure/azure-sdk-for-go/profiles/latest/compute/mgmt/compute",
-    "github.com/Azure/azure-sdk-for-go/profiles/latest/resources/mgmt/resources",
     "github.com/Azure/azure-sdk-for-go/services/compute/mgmt/2018-04-01/compute",
     "github.com/Azure/azure-sdk-for-go/services/compute/mgmt/2018-10-01/compute",
     "github.com/Azure/azure-sdk-for-go/services/network/mgmt/2018-01-01/network",
@@ -1411,6 +1456,7 @@
     "github.com/Azure/go-autorest/autorest/adal",
     "github.com/Azure/go-autorest/autorest/azure",
     "github.com/Azure/go-autorest/autorest/to",
+    "github.com/Masterminds/semver",
     "github.com/briandowns/spinner",
     "github.com/emicklei/go-restful",
     "github.com/onsi/ginkgo",
@@ -1445,6 +1491,7 @@
     "k8s.io/kubernetes/cmd/kubeadm/app/phases/kubeconfig",
     "k8s.io/kubernetes/cmd/kubeadm/app/util/kubeconfig",
     "k8s.io/kubernetes/cmd/kubeadm/app/util/pubkeypin",
+    "k8s.io/kubernetes/pkg/kubectl/cmd/apply",
     "k8s.io/kubernetes/pkg/kubectl/cmd/drain",
     "k8s.io/kubernetes/pkg/kubectl/cmd/util",
     "sigs.k8s.io/controller-runtime/pkg/client",

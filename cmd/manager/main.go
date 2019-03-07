@@ -32,7 +32,7 @@ func main() {
 	mgrOptions := manager.Options{
 		MetricsBindAddress:      metricsAddr,
 		LeaderElection:          true,
-		LeaderElectionNamespace: "default",
+		LeaderElectionNamespace: "azkube-system",
 		LeaderElectionID:        "azkube-manager",
 	}
 

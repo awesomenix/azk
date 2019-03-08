@@ -200,7 +200,7 @@ func RunCreate(co *CreateOptions) error {
 		log.Error(loopErr, " ✗ Failed to create kube client from config")
 		return loopErr
 	}
-	fmt.Fprintf(s.Writer, " ✓ Done")
+	fmt.Fprintf(s.Writer, " ✓ Done\n")
 
 	if err := kubectlApply("config/crds", spec.CustomerKubeConfig); err != nil {
 		log.Error(err, "Failed to apply crds to cluster")

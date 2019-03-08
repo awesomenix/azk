@@ -3,7 +3,6 @@ package cluster
 import (
 	"context"
 	"fmt"
-	"time"
 
 	enginev1alpha1 "github.com/awesomenix/azkube/pkg/apis/engine/v1alpha1"
 	"github.com/awesomenix/azkube/pkg/helpers"
@@ -114,17 +113,17 @@ func (r *ReconcileCluster) Reconcile(request reconcile.Request) (reconcile.Resul
 		return reconcile.Result{}, nil
 	}
 
-	instance.Status.ProvisioningState = "Updating"
-	if err := r.Status().Update(context.TODO(), instance); err != nil {
-		return reconcile.Result{}, err
-	}
+	// instance.Status.ProvisioningState = "Updating"
+	// if err := r.Status().Update(context.TODO(), instance); err != nil {
+	// 	return reconcile.Result{}, err
+	// }
 
-	if instance.Spec.IsValid() {
-		if err := instance.Spec.Bootstrap(); err != nil {
-			r.recorder.Event(instance, "Warning", "Error", fmt.Sprintf("Bootstrap Failed %s", err.Error()))
-			return reconcile.Result{RequeueAfter: 10 * time.Second}, err
-		}
-	}
+	// if instance.Spec.IsValid() {
+	// 	if err := instance.Spec.Bootstrap(); err != nil {
+	// 		r.recorder.Event(instance, "Warning", "Error", fmt.Sprintf("Bootstrap Failed %s", err.Error()))
+	// 		return reconcile.Result{RequeueAfter: 10 * time.Second}, err
+	// 	}
+	// }
 
 	instance.Status.ProvisioningState = "Succeeded"
 	if err := r.Status().Update(context.TODO(), instance); err != nil {

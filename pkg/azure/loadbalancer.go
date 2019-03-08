@@ -48,7 +48,7 @@ func (c *CloudConfiguration) CreateLoadBalancer(ctx context.Context, lbName, pip
 		c.GroupName,
 		lbName,
 		network.LoadBalancer{
-			Sku:      &network.LoadBalancerSku{Name: network.LoadBalancerSkuNameBasic},
+			Sku:      &network.LoadBalancerSku{Name: network.LoadBalancerSkuNameStandard},
 			Location: to.StringPtr(c.GroupLocation),
 			LoadBalancerPropertiesFormat: &network.LoadBalancerPropertiesFormat{
 				FrontendIPConfigurations: &[]network.FrontendIPConfiguration{
@@ -180,7 +180,7 @@ func (c *CloudConfiguration) CreateInternalLoadBalancer(ctx context.Context, vne
 		c.GroupName,
 		lbName,
 		network.LoadBalancer{
-			Sku:      &network.LoadBalancerSku{Name: network.LoadBalancerSkuNameBasic},
+			Sku:      &network.LoadBalancerSku{Name: network.LoadBalancerSkuNameStandard},
 			Location: to.StringPtr(c.GroupLocation),
 			LoadBalancerPropertiesFormat: &network.LoadBalancerPropertiesFormat{
 				FrontendIPConfigurations: &[]network.FrontendIPConfiguration{

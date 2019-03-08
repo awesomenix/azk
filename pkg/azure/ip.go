@@ -40,7 +40,7 @@ func (c *CloudConfiguration) CreatePublicIP(ctx context.Context, ipName string) 
 		c.GroupName,
 		ipName,
 		network.PublicIPAddress{
-			Sku:      &network.PublicIPAddressSku{Name: network.PublicIPAddressSkuNameBasic},
+			Sku:      &network.PublicIPAddressSku{Name: network.PublicIPAddressSkuNameStandard},
 			Name:     to.StringPtr(ipName),
 			Location: to.StringPtr(c.GroupLocation),
 			PublicIPAddressPropertiesFormat: &network.PublicIPAddressPropertiesFormat{

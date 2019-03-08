@@ -120,7 +120,6 @@ func (r *ReconcileCluster) Reconcile(request reconcile.Request) (reconcile.Resul
 	}
 
 	if instance.Spec.IsValid() {
-		fmt.Println("Creating Bootstrap resources")
 		if err := instance.Spec.Bootstrap(); err != nil {
 			r.recorder.Event(instance, "Warning", "Error", fmt.Sprintf("Bootstrap Failed %s", err.Error()))
 			return reconcile.Result{RequeueAfter: 10 * time.Second}, err

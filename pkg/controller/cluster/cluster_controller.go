@@ -60,6 +60,7 @@ type ReconcileCluster struct {
 // and what is in the Cluster.Spec
 // Automatically generate RBAC rules to allow the Controller to read and write Deployments
 // +kubebuilder:rbac:groups=,resources=configmaps,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=,resources=events,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=engine.azkube.io,resources=clusters,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=engine.azkube.io,resources=clusters/status,verbs=get;update;patch
 func (r *ReconcileCluster) Reconcile(request reconcile.Request) (reconcile.Result, error) {

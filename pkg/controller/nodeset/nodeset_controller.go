@@ -15,6 +15,7 @@ import (
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/client-go/tools/record"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
 	"sigs.k8s.io/controller-runtime/pkg/handler"
@@ -77,7 +78,10 @@ func Add(mgr manager.Manager) error {
 
 // newReconciler returns a new reconcile.Reconciler
 func newReconciler(mgr manager.Manager) reconcile.Reconciler {
-	return &ReconcileNodeSet{Client: mgr.GetClient(), scheme: mgr.GetScheme()}
+	r := &ReconcileNodeSet{Client: mgr.GetClient(), scheme: mgr.GetScheme()}
+	recorder := mgr.GetRecorder("nodeset-controller")
+	r.recorder = recorder
+	return r
 }
 
 // add adds a new Controller to mgr with r as the reconcile.Reconciler
@@ -102,7 +106,8 @@ var _ reconcile.Reconciler = &ReconcileNodeSet{}
 // ReconcileNodeSet reconciles a NodeSet object
 type ReconcileNodeSet struct {
 	client.Client
-	scheme *runtime.Scheme
+	scheme   *runtime.Scheme
+	recorder record.EventRecorder
 }
 
 // Reconcile reads that state of the cluster for a NodeSet object and makes changes based on the state read
@@ -156,21 +161,13 @@ func (r *ReconcileNodeSet) Reconcile(request reconcile.Request) (reconcile.Resul
 	if instance.ObjectMeta.DeletionTimestamp.IsZero() {
 		// The object is not being deleted, so if it does not have our finalizer,
 		// then lets add the finalizer and update the object.
-		update := false
-
 		if !helpers.ContainsFinalizer(instance.ObjectMeta.Finalizers, nodesetsFinalizerName) {
-			instance.ObjectMeta.Finalizers = append(instance.ObjectMeta.Finalizers, nodesetsFinalizerName)
-			update = true
-		}
-
-		if update {
 			if err := r.Update(context.TODO(), instance); err != nil {
 				return reconcile.Result{Requeue: true}, err
 			}
 			// Once updates object changes we need to requeue
 			return reconcile.Result{Requeue: true}, nil
 		}
-
 	} else {
 		if helpers.ContainsFinalizer(instance.ObjectMeta.Finalizers, nodesetsFinalizerName) {
 			if cloudConfig.IsValid() {
@@ -222,6 +219,7 @@ func (r *ReconcileNodeSet) Reconcile(request reconcile.Request) (reconcile.Resul
 		); err != nil {
 			return reconcile.Result{}, err
 		}
+		r.recorder.Event(instance, "Normal", "Created", fmt.Sprintf("%s", instance.Name+"-agentvmss"))
 		return reconcile.Result{Requeue: true}, nil
 	} else if int(*instance.Spec.Replicas) != len(instance.Status.NodeStatus) {
 		instance.Status.ProvisioningState = "Scaling"
@@ -232,6 +230,7 @@ func (r *ReconcileNodeSet) Reconcile(request reconcile.Request) (reconcile.Resul
 		if err := scaleNodeSet(context.TODO(), instance, cloudConfig); err != nil {
 			return reconcile.Result{}, err
 		}
+		r.recorder.Event(instance, "Normal", "Scaled", fmt.Sprintf("%d to %d", len(instance.Status.NodeStatus), *instance.Spec.Replicas))
 		return reconcile.Result{Requeue: true}, nil
 	}
 

@@ -5,10 +5,13 @@ import (
 	"fmt"
 	debugruntime "runtime"
 	"runtime/debug"
+	"time"
 
 	enginev1alpha1 "github.com/awesomenix/azkube/pkg/apis/engine/v1alpha1"
+	"github.com/awesomenix/azkube/pkg/helpers"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/client-go/tools/record"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
 	"sigs.k8s.io/controller-runtime/pkg/handler"
@@ -20,6 +23,10 @@ import (
 
 var log = logf.Log.WithName("controller")
 
+const (
+	clusterFinalizerName = "cluster.finalizers.engine.azkube.io"
+)
+
 // Add creates a new Cluster Controller and adds it to the Manager with default RBAC. The Manager will set fields on the Controller
 // and Start it when the Manager is Started.
 func Add(mgr manager.Manager) error {
@@ -28,7 +35,10 @@ func Add(mgr manager.Manager) error {
 
 // newReconciler returns a new reconcile.Reconciler
 func newReconciler(mgr manager.Manager) reconcile.Reconciler {
-	return &ReconcileCluster{Client: mgr.GetClient(), scheme: mgr.GetScheme()}
+	r := &ReconcileCluster{Client: mgr.GetClient(), scheme: mgr.GetScheme()}
+	recorder := mgr.GetRecorder("cluster-controller")
+	r.recorder = recorder
+	return r
 }
 
 // add adds a new Controller to mgr with r as the reconcile.Reconciler
@@ -53,7 +63,8 @@ var _ reconcile.Reconciler = &ReconcileCluster{}
 // ReconcileCluster reconciles a Cluster object
 type ReconcileCluster struct {
 	client.Client
-	scheme *runtime.Scheme
+	scheme   *runtime.Scheme
+	recorder record.EventRecorder
 }
 
 // Reconcile reads that state of the cluster for a Cluster object and makes changes based on the state read
@@ -85,10 +96,49 @@ func (r *ReconcileCluster) Reconcile(request reconcile.Request) (reconcile.Resul
 		return reconcile.Result{}, err
 	}
 
+	if instance.ObjectMeta.DeletionTimestamp.IsZero() {
+		// The object is not being deleted, so if it does not have our finalizer,
+		// then lets add the finalizer and update the object.
+		if !helpers.ContainsFinalizer(instance.ObjectMeta.Finalizers, clusterFinalizerName) {
+			if err := r.Update(context.TODO(), instance); err != nil {
+				return reconcile.Result{Requeue: true}, err
+			}
+			// Once updates object changes we need to requeue
+			return reconcile.Result{Requeue: true}, nil
+		}
+
+	} else {
+		if helpers.ContainsFinalizer(instance.ObjectMeta.Finalizers, clusterFinalizerName) {
+			if err == nil && instance.Spec.IsValid() {
+				instance.Spec.CleanupInfrastructure()
+			}
+
+			// remove our finalizer from the list and update it.
+			instance.ObjectMeta.Finalizers = helpers.RemoveFinalizer(instance.ObjectMeta.Finalizers, clusterFinalizerName)
+			if err := r.Update(context.TODO(), instance); err != nil {
+				return reconcile.Result{Requeue: true}, nil
+			}
+		}
+
+		return reconcile.Result{}, nil
+	}
+
+	instance.Status.ProvisioningState = "Updating"
+	if err := r.Status().Update(context.TODO(), instance); err != nil {
+		return reconcile.Result{}, err
+	}
+
+	if err := instance.Spec.Bootstrap(); err != nil {
+		r.recorder.Event(instance, "Warning", "Error", fmt.Sprintf("Bootstrap Failed %s", err.Error()))
+		return reconcile.Result{RequeueAfter: 10 * time.Second}, err
+	}
+
 	instance.Status.ProvisioningState = "Succeeded"
 	if err := r.Status().Update(context.TODO(), instance); err != nil {
 		return reconcile.Result{}, err
 	}
+
+	r.recorder.Event(instance, "Normal", "Created", fmt.Sprintf("Completed Cluster Setup %s/%s", request.Namespace, request.Name))
 
 	return reconcile.Result{}, nil
 }

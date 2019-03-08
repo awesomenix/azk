@@ -153,7 +153,7 @@ func RunCreate(co *CreateOptions) error {
 		s.Color("green")
 		s.Suffix = fmt.Sprintf(" Cleaning up bootstrap resources %s", spec.ClusterName)
 		s.Start()
-		spec.DeleteResourceGroup(context.TODO())
+		spec.CleanupInfrastructure()
 		s.Stop()
 		fmt.Fprintf(s.Writer, " ✓ Successfully cleanup up bootstrap resources %s\n", spec.ClusterName)
 		return err
@@ -421,7 +421,7 @@ func RunDelete(do *DeleteOptions) error {
 	s.Start()
 
 	start := time.Now()
-	err = cluster.Spec.DeleteResourceGroup(context.TODO())
+	err = cluster.Spec.CleanupInfrastructure()
 	s.Stop()
 
 	if err != nil {

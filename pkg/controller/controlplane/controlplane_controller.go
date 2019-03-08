@@ -15,6 +15,7 @@ import (
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/client-go/tools/record"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
 	"sigs.k8s.io/controller-runtime/pkg/handler"
@@ -90,7 +91,10 @@ func Add(mgr manager.Manager) error {
 
 // newReconciler returns a new reconcile.Reconciler
 func newReconciler(mgr manager.Manager) reconcile.Reconciler {
-	return &ReconcileControlPlane{Client: mgr.GetClient(), scheme: mgr.GetScheme()}
+	r := &ReconcileControlPlane{Client: mgr.GetClient(), scheme: mgr.GetScheme()}
+	recorder := mgr.GetRecorder("contolplane-controller")
+	r.recorder = recorder
+	return r
 }
 
 // add adds a new Controller to mgr with r as the reconcile.Reconciler
@@ -115,7 +119,8 @@ var _ reconcile.Reconciler = &ReconcileControlPlane{}
 // ReconcileControlPlane reconciles a ControlPlane object
 type ReconcileControlPlane struct {
 	client.Client
-	scheme *runtime.Scheme
+	scheme   *runtime.Scheme
+	recorder record.EventRecorder
 }
 
 // Reconcile reads that state of the cluster for a ControlPlane object and makes changes based on the state read
@@ -148,20 +153,13 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 	if instance.ObjectMeta.DeletionTimestamp.IsZero() {
 		// The object is not being deleted, so if it does not have our finalizer,
 		// then lets add the finalizer and update the object.
-		update := false
 		if !helpers.ContainsFinalizer(instance.ObjectMeta.Finalizers, controlPlaneFinalizerName) {
-			instance.ObjectMeta.Finalizers = append(instance.ObjectMeta.Finalizers, controlPlaneFinalizerName)
-			update = true
-		}
-
-		if update {
 			if err := r.Update(context.TODO(), instance); err != nil {
 				return reconcile.Result{Requeue: true}, err
 			}
 			// Once updates object changes we need to requeue
 			return reconcile.Result{Requeue: true}, nil
 		}
-
 	} else {
 		if helpers.ContainsFinalizer(instance.ObjectMeta.Finalizers, controlPlaneFinalizerName) {
 			cluster, err := r.getCluster(context.TODO(), instance.Namespace)
@@ -196,7 +194,7 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 
 	cluster, err := r.getCluster(context.TODO(), instance.Namespace)
 	if err != nil {
-		return reconcile.Result{}, err
+		return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, err
 	}
 
 	if cluster.Status.ProvisioningState != "Succeeded" {
@@ -230,14 +228,6 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 		"/etc/kubernetes/azure.json":             cluster.Spec.AzureCloudProviderConfig,
 		//"/etc/kubernetes/admin.conf":             cluster.Status.AdminKubeConfig,
 	}
-
-	log.Info("Creating", "AvailabilitySet", masterAvailabilitySetName)
-	if _, err := cluster.Spec.CreateAvailabilitySet(
-		context.TODO(),
-		masterAvailabilitySetName); err != nil {
-		return reconcile.Result{}, err
-	}
-	log.Info("Successfully Created", "AvailabilitySet", masterAvailabilitySetName)
 
 	vmSKUType := instance.Spec.VMSKUType
 	if vmSKUType == "" {
@@ -277,6 +267,7 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 					globalErr = err
 					return
 				}
+				r.recorder.Event(instance, "Normal", "Created", fmt.Sprintf("%s", vmName))
 				log.Info("Successfully Created", "VM", vmName)
 			}(i)
 		}
@@ -292,6 +283,8 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 	if err := r.Status().Update(context.TODO(), instance); err != nil {
 		return reconcile.Result{}, err
 	}
+
+	r.recorder.Event(instance, "Normal", "Created", fmt.Sprintf("Control Plane"))
 
 	return reconcile.Result{}, nil
 }

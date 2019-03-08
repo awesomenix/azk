@@ -114,6 +114,14 @@ func (spec *Spec) CreateBaseInfrastructure() error {
 	}
 	log.Info("Successfully Created", "VNET", "azkube-vnet", "Location", spec.GroupLocation)
 
+	log.Info("Creating", "AvailabilitySet", masterAvailabilitySetName)
+	if _, err := spec.CreateAvailabilitySet(
+		context.TODO(),
+		masterAvailabilitySetName); err != nil {
+		return err
+	}
+	log.Info("Successfully Created", "AvailabilitySet", masterAvailabilitySetName)
+
 	log.Info("Creating Internal Load Balancer", "Name", azkubeInternalLoadBalancerName)
 	if err := spec.CreateInternalLoadBalancer(
 		context.TODO(),
@@ -148,13 +156,6 @@ func (spec *Spec) CreateBaseInfrastructure() error {
 }
 
 func (spec *Spec) CreateInfrastructure() error {
-	log.Info("Creating", "AvailabilitySet", masterAvailabilitySetName)
-	if _, err := spec.CreateAvailabilitySet(
-		context.TODO(),
-		masterAvailabilitySetName); err != nil {
-		return err
-	}
-	log.Info("Successfully Created", "AvailabilitySet", masterAvailabilitySetName)
 
 	vmSKUType := spec.BootstrapVMSKUType
 	if vmSKUType == "" {
@@ -198,4 +199,8 @@ func (spec *Spec) CreateInfrastructure() error {
 	log.Info("Successfully Created", "VM", vmName)
 
 	return nil
+}
+
+func (spec *Spec) CleanupInfrastructure() error {
+	return spec.DeleteResourceGroup(context.TODO())
 }

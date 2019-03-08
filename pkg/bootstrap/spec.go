@@ -56,9 +56,15 @@ func CreateSpec(cloudConfig *azhelpers.CloudConfiguration, dnsPrefix, vmSKUType,
 		spec.ClusterName = fmt.Sprintf("%x", h.Sum64())
 	}
 	spec.CloudConfiguration = *cloudConfig
-	spec.DNSPrefix = dnsPrefix
-	spec.BootstrapKubernetesVersion = kubernetesVersion
-	spec.BootstrapVMSKUType = vmSKUType
+	if spec.DNSPrefix == "" {
+		spec.DNSPrefix = dnsPrefix
+	}
+	if spec.BootstrapKubernetesVersion == "" {
+		spec.BootstrapKubernetesVersion = kubernetesVersion
+	}
+	if spec.BootstrapVMSKUType == "" {
+		spec.BootstrapVMSKUType = vmSKUType
+	}
 
 	publicIPName := ""
 
@@ -72,8 +78,16 @@ func CreateSpec(cloudConfig *azhelpers.CloudConfiguration, dnsPrefix, vmSKUType,
 	publicDNSName := fmt.Sprintf("%s.%s.cloudapp.azure.com", strings.ToLower(publicIPName), strings.ToLower(cloudConfig.GroupLocation))
 	internalDNSName := fmt.Sprintf("%s.internal", strings.ToLower(publicIPName))
 
-	spec.PublicDNSName = publicDNSName
-	spec.InternalDNSName = internalDNSName
+	if spec.PublicDNSName == "" {
+		spec.PublicDNSName = publicDNSName
+	} else {
+		publicDNSName = spec.PublicDNSName
+	}
+	if spec.InternalDNSName == "" {
+		spec.InternalDNSName = internalDNSName
+	} else {
+		internalDNSName = spec.InternalDNSName
+	}
 
 	tmpDirName := tmpDir + spec.ClusterName
 
@@ -111,84 +125,115 @@ func CreateSpec(cloudConfig *azhelpers.CloudConfiguration, dnsPrefix, vmSKUType,
 		return nil, err
 	}
 
-	azureCloudProviderConfig := azhelpers.GetAzureCloudProviderConfig(cloudConfig)
-	spec.AzureCloudProviderConfig = azureCloudProviderConfig
+	if spec.AzureCloudProviderConfig == "" {
+		azureCloudProviderConfig := azhelpers.GetAzureCloudProviderConfig(cloudConfig)
+		spec.AzureCloudProviderConfig = azureCloudProviderConfig
+	}
 
-	log.Info("Creating Customer Kubeconfig", "DNS", publicDNSName)
-	os.Remove(tmpDirName + "/kubeconfigs/admin.conf")
-	cfg.LocalAPIEndpoint = kubeadmapi.APIEndpoint{AdvertiseAddress: "192.0.0.4", BindPort: 6443}
-	cfg.ControlPlaneEndpoint = fmt.Sprintf("%s:443", publicDNSName)
-	if err := kubeconfigphase.CreateKubeConfigFile(kubeadmconstants.AdminKubeConfigFileName, kubeConfigDir, cfg); err != nil {
-		return nil, err
+	if spec.CustomerKubeConfig == "" {
+		log.Info("Creating Customer Kubeconfig", "DNS", publicDNSName)
+		os.Remove(tmpDirName + "/kubeconfigs/admin.conf")
+		cfg.LocalAPIEndpoint = kubeadmapi.APIEndpoint{AdvertiseAddress: "192.0.0.4", BindPort: 6443}
+		cfg.ControlPlaneEndpoint = fmt.Sprintf("%s:443", publicDNSName)
+		if err := kubeconfigphase.CreateKubeConfigFile(kubeadmconstants.AdminKubeConfigFileName, kubeConfigDir, cfg); err != nil {
+			return nil, err
+		}
+		buf, err := ioutil.ReadFile(tmpDirName + "/kubeconfigs/admin.conf")
+		if err != nil {
+			return nil, err
+		}
+		spec.CustomerKubeConfig = string(buf)
+		log.Info("Created Customer Kubeconfig", "DNS", publicDNSName)
 	}
-	buf, err := ioutil.ReadFile(tmpDirName + "/kubeconfigs/admin.conf")
-	if err != nil {
-		return nil, err
-	}
-	spec.CustomerKubeConfig = string(buf)
-	log.Info("Created Customer Kubeconfig", "DNS", publicDNSName)
 
 	return spec, nil
 }
 
 func (spec *Spec) UpdateSpec() error {
 	tmpDirName := tmpDir + spec.ClusterName
-	buf, err := ioutil.ReadFile(tmpDirName + "/certs/ca.crt")
-	if err != nil {
-		return err
+	if spec.CACertificate == "" {
+		buf, err := ioutil.ReadFile(tmpDirName + "/certs/ca.crt")
+		if err != nil {
+			return err
+		}
+		spec.CACertificate = string(buf)
 	}
-	spec.CACertificate = string(buf)
-	buf, err = ioutil.ReadFile(tmpDirName + "/certs/ca.key")
-	if err != nil {
-		return err
+	if spec.CACertificateKey == "" {
+		buf, err := ioutil.ReadFile(tmpDirName + "/certs/ca.key")
+		if err != nil {
+			return err
+		}
+		spec.CACertificateKey = string(buf)
 	}
-	spec.CACertificateKey = string(buf)
-	buf, err = ioutil.ReadFile(tmpDirName + "/certs/sa.key")
-	if err != nil {
-		return err
+	if spec.ServiceAccountKey == "" {
+		buf, err := ioutil.ReadFile(tmpDirName + "/certs/sa.key")
+		if err != nil {
+			return err
+		}
+		spec.ServiceAccountKey = string(buf)
 	}
-	spec.ServiceAccountKey = string(buf)
-	buf, err = ioutil.ReadFile(tmpDirName + "/certs/sa.pub")
-	if err != nil {
-		return err
+	if spec.ServiceAccountPub == "" {
+		buf, err := ioutil.ReadFile(tmpDirName + "/certs/sa.pub")
+		if err != nil {
+			return err
+		}
+		spec.ServiceAccountPub = string(buf)
 	}
-	spec.ServiceAccountPub = string(buf)
-	buf, err = ioutil.ReadFile(tmpDirName + "/certs/front-proxy-ca.crt")
-	if err != nil {
-		return err
+	if spec.FrontProxyCACertificate == "" {
+		buf, err := ioutil.ReadFile(tmpDirName + "/certs/front-proxy-ca.crt")
+		if err != nil {
+			return err
+		}
+		spec.FrontProxyCACertificate = string(buf)
 	}
-	spec.FrontProxyCACertificate = string(buf)
-	buf, err = ioutil.ReadFile(tmpDirName + "/certs/front-proxy-ca.key")
-	if err != nil {
-		return err
-	}
-	spec.FrontProxyCACertificateKey = string(buf)
-	buf, err = ioutil.ReadFile(tmpDirName + "/certs/etcd/ca.crt")
-	if err != nil {
-		return err
-	}
-	spec.EtcdCACertificate = string(buf)
-	buf, err = ioutil.ReadFile(tmpDirName + "/certs/etcd/ca.key")
-	if err != nil {
-		return err
-	}
-	spec.EtcdCACertificateKey = string(buf)
-	buf, err = ioutil.ReadFile(tmpDirName + "/kubeconfigs/admin.conf")
-	if err != nil {
-		return err
-	}
-	spec.AdminKubeConfig = string(buf)
 
-	token, err := bootstraputil.GenerateBootstrapToken()
-	if err != nil {
-		return err
+	if spec.FrontProxyCACertificateKey == "" {
+		buf, err := ioutil.ReadFile(tmpDirName + "/certs/front-proxy-ca.key")
+		if err != nil {
+			return err
+		}
+		spec.FrontProxyCACertificateKey = string(buf)
 	}
-	spec.BootstrapToken = token
 
-	discoveryHashes, err := GetDiscoveryHashes(tmpDirName + "/kubeconfigs/admin.conf")
-	if err != nil {
-		return err
+	if spec.EtcdCACertificate == "" {
+		buf, err := ioutil.ReadFile(tmpDirName + "/certs/etcd/ca.crt")
+		if err != nil {
+			return err
+		}
+		spec.EtcdCACertificate = string(buf)
 	}
-	spec.DiscoveryHashes = discoveryHashes
+
+	if spec.EtcdCACertificateKey == "" {
+		buf, err := ioutil.ReadFile(tmpDirName + "/certs/etcd/ca.key")
+		if err != nil {
+			return err
+		}
+		spec.EtcdCACertificateKey = string(buf)
+	}
+	if spec.AdminKubeConfig == "" {
+		buf, err := ioutil.ReadFile(tmpDirName + "/kubeconfigs/admin.conf")
+		if err != nil {
+			return err
+		}
+		spec.AdminKubeConfig = string(buf)
+	}
+
+	// We might need to generate bootstrap token every time a VM is bootstrapped
+	if spec.BootstrapToken == "" {
+		token, err := bootstraputil.GenerateBootstrapToken()
+		if err != nil {
+			return err
+		}
+		spec.BootstrapToken = token
+	}
+
+	// Discovery hashes typically never changes
+	if len(spec.DiscoveryHashes) <= 0 {
+		discoveryHashes, err := GetDiscoveryHashes(tmpDirName + "/kubeconfigs/admin.conf")
+		if err != nil {
+			return err
+		}
+		spec.DiscoveryHashes = discoveryHashes
+	}
 	return nil
 }

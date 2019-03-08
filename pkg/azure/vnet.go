@@ -41,10 +41,10 @@ func (c *CloudConfiguration) CreateVirtualNetworkAndSubnets(ctx context.Context,
 		return err
 	}
 
-	// masterNetworkSecurityGroup, err := c.CreateNetworkSecurityGroup(context.TODO(), "azkube-master-nsg")
-	// if err != nil {
-	// 	return err
-	// }
+	masterNetworkSecurityGroup, err := c.CreateNetworkSecurityGroup(context.TODO(), "azkube-master-nsg")
+	if err != nil {
+		return err
+	}
 
 	routeTable, err := c.CreateRouteTables(context.TODO(), "azkube-routetable")
 	if err != nil {
@@ -65,8 +65,8 @@ func (c *CloudConfiguration) CreateVirtualNetworkAndSubnets(ctx context.Context,
 					{
 						Name: to.StringPtr("master-subnet"),
 						SubnetPropertiesFormat: &network.SubnetPropertiesFormat{
-							AddressPrefix: to.StringPtr("192.0.0.0/16"),
-							//NetworkSecurityGroup: &masterNetworkSecurityGroup,
+							AddressPrefix:        to.StringPtr("192.0.0.0/16"),
+							NetworkSecurityGroup: &masterNetworkSecurityGroup,
 						},
 					},
 					{

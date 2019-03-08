@@ -47,6 +47,19 @@ func (c *CloudConfiguration) CreateNetworkSecurityGroup(ctx context.Context, nsg
 							Priority:                 to.Int32Ptr(100),
 						},
 					},
+					{
+						Name: to.StringPtr("allow_6443"),
+						SecurityRulePropertiesFormat: &network.SecurityRulePropertiesFormat{
+							Protocol:                 network.SecurityRuleProtocolTCP,
+							SourceAddressPrefix:      to.StringPtr("*"),
+							SourcePortRange:          to.StringPtr("*"),
+							DestinationAddressPrefix: to.StringPtr("*"),
+							DestinationPortRange:     to.StringPtr("6443"),
+							Access:                   network.SecurityRuleAccessAllow,
+							Direction:                network.SecurityRuleDirectionInbound,
+							Priority:                 to.Int32Ptr(101),
+						},
+					},
 					// {
 					// 	Name: to.StringPtr("allow_https"),
 					// 	SecurityRulePropertiesFormat: &network.SecurityRulePropertiesFormat{

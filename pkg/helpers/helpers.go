@@ -5,10 +5,15 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"net/http"
+	debugruntime "runtime"
+	"runtime/debug"
 	"strings"
 
 	"github.com/Masterminds/semver"
+	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 )
+
+var log = logf.Log.WithName("controller")
 
 var letterRunes = []rune("0123456789abcdef")
 
@@ -99,4 +104,13 @@ func GetLatestUpgradeKubernetesVersion(version string) (string, error) {
 	}
 
 	return strings.TrimSpace(string(body[1:])), nil
+}
+
+func Recover() {
+	// recover from panic if one occured. Set err to nil otherwise.
+	if r := recover(); r != nil {
+		_, file, line, _ := debugruntime.Caller(3)
+		stack := string(debug.Stack())
+		log.Error(fmt.Errorf("Panic: %+v, file: %s, line: %d, stacktrace: '%s'", r, file, line, stack), "Panic Observed")
+	}
 }

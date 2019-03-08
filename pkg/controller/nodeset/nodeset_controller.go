@@ -4,8 +4,6 @@ import (
 	"context"
 	"encoding/base64"
 	"fmt"
-	debugruntime "runtime"
-	"runtime/debug"
 	"time"
 
 	"github.com/Azure/azure-sdk-for-go/profiles/latest/compute/mgmt/compute"
@@ -58,7 +56,7 @@ func getNodeSetStartupScript(cluster *enginev1alpha1.Cluster, instance *enginev1
 %[1]s
 sudo cp -f /etc/hosts /tmp/hostsupdate
 sudo chown $(id -u):$(id -g) /tmp/hostsupdate
-echo '192.0.0.100 %[2]s' >> /tmp/hostsupdate
+echo '10.0.0.100 %[2]s' >> /tmp/hostsupdate
 sudo mv /etc/hosts /etc/hosts.bak
 sudo mv /tmp/hostsupdate /etc/hosts
 %[3]s
@@ -116,14 +114,7 @@ type ReconcileNodeSet struct {
 // +kubebuilder:rbac:groups=engine.azkube.io,resources=nodesets,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=engine.azkube.io,resources=nodesets/status,verbs=get;update;patch
 func (r *ReconcileNodeSet) Reconcile(request reconcile.Request) (reconcile.Result, error) {
-	defer func() {
-		// recover from panic if one occured. Set err to nil otherwise.
-		if r := recover(); r != nil {
-			_, file, line, _ := debugruntime.Caller(3)
-			stack := string(debug.Stack())
-			log.Error(fmt.Errorf("Panic: %+v, file: %s, line: %d, stacktrace: '%s'", r, file, line, stack), "Panic Observed")
-		}
-	}()
+	defer helpers.Recover()
 	// Fetch the NodeSet instance
 	instance := &enginev1alpha1.NodeSet{}
 	err := r.Get(context.TODO(), request.NamespacedName, instance)
@@ -162,6 +153,7 @@ func (r *ReconcileNodeSet) Reconcile(request reconcile.Request) (reconcile.Resul
 		// The object is not being deleted, so if it does not have our finalizer,
 		// then lets add the finalizer and update the object.
 		if !helpers.ContainsFinalizer(instance.ObjectMeta.Finalizers, nodesetsFinalizerName) {
+			instance.ObjectMeta.Finalizers = append(instance.ObjectMeta.Finalizers, nodesetsFinalizerName)
 			if err := r.Update(context.TODO(), instance); err != nil {
 				return reconcile.Result{Requeue: true}, err
 			}

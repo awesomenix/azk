@@ -97,9 +97,9 @@ func CreateSpec(cloudConfig *azhelpers.CloudConfiguration, dnsPrefix, vmSKUType,
 	kubeadmscheme.Scheme.Default(v1beta1cfg)
 	v1beta1cfg.CertificatesDir = tmpDirName + "/certs"
 	v1beta1cfg.Etcd.Local = &kubeadmv1beta1.LocalEtcd{}
-	v1beta1cfg.LocalAPIEndpoint = kubeadmv1beta1.APIEndpoint{AdvertiseAddress: "192.0.0.4", BindPort: 6443}
+	v1beta1cfg.LocalAPIEndpoint = kubeadmv1beta1.APIEndpoint{AdvertiseAddress: "10.0.0.4", BindPort: 6443}
 	v1beta1cfg.ControlPlaneEndpoint = fmt.Sprintf("%s:6443", internalDNSName)
-	v1beta1cfg.APIServer.CertSANs = []string{"192.0.0.100", publicDNSName, internalDNSName}
+	v1beta1cfg.APIServer.CertSANs = []string{"10.0.0.100", publicDNSName, internalDNSName}
 	v1beta1cfg.NodeRegistration.Name = "fakenode" + spec.ClusterName
 	cfg := &kubeadmapi.InitConfiguration{}
 	kubeadmscheme.Scheme.Default(cfg)
@@ -133,7 +133,7 @@ func CreateSpec(cloudConfig *azhelpers.CloudConfiguration, dnsPrefix, vmSKUType,
 	if spec.CustomerKubeConfig == "" {
 		log.Info("Creating Customer Kubeconfig", "DNS", publicDNSName)
 		os.Remove(tmpDirName + "/kubeconfigs/admin.conf")
-		cfg.LocalAPIEndpoint = kubeadmapi.APIEndpoint{AdvertiseAddress: "192.0.0.4", BindPort: 6443}
+		cfg.LocalAPIEndpoint = kubeadmapi.APIEndpoint{AdvertiseAddress: "10.0.0.4", BindPort: 6443}
 		cfg.ControlPlaneEndpoint = fmt.Sprintf("%s:443", publicDNSName)
 		if err := kubeconfigphase.CreateKubeConfigFile(kubeadmconstants.AdminKubeConfigFileName, kubeConfigDir, cfg); err != nil {
 			return nil, err

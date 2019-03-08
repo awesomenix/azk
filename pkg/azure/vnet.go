@@ -59,20 +59,20 @@ func (c *CloudConfiguration) CreateVirtualNetworkAndSubnets(ctx context.Context,
 			Location: to.StringPtr(c.GroupLocation),
 			VirtualNetworkPropertiesFormat: &network.VirtualNetworkPropertiesFormat{
 				AddressSpace: &network.AddressSpace{
-					AddressPrefixes: &[]string{"192.0.0.0/8"},
+					AddressPrefixes: &[]string{"10.0.0.0/8"},
 				},
 				Subnets: &[]network.Subnet{
 					{
 						Name: to.StringPtr("master-subnet"),
 						SubnetPropertiesFormat: &network.SubnetPropertiesFormat{
-							AddressPrefix:        to.StringPtr("192.0.0.0/16"),
+							AddressPrefix:        to.StringPtr("10.0.0.0/16"),
 							NetworkSecurityGroup: &masterNetworkSecurityGroup,
 						},
 					},
 					{
 						Name: to.StringPtr("agent-subnet"),
 						SubnetPropertiesFormat: &network.SubnetPropertiesFormat{
-							AddressPrefix:        to.StringPtr("192.1.0.0/16"),
+							AddressPrefix:        to.StringPtr("10.1.0.0/16"),
 							NetworkSecurityGroup: &networkSecurityGroup,
 							RouteTable:           &routeTable,
 						},

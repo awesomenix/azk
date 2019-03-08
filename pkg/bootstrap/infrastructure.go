@@ -22,7 +22,7 @@ func (spec *Spec) preRequisites(kubernetesVersion string) string {
 %[1]s
 sudo cp -f /etc/hosts /tmp/hostsupdate
 sudo chown $(id -u):$(id -g) /tmp/hostsupdate
-echo '192.0.0.4 %[2]s' >> /tmp/hostsupdate
+echo '10.0.0.4 %[2]s' >> /tmp/hostsupdate
 sudo mv /etc/hosts /etc/hosts.bak
 sudo mv /tmp/hostsupdate /etc/hosts
 `, helpers.PreRequisitesInstallScript(kubernetesVersion), spec.InternalDNSName)
@@ -52,7 +52,7 @@ apiServer:
   certSANs:
   - "%[2]s"
   - "%[3]s"
-  - "192.0.0.100"
+  - "10.0.0.100"
   extraArgs:
     cloud-config: /etc/kubernetes/azure.json
     cloud-provider: azure
@@ -188,7 +188,7 @@ func (spec *Spec) CreateInfrastructure() error {
 		"azkube-internal-lb",
 		"azkube-vnet",
 		"master-subnet",
-		fmt.Sprintf("192.0.0.4"),
+		fmt.Sprintf("10.0.0.4"),
 		base64.StdEncoding.EncodeToString([]byte(azhelpers.GetCustomData(customData, customRunData))),
 		masterAvailabilitySetName,
 		vmSKUType,

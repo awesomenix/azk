@@ -4,8 +4,6 @@ import (
 	"context"
 	"encoding/base64"
 	"fmt"
-	debugruntime "runtime"
-	"runtime/debug"
 	"sync"
 	"time"
 
@@ -37,7 +35,7 @@ func preRequisites(cluster *enginev1alpha1.Cluster, instance *enginev1alpha1.Con
 %[1]s
 sudo cp -f /etc/hosts /tmp/hostsupdate
 sudo chown $(id -u):$(id -g) /tmp/hostsupdate
-echo '192.0.0.4 %[2]s' >> /tmp/hostsupdate
+echo '10.0.0.4 %[2]s' >> /tmp/hostsupdate
 sudo mv /etc/hosts /etc/hosts.bak
 sudo mv /tmp/hostsupdate /etc/hosts
 `, helpers.PreRequisitesInstallScript(instance.Spec.KubernetesVersion), cluster.Spec.InternalDNSName)
@@ -129,14 +127,7 @@ type ReconcileControlPlane struct {
 // +kubebuilder:rbac:groups=engine.azkube.io,resources=controlplanes,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=engine.azkube.io,resources=controlplanes/status,verbs=get;update;patch
 func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.Result, error) {
-	defer func() {
-		// recover from panic if one occured. Set err to nil otherwise.
-		if r := recover(); r != nil {
-			_, file, line, _ := debugruntime.Caller(3)
-			stack := string(debug.Stack())
-			log.Error(fmt.Errorf("Panic: %+v, file: %s, line: %d, stacktrace: '%s'", r, file, line, stack), "Panic Observed")
-		}
-	}()
+	defer helpers.Recover()
 	// Fetch the ControlPlane instance
 	instance := &enginev1alpha1.ControlPlane{}
 	err := r.Get(context.TODO(), request.NamespacedName, instance)
@@ -154,6 +145,7 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 		// The object is not being deleted, so if it does not have our finalizer,
 		// then lets add the finalizer and update the object.
 		if !helpers.ContainsFinalizer(instance.ObjectMeta.Finalizers, controlPlaneFinalizerName) {
+			instance.ObjectMeta.Finalizers = append(instance.ObjectMeta.Finalizers, controlPlaneFinalizerName)
 			if err := r.Update(context.TODO(), instance); err != nil {
 				return reconcile.Result{Requeue: true}, err
 			}
@@ -258,7 +250,7 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 					"azkube-internal-lb",
 					"azkube-vnet",
 					"master-subnet",
-					fmt.Sprintf("192.0.0.%d", vmIndex+4),
+					fmt.Sprintf("10.0.0.%d", vmIndex+4),
 					base64.StdEncoding.EncodeToString([]byte(azhelpers.GetCustomData(customData, customRunData))),
 					masterAvailabilitySetName,
 					vmSKUType,

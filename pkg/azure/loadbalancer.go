@@ -189,7 +189,7 @@ func (c *CloudConfiguration) CreateInternalLoadBalancer(ctx context.Context, vne
 						FrontendIPConfigurationPropertiesFormat: &network.FrontendIPConfigurationPropertiesFormat{
 							PrivateIPAllocationMethod: network.Static,
 							Subnet:                    &subnet,
-							PrivateIPAddress:          to.StringPtr("192.0.0.100"),
+							PrivateIPAddress:          to.StringPtr("10.0.0.100"),
 						},
 					},
 				},

@@ -131,7 +131,7 @@ func (r *ReconcileNodePool) Reconcile(request reconcile.Request) (reconcile.Resu
 		}
 	}
 
-	if int32(len(foundNodeSet.Status.NodeStatus)) == *instance.Spec.Replicas {
+	if instance.Spec.Replicas != nil && int32(len(foundNodeSet.Status.NodeStatus)) == *instance.Spec.Replicas {
 		if err := r.performGarbageCollection(instance.Namespace, nodeSetName); err != nil {
 			return reconcile.Result{}, err
 		}

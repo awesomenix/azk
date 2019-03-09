@@ -88,7 +88,6 @@ var ccpo = &CreateControlPlaneOptions{}
 var ucpo = &UpgradeControlPlaneOptions{}
 
 func CreateControlPlane(ccpo *CreateControlPlaneOptions) error {
-
 	kubernetesVersion, err := helpers.GetKubernetesVersion(ccpo.MasterKubernetesVersion)
 	if err != nil {
 		log.Error(err, "Failed to determine valid kubernetes version")

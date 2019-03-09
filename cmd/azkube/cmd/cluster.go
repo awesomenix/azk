@@ -52,6 +52,7 @@ func init() {
 	createClusterCmd.Flags().StringVarP(&co.KubernetesVersion, "kubernetesversion", "k", "stable", "Master Kubernetes Version")
 	createClusterCmd.Flags().StringVarP(&co.NodePoolName, "nodepoolname", "n", "nodepool1", "Nodepool Name, Optional, default nodepool1")
 	createClusterCmd.Flags().Int32VarP(&co.NodePoolCount, "nodepoolcount", "c", 1, "Nodepool Count, Optional, default 1")
+	createClusterCmd.Flags().BoolVarP(&co.IsLocal, "islocal", "b", false, "Nodepool Count, Optional, default 1")
 
 	// Optional flags
 	createClusterCmd.Flags().StringVarP(&co.KubeconfigOutput, "kubeconfigout", "o", "kubeconfig", "Where to output the kubeconfig for the provisioned cluster")
@@ -103,6 +104,7 @@ type CreateOptions struct {
 	NodePoolName      string
 	NodePoolCount     int32
 	KubeconfigOutput  string
+	IsLocal           bool
 }
 
 type DeleteOptions struct {
@@ -202,12 +204,14 @@ func RunCreate(co *CreateOptions) error {
 	}
 	fmt.Fprintf(s.Writer, " ✓ Done\n")
 
-	if err := kubectlApply("config/crds", spec.CustomerKubeConfig); err != nil {
-		log.Error(err, "Failed to apply crds to cluster")
-	}
+	if !co.IsLocal {
+		if err := kubectlApply("config/crds", spec.CustomerKubeConfig); err != nil {
+			log.Error(err, "Failed to apply crds to cluster")
+		}
 
-	if err := kubectlApply("config/deployment", spec.CustomerKubeConfig); err != nil {
-		log.Error(err, "Failed to apply manager deployment to cluster")
+		if err := kubectlApply("config/deployment", spec.CustomerKubeConfig); err != nil {
+			log.Error(err, "Failed to apply manager deployment to cluster")
+		}
 	}
 
 	h := fnv.New64a()
@@ -222,6 +226,15 @@ func RunCreate(co *CreateOptions) error {
 			Name:      clusterName,
 			Namespace: clusterName,
 		},
+	}
+
+	if co.IsLocal {
+		log.Info("Creating local client")
+		cfg, err = clientcmd.BuildConfigFromFlags("", os.Getenv("KUBECONFIG"))
+		if err != nil {
+			log.Error(err, "Failed to create config from KUBECONFIG")
+			return err
+		}
 	}
 
 	kClient, err := client.New(cfg, client.Options{})

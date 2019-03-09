@@ -81,6 +81,18 @@ sudo mv /tmp/hostsupdate /etc/hosts
 	)
 }
 
+func getUpgradeScript(instance *enginev1alpha1.ControlPlane) string {
+	return fmt.Sprintf(`
+sudo kubeadm upgrade apply --force --yes v%[1]s
+sudo kubectl --kubeconfig /etc/kubernetes/admin.conf drain $(uname -n) --ignore-daemonsets
+sudo apt-mark unhold kubelet
+sudo apt-get upgrade -y kubelet=%[1]s-00 
+sudo apt-mark hold kubelet
+sudo systemctl restart kubelet
+sudo kubectl --kubeconfig /etc/kubernetes/admin.conf uncordon $(uname -n)
+`, instance.Spec.KubernetesVersion)
+}
+
 // Add creates a new ControlPlane Controller and adds it to the Manager with default RBAC. The Manager will set fields on the Controller
 // and Start it when the Manager is Started.
 func Add(mgr manager.Manager) error {
@@ -227,7 +239,7 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 	}
 
 	var globalErr error
-	{
+	if instance.Status.KubernetesVersion == "" {
 		var wg sync.WaitGroup
 		for i := 0; i < 3; i++ {
 			wg.Add(1)
@@ -264,10 +276,40 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 			}(i)
 		}
 		wg.Wait()
+	} else if instance.Status.KubernetesVersion != instance.Spec.KubernetesVersion {
+		// Upgrading scenario
+		for i := 0; i < 3; i++ {
+			vmName := fmt.Sprintf("%s-mastervm-%d", instance.Name, i)
+			log.Info("Running Custom Script Extension, Upgrading", "VM", vmName, "KubernetesVersion", instance.Spec.KubernetesVersion)
+			if err := cluster.Spec.AddCustomScriptsExtension(
+				context.TODO(),
+				vmName,
+				"upgrade_"+instance.Spec.KubernetesVersion,
+				base64.StdEncoding.EncodeToString([]byte(getUpgradeScript(instance)))); err != nil {
+				log.Error(err, "Error Executing Custom Script Extension", "VM", vmName)
+				globalErr = err
+				continue
+			}
+			cluster.Spec.DeleteCustomScriptsExtension(
+				context.TODO(),
+				vmName,
+				"upgrade_"+instance.Spec.KubernetesVersion)
+			log.Info("Successfully Executed Custom Script Extension", "VM", vmName, "KubernetesVersion", instance.Spec.KubernetesVersion)
+		}
 	}
 
 	if globalErr != nil {
 		return reconcile.Result{}, globalErr
+	}
+
+	if err := helpers.WaitForNodesReady(r.Client, "-mastervm-", 3); err != nil {
+		kclient, err := helpers.GetKubeClient(cluster.Spec.CustomerKubeConfig)
+		if err != nil {
+			return reconcile.Result{RequeueAfter: 30 * time.Second}, err
+		}
+		if err := helpers.WaitForNodesReady(kclient, "-mastervm-", 3); err != nil {
+			return reconcile.Result{RequeueAfter: 30 * time.Second}, err
+		}
 	}
 
 	instance.Status.KubernetesVersion = instance.Spec.KubernetesVersion

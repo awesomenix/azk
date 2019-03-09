@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"context"
 	"fmt"
 	"io/ioutil"
 	"math/rand"
@@ -10,6 +11,10 @@ import (
 	"strings"
 
 	"github.com/Masterminds/semver"
+	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/tools/clientcmd"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 )
 
@@ -104,6 +109,60 @@ func GetLatestUpgradeKubernetesVersion(version string) (string, error) {
 	}
 
 	return strings.TrimSpace(string(body[1:])), nil
+}
+
+func WaitForNodesReady(kclient client.Client, nodeName string, nodeCount int) error {
+	nodeList := &corev1.NodeList{}
+	listOptions := &client.ListOptions{
+		Namespace: "",
+		Raw: &metav1.ListOptions{
+			TypeMeta: metav1.TypeMeta{
+				APIVersion: corev1.SchemeGroupVersion.String(),
+				Kind:       "Node",
+			},
+		},
+	}
+	if err := kclient.List(context.TODO(), listOptions, nodeList); err != nil {
+		return err
+	}
+
+	foundNodes := 0
+	for _, node := range nodeList.Items {
+		if strings.Contains(node.Name, nodeName) {
+			for _, c := range node.Status.Conditions {
+				if c.Type == corev1.NodeReady {
+					foundNodes++
+					break
+				}
+			}
+		}
+	}
+
+	if foundNodes < nodeCount {
+		return fmt.Errorf("Found %d nodes, expected %d nodes to be Ready", foundNodes, nodeCount)
+	}
+
+	return nil
+}
+
+func GetKubeClient(kubeconfig string) (client.Client, error) {
+	clientcfg, err := clientcmd.NewClientConfigFromBytes([]byte(kubeconfig))
+	if err != nil {
+		log.Error(err, "Failed to NewClientConfigFromBytes")
+		return nil, err
+	}
+
+	cfg, err := clientcfg.ClientConfig()
+	if err != nil {
+		log.Error(err, "Failed to get client config")
+		return nil, err
+	}
+	kclient, err := client.New(cfg, client.Options{})
+	if err != nil {
+		log.Error(err, "Failed to create kube client from config")
+		return nil, err
+	}
+	return kclient, nil
 }
 
 func Recover() {

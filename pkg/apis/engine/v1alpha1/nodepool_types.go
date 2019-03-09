@@ -11,9 +11,8 @@ type NodePoolSpec struct {
 
 // NodePoolStatus defines the observed state of NodePool
 type NodePoolStatus struct {
-	NodeSetName string `json:"nodesetName,omitempty"`
-	//PrevNodeSetName   string `json:"prevNodeSetName,omitempty"`
-	VMReplicas    int32 `json:"vmreplicas,omitempty"`
+	NodeSetName   string `json:"nodesetName,omitempty"`
+	VMReplicas    int32  `json:"vmreplicas,omitempty"`
 	NodeSetStatus `json:",inline"`
 }
 

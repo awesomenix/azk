@@ -91,10 +91,11 @@ func (r *ReconcileNodePool) Reconcile(request reconcile.Request) (reconcile.Resu
 	h := fnv.New64a()
 	h.Write([]byte(fmt.Sprintf("%s/%s", instance.Name, instance.Spec.KubernetesVersion)))
 	nodeSetName := fmt.Sprintf("%x", h.Sum64())
+	nodeSetName = instance.Name + "-" + nodeSetName
 
 	nodeSet := &enginev1alpha1.NodeSet{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      instance.Name + "-" + nodeSetName,
+			Name:      nodeSetName,
 			Namespace: instance.Namespace,
 		},
 		Spec: enginev1alpha1.NodeSetSpec{
@@ -116,6 +117,7 @@ func (r *ReconcileNodePool) Reconcile(request reconcile.Request) (reconcile.Resu
 			return reconcile.Result{}, err
 		}
 		log.Info("Successfully Created NodeSet", "NodeSet", nodeSet.Name, "Namespace", nodeSet.Namespace)
+		return reconcile.Result{Requeue: true}, nil
 	} else if err != nil {
 		return reconcile.Result{}, err
 	} else {
@@ -129,8 +131,13 @@ func (r *ReconcileNodePool) Reconcile(request reconcile.Request) (reconcile.Resu
 		}
 	}
 
+	if int32(len(foundNodeSet.Status.NodeStatus)) == *instance.Spec.Replicas {
+		if err := r.performGarbageCollection(instance.Namespace, nodeSetName); err != nil {
+			return reconcile.Result{}, err
+		}
+	}
+
 	instance.Status.NodeSetName = nodeSetName
-	//instance.Status.PrevNodeSetName = nodeSetName
 	instance.Status.Replicas = foundNodeSet.Status.Replicas
 	instance.Status.VMReplicas = int32(len(foundNodeSet.Status.NodeStatus))
 	instance.Status.KubernetesVersion = foundNodeSet.Status.KubernetesVersion
@@ -140,4 +147,34 @@ func (r *ReconcileNodePool) Reconcile(request reconcile.Request) (reconcile.Resu
 	}
 
 	return reconcile.Result{}, nil
+}
+
+func (r *ReconcileNodePool) performGarbageCollection(namespace, nodeSetName string) error {
+	listOptions := &client.ListOptions{
+		Namespace: namespace,
+		Raw: &metav1.ListOptions{
+			TypeMeta: metav1.TypeMeta{
+				APIVersion: enginev1alpha1.SchemeGroupVersion.String(),
+				Kind:       "NodeSet",
+			},
+		},
+	}
+
+	nodeSetList := enginev1alpha1.NodeSetList{}
+	if err := r.List(context.TODO(), listOptions, &nodeSetList); err != nil {
+		return err
+	}
+
+	for _, nodeSet := range nodeSetList.Items {
+		if nodeSet.Name == nodeSetName {
+			continue
+		}
+
+		log.Info("Deleting Unreferenced NodeSet", "namespace", nodeSet.Namespace, "name", nodeSet.Name)
+		if err := r.Delete(context.TODO(), &nodeSet); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

@@ -236,7 +236,7 @@ func (c *CloudConfiguration) CreateVMInAvailabilitySet(
 	return err
 }
 
-func (c *CloudConfiguration) AddCustomScriptsExtension(ctx context.Context, vmName, startupScript string) error {
+func (c *CloudConfiguration) AddCustomScriptsExtension(ctx context.Context, vmName, scriptName, startupScript string) error {
 	extensionsClient, err := c.GetVMExtensionsClient()
 	if err != nil {
 		return err
@@ -245,9 +245,9 @@ func (c *CloudConfiguration) AddCustomScriptsExtension(ctx context.Context, vmNa
 		ctx,
 		c.GroupName,
 		vmName,
-		"startup_script",
+		scriptName,
 		compute.VirtualMachineExtension{
-			Name:     to.StringPtr("startup_script"),
+			Name:     to.StringPtr(scriptName),
 			Location: to.StringPtr(c.GroupLocation),
 			VirtualMachineExtensionProperties: &compute.VirtualMachineExtensionProperties{
 				Type:                    to.StringPtr("CustomScript"),
@@ -265,6 +265,29 @@ func (c *CloudConfiguration) AddCustomScriptsExtension(ctx context.Context, vmNa
 	err = future.WaitForCompletionRef(ctx, extensionsClient.Client)
 	if err != nil {
 		return fmt.Errorf("cannot get the extension create or update future response: %v", err)
+	}
+
+	_, err = future.Result(extensionsClient)
+	return err
+}
+
+func (c *CloudConfiguration) DeleteCustomScriptsExtension(ctx context.Context, vmName, scriptName string) error {
+	extensionsClient, err := c.GetVMExtensionsClient()
+	if err != nil {
+		return err
+	}
+	future, err := extensionsClient.Delete(
+		ctx,
+		c.GroupName,
+		vmName,
+		scriptName)
+	if err != nil {
+		return fmt.Errorf("cannot delete vm extension: %v", err)
+	}
+
+	err = future.WaitForCompletionRef(ctx, extensionsClient.Client)
+	if err != nil {
+		return fmt.Errorf("cannot get the extension delete future response: %v", err)
 	}
 
 	_, err = future.Result(extensionsClient)

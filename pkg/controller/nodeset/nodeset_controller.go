@@ -226,6 +226,16 @@ func (r *ReconcileNodeSet) Reconcile(request reconcile.Request) (reconcile.Resul
 		return reconcile.Result{Requeue: true}, nil
 	}
 
+	if err := helpers.WaitForNodesReady(r.Client, instance.Name, int(*instance.Spec.Replicas)); err != nil {
+		kclient, err := helpers.GetKubeClient(cluster.Spec.CustomerKubeConfig)
+		if err != nil {
+			return reconcile.Result{Requeue: true, RequeueAfter: 30 * time.Second}, err
+		}
+		if err := helpers.WaitForNodesReady(kclient, instance.Name, int(*instance.Spec.Replicas)); err != nil {
+			return reconcile.Result{Requeue: true, RequeueAfter: 30 * time.Second}, err
+		}
+	}
+
 	instance.Status.KubernetesVersion = instance.Spec.KubernetesVersion
 	instance.Status.ProvisioningState = "Succeeded"
 	instance.Status.Kubeconfig = cluster.Spec.CustomerKubeConfig

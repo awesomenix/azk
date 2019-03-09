@@ -325,7 +325,7 @@ func ScaleNodePool(snpo *ScaleNodePoolOptions) error {
 }
 
 func UpgradeNodePool(unpo *UpgradeNodePoolOptions) error {
-	log.Info("setting up client for scale")
+	log.Info("setting up client for upgrade")
 	cfg, err := clientcmd.BuildConfigFromFlags("", os.Getenv("KUBECONFIG"))
 	if err != nil {
 		log.Error(err, "Failed to create config from KUBECONFIG")

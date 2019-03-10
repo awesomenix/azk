@@ -50,12 +50,14 @@ func (in *Spec) DeepCopyInto(out *Spec) {
 
 func CreateSpec(cloudConfig *azhelpers.CloudConfiguration, dnsPrefix, vmSKUType, kubernetesVersion string) (*Spec, error) {
 	spec := &Spec{}
-	{
+	if spec.ClusterName == "" {
 		h := fnv.New64a()
 		h.Write([]byte(fmt.Sprintf("%s/%s", cloudConfig.SubscriptionID, cloudConfig.GroupName)))
 		spec.ClusterName = fmt.Sprintf("%x", h.Sum64())
 	}
-	spec.CloudConfiguration = *cloudConfig
+	if !spec.CloudConfiguration.IsValid() {
+		spec.CloudConfiguration = *cloudConfig
+	}
 	if spec.DNSPrefix == "" {
 		spec.DNSPrefix = dnsPrefix
 	}

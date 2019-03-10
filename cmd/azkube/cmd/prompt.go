@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"sort"
 	"strconv"
 
 	"github.com/Azure/azure-sdk-for-go/profiles/preview/preview/subscription/mgmt/subscription"
@@ -32,7 +33,7 @@ func init() {
 }
 
 func RunFlow() error {
-	subscriptionID, err := getInput("Subscription ID", func(i string) error {
+	subscriptionID, err := getSecret("Subscription ID", func(i string) error {
 		if len(i) < 30 {
 			return fmt.Errorf("Invalid Subscription ID")
 		}
@@ -161,6 +162,7 @@ func selectRegion(subscriptionID, clientID, clientSecret string) (string, error)
 	if err != nil {
 		return "", err
 	}
+	sort.Strings(locations)
 	prompt := promptui.Select{
 		Label: "Select Region",
 		Items: locations,

@@ -9,6 +9,7 @@ import (
 
 	enginev1alpha1 "github.com/awesomenix/azkube/pkg/apis/engine/v1alpha1"
 	azhelpers "github.com/awesomenix/azkube/pkg/azure"
+	"github.com/awesomenix/azkube/pkg/bootstrap"
 	"github.com/awesomenix/azkube/pkg/helpers"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -30,7 +31,7 @@ const (
 	controlPlaneFinalizerName = "controlplane.finalizers.engine.azkube.io"
 )
 
-func preRequisites(cluster *enginev1alpha1.Cluster, instance *enginev1alpha1.ControlPlane) string {
+func preRequisites(kubernetesVersion, internalDNSName string) string {
 	return fmt.Sprintf(`
 %[1]s
 sudo cp -f /etc/hosts /tmp/hostsupdate
@@ -38,10 +39,10 @@ sudo chown $(id -u):$(id -g) /tmp/hostsupdate
 echo '10.0.0.4 %[2]s' >> /tmp/hostsupdate
 sudo mv /etc/hosts /etc/hosts.bak
 sudo mv /tmp/hostsupdate /etc/hosts
-`, helpers.PreRequisitesInstallScript(instance.Spec.KubernetesVersion), cluster.Spec.InternalDNSName)
+`, helpers.PreRequisitesInstallScript(kubernetesVersion), internalDNSName)
 }
 
-func kubeadmJoinConfig(cluster *enginev1alpha1.Cluster) string {
+func kubeadmJoinConfig(bootstrapToken, internalDNSName, discoveryHash string) string {
 	return fmt.Sprintf(`
 cat <<EOF >/tmp/kubeadm-config.yaml
 apiVersion: kubeadm.k8s.io/v1beta1
@@ -59,13 +60,13 @@ discovery:
 controlPlane:
   localAPIEndpoint:
 EOF
-`, cluster.Spec.BootstrapToken,
-		cluster.Spec.InternalDNSName,
-		cluster.Spec.DiscoveryHashes[0],
+`, bootstrapToken,
+		internalDNSName,
+		discoveryHash,
 	)
 }
 
-func getSecondaryMasterStartupScript(cluster *enginev1alpha1.Cluster, instance *enginev1alpha1.ControlPlane) string {
+func getSecondaryMasterStartupScript(kubernetesVersion, internalDNSName, bootstrapToken, discoveryHash string) string {
 	return fmt.Sprintf(`
 %[1]s
 %[2]s
@@ -75,9 +76,9 @@ sudo cp -f /etc/hosts.bak /tmp/hostsupdate
 sudo chown $(id -u):$(id -g) /tmp/hostsupdate
 echo '127.0.0.1 %[3]s' >> /tmp/hostsupdate
 sudo mv /tmp/hostsupdate /etc/hosts
-`, preRequisites(cluster, instance),
-		kubeadmJoinConfig(cluster),
-		cluster.Spec.InternalDNSName,
+`, preRequisites(kubernetesVersion, internalDNSName),
+		kubeadmJoinConfig(bootstrapToken, internalDNSName, discoveryHash),
+		internalDNSName,
 	)
 }
 
@@ -238,6 +239,11 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 		vmSKUType = "Standard_DS2_v2"
 	}
 
+	bootstrapToken, err := bootstrap.CreateNewBootstrapToken()
+	if err != nil {
+		return reconcile.Result{Requeue: true, RequeueAfter: 30 * time.Second}, err
+	}
+
 	var globalErr error
 	if instance.Status.KubernetesVersion == "" {
 		var wg sync.WaitGroup
@@ -248,9 +254,15 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 				customRunData := map[string]string{
 					"/etc/kubernetes/init-azure-bootstrap.sh": cluster.Spec.GetPrimaryMasterStartupScript(instance.Spec.KubernetesVersion),
 				}
+				startupScript := getSecondaryMasterStartupScript(
+					instance.Spec.KubernetesVersion,
+					cluster.Spec.InternalDNSName,
+					bootstrapToken,
+					cluster.Spec.DiscoveryHashes[0])
+
 				if vmIndex > 0 {
 					customRunData = map[string]string{
-						"/etc/kubernetes/init-azure-bootstrap.sh": getSecondaryMasterStartupScript(cluster, instance),
+						"/etc/kubernetes/init-azure-bootstrap.sh": startupScript,
 					}
 				}
 				vmName := fmt.Sprintf("%s-mastervm-%d", instance.Name, vmIndex)
@@ -303,13 +315,7 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 	}
 
 	if err := helpers.WaitForNodesReady(r.Client, "-mastervm-", 3); err != nil {
-		kclient, err := helpers.GetKubeClient(cluster.Spec.CustomerKubeConfig)
-		if err != nil {
-			return reconcile.Result{RequeueAfter: 30 * time.Second}, err
-		}
-		if err := helpers.WaitForNodesReady(kclient, "-mastervm-", 3); err != nil {
-			return reconcile.Result{RequeueAfter: 30 * time.Second}, err
-		}
+		return reconcile.Result{Requeue: true, RequeueAfter: 30 * time.Second}, err
 	}
 
 	instance.Status.KubernetesVersion = instance.Spec.KubernetesVersion

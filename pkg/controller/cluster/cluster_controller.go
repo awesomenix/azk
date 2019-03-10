@@ -67,6 +67,8 @@ type ReconcileCluster struct {
 // Reconcile reads that state of the cluster for a Cluster object and makes changes based on the state read
 // and what is in the Cluster.Spec
 // Automatically generate RBAC rules to allow the Controller to read and write Deployments
+// +kubebuilder:rbac:groups=,resources=nodes,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=,resources=secrets,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=,resources=configmaps,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=,resources=events,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=engine.azkube.io,resources=clusters,verbs=get;list;watch;create;update;patch;delete

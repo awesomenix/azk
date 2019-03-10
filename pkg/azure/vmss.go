@@ -256,7 +256,7 @@ func (c *CloudConfiguration) GetVMSS(ctx context.Context, vmssName string) (comp
 // 	return future.Result(vmssClient)
 // }
 
-func (c *CloudConfiguration) ScaleVMSS(ctx context.Context, vmssName string, count int) error {
+func (c *CloudConfiguration) ScaleVMSS(ctx context.Context, vmssName string, customData string, count int) error {
 	vmssClient, err := c.GetVMSSClient()
 	if err != nil {
 		return err
@@ -275,6 +275,13 @@ func (c *CloudConfiguration) ScaleVMSS(ctx context.Context, vmssName string, cou
 	future, err := vmssClient.Update(ctx, c.GroupName, vmssName, compute.VirtualMachineScaleSetUpdate{
 		Sku: &compute.Sku{
 			Capacity: to.Int64Ptr(int64(count)),
+		},
+		VirtualMachineScaleSetUpdateProperties: &compute.VirtualMachineScaleSetUpdateProperties{
+			VirtualMachineProfile: &compute.VirtualMachineScaleSetUpdateVMProfile{
+				OsProfile: &compute.VirtualMachineScaleSetUpdateOSProfile{
+					CustomData: to.StringPtr(customData),
+				},
+			},
 		},
 	})
 	if err != nil {

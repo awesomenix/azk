@@ -9,6 +9,7 @@ import (
 	debugruntime "runtime"
 	"runtime/debug"
 	"strings"
+	"time"
 
 	"github.com/Masterminds/semver"
 	corev1 "k8s.io/api/core/v1"
@@ -112,7 +113,6 @@ func GetLatestUpgradeKubernetesVersion(version string) (string, error) {
 }
 
 func WaitForNodesReady(kclient client.Client, nodeName string, nodeCount int) error {
-	nodeList := &corev1.NodeList{}
 	listOptions := &client.ListOptions{
 		Namespace: "",
 		Raw: &metav1.ListOptions{
@@ -122,27 +122,36 @@ func WaitForNodesReady(kclient client.Client, nodeName string, nodeCount int) er
 			},
 		},
 	}
-	if err := kclient.List(context.TODO(), listOptions, nodeList); err != nil {
-		return err
-	}
 
-	foundNodes := 0
-	for _, node := range nodeList.Items {
-		if strings.Contains(node.Name, nodeName) {
-			for _, c := range node.Status.Conditions {
-				if c.Type == corev1.NodeReady {
-					foundNodes++
-					break
+	var localErr error
+	for i := 0; i < 100; i++ {
+		nodeList := &corev1.NodeList{}
+		if err := kclient.List(context.TODO(), listOptions, nodeList); err != nil {
+			return err
+		}
+
+		foundNodes := 0
+		for _, node := range nodeList.Items {
+			if strings.Contains(node.Name, nodeName) {
+				for _, c := range node.Status.Conditions {
+					if c.Type == corev1.NodeReady {
+						foundNodes++
+						break
+					}
 				}
 			}
 		}
+
+		if foundNodes < nodeCount {
+			localErr = fmt.Errorf("Found %d nodes, expected %d nodes to be Ready", foundNodes, nodeCount)
+			time.Sleep(3 * time.Second)
+			continue
+		}
+		localErr = nil
+		break
 	}
 
-	if foundNodes < nodeCount {
-		return fmt.Errorf("Found %d nodes, expected %d nodes to be Ready", foundNodes, nodeCount)
-	}
-
-	return nil
+	return localErr
 }
 
 func GetKubeClient(kubeconfig string) (client.Client, error) {

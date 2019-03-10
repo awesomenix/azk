@@ -6,14 +6,19 @@ import (
 	"io/ioutil"
 	"os"
 	"strings"
+	"time"
 
 	azhelpers "github.com/awesomenix/azkube/pkg/azure"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	clientset "k8s.io/client-go/kubernetes"
 	bootstraputil "k8s.io/cluster-bootstrap/token/util"
 	kubeadmapi "k8s.io/kubernetes/cmd/kubeadm/app/apis/kubeadm"
 	kubeadmscheme "k8s.io/kubernetes/cmd/kubeadm/app/apis/kubeadm/scheme"
 	kubeadmv1beta1 "k8s.io/kubernetes/cmd/kubeadm/app/apis/kubeadm/v1beta1"
 	kubeadmconstants "k8s.io/kubernetes/cmd/kubeadm/app/constants"
+	tokenphase "k8s.io/kubernetes/cmd/kubeadm/app/phases/bootstraptoken/node"
 	kubeconfigphase "k8s.io/kubernetes/cmd/kubeadm/app/phases/kubeconfig"
+	"sigs.k8s.io/controller-runtime/pkg/client/config"
 )
 
 const (
@@ -34,7 +39,6 @@ type Spec struct {
 	EtcdCACertificateKey         string   `json:"etcdCACertificateKey,omitempty"`
 	AdminKubeConfig              string   `json:"adminKubeConfig,omitempty"`
 	CustomerKubeConfig           string   `json:"customerKubeConfig,omitempty"`
-	BootstrapToken               string   `json:"bootstrapToken,omitempty"`
 	DiscoveryHashes              []string `json:"discoveryHashes,omitempty"`
 	PublicDNSName                string   `json:"publicDNSName,omitempty"`
 	InternalDNSName              string   `json:"internalDNSName,omitempty"`
@@ -220,15 +224,6 @@ func (spec *Spec) UpdateSpec() error {
 		spec.AdminKubeConfig = string(buf)
 	}
 
-	// We might need to generate bootstrap token every time a VM is bootstrapped
-	if spec.BootstrapToken == "" {
-		token, err := bootstraputil.GenerateBootstrapToken()
-		if err != nil {
-			return err
-		}
-		spec.BootstrapToken = token
-	}
-
 	// Discovery hashes typically never changes
 	if len(spec.DiscoveryHashes) <= 0 {
 		discoveryHashes, err := GetDiscoveryHashes(tmpDirName + "/kubeconfigs/admin.conf")
@@ -238,4 +233,41 @@ func (spec *Spec) UpdateSpec() error {
 		spec.DiscoveryHashes = discoveryHashes
 	}
 	return nil
+}
+
+func CreateNewBootstrapToken() (string, error) {
+	token, err := bootstraputil.GenerateBootstrapToken()
+	if err != nil {
+		return token, err
+	}
+
+	cfg, err := config.GetConfig()
+	if err != nil {
+		return token, err
+	}
+
+	kclientset, err := clientset.NewForConfig(cfg)
+	if err != nil {
+		return token, err
+	}
+
+	tokenString, err := kubeadmapi.NewBootstrapTokenString(token)
+	if err != nil {
+		return token, err
+	}
+
+	bootstrapTokens := []kubeadmapi.BootstrapToken{
+		kubeadmapi.BootstrapToken{
+			Token:  tokenString,
+			TTL:    &metav1.Duration{Duration: 1 * time.Hour},
+			Groups: []string{"system:bootstrappers:kubeadm:default-node-token"},
+			Usages: []string{"signing", "authentication"},
+		},
+	}
+
+	if err := tokenphase.CreateNewTokens(kclientset, bootstrapTokens); err != nil {
+		return token, err
+	}
+
+	return token, nil
 }

@@ -1,6 +1,6 @@
 
 # Image URL to use all building/pushing image targets
-IMG ?= controller:latest
+IMG ?= quay.io/awesomenix/azkube-manager:latest
 
 all: test manager
 
@@ -39,15 +39,14 @@ vet:
 
 # Generate code
 generate:
-	go generate ./pkg/... ./cmd/...
+	go get -u github.com/shurcooL/vfsgen/cmd/vfsgendev
+	go generate ./pkg/... ./cmd/... ./assets/...
 	kustomize build config/default > config/deployment/azkube-deployment.yaml
 
 # Build the docker image
 docker-build: test
 	docker build . -t ${IMG}
-	@echo "updating kustomize image patch file for manager resource"
-	sed -i'' -e 's@image: .*@image: '"${IMG}"'@' ./config/default/manager_image_patch.yaml
 
 # Push the docker image
-docker-push:
+docker-push: docker-build
 	docker push ${IMG}

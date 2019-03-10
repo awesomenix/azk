@@ -36,8 +36,6 @@ spec:
               type: string
             bootstrapKubernetesVersion:
               type: string
-            bootstrapToken:
-              type: string
             bootstrapVMSKUType:
               type: string
             caCertificate:

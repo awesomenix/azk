@@ -10,6 +10,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/awesomenix/azkube/assets"
 	enginev1alpha1 "github.com/awesomenix/azkube/pkg/apis/engine/v1alpha1"
 	"github.com/awesomenix/azkube/pkg/azure"
 	"github.com/awesomenix/azkube/pkg/bootstrap"
@@ -52,7 +53,7 @@ func init() {
 	createClusterCmd.Flags().StringVarP(&co.KubernetesVersion, "kubernetesversion", "k", "stable", "Master Kubernetes Version")
 	createClusterCmd.Flags().StringVarP(&co.NodePoolName, "nodepoolname", "n", "nodepool1", "Nodepool Name, Optional, default nodepool1")
 	createClusterCmd.Flags().Int32VarP(&co.NodePoolCount, "nodepoolcount", "c", 1, "Nodepool Count, Optional, default 1")
-	createClusterCmd.Flags().BoolVarP(&co.IsLocal, "islocal", "b", false, "Nodepool Count, Optional, default 1")
+	createClusterCmd.Flags().BoolVarP(&co.IsDevelopment, "isdev", "m", false, "Is development mode")
 
 	// Optional flags
 	createClusterCmd.Flags().StringVarP(&co.KubeconfigOutput, "kubeconfigout", "o", "kubeconfig", "Where to output the kubeconfig for the provisioned cluster")
@@ -104,7 +105,7 @@ type CreateOptions struct {
 	NodePoolName      string
 	NodePoolCount     int32
 	KubeconfigOutput  string
-	IsLocal           bool
+	IsDevelopment     bool
 }
 
 type DeleteOptions struct {
@@ -188,7 +189,13 @@ func RunCreate(co *CreateOptions) error {
 
 	var loopErr error
 	for i := 0; i < 100; i++ {
-		if _, err := client.New(cfg, client.Options{}); err != nil {
+		waitclient, err := client.New(cfg, client.Options{})
+		if err != nil {
+			loopErr = err
+			time.Sleep(3 * time.Second)
+			continue
+		}
+		if err := helpers.WaitForNodesReady(waitclient, "-mastervm-", 1); err != nil {
 			loopErr = err
 			time.Sleep(3 * time.Second)
 			continue
@@ -204,14 +211,9 @@ func RunCreate(co *CreateOptions) error {
 	}
 	fmt.Fprintf(s.Writer, " ✓ Done\n")
 
-	if !co.IsLocal {
-		if err := kubectlApply("config/crds", spec.CustomerKubeConfig); err != nil {
-			log.Error(err, "Failed to apply crds to cluster")
-		}
-
-		if err := kubectlApply("config/deployment", spec.CustomerKubeConfig); err != nil {
-			log.Error(err, "Failed to apply manager deployment to cluster")
-		}
+	if err := kubectlApplyResources(spec.CustomerKubeConfig, co.IsDevelopment); err != nil {
+		log.Error(err, "Failed to apply resources to bootstrap cluster")
+		return err
 	}
 
 	h := fnv.New64a()
@@ -226,15 +228,6 @@ func RunCreate(co *CreateOptions) error {
 			Name:      clusterName,
 			Namespace: clusterName,
 		},
-	}
-
-	if co.IsLocal {
-		log.Info("Creating local client")
-		cfg, err = clientcmd.BuildConfigFromFlags("", os.Getenv("KUBECONFIG"))
-		if err != nil {
-			log.Error(err, "Failed to create config from KUBECONFIG")
-			return err
-		}
 	}
 
 	kClient, err := client.New(cfg, client.Options{})
@@ -476,6 +469,59 @@ func kubectlApply(manifestPath, kubeconfig string) error {
 	err = options.Run()
 	if err != nil {
 		return fmt.Errorf("failed to apply %s: %v", manifestPath, err)
+	}
+
+	return nil
+}
+
+func kubectlApplyResources(kubeconfig string, isDevlopment bool) error {
+	tmpAssetsDir := "/tmp/azkube-assets"
+	defer os.RemoveAll(tmpAssetsDir)
+
+	folders := []string{"crds", "deployment"}
+	if isDevlopment {
+		folders = []string{"crds"}
+	}
+	for _, folder := range folders {
+		tmpFolderDir := tmpAssetsDir + "/" + folder
+		f, err := assets.Assets.Open(folder)
+		if err != nil {
+			log.Error(err, "Failed to open assets folder", "Folder", folder)
+			return err
+		}
+		defer f.Close()
+		fi, err := f.Readdir(-1)
+		if err != nil {
+			log.Error(err, "Failed to read assets folder", "Folder", folder)
+			return err
+		}
+		for _, fi := range fi {
+			if !fi.IsDir() {
+				assetFileName := folder + "/" + fi.Name()
+				fileName := tmpAssetsDir + "/" + assetFileName
+				file, err := assets.Assets.Open(assetFileName)
+				if err != nil {
+					log.Error(err, "Failed to open file from assets", "File", assetFileName)
+					return err
+				}
+				defer file.Close()
+				bytes, err := ioutil.ReadAll(file)
+				if err != nil {
+					log.Error(err, "Failed to read asset file", "File", assetFileName)
+					return err
+				}
+				os.MkdirAll(tmpFolderDir, os.ModePerm)
+				err = ioutil.WriteFile(fileName, bytes, 0644)
+				if err != nil {
+					log.Error(err, "Failed to write file", "File", fileName)
+					return err
+				}
+			}
+		}
+
+		if err := kubectlApply(tmpFolderDir, kubeconfig); err != nil {
+			log.Error(err, "Failed to apply to cluster", "Resource", folder)
+		}
 	}
 
 	return nil

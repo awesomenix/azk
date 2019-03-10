@@ -36,22 +36,14 @@ nodeRegistration:
   kubeletExtraArgs:
     cloud-provider: azure
     cloud-config: /etc/kubernetes/azure.json
-bootstrapTokens:
-- groups:
-  - system:bootstrappers:kubeadm:default-node-token
-  token: %[1]s
-  ttl: 48h0m0s
-  usages:
-  - signing
-  - authentication
 kind: InitConfiguration
 ---
 apiVersion: kubeadm.k8s.io/v1beta1
 kind: ClusterConfiguration
 apiServer:
   certSANs:
+  - "%[1]s"
   - "%[2]s"
-  - "%[3]s"
   - "10.0.0.100"
   extraArgs:
     cloud-config: /etc/kubernetes/azure.json
@@ -70,13 +62,12 @@ controllerManager:
     mountPath: /etc/kubernetes/azure.json
     name: cloud-config
     readOnly: true
-kubernetesVersion: %[4]s
-controlPlaneEndpoint: "%[3]s:6443"
+kubernetesVersion: %[3]s
+controlPlaneEndpoint: "%[2]s:6443"
 networking:
   podSubnet: "192.168.0.0/16"
 EOF
-`, spec.BootstrapToken,
-		spec.PublicDNSName,
+`, spec.PublicDNSName,
 		spec.InternalDNSName,
 		kubernetesVersion)
 }

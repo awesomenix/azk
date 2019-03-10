@@ -9,6 +9,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/profiles/latest/compute/mgmt/compute"
 	enginev1alpha1 "github.com/awesomenix/azkube/pkg/apis/engine/v1alpha1"
 	azhelpers "github.com/awesomenix/azkube/pkg/azure"
+	"github.com/awesomenix/azkube/pkg/bootstrap"
 	"github.com/awesomenix/azkube/pkg/helpers"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -29,7 +30,7 @@ const (
 
 var log = logf.Log.WithName("controller")
 
-func kubeadmJoinConfig(cluster *enginev1alpha1.Cluster) string {
+func kubeadmJoinConfig(internalDNSName, bootstrapToken, discoveryHash string) string {
 	return fmt.Sprintf(`
 cat <<EOF >/tmp/kubeadm-config.yaml
 apiVersion: kubeadm.k8s.io/v1beta1
@@ -45,13 +46,13 @@ discovery:
     caCertHashes:
     - %[3]s
 EOF
-`, cluster.Spec.BootstrapToken,
-		cluster.Spec.InternalDNSName,
-		cluster.Spec.DiscoveryHashes[0],
+`, bootstrapToken,
+		internalDNSName,
+		discoveryHash,
 	)
 }
 
-func getNodeSetStartupScript(cluster *enginev1alpha1.Cluster, instance *enginev1alpha1.NodeSet) string {
+func getNodeSetStartupScript(kubernetesVersion, internalDNSName, bootstrapToken, discoveryHash string) string {
 	return fmt.Sprintf(`
 %[1]s
 sudo cp -f /etc/hosts /tmp/hostsupdate
@@ -62,9 +63,9 @@ sudo mv /tmp/hostsupdate /etc/hosts
 %[3]s
 #Setup using kubeadm
 sudo kubeadm join --config /tmp/kubeadm-config.yaml
-`, helpers.PreRequisitesInstallScript(instance.Spec.KubernetesVersion),
-		cluster.Spec.InternalDNSName,
-		kubeadmJoinConfig(cluster),
+`, helpers.PreRequisitesInstallScript(kubernetesVersion),
+		internalDNSName,
+		kubeadmJoinConfig(internalDNSName, bootstrapToken, discoveryHash),
 	)
 }
 
@@ -186,18 +187,15 @@ func (r *ReconcileNodeSet) Reconcile(request reconcile.Request) (reconcile.Resul
 		vmSKUType = "Standard_DS2_v2"
 	}
 
-	customData := map[string]string{
-		"/etc/kubernetes/azure.json": cluster.Spec.AzureCloudProviderConfig,
-	}
-
-	customRunData := map[string]string{
-		"/etc/kubernetes/init-azure-bootstrap.sh": getNodeSetStartupScript(cluster, instance),
-	}
-
 	if err := updateNodeSet(instance, cloudConfig); err != nil {
 		instance.Status.ProvisioningState = "Updating"
 		if err := r.Status().Update(context.TODO(), instance); err != nil {
 			return reconcile.Result{}, err
+		}
+
+		customDataStr, err := getCustomData(instance, cluster)
+		if err != nil {
+			return reconcile.Result{Requeue: true, RequeueAfter: 30 * time.Second}, err
 		}
 
 		if err := cloudConfig.CreateVMSS(
@@ -205,7 +203,7 @@ func (r *ReconcileNodeSet) Reconcile(request reconcile.Request) (reconcile.Resul
 			instance.Name+"-agentvmss",
 			"azkube-vnet",
 			"agent-subnet",
-			base64.StdEncoding.EncodeToString([]byte(azhelpers.GetCustomData(customData, customRunData))),
+			customDataStr,
 			vmSKUType,
 			int(*instance.Spec.Replicas),
 		); err != nil {
@@ -219,7 +217,7 @@ func (r *ReconcileNodeSet) Reconcile(request reconcile.Request) (reconcile.Resul
 			return reconcile.Result{}, err
 		}
 
-		if err := scaleNodeSet(context.TODO(), instance, cloudConfig); err != nil {
+		if err := scaleNodeSet(context.TODO(), instance, cluster); err != nil {
 			return reconcile.Result{}, err
 		}
 		r.recorder.Event(instance, "Normal", "Scaled", fmt.Sprintf("%d to %d", len(instance.Status.NodeStatus), *instance.Spec.Replicas))
@@ -227,13 +225,7 @@ func (r *ReconcileNodeSet) Reconcile(request reconcile.Request) (reconcile.Resul
 	}
 
 	if err := helpers.WaitForNodesReady(r.Client, instance.Name, int(*instance.Spec.Replicas)); err != nil {
-		kclient, err := helpers.GetKubeClient(cluster.Spec.CustomerKubeConfig)
-		if err != nil {
-			return reconcile.Result{Requeue: true, RequeueAfter: 30 * time.Second}, err
-		}
-		if err := helpers.WaitForNodesReady(kclient, instance.Name, int(*instance.Spec.Replicas)); err != nil {
-			return reconcile.Result{Requeue: true, RequeueAfter: 30 * time.Second}, err
-		}
+		return reconcile.Result{Requeue: true, RequeueAfter: 30 * time.Second}, err
 	}
 
 	instance.Status.KubernetesVersion = instance.Spec.KubernetesVersion
@@ -315,7 +307,7 @@ func updateNodeSet(instance *enginev1alpha1.NodeSet, cloudConfig azhelpers.Cloud
 	return nil
 }
 
-func scaleNodeSet(ctx context.Context, instance *enginev1alpha1.NodeSet, cloudConfig azhelpers.CloudConfiguration) error {
+func scaleNodeSet(ctx context.Context, instance *enginev1alpha1.NodeSet, cluster *enginev1alpha1.Cluster) error {
 	vmssName := instance.Name + "-agentvmss"
 	expectedCount := int(*instance.Spec.Replicas)
 	curCount := 0
@@ -330,17 +322,43 @@ func scaleNodeSet(ctx context.Context, instance *enginev1alpha1.NodeSet, cloudCo
 			return err
 		}
 
-		vmssClient, err := cloudConfig.GetVMSSVMsClient()
+		vmssClient, err := cluster.Spec.CloudConfiguration.GetVMSSVMsClient()
 		if err != nil {
 			return err
 		}
 
 		log.Info("Scaling down", "VMSS", nodeStatus.VMInstanceID)
 
-		_, err = vmssClient.Delete(ctx, cloudConfig.GroupName, vmssName, nodeStatus.VMInstanceID)
+		_, err = vmssClient.Delete(ctx, cluster.Spec.CloudConfiguration.GroupName, vmssName, nodeStatus.VMInstanceID)
 		if err != nil {
 			return err
 		}
 	}
-	return cloudConfig.ScaleVMSS(ctx, vmssName, expectedCount)
+	customDataStr, err := getCustomData(instance, cluster)
+	if err != nil {
+		return err
+	}
+	return cluster.Spec.CloudConfiguration.ScaleVMSS(ctx, vmssName, customDataStr, expectedCount)
+}
+
+func getCustomData(instance *enginev1alpha1.NodeSet, cluster *enginev1alpha1.Cluster) (string, error) {
+	bootstrapToken, err := bootstrap.CreateNewBootstrapToken()
+	if err != nil {
+		return "", err
+	}
+
+	startupScript := getNodeSetStartupScript(
+		instance.Spec.KubernetesVersion,
+		cluster.Spec.InternalDNSName,
+		bootstrapToken,
+		cluster.Spec.DiscoveryHashes[0])
+
+	customData := map[string]string{
+		"/etc/kubernetes/azure.json": cluster.Spec.AzureCloudProviderConfig,
+	}
+	customRunData := map[string]string{
+		"/etc/kubernetes/init-azure-bootstrap.sh": startupScript,
+	}
+
+	return base64.StdEncoding.EncodeToString([]byte(azhelpers.GetCustomData(customData, customRunData))), nil
 }

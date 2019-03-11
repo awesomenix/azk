@@ -1,10 +1,9 @@
 package main
 
 // Idea here is that
-//  we create kind cluster
+//  we create a bootstrap vm, first master
 //  deploy crd and controllers into it
-//  create target cluster
-//  move all the crds and controllers to target cluster
+//  continues to create other masters and nodepools
 
 import (
 	"github.com/awesomenix/azk/cmd/azk/cmd"

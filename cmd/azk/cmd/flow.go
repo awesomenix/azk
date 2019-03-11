@@ -7,6 +7,7 @@ import (
 	"regexp"
 	"sort"
 	"strconv"
+	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/profiles/preview/preview/subscription/mgmt/subscription"
 	"github.com/Azure/azure-sdk-for-go/services/compute/mgmt/2018-10-01/compute"
@@ -170,9 +171,17 @@ func selectRegion(subscriptionID, clientID, clientSecret string) (string, error)
 		return "", err
 	}
 	sort.Strings(locations)
+	searcher := func(input string, index int) bool {
+		location := locations[index]
+		name := strings.Replace(strings.ToLower(location), " ", "", -1)
+		input = strings.Replace(strings.ToLower(input), " ", "", -1)
+
+		return strings.Contains(name, input)
+	}
 	prompt := promptui.Select{
-		Label: "Select Region",
-		Items: locations,
+		Label:    "Select Region",
+		Items:    locations,
+		Searcher: searcher,
 	}
 
 	_, result, err := prompt.Run()
@@ -194,9 +203,18 @@ func selectVMSize(subscriptionID, location, clientID, clientSecret string) (stri
 		return "", err
 	}
 	sort.Strings(vmSizes)
+	searcher := func(input string, index int) bool {
+		vmSize := vmSizes[index]
+		name := strings.Replace(strings.ToLower(vmSize), " ", "", -1)
+		input = strings.Replace(strings.ToLower(input), " ", "", -1)
+
+		return strings.Contains(name, input)
+	}
+
 	prompt := promptui.Select{
-		Label: "Select VM Size",
-		Items: vmSizes,
+		Label:    "Select VM Size",
+		Items:    vmSizes,
+		Searcher: searcher,
 	}
 
 	_, result, err := prompt.Run()

@@ -52,15 +52,13 @@ spec:
                 - ""
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
-              topologyKey: kubernetes.io/hostname
-              labelSelector:
-                matchExpressions:
-                - key: control-plane
-                  operator: In
-                  values:
-                  - controller-manager
+          - labelSelector:
+              matchExpressions:
+              - key: control-plane
+                operator: In
+                values:
+                - controller-manager
+            topologyKey: "kubernetes.io/hostname"
       tolerations:
       - key: node-role.kubernetes.io/master
         effect: NoSchedule

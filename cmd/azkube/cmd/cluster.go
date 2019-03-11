@@ -168,8 +168,12 @@ func RunCreate(co *CreateOptions) error {
 
 	fmt.Fprintf(s.Writer, " ✓ Successfully created bootstrap resources %s in %s\n", spec.ClusterName, time.Since(start))
 
+	h := fnv.New64a()
+	h.Write([]byte(fmt.Sprintf("%s/%s", co.SubscriptionID, co.ResourceGroup)))
+	clusterName := fmt.Sprintf("%x", h.Sum64())
+
 	if co.KubeconfigOutput != "" {
-		ioutil.WriteFile(co.KubeconfigOutput, []byte(spec.CustomerKubeConfig), 0644)
+		ioutil.WriteFile(co.KubeconfigOutput+"-"+clusterName, []byte(spec.CustomerKubeConfig), 0644)
 	}
 
 	// Get a config to talk to the apiserver
@@ -219,10 +223,6 @@ func RunCreate(co *CreateOptions) error {
 		log.Error(err, "Failed to apply resources to bootstrap cluster")
 		return err
 	}
-
-	h := fnv.New64a()
-	h.Write([]byte(fmt.Sprintf("%s/%s", co.SubscriptionID, co.ResourceGroup)))
-	clusterName := fmt.Sprintf("%x", h.Sum64())
 
 	s = spinner.New(spinner.CharSets[11], 200*time.Millisecond)
 	s.Color("green")

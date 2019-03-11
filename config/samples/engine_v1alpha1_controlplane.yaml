@@ -1,4 +1,4 @@
-apiVersion: engine.azkube.io/v1alpha1
+apiVersion: engine.azk.io/v1alpha1
 kind: ControlPlane
 metadata:
   labels:

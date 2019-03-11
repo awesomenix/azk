@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/awesomenix/azkube/pkg/controller/nodeset"
+	"github.com/awesomenix/azk/pkg/controller/nodeset"
 )
 
 func init() {

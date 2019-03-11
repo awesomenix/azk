@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	enginev1alpha1 "github.com/awesomenix/azkube/pkg/apis/engine/v1alpha1"
+	enginev1alpha1 "github.com/awesomenix/azk/pkg/apis/engine/v1alpha1"
 	"github.com/onsi/gomega"
 	"golang.org/x/net/context"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"

@@ -4,9 +4,9 @@ import (
 	"flag"
 	"os"
 
-	"github.com/awesomenix/azkube/pkg/apis"
-	"github.com/awesomenix/azkube/pkg/controller"
-	"github.com/awesomenix/azkube/pkg/webhook"
+	"github.com/awesomenix/azk/pkg/apis"
+	"github.com/awesomenix/azk/pkg/controller"
+	"github.com/awesomenix/azk/pkg/webhook"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
@@ -32,8 +32,8 @@ func main() {
 	mgrOptions := manager.Options{
 		MetricsBindAddress:      metricsAddr,
 		LeaderElection:          true,
-		LeaderElectionNamespace: "azkube-system",
-		LeaderElectionID:        "azkube-manager",
+		LeaderElectionNamespace: "azk-system",
+		LeaderElectionID:        "azk-manager",
 	}
 
 	// Create a new Cmd to provide shared dependencies and start components

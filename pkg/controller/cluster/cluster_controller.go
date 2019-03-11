@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	enginev1alpha1 "github.com/awesomenix/azkube/pkg/apis/engine/v1alpha1"
-	"github.com/awesomenix/azkube/pkg/helpers"
+	enginev1alpha1 "github.com/awesomenix/azk/pkg/apis/engine/v1alpha1"
+	"github.com/awesomenix/azk/pkg/helpers"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/tools/record"
@@ -21,7 +21,7 @@ import (
 var log = logf.Log.WithName("controller")
 
 const (
-	clusterFinalizerName = "cluster.finalizers.engine.azkube.io"
+	clusterFinalizerName = "cluster.finalizers.engine.azk.io"
 )
 
 // Add creates a new Cluster Controller and adds it to the Manager with default RBAC. The Manager will set fields on the Controller
@@ -71,8 +71,8 @@ type ReconcileCluster struct {
 // +kubebuilder:rbac:groups=,resources=secrets,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=,resources=configmaps,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=,resources=events,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=engine.azkube.io,resources=clusters,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=engine.azkube.io,resources=clusters/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=engine.azk.io,resources=clusters,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=engine.azk.io,resources=clusters/status,verbs=get;update;patch
 func (r *ReconcileCluster) Reconcile(request reconcile.Request) (reconcile.Result, error) {
 	defer helpers.Recover()
 	// Fetch the Cluster instance

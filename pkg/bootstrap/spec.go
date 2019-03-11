@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	azhelpers "github.com/awesomenix/azkube/pkg/azure"
+	azhelpers "github.com/awesomenix/azk/pkg/azure"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	clientset "k8s.io/client-go/kubernetes"
 	bootstraputil "k8s.io/cluster-bootstrap/token/util"
@@ -76,7 +76,7 @@ func CreateSpec(cloudConfig *azhelpers.CloudConfiguration, dnsPrefix, vmSKUType,
 
 	{
 		h := fnv.New32a()
-		h.Write([]byte(fmt.Sprintf("%s-%s", azkubePublicIPName, spec.ClusterName)))
+		h.Write([]byte(fmt.Sprintf("%s-%s", azkPublicIPName, spec.ClusterName)))
 		publicIPName = fmt.Sprintf("%x", h.Sum32())
 	}
 

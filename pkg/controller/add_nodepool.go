@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/awesomenix/azkube/pkg/controller/nodepool"
+	"github.com/awesomenix/azk/pkg/controller/nodepool"
 )
 
 func init() {

@@ -5,16 +5,16 @@ import (
 	"fmt"
 	"os"
 
-	enginev1alpha1 "github.com/awesomenix/azkube/pkg/apis/engine/v1alpha1"
+	enginev1alpha1 "github.com/awesomenix/azk/pkg/apis/engine/v1alpha1"
 	"github.com/spf13/cobra"
 	"k8s.io/client-go/kubernetes/scheme"
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 )
 
-var log = logf.Log.WithName("azkube")
+var log = logf.Log.WithName("azk")
 
 var RootCmd = &cobra.Command{
-	Use:   "azkube",
+	Use:   "azk",
 	Short: "azure cluster management",
 	Long:  `Simple kubernetes azure cluster manager`,
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {

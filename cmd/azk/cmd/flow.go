@@ -220,7 +220,7 @@ func getLocations(subscriptionID, clientID, clientSecret string) ([]string, erro
 		return nil, err
 	}
 	subClient.Authorizer = a
-	subClient.AddToUserAgent("azkubeprompt")
+	subClient.AddToUserAgent("azkprompt")
 
 	res, err := subClient.ListLocations(context.TODO(), subscriptionID)
 	if err != nil {
@@ -241,7 +241,7 @@ func getVMSizes(subscriptionID, location, clientID, clientSecret string) ([]stri
 		return nil, err
 	}
 	vmSizesClient.Authorizer = a
-	vmSizesClient.AddToUserAgent("azkubeprompt")
+	vmSizesClient.AddToUserAgent("azkprompt")
 
 	res, err := vmSizesClient.List(context.TODO(), location)
 	if err != nil {

@@ -1,4 +1,4 @@
-# azkube
+# azk
 Create Kubernetes Clusters on Azure, with configurable controllers, providing provisioning and beyond management capabilities
 
 ## Principles
@@ -13,7 +13,7 @@ Create Kubernetes Clusters on Azure, with configurable controllers, providing pr
 
 ![](Architecture.jpg)
 
-* azkube, a gateway client for cluster management
+* azk, a gateway client for cluster management
     * Create
     * Scale
     * Upgrade
@@ -23,7 +23,7 @@ Create Kubernetes Clusters on Azure, with configurable controllers, providing pr
 
 ## Workflow
 
-* azkube checks for existence of target cluster, using resourcegroupname, subscriptionid
+* azk checks for existence of target cluster, using resourcegroupname, subscriptionid
 * If the cluster does not exist
     * creates prerequisite resources
         * Generate Certificates
@@ -38,7 +38,7 @@ Create Kubernetes Clusters on Azure, with configurable controllers, providing pr
 ## Usage
 
 ```
-azkube cluster create flow
+azk cluster create flow
 ```
 
 Provides a questionnaire for installation

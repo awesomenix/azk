@@ -1,7 +1,7 @@
 package apis
 
 import (
-	"github.com/awesomenix/azkube/pkg/apis/engine/v1alpha1"
+	"github.com/awesomenix/azk/pkg/apis/engine/v1alpha1"
 )
 
 func init() {

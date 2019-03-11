@@ -7,10 +7,10 @@ import (
 	"sync"
 	"time"
 
-	enginev1alpha1 "github.com/awesomenix/azkube/pkg/apis/engine/v1alpha1"
-	azhelpers "github.com/awesomenix/azkube/pkg/azure"
-	"github.com/awesomenix/azkube/pkg/bootstrap"
-	"github.com/awesomenix/azkube/pkg/helpers"
+	enginev1alpha1 "github.com/awesomenix/azk/pkg/apis/engine/v1alpha1"
+	azhelpers "github.com/awesomenix/azk/pkg/azure"
+	"github.com/awesomenix/azk/pkg/bootstrap"
+	"github.com/awesomenix/azk/pkg/helpers"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -27,8 +27,8 @@ import (
 var log = logf.Log.WithName("controller")
 
 const (
-	masterAvailabilitySetName = "azkube-masters-availabilityset"
-	controlPlaneFinalizerName = "controlplane.finalizers.engine.azkube.io"
+	masterAvailabilitySetName = "azk-masters-availabilityset"
+	controlPlaneFinalizerName = "controlplane.finalizers.engine.azk.io"
 )
 
 func preRequisites(kubernetesVersion, internalDNSName string) string {
@@ -137,8 +137,8 @@ type ReconcileControlPlane struct {
 // Reconcile reads that state of the cluster for a ControlPlane object and makes changes based on the state read
 // and what is in the ControlPlane.Spec
 // Automatically generate RBAC rules to allow the Controller to read and write Deployments
-// +kubebuilder:rbac:groups=engine.azkube.io,resources=controlplanes,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=engine.azkube.io,resources=controlplanes/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=engine.azk.io,resources=controlplanes,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=engine.azk.io,resources=controlplanes/status,verbs=get;update;patch
 func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.Result, error) {
 	defer helpers.Recover()
 	// Fetch the ControlPlane instance
@@ -270,9 +270,9 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 				if err := cluster.Spec.CreateVMWithLoadBalancer(
 					context.TODO(),
 					vmName,
-					"azkube-lb",
-					"azkube-internal-lb",
-					"azkube-vnet",
+					"azk-lb",
+					"azk-internal-lb",
+					"azk-vnet",
 					"master-subnet",
 					fmt.Sprintf("10.0.0.%d", vmIndex+4),
 					base64.StdEncoding.EncodeToString([]byte(azhelpers.GetCustomData(customData, customRunData))),

@@ -10,11 +10,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/awesomenix/azkube/assets"
-	enginev1alpha1 "github.com/awesomenix/azkube/pkg/apis/engine/v1alpha1"
-	"github.com/awesomenix/azkube/pkg/azure"
-	"github.com/awesomenix/azkube/pkg/bootstrap"
-	"github.com/awesomenix/azkube/pkg/helpers"
+	"github.com/awesomenix/azk/assets"
+	enginev1alpha1 "github.com/awesomenix/azk/pkg/apis/engine/v1alpha1"
+	"github.com/awesomenix/azk/pkg/azure"
+	"github.com/awesomenix/azk/pkg/bootstrap"
+	"github.com/awesomenix/azk/pkg/helpers"
 	"github.com/briandowns/spinner"
 	"github.com/spf13/cobra"
 	corev1 "k8s.io/api/core/v1"
@@ -136,7 +136,7 @@ func RunCreate(co *CreateOptions) error {
 		TenantID:       co.TenantID,
 		GroupName:      co.ResourceGroup,
 		GroupLocation:  co.ResourceLocation,
-		UserAgent:      "azkube",
+		UserAgent:      "azk",
 	}, co.DNSPrefix, "", co.KubernetesVersion)
 
 	if err != nil {
@@ -481,7 +481,7 @@ func kubectlApply(manifestPath, kubeconfig string) error {
 }
 
 func kubectlApplyResources(kubeconfig string, isDevlopment bool) error {
-	tmpAssetsDir := "/tmp/azkube-assets"
+	tmpAssetsDir := "/tmp/azk-assets"
 	defer os.RemoveAll(tmpAssetsDir)
 
 	folders := []string{"crds", "deployment"}

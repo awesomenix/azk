@@ -7,10 +7,10 @@ import (
 	"time"
 
 	"github.com/Azure/azure-sdk-for-go/profiles/latest/compute/mgmt/compute"
-	enginev1alpha1 "github.com/awesomenix/azkube/pkg/apis/engine/v1alpha1"
-	azhelpers "github.com/awesomenix/azkube/pkg/azure"
-	"github.com/awesomenix/azkube/pkg/bootstrap"
-	"github.com/awesomenix/azkube/pkg/helpers"
+	enginev1alpha1 "github.com/awesomenix/azk/pkg/apis/engine/v1alpha1"
+	azhelpers "github.com/awesomenix/azk/pkg/azure"
+	"github.com/awesomenix/azk/pkg/bootstrap"
+	"github.com/awesomenix/azk/pkg/helpers"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -25,7 +25,7 @@ import (
 )
 
 const (
-	nodesetsFinalizerName = "nodesets.finalizers.engine.azkube.io"
+	nodesetsFinalizerName = "nodesets.finalizers.engine.azk.io"
 )
 
 var log = logf.Log.WithName("controller")
@@ -112,8 +112,8 @@ type ReconcileNodeSet struct {
 // Reconcile reads that state of the cluster for a NodeSet object and makes changes based on the state read
 // and what is in the NodeSet.Spec
 // Automatically generate RBAC rules to allow the Controller to read and write Deployments
-// +kubebuilder:rbac:groups=engine.azkube.io,resources=nodesets,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=engine.azkube.io,resources=nodesets/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=engine.azk.io,resources=nodesets,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=engine.azk.io,resources=nodesets/status,verbs=get;update;patch
 func (r *ReconcileNodeSet) Reconcile(request reconcile.Request) (reconcile.Result, error) {
 	defer helpers.Recover()
 	// Fetch the NodeSet instance
@@ -147,7 +147,7 @@ func (r *ReconcileNodeSet) Reconcile(request reconcile.Request) (reconcile.Resul
 		TenantID:       cluster.Spec.TenantID,
 		GroupName:      cluster.Spec.GroupName,
 		GroupLocation:  cluster.Spec.GroupLocation,
-		UserAgent:      "azkube",
+		UserAgent:      "azk",
 	}
 
 	if instance.ObjectMeta.DeletionTimestamp.IsZero() {
@@ -201,7 +201,7 @@ func (r *ReconcileNodeSet) Reconcile(request reconcile.Request) (reconcile.Resul
 		if err := cloudConfig.CreateVMSS(
 			context.TODO(),
 			instance.Name+"-agentvmss",
-			"azkube-vnet",
+			"azk-vnet",
 			"agent-subnet",
 			customDataStr,
 			vmSKUType,

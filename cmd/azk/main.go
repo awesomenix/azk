@@ -7,7 +7,7 @@ package main
 //  move all the crds and controllers to target cluster
 
 import (
-	"github.com/awesomenix/azkube/cmd/azkube/cmd"
+	"github.com/awesomenix/azk/cmd/azk/cmd"
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 )
 

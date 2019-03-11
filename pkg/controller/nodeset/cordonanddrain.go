@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/awesomenix/azkube/pkg/helpers"
+	"github.com/awesomenix/azk/pkg/helpers"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/client-go/tools/clientcmd"

@@ -53,7 +53,7 @@ rules:
   - patch
   - delete
 - apiGroups:
-  - engine.azkube.io
+  - engine.azk.io
   resources:
   - clusters
   verbs:
@@ -65,7 +65,7 @@ rules:
   - patch
   - delete
 - apiGroups:
-  - engine.azkube.io
+  - engine.azk.io
   resources:
   - clusters/status
   verbs:
@@ -73,7 +73,7 @@ rules:
   - update
   - patch
 - apiGroups:
-  - engine.azkube.io
+  - engine.azk.io
   resources:
   - controlplanes
   verbs:
@@ -85,7 +85,7 @@ rules:
   - patch
   - delete
 - apiGroups:
-  - engine.azkube.io
+  - engine.azk.io
   resources:
   - controlplanes/status
   verbs:
@@ -93,7 +93,7 @@ rules:
   - update
   - patch
 - apiGroups:
-  - engine.azkube.io
+  - engine.azk.io
   resources:
   - nodesets
   verbs:
@@ -105,7 +105,7 @@ rules:
   - patch
   - delete
 - apiGroups:
-  - engine.azkube.io
+  - engine.azk.io
   resources:
   - nodesets/status
   verbs:
@@ -113,7 +113,7 @@ rules:
   - update
   - patch
 - apiGroups:
-  - engine.azkube.io
+  - engine.azk.io
   resources:
   - nodepools
   verbs:
@@ -125,7 +125,7 @@ rules:
   - patch
   - delete
 - apiGroups:
-  - engine.azkube.io
+  - engine.azk.io
   resources:
   - nodepools/status
   verbs:
@@ -133,7 +133,7 @@ rules:
   - update
   - patch
 - apiGroups:
-  - engine.azkube.io
+  - engine.azk.io
   resources:
   - nodesets
   verbs:
@@ -145,7 +145,7 @@ rules:
   - patch
   - delete
 - apiGroups:
-  - engine.azkube.io
+  - engine.azk.io
   resources:
   - nodesets/status
   verbs:

@@ -4,9 +4,9 @@ metadata:
   creationTimestamp: null
   labels:
     controller-tools.k8s.io: "1.0"
-  name: nodepools.engine.azkube.io
+  name: nodepools.engine.azk.io
 spec:
-  group: engine.azkube.io
+  group: engine.azk.io
   names:
     kind: NodePool
     plural: nodepools

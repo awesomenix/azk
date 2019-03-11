@@ -6,7 +6,7 @@ import (
 	"hash/fnv"
 	"reflect"
 
-	enginev1alpha1 "github.com/awesomenix/azkube/pkg/apis/engine/v1alpha1"
+	enginev1alpha1 "github.com/awesomenix/azk/pkg/apis/engine/v1alpha1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -70,10 +70,10 @@ type ReconcileNodePool struct {
 // Reconcile reads that state of the cluster for a NodePool object and makes changes based on the state read
 // and what is in the NodePool.Spec
 // Automatically generate RBAC rules to allow the Controller to read and write Deployments
-// +kubebuilder:rbac:groups=engine.azkube.io,resources=nodesets,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=engine.azkube.io,resources=nodesets/status,verbs=get;update;patch
-// +kubebuilder:rbac:groups=engine.azkube.io,resources=nodepools,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=engine.azkube.io,resources=nodepools/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=engine.azk.io,resources=nodesets,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=engine.azk.io,resources=nodesets/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=engine.azk.io,resources=nodepools,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=engine.azk.io,resources=nodepools/status,verbs=get;update;patch
 func (r *ReconcileNodePool) Reconcile(request reconcile.Request) (reconcile.Result, error) {
 	// Fetch the NodePool instance
 	instance := &enginev1alpha1.NodePool{}

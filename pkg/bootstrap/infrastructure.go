@@ -6,15 +6,15 @@ import (
 	"fmt"
 	"hash/fnv"
 
-	azhelpers "github.com/awesomenix/azkube/pkg/azure"
-	"github.com/awesomenix/azkube/pkg/helpers"
+	azhelpers "github.com/awesomenix/azk/pkg/azure"
+	"github.com/awesomenix/azk/pkg/helpers"
 )
 
 const (
-	azkubeLoadBalancerName         = "azkube-lb"
-	azkubeInternalLoadBalancerName = "azkube-internal-lb"
-	azkubePublicIPName             = "azkube-publicip"
-	masterAvailabilitySetName      = "azkube-masters-availabilityset"
+	azkLoadBalancerName         = "azk-lb"
+	azkInternalLoadBalancerName = "azk-internal-lb"
+	azkPublicIPName             = "azk-publicip"
+	masterAvailabilitySetName   = "azk-masters-availabilityset"
 )
 
 func (spec *Spec) preRequisites(kubernetesVersion string) string {
@@ -98,12 +98,12 @@ func (spec *Spec) CreateBaseInfrastructure() error {
 	}
 	log.Info("Successfully Created", "ResourceGroup", spec.GroupName, "Location", spec.GroupLocation)
 
-	log.Info("Creating", "VNET", "azkube-vnet", "Location", spec.GroupLocation)
-	err = spec.CreateVirtualNetworkAndSubnets(context.TODO(), "azkube-vnet")
+	log.Info("Creating", "VNET", "azk-vnet", "Location", spec.GroupLocation)
+	err = spec.CreateVirtualNetworkAndSubnets(context.TODO(), "azk-vnet")
 	if err != nil {
 		return err
 	}
-	log.Info("Successfully Created", "VNET", "azkube-vnet", "Location", spec.GroupLocation)
+	log.Info("Successfully Created", "VNET", "azk-vnet", "Location", spec.GroupLocation)
 
 	log.Info("Creating", "AvailabilitySet", masterAvailabilitySetName)
 	if _, err := spec.CreateAvailabilitySet(
@@ -113,29 +113,29 @@ func (spec *Spec) CreateBaseInfrastructure() error {
 	}
 	log.Info("Successfully Created", "AvailabilitySet", masterAvailabilitySetName)
 
-	log.Info("Creating Internal Load Balancer", "Name", azkubeInternalLoadBalancerName)
+	log.Info("Creating Internal Load Balancer", "Name", azkInternalLoadBalancerName)
 	if err := spec.CreateInternalLoadBalancer(
 		context.TODO(),
-		"azkube-vnet",
+		"azk-vnet",
 		"master-subnet",
-		azkubeInternalLoadBalancerName); err != nil {
+		azkInternalLoadBalancerName); err != nil {
 		return err
 	}
-	log.Info("Successfully Created Internal Load Balancer", "Name", azkubeInternalLoadBalancerName)
+	log.Info("Successfully Created Internal Load Balancer", "Name", azkInternalLoadBalancerName)
 
 	h := fnv.New32a()
-	h.Write([]byte(fmt.Sprintf("%s-%s", azkubePublicIPName, spec.ClusterName)))
+	h.Write([]byte(fmt.Sprintf("%s-%s", azkPublicIPName, spec.ClusterName)))
 	publicIPName := fmt.Sprintf("%x", h.Sum32())
 	publicIPName = spec.DNSPrefix + publicIPName
 
-	log.Info("Creating Public Load Balancer", "Name", azkubeLoadBalancerName, "PublicIPName", publicIPName)
+	log.Info("Creating Public Load Balancer", "Name", azkLoadBalancerName, "PublicIPName", publicIPName)
 	if err := spec.CreateLoadBalancer(
 		context.TODO(),
-		azkubeLoadBalancerName,
+		azkLoadBalancerName,
 		publicIPName); err != nil {
 		return err
 	}
-	log.Info("Successfully Created Public Load Balancer", "Name", azkubeLoadBalancerName, "PublicIPName", publicIPName)
+	log.Info("Successfully Created Public Load Balancer", "Name", azkLoadBalancerName, "PublicIPName", publicIPName)
 
 	pip, err := spec.GetPublicIP(context.TODO(), publicIPName)
 	if err != nil {
@@ -175,9 +175,9 @@ func (spec *Spec) CreateInfrastructure() error {
 	if err := spec.CreateVMWithLoadBalancer(
 		context.TODO(),
 		vmName,
-		"azkube-lb",
-		"azkube-internal-lb",
-		"azkube-vnet",
+		"azk-lb",
+		"azk-internal-lb",
+		"azk-vnet",
 		"master-subnet",
 		fmt.Sprintf("10.0.0.4"),
 		base64.StdEncoding.EncodeToString([]byte(azhelpers.GetCustomData(customData, customRunData))),

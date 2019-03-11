@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/awesomenix/azkube/pkg/controller/cluster"
+	"github.com/awesomenix/azk/pkg/controller/cluster"
 )
 
 func init() {

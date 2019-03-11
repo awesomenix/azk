@@ -36,17 +36,17 @@ func (c *CloudConfiguration) CreateVirtualNetworkAndSubnets(ctx context.Context,
 		return err
 	}
 
-	networkSecurityGroup, err := c.CreateDefaultNetworkSecurityGroup(context.TODO(), "azkube-nsg")
+	networkSecurityGroup, err := c.CreateDefaultNetworkSecurityGroup(context.TODO(), "azk-nsg")
 	if err != nil {
 		return err
 	}
 
-	masterNetworkSecurityGroup, err := c.CreateNetworkSecurityGroup(context.TODO(), "azkube-master-nsg")
+	masterNetworkSecurityGroup, err := c.CreateNetworkSecurityGroup(context.TODO(), "azk-master-nsg")
 	if err != nil {
 		return err
 	}
 
-	routeTable, err := c.CreateRouteTables(context.TODO(), "azkube-routetable")
+	routeTable, err := c.CreateRouteTables(context.TODO(), "azk-routetable")
 	if err != nil {
 		return err
 	}

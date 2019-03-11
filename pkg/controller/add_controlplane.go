@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/awesomenix/azkube/pkg/controller/controlplane"
+	"github.com/awesomenix/azk/pkg/controller/controlplane"
 )
 
 func init() {

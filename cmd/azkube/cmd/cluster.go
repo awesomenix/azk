@@ -54,6 +54,7 @@ func init() {
 	createClusterCmd.Flags().StringVarP(&co.NodePoolName, "nodepoolname", "n", "nodepool1", "Nodepool Name, Optional, default nodepool1")
 	createClusterCmd.Flags().Int32VarP(&co.NodePoolCount, "nodepoolcount", "c", 1, "Nodepool Count, Optional, default 1")
 	createClusterCmd.Flags().BoolVarP(&co.IsDevelopment, "isdev", "m", false, "Is development mode")
+	createClusterCmd.Flags().StringVarP(&co.VMSKUType, "vmskutype", "u", "Standard_DS2_v2", "VM SKU Type, default: Standard_DS2_v2")
 
 	// Optional flags
 	createClusterCmd.Flags().StringVarP(&co.KubeconfigOutput, "kubeconfigout", "o", "kubeconfig", "Where to output the kubeconfig for the provisioned cluster")
@@ -105,6 +106,7 @@ type CreateOptions struct {
 	NodePoolName      string
 	NodePoolCount     int32
 	KubeconfigOutput  string
+	VMSKUType         string
 	IsDevelopment     bool
 }
 
@@ -141,6 +143,8 @@ func RunCreate(co *CreateOptions) error {
 		log.Error(err, "Failed to create bootstrap spec")
 		return err
 	}
+
+	spec.BootstrapVMSKUType = co.VMSKUType
 
 	s := spinner.New(spinner.CharSets[11], 200*time.Millisecond)
 	s.Color("green")
@@ -303,6 +307,7 @@ func RunCreate(co *CreateOptions) error {
 			},
 			Spec: enginev1alpha1.ControlPlaneSpec{
 				KubernetesVersion: co.KubernetesVersion,
+				VMSKUType:         co.VMSKUType,
 			},
 		}
 
@@ -347,6 +352,7 @@ func RunCreate(co *CreateOptions) error {
 				NodeSetSpec: enginev1alpha1.NodeSetSpec{
 					KubernetesVersion: co.KubernetesVersion,
 					Replicas:          &(co.NodePoolCount),
+					VMSKUType:         co.VMSKUType,
 				},
 			},
 		}

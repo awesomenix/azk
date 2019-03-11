@@ -65,7 +65,7 @@ controllerManager:
 kubernetesVersion: %[3]s
 controlPlaneEndpoint: "%[2]s:6443"
 networking:
-  podSubnet: "192.168.0.0/16"
+  podSubnet: "10.244.0.0/16"
 EOF
 `, spec.PublicDNSName,
 		spec.InternalDNSName,
@@ -87,7 +87,7 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 %[3]s
 `, spec.kubeadmInitConfig(kubernetesVersion),
 		spec.preRequisites(kubernetesVersion),
-		helpers.CalicoCNI())
+		helpers.CanalCNI())
 }
 
 func (spec *Spec) CreateBaseInfrastructure() error {

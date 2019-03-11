@@ -1,6 +1,7 @@
 
 # Image URL to use all building/pushing image targets
 IMG ?= quay.io/awesomenix/azkube-manager:latest
+RELEASE_LABEL ?= $(git describe --tags)
 
 all: test manager
 
@@ -51,3 +52,9 @@ docker-build: test
 # Push the docker image
 docker-push: docker-build
 	docker push ${IMG}
+
+release:
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o bin/linux/azkube cmd/azkube/main.go
+	tar -czf bin/azkube-linux-${RELEASE_LABEL}.tar.gz bin/linux/azkube
+	CGO_ENABLED=0 GOARCH=amd64 go build -a -o bin/osx/azkube cmd/azkube/main.go
+	tar -czf bin/azkube-osx-${RELEASE_LABEL}.tar.gz bin/osx/azkube

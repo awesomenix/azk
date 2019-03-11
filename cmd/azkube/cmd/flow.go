@@ -9,6 +9,7 @@ import (
 	"strconv"
 
 	"github.com/Azure/azure-sdk-for-go/profiles/preview/preview/subscription/mgmt/subscription"
+	"github.com/Azure/azure-sdk-for-go/services/compute/mgmt/2018-10-01/compute"
 	"github.com/Azure/go-autorest/autorest"
 	"github.com/Azure/go-autorest/autorest/adal"
 	"github.com/Azure/go-autorest/autorest/azure"
@@ -86,6 +87,11 @@ func RunFlow() error {
 		return err
 	}
 
+	vmsize, err := selectVMSize(subscriptionID, region, clientID, clientSecret)
+	if err != nil {
+		return err
+	}
+
 	nodepoolCount, err := getInput("Node Pool Count", func(i string) error {
 		_, err := strconv.ParseUint(i, 10, 32)
 		if err != nil {
@@ -110,6 +116,7 @@ func RunFlow() error {
 		KubernetesVersion: "stable",
 		NodePoolName:      "nodepool1",
 		NodePoolCount:     int32(nodeCount),
+		VMSKUType:         vmsize,
 		KubeconfigOutput:  "kubeconfig",
 	}
 
@@ -181,6 +188,30 @@ func selectRegion(subscriptionID, clientID, clientSecret string) (string, error)
 	return result, nil
 }
 
+func selectVMSize(subscriptionID, location, clientID, clientSecret string) (string, error) {
+	vmSizes, err := getVMSizes(subscriptionID, location, clientID, clientSecret)
+	if err != nil {
+		return "", err
+	}
+	sort.Strings(vmSizes)
+	prompt := promptui.Select{
+		Label: "Select VM Size",
+		Items: vmSizes,
+	}
+
+	_, result, err := prompt.Run()
+
+	if err == promptui.ErrInterrupt {
+		os.Exit(-1)
+	}
+
+	if err != nil {
+		fmt.Printf("Prompt failed %v\n", err)
+		return "", err
+	}
+	return result, nil
+}
+
 func getLocations(subscriptionID, clientID, clientSecret string) ([]string, error) {
 	var locations []string
 	subClient := subscription.NewSubscriptionsClient()
@@ -200,6 +231,27 @@ func getLocations(subscriptionID, clientID, clientSecret string) ([]string, erro
 		locations = append(locations, *location.Name)
 	}
 	return locations, err
+}
+
+func getVMSizes(subscriptionID, location, clientID, clientSecret string) ([]string, error) {
+	var vmsizes []string
+	vmSizesClient := compute.NewVirtualMachineSizesClient(subscriptionID)
+	a, err := getAuthorizerForResource(subscriptionID, clientID, clientSecret)
+	if err != nil {
+		return nil, err
+	}
+	vmSizesClient.Authorizer = a
+	vmSizesClient.AddToUserAgent("azkubeprompt")
+
+	res, err := vmSizesClient.List(context.TODO(), location)
+	if err != nil {
+		return vmsizes, err
+	}
+
+	for _, vmsize := range *res.Value {
+		vmsizes = append(vmsizes, *vmsize.Name)
+	}
+	return vmsizes, err
 }
 
 func getAuthorizerForResource(subscriptionID, clientID, clientSecret string) (autorest.Authorizer, error) {

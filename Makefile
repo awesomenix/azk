@@ -40,7 +40,8 @@ vet:
 # Generate code
 generate:
 	go get -u github.com/shurcooL/vfsgen/cmd/vfsgendev
-	go generate ./pkg/... ./cmd/... ./assets/...
+	go generate ./pkg/... ./cmd/...
+	go generate -tags dev ./assets/...
 	kustomize build config/default > config/deployment/azkube-deployment.yaml
 
 # Build the docker image

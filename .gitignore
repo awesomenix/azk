@@ -13,4 +13,4 @@
 
 .vscode
 bin/*
-kubeconfig
+kubeconfig*

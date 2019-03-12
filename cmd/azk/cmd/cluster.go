@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"hash/fnv"
 	"io/ioutil"
@@ -17,6 +18,7 @@ import (
 	"github.com/awesomenix/azk/pkg/helpers"
 	"github.com/briandowns/spinner"
 	"github.com/spf13/cobra"
+	"gopkg.in/yaml.v2"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -125,8 +127,19 @@ func RunCreate(co *CreateOptions) error {
 		return err
 	}
 	co.KubernetesVersion = kubernetesVersion
+
+	h := fnv.New64a()
+	h.Write([]byte(fmt.Sprintf("%s/%s", co.SubscriptionID, co.ResourceGroup)))
+	clusterName := fmt.Sprintf("%x", h.Sum64())
+
+	clusterdir := os.Getenv("HOME") + "/.azk/" + clusterName
+	if err := os.MkdirAll(clusterdir, 0755); err != nil {
+		log.Error(err, "Failed to marshal bootstrap spec to json")
+		return err
+	}
+
 	clusterStart := time.Now()
-	log.Info("Creating Cluster", "KubernetesVersion", co.KubernetesVersion)
+	log.Info("Creating Cluster", "KubernetesVersion", co.KubernetesVersion, "ClusterName", clusterName)
 
 	spec, err := bootstrap.CreateSpec(&azhelpers.CloudConfiguration{
 		CloudName:      azhelpers.AzurePublicCloudName,
@@ -143,8 +156,18 @@ func RunCreate(co *CreateOptions) error {
 		log.Error(err, "Failed to create bootstrap spec")
 		return err
 	}
-
 	spec.BootstrapVMSKUType = co.VMSKUType
+
+	jsonSpec, err := json.Marshal(spec)
+	if err != nil {
+		log.Error(err, "Failed to marshal bootstrap spec to json")
+		return err
+	}
+
+	if err := ioutil.WriteFile(clusterdir+"/bootstrapspec.json", jsonSpec, 0644); err != nil {
+		log.Error(err, "Failed to store bootstrap spec")
+		return err
+	}
 
 	s := spinner.New(spinner.CharSets[11], 200*time.Millisecond)
 	s.Color("green")
@@ -167,10 +190,6 @@ func RunCreate(co *CreateOptions) error {
 	}
 
 	fmt.Fprintf(s.Writer, " ✓ Successfully created bootstrap resources %s in %s\n", spec.ClusterName, time.Since(start))
-
-	h := fnv.New64a()
-	h.Write([]byte(fmt.Sprintf("%s/%s", co.SubscriptionID, co.ResourceGroup)))
-	clusterName := fmt.Sprintf("%x", h.Sum64())
 
 	if co.KubeconfigOutput != "" {
 		ioutil.WriteFile(co.KubeconfigOutput+"-"+clusterName, []byte(spec.CustomerKubeConfig), 0644)
@@ -258,6 +277,10 @@ func RunCreate(co *CreateOptions) error {
 		if cluster.Status.ProvisioningState == "Succeeded" {
 			fmt.Fprintf(s.Writer, " ✓ Already Created Cluster %s\n", clusterName)
 		}
+		clusterSpec, err := yaml.Marshal(cluster)
+		if err == nil {
+			ioutil.WriteFile(clusterdir+"/clusterspec.yml", clusterSpec, 0644)
+		}
 	} else {
 		time.Sleep(3 * time.Second)
 		cluster = &enginev1alpha1.Cluster{
@@ -268,6 +291,11 @@ func RunCreate(co *CreateOptions) error {
 			Spec: enginev1alpha1.ClusterSpec{
 				Spec: *spec,
 			},
+		}
+
+		clusterSpec, err := yaml.Marshal(cluster)
+		if err == nil {
+			ioutil.WriteFile(clusterdir+"/clusterspec.yml", clusterSpec, 0644)
 		}
 
 		s = spinner.New(spinner.CharSets[11], 200*time.Millisecond)
@@ -309,6 +337,11 @@ func RunCreate(co *CreateOptions) error {
 				KubernetesVersion: co.KubernetesVersion,
 				VMSKUType:         co.VMSKUType,
 			},
+		}
+
+		controlplaneSpec, err := yaml.Marshal(controlPlane)
+		if err == nil {
+			ioutil.WriteFile(clusterdir+"/controlplanespec.yml", controlplaneSpec, 0644)
 		}
 
 		log.Info("Creating ControlPlane .. timeout 15m0s", "ClusterName", clusterName, "KubernetesVersion", co.KubernetesVersion)
@@ -355,6 +388,11 @@ func RunCreate(co *CreateOptions) error {
 					VMSKUType:         co.VMSKUType,
 				},
 			},
+		}
+
+		nodepoolSpec, err := yaml.Marshal(nodePool)
+		if err == nil {
+			ioutil.WriteFile(clusterdir+"/nodepoolspec.yml", nodepoolSpec, 0644)
 		}
 
 		log.Info("Creating Nodepool .. timeout 10m0s", "Name", co.NodePoolName, "KubernetesVersion", co.KubernetesVersion)

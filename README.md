@@ -37,8 +37,14 @@ Create Kubernetes Clusters on Azure, with configurable controllers, providing pr
 
 ## Usage
 
+Either use download the release (relatively stable) or 
+
+```
+go get -u github.com/awesomenix/azk/cmd/azk
+```
+
+Follow the prompts in
+
 ```
 azk cluster create flow
 ```
-
-Provides a questionnaire for installation

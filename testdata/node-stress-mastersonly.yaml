@@ -1,0 +1,29 @@
+kind: DaemonSet
+apiVersion: extensions/v1beta1
+metadata:
+  name: kube-stresscheck-mastersonly
+  namespace: kube-system
+  labels:
+    app: kube-stresscheck-mastersonly
+spec:
+  template:
+    metadata:
+      labels:
+        app: kube-stresscheck
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: node-role.kubernetes.io/master
+                operator: In
+                values:
+                - ""
+      tolerations:
+        # Allow the pod to run on the master.
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
+      containers:
+        - name: kube-stresscheck
+          image: quay.io/giantswarm/kube-stresscheck:latest

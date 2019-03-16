@@ -22,10 +22,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/client-go/tools/clientcmd"
-	kubectlapply "k8s.io/kubernetes/pkg/kubectl/cmd/apply"
-	cmdutil "k8s.io/kubernetes/pkg/kubectl/cmd/util"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -484,89 +481,16 @@ func RunDelete(do *DeleteOptions) error {
 	return nil
 }
 
-func kubectlApply(manifestPath, kubeconfig string) error {
-	clientcfg, err := clientcmd.NewClientConfigFromBytes([]byte(kubeconfig))
-	if err != nil {
-		log.Error(err, "Failed to create config")
-		return err
-	}
-
-	f := cmdutil.NewFactory(&helpers.RestClientGetter{Config: clientcfg})
-
-	streams := genericclioptions.IOStreams{
-		Out:    os.Stdout,
-		ErrOut: os.Stderr,
-	}
-
-	apply := kubectlapply.NewCmdApply("kubectl", f, streams)
-	args := []string{manifestPath}
-	options := kubectlapply.NewApplyOptions(streams)
-
-	err = options.Complete(f, apply)
-	if err != nil {
-		return fmt.Errorf("error setting up apply: %v", err)
-	}
-
-	options.DeleteOptions.FilenameOptions.Filenames = args
-	options.DeleteOptions.FilenameOptions.Recursive = true
-
-	err = options.Run()
-	if err != nil {
-		return fmt.Errorf("failed to apply %s: %v", manifestPath, err)
-	}
-
-	return nil
-}
-
 func kubectlApplyResources(kubeconfig string, isDevlopment bool) error {
-	tmpAssetsDir := "/tmp/azk-assets"
-	defer os.RemoveAll(tmpAssetsDir)
-
 	folders := []string{"crds", "deployment"}
 	if isDevlopment {
 		folders = []string{"crds"}
 	}
-	for _, folder := range folders {
-		tmpFolderDir := tmpAssetsDir + "/" + folder
-		f, err := assets.Assets.Open(folder)
-		if err != nil {
-			log.Error(err, "Failed to open assets folder", "Folder", folder)
-			return err
-		}
-		defer f.Close()
-		fi, err := f.Readdir(-1)
-		if err != nil {
-			log.Error(err, "Failed to read assets folder", "Folder", folder)
-			return err
-		}
-		for _, fi := range fi {
-			if !fi.IsDir() {
-				assetFileName := folder + "/" + fi.Name()
-				fileName := tmpAssetsDir + "/" + assetFileName
-				file, err := assets.Assets.Open(assetFileName)
-				if err != nil {
-					log.Error(err, "Failed to open file from assets", "File", assetFileName)
-					return err
-				}
-				defer file.Close()
-				bytes, err := ioutil.ReadAll(file)
-				if err != nil {
-					log.Error(err, "Failed to read asset file", "File", assetFileName)
-					return err
-				}
-				os.MkdirAll(tmpFolderDir, os.ModePerm)
-				err = ioutil.WriteFile(fileName, bytes, 0644)
-				if err != nil {
-					log.Error(err, "Failed to write file", "File", fileName)
-					return err
-				}
-			}
-		}
 
-		if err := kubectlApply(tmpFolderDir, kubeconfig); err != nil {
-			log.Error(err, "Failed to apply to cluster", "Resource", folder)
+	for _, folder := range folders {
+		if err := kubectlApplyFolder(folder, kubeconfig, assets.Assets); err != nil {
+			return err
 		}
 	}
-
 	return nil
 }

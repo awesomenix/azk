@@ -251,6 +251,33 @@ func getLocations(subscriptionID, clientID, clientSecret string) ([]string, erro
 	return locations, err
 }
 
+// func getResourcesSku(subscriptionID, clientID, clientSecret string) ([]string, error) {
+// 	var locations []string
+// 	resClient := compute.NewResourceSkusClient(subscriptionID)
+// 	a, err := getAuthorizerForResource(subscriptionID, clientID, clientSecret)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	resClient.Authorizer = a
+// 	resClient.AddToUserAgent("azkprompt")
+
+// 	res, err := resClient.List(context.TODO())
+// 	if err != nil {
+// 		return locations, err
+// 	}
+
+// 	for _, resSku := range res.Values() {
+// 		fmt.Println(*resSku.Locations)
+// 		fmt.Println(*resSku.Name)
+// 		for _, locationInfo := range *resSku.LocationInfo {
+// 			fmt.Println(*locationInfo.Location)
+// 			fmt.Println(*locationInfo.Zones)
+// 		}
+
+// 	}
+// 	return nil, nil
+// }
+
 func getVMSizes(subscriptionID, location, clientID, clientSecret string) ([]string, error) {
 	var vmsizes []string
 	vmSizesClient := compute.NewVirtualMachineSizesClient(subscriptionID)

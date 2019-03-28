@@ -60,6 +60,13 @@ func RunFlow() error {
 		return err
 	}
 
+	tenantID, err := getSecret("Tenant ID", func(i string) error {
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+
 	resourceGroupName, err := getInput("Resource Group Name", func(i string) error {
 		matched, err := regexp.MatchString(`^[-\w\._\(\)]+$`, i)
 		if err != nil || !matched {
@@ -110,7 +117,7 @@ func RunFlow() error {
 		SubscriptionID:    subscriptionID,
 		ClientID:          clientID,
 		ClientSecret:      clientSecret,
-		TenantID:          "72f988bf-86f1-41af-91ab-2d7cd011db47",
+		TenantID:          tenantID,
 		ResourceGroup:     resourceGroupName,
 		ResourceLocation:  region,
 		DNSPrefix:         dnsPrefix,

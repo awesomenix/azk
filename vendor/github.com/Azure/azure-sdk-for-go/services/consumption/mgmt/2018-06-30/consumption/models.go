@@ -315,7 +315,7 @@ type Budget struct {
 	Name *string `json:"name,omitempty"`
 	// Type - Resource type.
 	Type *string `json:"type,omitempty"`
-	// ETag - eTag of the resource. To handle concurrent update scenarion, this field will be used to determine whether the user is updating the latest version or not.
+	// ETag - eTag of the resource. To handle concurrent update scenario, this field will be used to determine whether the user is updating the latest version or not.
 	ETag *string `json:"eTag,omitempty"`
 }
 
@@ -408,7 +408,7 @@ type BudgetProperties struct {
 	Amount *decimal.Decimal `json:"amount,omitempty"`
 	// TimeGrain - The time covered by a budget. Tracking of the amount will be reset based on the time grain. Possible values include: 'TimeGrainTypeMonthly', 'TimeGrainTypeQuarterly', 'TimeGrainTypeAnnually'
 	TimeGrain TimeGrainType `json:"timeGrain,omitempty"`
-	// TimePeriod - Has start and end date of the budget. The start date must be first of the month and should be less than the end date. Budget start date must be on or after June 1, 2017. Future start date should not be more than three months. Past start date should  be selected within the timegrain preiod. There are no restrictions on the end date.
+	// TimePeriod - Has start and end date of the budget. The start date must be first of the month and should be less than the end date. Budget start date must be on or after June 1, 2017. Future start date should not be more than three months. Past start date should  be selected within the timegrain period. There are no restrictions on the end date.
 	TimePeriod *BudgetTimePeriod `json:"timePeriod,omitempty"`
 	// Filters - May be used to filter budgets by resource group, resource, or meter.
 	Filters *Filters `json:"filters,omitempty"`
@@ -513,6 +513,11 @@ func (iter BudgetsListResultIterator) Value() Budget {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the BudgetsListResultIterator type.
+func NewBudgetsListResultIterator(page BudgetsListResultPage) BudgetsListResultIterator {
+	return BudgetsListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (blr BudgetsListResult) IsEmpty() bool {
 	return blr.Value == nil || len(*blr.Value) == 0
@@ -582,6 +587,11 @@ func (page BudgetsListResultPage) Values() []Budget {
 	return *page.blr.Value
 }
 
+// Creates a new instance of the BudgetsListResultPage type.
+func NewBudgetsListResultPage(getNextPage func(context.Context, BudgetsListResult) (BudgetsListResult, error)) BudgetsListResultPage {
+	return BudgetsListResultPage{fn: getNextPage}
+}
+
 // BudgetTimePeriod the start and end date for a budget.
 type BudgetTimePeriod struct {
 	// StartDate - The start date for the budget.
@@ -600,7 +610,7 @@ type CostTag struct {
 	Name *string `json:"name,omitempty"`
 	// Type - Resource type.
 	Type *string `json:"type,omitempty"`
-	// ETag - eTag of the resource. To handle concurrent update scenarion, this field will be used to determine whether the user is updating the latest version or not.
+	// ETag - eTag of the resource. To handle concurrent update scenario, this field will be used to determine whether the user is updating the latest version or not.
 	ETag *string `json:"eTag,omitempty"`
 }
 
@@ -1202,6 +1212,11 @@ func (iter MarketplacesListResultIterator) Value() Marketplace {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the MarketplacesListResultIterator type.
+func NewMarketplacesListResultIterator(page MarketplacesListResultPage) MarketplacesListResultIterator {
+	return MarketplacesListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (mlr MarketplacesListResult) IsEmpty() bool {
 	return mlr.Value == nil || len(*mlr.Value) == 0
@@ -1269,6 +1284,11 @@ func (page MarketplacesListResultPage) Values() []Marketplace {
 		return nil
 	}
 	return *page.mlr.Value
+}
+
+// Creates a new instance of the MarketplacesListResultPage type.
+func NewMarketplacesListResultPage(getNextPage func(context.Context, MarketplacesListResult) (MarketplacesListResult, error)) MarketplacesListResultPage {
+	return MarketplacesListResultPage{fn: getNextPage}
 }
 
 // MeterDetails the properties of the meter detail.
@@ -1395,6 +1415,11 @@ func (iter OperationListResultIterator) Value() Operation {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the OperationListResultIterator type.
+func NewOperationListResultIterator(page OperationListResultPage) OperationListResultIterator {
+	return OperationListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (olr OperationListResult) IsEmpty() bool {
 	return olr.Value == nil || len(*olr.Value) == 0
@@ -1462,6 +1487,11 @@ func (page OperationListResultPage) Values() []Operation {
 		return nil
 	}
 	return *page.olr.Value
+}
+
+// Creates a new instance of the OperationListResultPage type.
+func NewOperationListResultPage(getNextPage func(context.Context, OperationListResult) (OperationListResult, error)) OperationListResultPage {
+	return OperationListResultPage{fn: getNextPage}
 }
 
 // PriceSheetModel price sheet result. It contains the pricesheet associated with billing period
@@ -1597,7 +1627,7 @@ type ProxyResource struct {
 	Name *string `json:"name,omitempty"`
 	// Type - Resource type.
 	Type *string `json:"type,omitempty"`
-	// ETag - eTag of the resource. To handle concurrent update scenarion, this field will be used to determine whether the user is updating the latest version or not.
+	// ETag - eTag of the resource. To handle concurrent update scenario, this field will be used to determine whether the user is updating the latest version or not.
 	ETag *string `json:"eTag,omitempty"`
 }
 
@@ -1701,7 +1731,7 @@ type ReservationDetailProperties struct {
 	ReservationOrderID *string `json:"reservationOrderId,omitempty"`
 	// ReservationID - The reservation ID is the identifier of a reservation within a reservation order. Each reservation is the grouping for applying the benefit scope and also specifies the number of instances to which the reservation benefit can be applied to.
 	ReservationID *string `json:"reservationId,omitempty"`
-	// SkuName - This is the ARM Sku name. It can be used to join with the servicetype field in additoinalinfo in usage records.
+	// SkuName - This is the ARM Sku name. It can be used to join with the serviceType field in additional info in usage records.
 	SkuName *string `json:"skuName,omitempty"`
 	// ReservedHours - This is the total hours reserved for the day. E.g. if reservation for 1 instance was made on 1 PM, this will be 11 hours for that day and 24 hours from subsequent days.
 	ReservedHours *decimal.Decimal `json:"reservedHours,omitempty"`
@@ -1711,7 +1741,7 @@ type ReservationDetailProperties struct {
 	UsedHours *decimal.Decimal `json:"usedHours,omitempty"`
 	// InstanceID - This identifier is the name of the resource or the fully qualified Resource ID.
 	InstanceID *string `json:"instanceId,omitempty"`
-	// TotalReservedQuantity - This is the total count of instances that are reserved for the reservationid.
+	// TotalReservedQuantity - This is the total count of instances that are reserved for the reservationId.
 	TotalReservedQuantity *decimal.Decimal `json:"totalReservedQuantity,omitempty"`
 }
 
@@ -1782,6 +1812,11 @@ func (iter ReservationDetailsListResultIterator) Value() ReservationDetail {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ReservationDetailsListResultIterator type.
+func NewReservationDetailsListResultIterator(page ReservationDetailsListResultPage) ReservationDetailsListResultIterator {
+	return ReservationDetailsListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (rdlr ReservationDetailsListResult) IsEmpty() bool {
 	return rdlr.Value == nil || len(*rdlr.Value) == 0
@@ -1849,6 +1884,11 @@ func (page ReservationDetailsListResultPage) Values() []ReservationDetail {
 		return nil
 	}
 	return *page.rdlr.Value
+}
+
+// Creates a new instance of the ReservationDetailsListResultPage type.
+func NewReservationDetailsListResultPage(getNextPage func(context.Context, ReservationDetailsListResult) (ReservationDetailsListResult, error)) ReservationDetailsListResultPage {
+	return ReservationDetailsListResultPage{fn: getNextPage}
 }
 
 // ReservationRecommendation reservation recommendation resource.
@@ -1983,7 +2023,7 @@ type ReservationRecommendationProperties struct {
 	Term *string `json:"term,omitempty"`
 	// CostWithNoReservedInstances - The total amount of cost without reserved instances.
 	CostWithNoReservedInstances *decimal.Decimal `json:"costWithNoReservedInstances,omitempty"`
-	// RecommendedQuantity - Recomended quality for reserved instances.
+	// RecommendedQuantity - Recommended quality for reserved instances.
 	RecommendedQuantity *decimal.Decimal `json:"recommendedQuantity,omitempty"`
 	// TotalCostWithReservedInstances - The total amount of cost with reserved instances.
 	TotalCostWithReservedInstances *decimal.Decimal `json:"totalCostWithReservedInstances,omitempty"`
@@ -2063,6 +2103,11 @@ func (iter ReservationRecommendationsListResultIterator) Value() ReservationReco
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ReservationRecommendationsListResultIterator type.
+func NewReservationRecommendationsListResultIterator(page ReservationRecommendationsListResultPage) ReservationRecommendationsListResultIterator {
+	return ReservationRecommendationsListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (rrlr ReservationRecommendationsListResult) IsEmpty() bool {
 	return rrlr.Value == nil || len(*rrlr.Value) == 0
@@ -2130,6 +2175,11 @@ func (page ReservationRecommendationsListResultPage) Values() []ReservationRecom
 		return nil
 	}
 	return *page.rrlr.Value
+}
+
+// Creates a new instance of the ReservationRecommendationsListResultPage type.
+func NewReservationRecommendationsListResultPage(getNextPage func(context.Context, ReservationRecommendationsListResult) (ReservationRecommendationsListResult, error)) ReservationRecommendationsListResultPage {
+	return ReservationRecommendationsListResultPage{fn: getNextPage}
 }
 
 // ReservationSummariesListResult result of listing reservation summaries.
@@ -2200,6 +2250,11 @@ func (iter ReservationSummariesListResultIterator) Value() ReservationSummary {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ReservationSummariesListResultIterator type.
+func NewReservationSummariesListResultIterator(page ReservationSummariesListResultPage) ReservationSummariesListResultIterator {
+	return ReservationSummariesListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (rslr ReservationSummariesListResult) IsEmpty() bool {
 	return rslr.Value == nil || len(*rslr.Value) == 0
@@ -2267,6 +2322,11 @@ func (page ReservationSummariesListResultPage) Values() []ReservationSummary {
 		return nil
 	}
 	return *page.rslr.Value
+}
+
+// Creates a new instance of the ReservationSummariesListResultPage type.
+func NewReservationSummariesListResultPage(getNextPage func(context.Context, ReservationSummariesListResult) (ReservationSummariesListResult, error)) ReservationSummariesListResultPage {
+	return ReservationSummariesListResultPage{fn: getNextPage}
 }
 
 // ReservationSummary reservation summary resource.
@@ -2369,7 +2429,7 @@ type ReservationSummaryProperties struct {
 	ReservationOrderID *string `json:"reservationOrderId,omitempty"`
 	// ReservationID - The reservation ID is the identifier of a reservation within a reservation order. Each reservation is the grouping for applying the benefit scope and also specifies the number of instances to which the reservation benefit can be applied to.
 	ReservationID *string `json:"reservationId,omitempty"`
-	// SkuName - This is the ARM Sku name. It can be used to join with the servicetype field in additoinalinfo in usage records.
+	// SkuName - This is the ARM Sku name. It can be used to join with the serviceType field in additional info in usage records.
 	SkuName *string `json:"skuName,omitempty"`
 	// ReservedHours - This is the total hours reserved. E.g. if reservation for 1 instance was made on 1 PM, this will be 11 hours for that day and 24 hours from subsequent days
 	ReservedHours *decimal.Decimal `json:"reservedHours,omitempty"`
@@ -2445,7 +2505,7 @@ type TagsResult struct {
 	Name *string `json:"name,omitempty"`
 	// Type - Resource type.
 	Type *string `json:"type,omitempty"`
-	// ETag - eTag of the resource. To handle concurrent update scenarion, this field will be used to determine whether the user is updating the latest version or not.
+	// ETag - eTag of the resource. To handle concurrent update scenario, this field will be used to determine whether the user is updating the latest version or not.
 	ETag *string `json:"eTag,omitempty"`
 }
 
@@ -2750,6 +2810,11 @@ func (iter UsageDetailsListResultIterator) Value() UsageDetail {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the UsageDetailsListResultIterator type.
+func NewUsageDetailsListResultIterator(page UsageDetailsListResultPage) UsageDetailsListResultIterator {
+	return UsageDetailsListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (udlr UsageDetailsListResult) IsEmpty() bool {
 	return udlr.Value == nil || len(*udlr.Value) == 0
@@ -2817,4 +2882,9 @@ func (page UsageDetailsListResultPage) Values() []UsageDetail {
 		return nil
 	}
 	return *page.udlr.Value
+}
+
+// Creates a new instance of the UsageDetailsListResultPage type.
+func NewUsageDetailsListResultPage(getNextPage func(context.Context, UsageDetailsListResult) (UsageDetailsListResult, error)) UsageDetailsListResultPage {
+	return UsageDetailsListResultPage{fn: getNextPage}
 }

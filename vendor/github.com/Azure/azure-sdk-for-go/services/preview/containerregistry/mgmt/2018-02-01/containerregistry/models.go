@@ -31,6 +31,19 @@ import (
 // The package's fully qualified name.
 const fqdn = "github.com/Azure/azure-sdk-for-go/services/preview/containerregistry/mgmt/2018-02-01/containerregistry"
 
+// Action enumerates the values for action.
+type Action string
+
+const (
+	// Allow ...
+	Allow Action = "Allow"
+)
+
+// PossibleActionValues returns an array of possible values for the Action const type.
+func PossibleActionValues() []Action {
+	return []Action{Allow}
+}
+
 // BaseImageDependencyType enumerates the values for base image dependency type.
 type BaseImageDependencyType string
 
@@ -118,6 +131,21 @@ const (
 // PossibleBuildTypeValues returns an array of possible values for the BuildType const type.
 func PossibleBuildTypeValues() []BuildType {
 	return []BuildType{AutoBuild, QuickBuild}
+}
+
+// DefaultAction enumerates the values for default action.
+type DefaultAction string
+
+const (
+	// DefaultActionAllow ...
+	DefaultActionAllow DefaultAction = "Allow"
+	// DefaultActionDeny ...
+	DefaultActionDeny DefaultAction = "Deny"
+)
+
+// PossibleDefaultActionValues returns an array of possible values for the DefaultAction const type.
+func PossibleDefaultActionValues() []DefaultAction {
+	return []DefaultAction{DefaultActionAllow, DefaultActionDeny}
 }
 
 // ImportMode enumerates the values for import mode.
@@ -351,6 +379,10 @@ func PossibleTypeBasicQueueBuildRequestValues() []TypeBasicQueueBuildRequest {
 type WebhookAction string
 
 const (
+	// ChartDelete ...
+	ChartDelete WebhookAction = "chart_delete"
+	// ChartPush ...
+	ChartPush WebhookAction = "chart_push"
 	// Delete ...
 	Delete WebhookAction = "delete"
 	// Push ...
@@ -361,7 +393,7 @@ const (
 
 // PossibleWebhookActionValues returns an array of possible values for the WebhookAction const type.
 func PossibleWebhookActionValues() []WebhookAction {
-	return []WebhookAction{Delete, Push, Quarantine}
+	return []WebhookAction{ChartDelete, ChartPush, Delete, Push, Quarantine}
 }
 
 // WebhookStatus enumerates the values for webhook status.
@@ -561,6 +593,11 @@ func (iter BuildArgumentListIterator) Value() BuildArgument {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the BuildArgumentListIterator type.
+func NewBuildArgumentListIterator(page BuildArgumentListPage) BuildArgumentListIterator {
+	return BuildArgumentListIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (bal BuildArgumentList) IsEmpty() bool {
 	return bal.Value == nil || len(*bal.Value) == 0
@@ -628,6 +665,11 @@ func (page BuildArgumentListPage) Values() []BuildArgument {
 		return nil
 	}
 	return *page.bal.Value
+}
+
+// Creates a new instance of the BuildArgumentListPage type.
+func NewBuildArgumentListPage(getNextPage func(context.Context, BuildArgumentList) (BuildArgumentList, error)) BuildArgumentListPage {
+	return BuildArgumentListPage{fn: getNextPage}
 }
 
 // BuildFilter properties that are enabled for Odata querying.
@@ -724,6 +766,11 @@ func (iter BuildListResultIterator) Value() Build {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the BuildListResultIterator type.
+func NewBuildListResultIterator(page BuildListResultPage) BuildListResultIterator {
+	return BuildListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (blr BuildListResult) IsEmpty() bool {
 	return blr.Value == nil || len(*blr.Value) == 0
@@ -791,6 +838,11 @@ func (page BuildListResultPage) Values() []Build {
 		return nil
 	}
 	return *page.blr.Value
+}
+
+// Creates a new instance of the BuildListResultPage type.
+func NewBuildListResultPage(getNextPage func(context.Context, BuildListResult) (BuildListResult, error)) BuildListResultPage {
+	return BuildListResultPage{fn: getNextPage}
 }
 
 // BuildProperties the properties for a build.
@@ -977,6 +1029,11 @@ func (iter BuildStepListIterator) Value() BuildStep {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the BuildStepListIterator type.
+func NewBuildStepListIterator(page BuildStepListPage) BuildStepListIterator {
+	return BuildStepListIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (bsl BuildStepList) IsEmpty() bool {
 	return bsl.Value == nil || len(*bsl.Value) == 0
@@ -1044,6 +1101,11 @@ func (page BuildStepListPage) Values() []BuildStep {
 		return nil
 	}
 	return *page.bsl.Value
+}
+
+// Creates a new instance of the BuildStepListPage type.
+func NewBuildStepListPage(getNextPage func(context.Context, BuildStepList) (BuildStepList, error)) BuildStepListPage {
+	return BuildStepListPage{fn: getNextPage}
 }
 
 // BasicBuildStepProperties base properties for any build step.
@@ -1583,6 +1645,11 @@ func (iter BuildTaskListResultIterator) Value() BuildTask {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the BuildTaskListResultIterator type.
+func NewBuildTaskListResultIterator(page BuildTaskListResultPage) BuildTaskListResultIterator {
+	return BuildTaskListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (btlr BuildTaskListResult) IsEmpty() bool {
 	return btlr.Value == nil || len(*btlr.Value) == 0
@@ -1650,6 +1717,11 @@ func (page BuildTaskListResultPage) Values() []BuildTask {
 		return nil
 	}
 	return *page.btlr.Value
+}
+
+// Creates a new instance of the BuildTaskListResultPage type.
+func NewBuildTaskListResultPage(getNextPage func(context.Context, BuildTaskListResult) (BuildTaskListResult, error)) BuildTaskListResultPage {
+	return BuildTaskListResultPage{fn: getNextPage}
 }
 
 // BuildTaskProperties the properties of a build task.
@@ -2099,6 +2171,11 @@ func (iter EventListResultIterator) Value() Event {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the EventListResultIterator type.
+func NewEventListResultIterator(page EventListResultPage) EventListResultIterator {
+	return EventListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (elr EventListResult) IsEmpty() bool {
 	return elr.Value == nil || len(*elr.Value) == 0
@@ -2166,6 +2243,11 @@ func (page EventListResultPage) Values() []Event {
 		return nil
 	}
 	return *page.elr.Value
+}
+
+// Creates a new instance of the EventListResultPage type.
+func NewEventListResultPage(getNextPage func(context.Context, EventListResult) (EventListResult, error)) EventListResultPage {
+	return EventListResultPage{fn: getNextPage}
 }
 
 // EventRequestMessage the event request message sent to the service URI.
@@ -2307,6 +2389,24 @@ type ImportSourceCredentials struct {
 	Username *string `json:"username,omitempty"`
 	// Password - The password used to authenticate with the source registry.
 	Password *string `json:"password,omitempty"`
+}
+
+// IPRule IP rule with specific IP or IP range in CIDR format.
+type IPRule struct {
+	// Action - The action of IP ACL rule. Possible values include: 'Allow'
+	Action Action `json:"action,omitempty"`
+	// IPAddressOrRange - Specifies the IP or IP range in CIDR format. Only IPV4 address is allowed.
+	IPAddressOrRange *string `json:"value,omitempty"`
+}
+
+// NetworkRuleSet the network rule set for a container registry.
+type NetworkRuleSet struct {
+	// DefaultAction - The default action of allow or deny when no other rules match. Possible values include: 'DefaultActionAllow', 'DefaultActionDeny'
+	DefaultAction DefaultAction `json:"defaultAction,omitempty"`
+	// VirtualNetworkRules - The virtual network rules.
+	VirtualNetworkRules *[]VirtualNetworkRule `json:"virtualNetworkRules,omitempty"`
+	// IPRules - The IP ACL rules.
+	IPRules *[]IPRule `json:"ipRules,omitempty"`
 }
 
 // OperationDefinition the definition of a container registry operation.
@@ -2469,6 +2569,11 @@ func (iter OperationListResultIterator) Value() OperationDefinition {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the OperationListResultIterator type.
+func NewOperationListResultIterator(page OperationListResultPage) OperationListResultIterator {
+	return OperationListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (olr OperationListResult) IsEmpty() bool {
 	return olr.Value == nil || len(*olr.Value) == 0
@@ -2536,6 +2641,11 @@ func (page OperationListResultPage) Values() []OperationDefinition {
 		return nil
 	}
 	return *page.olr.Value
+}
+
+// Creates a new instance of the OperationListResultPage type.
+func NewOperationListResultPage(getNextPage func(context.Context, OperationListResult) (OperationListResult, error)) OperationListResultPage {
+	return OperationListResultPage{fn: getNextPage}
 }
 
 // OperationMetricSpecificationDefinition the definition of Azure Monitoring metric.
@@ -2679,7 +2789,7 @@ func (qbr QueueBuildRequest) AsBasicQueueBuildRequest() (BasicQueueBuildRequest,
 type QuickBuildRequest struct {
 	// ImageNames - The fully qualified image names including the repository and tag.
 	ImageNames *[]string `json:"imageNames,omitempty"`
-	// SourceLocation - The URL(absolute or relative) of the source that needs to be built. For Docker build, it can be an URL to a tar or github repoistory as supported by Docker.
+	// SourceLocation - The URL(absolute or relative) of the source that needs to be built. For Docker build, it can be an URL to a tar or github repository as supported by Docker.
 	// If it is relative URL, the relative path should be obtained from calling getSourceUploadUrl API.
 	SourceLocation *string `json:"sourceLocation,omitempty"`
 	// BuildArguments - The collection of build arguments to be used.
@@ -3144,6 +3254,11 @@ func (iter RegistryListResultIterator) Value() Registry {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the RegistryListResultIterator type.
+func NewRegistryListResultIterator(page RegistryListResultPage) RegistryListResultIterator {
+	return RegistryListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (rlr RegistryListResult) IsEmpty() bool {
 	return rlr.Value == nil || len(*rlr.Value) == 0
@@ -3213,6 +3328,11 @@ func (page RegistryListResultPage) Values() []Registry {
 	return *page.rlr.Value
 }
 
+// Creates a new instance of the RegistryListResultPage type.
+func NewRegistryListResultPage(getNextPage func(context.Context, RegistryListResult) (RegistryListResult, error)) RegistryListResultPage {
+	return RegistryListResultPage{fn: getNextPage}
+}
+
 // RegistryNameCheckRequest a request to check whether a container registry name is available.
 type RegistryNameCheckRequest struct {
 	// Name - The name of the container registry.
@@ -3263,6 +3383,8 @@ type RegistryProperties struct {
 	AdminUserEnabled *bool `json:"adminUserEnabled,omitempty"`
 	// StorageAccount - The properties of the storage account for the container registry. Only applicable to Classic SKU.
 	StorageAccount *StorageAccountProperties `json:"storageAccount,omitempty"`
+	// NetworkRuleSet - The network rule set for a container registry.
+	NetworkRuleSet *NetworkRuleSet `json:"networkRuleSet,omitempty"`
 }
 
 // RegistryPropertiesUpdateParameters the parameters for updating the properties of a container registry.
@@ -3271,6 +3393,8 @@ type RegistryPropertiesUpdateParameters struct {
 	AdminUserEnabled *bool `json:"adminUserEnabled,omitempty"`
 	// StorageAccount - The parameters of a storage account for the container registry. Only applicable to Classic SKU. If specified, the storage account must be in the same physical location as the container registry.
 	StorageAccount *StorageAccountProperties `json:"storageAccount,omitempty"`
+	// NetworkRuleSet - The network rule set for a container registry.
+	NetworkRuleSet *NetworkRuleSet `json:"networkRuleSet,omitempty"`
 }
 
 // RegistryUpdateParameters the parameters for updating a container registry.
@@ -3550,6 +3674,11 @@ func (iter ReplicationListResultIterator) Value() Replication {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ReplicationListResultIterator type.
+func NewReplicationListResultIterator(page ReplicationListResultPage) ReplicationListResultIterator {
+	return ReplicationListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (rlr ReplicationListResult) IsEmpty() bool {
 	return rlr.Value == nil || len(*rlr.Value) == 0
@@ -3617,6 +3746,11 @@ func (page ReplicationListResultPage) Values() []Replication {
 		return nil
 	}
 	return *page.rlr.Value
+}
+
+// Creates a new instance of the ReplicationListResultPage type.
+func NewReplicationListResultPage(getNextPage func(context.Context, ReplicationListResult) (ReplicationListResult, error)) ReplicationListResultPage {
+	return ReplicationListResultPage{fn: getNextPage}
 }
 
 // ReplicationProperties the properties of a replication.
@@ -3808,7 +3942,7 @@ type SourceRepositoryProperties struct {
 	autorest.Response `json:"-"`
 	// SourceControlType - The type of source control service. Possible values include: 'Github', 'VisualStudioTeamService'
 	SourceControlType SourceControlType `json:"sourceControlType,omitempty"`
-	// RepositoryURL - The full URL to the source code respository
+	// RepositoryURL - The full URL to the source code repository
 	RepositoryURL *string `json:"repositoryUrl,omitempty"`
 	// IsCommitTriggerEnabled - The value of this property indicates whether the source control commit trigger is enabled or not.
 	IsCommitTriggerEnabled *bool `json:"isCommitTriggerEnabled,omitempty"`
@@ -3874,6 +4008,14 @@ type TrustPolicy struct {
 	Type TrustPolicyType `json:"type,omitempty"`
 	// Status - The value that indicates whether the policy is enabled or not. Possible values include: 'PolicyStatusEnabled', 'PolicyStatusDisabled'
 	Status PolicyStatus `json:"status,omitempty"`
+}
+
+// VirtualNetworkRule virtual network rule.
+type VirtualNetworkRule struct {
+	// Action - The action of virtual network rule. Possible values include: 'Allow'
+	Action Action `json:"action,omitempty"`
+	// VirtualNetworkResourceID - Resource ID of a subnet, for example: /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/virtualNetworks/{vnetName}/subnets/{subnetName}.
+	VirtualNetworkResourceID *string `json:"id,omitempty"`
 }
 
 // Webhook an object that represents a webhook for a container registry.
@@ -4120,6 +4262,11 @@ func (iter WebhookListResultIterator) Value() Webhook {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the WebhookListResultIterator type.
+func NewWebhookListResultIterator(page WebhookListResultPage) WebhookListResultIterator {
+	return WebhookListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (wlr WebhookListResult) IsEmpty() bool {
 	return wlr.Value == nil || len(*wlr.Value) == 0
@@ -4187,6 +4334,11 @@ func (page WebhookListResultPage) Values() []Webhook {
 		return nil
 	}
 	return *page.wlr.Value
+}
+
+// Creates a new instance of the WebhookListResultPage type.
+func NewWebhookListResultPage(getNextPage func(context.Context, WebhookListResult) (WebhookListResult, error)) WebhookListResultPage {
+	return WebhookListResultPage{fn: getNextPage}
 }
 
 // WebhookProperties the properties of a webhook.

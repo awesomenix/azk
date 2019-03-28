@@ -49,6 +49,21 @@ func PossibleAacAudioProfileValues() []AacAudioProfile {
 	return []AacAudioProfile{AacLc, HeAacV1, HeAacV2}
 }
 
+// AnalysisResolution enumerates the values for analysis resolution.
+type AnalysisResolution string
+
+const (
+	// SourceResolution ...
+	SourceResolution AnalysisResolution = "SourceResolution"
+	// StandardDefinition ...
+	StandardDefinition AnalysisResolution = "StandardDefinition"
+)
+
+// PossibleAnalysisResolutionValues returns an array of possible values for the AnalysisResolution const type.
+func PossibleAnalysisResolutionValues() []AnalysisResolution {
+	return []AnalysisResolution{SourceResolution, StandardDefinition}
+}
+
 // AssetContainerPermission enumerates the values for asset container permission.
 type AssetContainerPermission string
 
@@ -225,9 +240,14 @@ const (
 	// AdaptiveStreaming Produces a set of GOP aligned MP4 files with H.264 video and stereo AAC audio.
 	// Auto-generates a bitrate ladder based on the input resolution and bitrate. The auto-generated preset
 	// will never exceed the input resolution and bitrate. For example, if the input is 720p at 3 Mbps, output
-	// will remain 720p at best, and will start at rates lower than 3 Mbps. The output will will have video and
+	// will remain 720p at best, and will start at rates lower than 3 Mbps. The output will have video and
 	// audio in separate MP4 files, which is optimal for adaptive streaming.
 	AdaptiveStreaming EncoderNamedPreset = "AdaptiveStreaming"
+	// ContentAwareEncodingExperimental Exposes an experimental preset for content-aware encoding. Given any
+	// input content, the service attempts to automatically determine the optimal number of layers, appropriate
+	// bitrate and resolution settings for delivery by adaptive streaming. The underlying algorithms will
+	// continue to evolve over time. The output will contain MP4 files with video and audio interleaved.
+	ContentAwareEncodingExperimental EncoderNamedPreset = "ContentAwareEncodingExperimental"
 	// H264MultipleBitrate1080p Produces a set of 8 GOP-aligned MP4 files, ranging from 6000 kbps to 400 kbps,
 	// and stereo AAC audio. Resolution starts at 1080p and goes down to 360p.
 	H264MultipleBitrate1080p EncoderNamedPreset = "H264MultipleBitrate1080p"
@@ -250,7 +270,7 @@ const (
 
 // PossibleEncoderNamedPresetValues returns an array of possible values for the EncoderNamedPreset const type.
 func PossibleEncoderNamedPresetValues() []EncoderNamedPreset {
-	return []EncoderNamedPreset{AACGoodQualityAudio, AdaptiveStreaming, H264MultipleBitrate1080p, H264MultipleBitrate720p, H264MultipleBitrateSD, H264SingleBitrate1080p, H264SingleBitrate720p, H264SingleBitrateSD}
+	return []EncoderNamedPreset{AACGoodQualityAudio, AdaptiveStreaming, ContentAwareEncodingExperimental, H264MultipleBitrate1080p, H264MultipleBitrate720p, H264MultipleBitrateSD, H264SingleBitrate1080p, H264SingleBitrate720p, H264SingleBitrateSD}
 }
 
 // EncryptionScheme enumerates the values for encryption scheme.
@@ -494,11 +514,13 @@ const (
 	LiveEventEncodingTypeBasic LiveEventEncodingType = "Basic"
 	// LiveEventEncodingTypeNone ...
 	LiveEventEncodingTypeNone LiveEventEncodingType = "None"
+	// LiveEventEncodingTypeStandard ...
+	LiveEventEncodingTypeStandard LiveEventEncodingType = "Standard"
 )
 
 // PossibleLiveEventEncodingTypeValues returns an array of possible values for the LiveEventEncodingType const type.
 func PossibleLiveEventEncodingTypeValues() []LiveEventEncodingType {
-	return []LiveEventEncodingType{LiveEventEncodingTypeBasic, LiveEventEncodingTypeNone}
+	return []LiveEventEncodingType{LiveEventEncodingTypeBasic, LiveEventEncodingTypeNone, LiveEventEncodingTypeStandard}
 }
 
 // LiveEventInputProtocol enumerates the values for live event input protocol.
@@ -807,6 +829,8 @@ const (
 	OdataTypeMicrosoftMediaAudioAnalyzerPreset OdataTypeBasicPreset = "#Microsoft.Media.AudioAnalyzerPreset"
 	// OdataTypeMicrosoftMediaBuiltInStandardEncoderPreset ...
 	OdataTypeMicrosoftMediaBuiltInStandardEncoderPreset OdataTypeBasicPreset = "#Microsoft.Media.BuiltInStandardEncoderPreset"
+	// OdataTypeMicrosoftMediaFaceDetectorPreset ...
+	OdataTypeMicrosoftMediaFaceDetectorPreset OdataTypeBasicPreset = "#Microsoft.Media.FaceDetectorPreset"
 	// OdataTypeMicrosoftMediaStandardEncoderPreset ...
 	OdataTypeMicrosoftMediaStandardEncoderPreset OdataTypeBasicPreset = "#Microsoft.Media.StandardEncoderPreset"
 	// OdataTypeMicrosoftMediaVideoAnalyzerPreset ...
@@ -817,7 +841,7 @@ const (
 
 // PossibleOdataTypeBasicPresetValues returns an array of possible values for the OdataTypeBasicPreset const type.
 func PossibleOdataTypeBasicPresetValues() []OdataTypeBasicPreset {
-	return []OdataTypeBasicPreset{OdataTypeMicrosoftMediaAudioAnalyzerPreset, OdataTypeMicrosoftMediaBuiltInStandardEncoderPreset, OdataTypeMicrosoftMediaStandardEncoderPreset, OdataTypeMicrosoftMediaVideoAnalyzerPreset, OdataTypePreset}
+	return []OdataTypeBasicPreset{OdataTypeMicrosoftMediaAudioAnalyzerPreset, OdataTypeMicrosoftMediaBuiltInStandardEncoderPreset, OdataTypeMicrosoftMediaFaceDetectorPreset, OdataTypeMicrosoftMediaStandardEncoderPreset, OdataTypeMicrosoftMediaVideoAnalyzerPreset, OdataTypePreset}
 }
 
 // OnErrorType enumerates the values for on error type.
@@ -1281,6 +1305,11 @@ func (iter AccountFilterCollectionIterator) Value() AccountFilter {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the AccountFilterCollectionIterator type.
+func NewAccountFilterCollectionIterator(page AccountFilterCollectionPage) AccountFilterCollectionIterator {
+	return AccountFilterCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (afc AccountFilterCollection) IsEmpty() bool {
 	return afc.Value == nil || len(*afc.Value) == 0
@@ -1348,6 +1377,11 @@ func (page AccountFilterCollectionPage) Values() []AccountFilter {
 		return nil
 	}
 	return *page.afc.Value
+}
+
+// Creates a new instance of the AccountFilterCollectionPage type.
+func NewAccountFilterCollectionPage(getNextPage func(context.Context, AccountFilterCollection) (AccountFilterCollection, error)) AccountFilterCollectionPage {
+	return AccountFilterCollectionPage{fn: getNextPage}
 }
 
 // AkamaiAccessControl akamai access control
@@ -1521,6 +1555,11 @@ func (iter AssetCollectionIterator) Value() Asset {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the AssetCollectionIterator type.
+func NewAssetCollectionIterator(page AssetCollectionPage) AssetCollectionIterator {
+	return AssetCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (ac AssetCollection) IsEmpty() bool {
 	return ac.Value == nil || len(*ac.Value) == 0
@@ -1588,6 +1627,11 @@ func (page AssetCollectionPage) Values() []Asset {
 		return nil
 	}
 	return *page.ac.Value
+}
+
+// Creates a new instance of the AssetCollectionPage type.
+func NewAssetCollectionPage(getNextPage func(context.Context, AssetCollection) (AssetCollection, error)) AssetCollectionPage {
+	return AssetCollectionPage{fn: getNextPage}
 }
 
 // AssetContainerSas the Asset Storage container SAS URLs.
@@ -1755,6 +1799,11 @@ func (iter AssetFilterCollectionIterator) Value() AssetFilter {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the AssetFilterCollectionIterator type.
+func NewAssetFilterCollectionIterator(page AssetFilterCollectionPage) AssetFilterCollectionIterator {
+	return AssetFilterCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (afc AssetFilterCollection) IsEmpty() bool {
 	return afc.Value == nil || len(*afc.Value) == 0
@@ -1822,6 +1871,11 @@ func (page AssetFilterCollectionPage) Values() []AssetFilter {
 		return nil
 	}
 	return *page.afc.Value
+}
+
+// Creates a new instance of the AssetFilterCollectionPage type.
+func NewAssetFilterCollectionPage(getNextPage func(context.Context, AssetFilterCollection) (AssetFilterCollection, error)) AssetFilterCollectionPage {
+	return AssetFilterCollectionPage{fn: getNextPage}
 }
 
 // AssetProperties the Asset properties.
@@ -2024,9 +2078,9 @@ type BasicAudioAnalyzerPreset interface {
 // including speech transcription. Currently, the preset supports processing of content with a single audio
 // track.
 type AudioAnalyzerPreset struct {
-	// AudioLanguage - The language for the audio payload in the input using the BCP-47 format of 'language tag-region' (e.g: 'en-US'). The list of supported languages are, 'en-US', 'en-GB', 'es-ES', 'es-MX', 'fr-FR', 'it-IT', 'ja-JP', 'pt-BR', 'zh-CN', 'de-DE', 'ar-EG', 'ru-RU', 'hi-IN'. If not specified, automatic language detection would be employed. This feature currently supports English, Chinese, French, German, Italian, Japanese, Spanish, Russian, and Portuguese. The automatic detection works best with audio recordings with clearly discernable speech. If automatic detection fails to find the language, transcription would fallback to English.
+	// AudioLanguage - The language for the audio payload in the input using the BCP-47 format of 'language tag-region' (e.g: 'en-US').  The list of supported languages are English ('en-US' and 'en-GB'), Spanish ('es-ES' and 'es-MX'), French ('fr-FR'), Italian ('it-IT'), Japanese ('ja-JP'), Portuguese ('pt-BR'), Chinese ('zh-CN'), German ('de-DE'), Arabic ('ar-EG' and 'ar-SY'), Russian ('ru-RU'), Hindi ('hi-IN'), and Korean ('ko-KR'). If you know the language of your content, it is recommended that you specify it. If the language isn't specified or set to null, automatic language detection will choose the first language detected and process with the selected language for the duration of the file. This language detection feature currently supports English, Chinese, French, German, Italian, Japanese, Spanish, Russian, and Portuguese. It does not currently support dynamically switching between languages after the first language is detected. The automatic detection works best with audio recordings with clearly discernable speech. If automatic detection fails to find the language, transcription would fallback to 'en-US'."
 	AudioLanguage *string `json:"audioLanguage,omitempty"`
-	// OdataType - Possible values include: 'OdataTypePreset', 'OdataTypeMicrosoftMediaAudioAnalyzerPreset', 'OdataTypeMicrosoftMediaBuiltInStandardEncoderPreset', 'OdataTypeMicrosoftMediaStandardEncoderPreset', 'OdataTypeMicrosoftMediaVideoAnalyzerPreset'
+	// OdataType - Possible values include: 'OdataTypePreset', 'OdataTypeMicrosoftMediaFaceDetectorPreset', 'OdataTypeMicrosoftMediaAudioAnalyzerPreset', 'OdataTypeMicrosoftMediaBuiltInStandardEncoderPreset', 'OdataTypeMicrosoftMediaStandardEncoderPreset', 'OdataTypeMicrosoftMediaVideoAnalyzerPreset'
 	OdataType OdataTypeBasicPreset `json:"@odata.type,omitempty"`
 }
 
@@ -2078,6 +2132,11 @@ func (aap AudioAnalyzerPreset) MarshalJSON() ([]byte, error) {
 		objectMap["@odata.type"] = aap.OdataType
 	}
 	return json.Marshal(objectMap)
+}
+
+// AsFaceDetectorPreset is the BasicPreset implementation for AudioAnalyzerPreset.
+func (aap AudioAnalyzerPreset) AsFaceDetectorPreset() (*FaceDetectorPreset, bool) {
+	return nil, false
 }
 
 // AsAudioAnalyzerPreset is the BasicPreset implementation for AudioAnalyzerPreset.
@@ -2184,9 +2243,9 @@ func (ao AudioOverlay) AsBasicOverlay() (BasicOverlay, bool) {
 // BuiltInStandardEncoderPreset describes a built-in preset for encoding the input video with the Standard
 // Encoder.
 type BuiltInStandardEncoderPreset struct {
-	// PresetName - The built-in preset to be used for encoding videos. Possible values include: 'H264SingleBitrateSD', 'H264SingleBitrate720p', 'H264SingleBitrate1080p', 'AdaptiveStreaming', 'AACGoodQualityAudio', 'H264MultipleBitrate1080p', 'H264MultipleBitrate720p', 'H264MultipleBitrateSD'
+	// PresetName - The built-in preset to be used for encoding videos. Possible values include: 'H264SingleBitrateSD', 'H264SingleBitrate720p', 'H264SingleBitrate1080p', 'AdaptiveStreaming', 'AACGoodQualityAudio', 'ContentAwareEncodingExperimental', 'H264MultipleBitrate1080p', 'H264MultipleBitrate720p', 'H264MultipleBitrateSD'
 	PresetName EncoderNamedPreset `json:"presetName,omitempty"`
-	// OdataType - Possible values include: 'OdataTypePreset', 'OdataTypeMicrosoftMediaAudioAnalyzerPreset', 'OdataTypeMicrosoftMediaBuiltInStandardEncoderPreset', 'OdataTypeMicrosoftMediaStandardEncoderPreset', 'OdataTypeMicrosoftMediaVideoAnalyzerPreset'
+	// OdataType - Possible values include: 'OdataTypePreset', 'OdataTypeMicrosoftMediaFaceDetectorPreset', 'OdataTypeMicrosoftMediaAudioAnalyzerPreset', 'OdataTypeMicrosoftMediaBuiltInStandardEncoderPreset', 'OdataTypeMicrosoftMediaStandardEncoderPreset', 'OdataTypeMicrosoftMediaVideoAnalyzerPreset'
 	OdataType OdataTypeBasicPreset `json:"@odata.type,omitempty"`
 }
 
@@ -2201,6 +2260,11 @@ func (bisep BuiltInStandardEncoderPreset) MarshalJSON() ([]byte, error) {
 		objectMap["@odata.type"] = bisep.OdataType
 	}
 	return json.Marshal(objectMap)
+}
+
+// AsFaceDetectorPreset is the BasicPreset implementation for BuiltInStandardEncoderPreset.
+func (bisep BuiltInStandardEncoderPreset) AsFaceDetectorPreset() (*FaceDetectorPreset, bool) {
+	return nil, false
 }
 
 // AsAudioAnalyzerPreset is the BasicPreset implementation for BuiltInStandardEncoderPreset.
@@ -2666,6 +2730,11 @@ func (iter ContentKeyPolicyCollectionIterator) Value() ContentKeyPolicy {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ContentKeyPolicyCollectionIterator type.
+func NewContentKeyPolicyCollectionIterator(page ContentKeyPolicyCollectionPage) ContentKeyPolicyCollectionIterator {
+	return ContentKeyPolicyCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (ckpc ContentKeyPolicyCollection) IsEmpty() bool {
 	return ckpc.Value == nil || len(*ckpc.Value) == 0
@@ -2733,6 +2802,11 @@ func (page ContentKeyPolicyCollectionPage) Values() []ContentKeyPolicy {
 		return nil
 	}
 	return *page.ckpc.Value
+}
+
+// Creates a new instance of the ContentKeyPolicyCollectionPage type.
+func NewContentKeyPolicyCollectionPage(getNextPage func(context.Context, ContentKeyPolicyCollection) (ContentKeyPolicyCollection, error)) ContentKeyPolicyCollectionPage {
+	return ContentKeyPolicyCollectionPage{fn: getNextPage}
 }
 
 // BasicContentKeyPolicyConfiguration base class for Content Key Policy configuration. A derived class must be used to
@@ -4328,8 +4402,70 @@ type EnvelopeEncryption struct {
 	ClearTracks *[]TrackSelection `json:"clearTracks,omitempty"`
 	// ContentKeys - Representing default content key for each encryption scheme and separate content keys for specific tracks
 	ContentKeys *StreamingPolicyContentKeys `json:"contentKeys,omitempty"`
-	// CustomKeyAcquisitionURLTemplate - KeyAcquistionUrlTemplate is used to point to user specified service to delivery content keys
+	// CustomKeyAcquisitionURLTemplate - Template for the URL of the custom service delivering keys to end user players.  Not required when using Azure Media Services for issuing keys.  The template supports replaceable tokens that the service will update at runtime with the value specific to the request.  The currently supported token values are {AlternativeMediaId}, which is replaced with the value of StreamingLocatorId.AlternativeMediaId, and {ContentKeyId}, which is replaced with the value of identifier of the key being requested.
 	CustomKeyAcquisitionURLTemplate *string `json:"customKeyAcquisitionUrlTemplate,omitempty"`
+}
+
+// FaceDetectorPreset describes all the settings to be used when analyzing a video in order to detect all
+// the faces present.
+type FaceDetectorPreset struct {
+	// Resolution - Specifies the maximum resolution at which your video is analyzed. The default behavior is "SourceResolution," which will keep the input video at its original resolution when analyzed. Using "StandardDefinition" will resize input videos to standard definition while preserving the appropriate aspect ratio. It will only resize if the video is of higher resolution. For example, a 1920x1080 input would be scaled to 640x360 before processing. Switching to "StandardDefinition" will reduce the time it takes to process high resolution video. It may also reduce the cost of using this component (see https://azure.microsoft.com/en-us/pricing/details/media-services/#analytics for details). However, faces that end up being too small in the resized video may not be detected. Possible values include: 'SourceResolution', 'StandardDefinition'
+	Resolution AnalysisResolution `json:"resolution,omitempty"`
+	// OdataType - Possible values include: 'OdataTypePreset', 'OdataTypeMicrosoftMediaFaceDetectorPreset', 'OdataTypeMicrosoftMediaAudioAnalyzerPreset', 'OdataTypeMicrosoftMediaBuiltInStandardEncoderPreset', 'OdataTypeMicrosoftMediaStandardEncoderPreset', 'OdataTypeMicrosoftMediaVideoAnalyzerPreset'
+	OdataType OdataTypeBasicPreset `json:"@odata.type,omitempty"`
+}
+
+// MarshalJSON is the custom marshaler for FaceDetectorPreset.
+func (fdp FaceDetectorPreset) MarshalJSON() ([]byte, error) {
+	fdp.OdataType = OdataTypeMicrosoftMediaFaceDetectorPreset
+	objectMap := make(map[string]interface{})
+	if fdp.Resolution != "" {
+		objectMap["resolution"] = fdp.Resolution
+	}
+	if fdp.OdataType != "" {
+		objectMap["@odata.type"] = fdp.OdataType
+	}
+	return json.Marshal(objectMap)
+}
+
+// AsFaceDetectorPreset is the BasicPreset implementation for FaceDetectorPreset.
+func (fdp FaceDetectorPreset) AsFaceDetectorPreset() (*FaceDetectorPreset, bool) {
+	return &fdp, true
+}
+
+// AsAudioAnalyzerPreset is the BasicPreset implementation for FaceDetectorPreset.
+func (fdp FaceDetectorPreset) AsAudioAnalyzerPreset() (*AudioAnalyzerPreset, bool) {
+	return nil, false
+}
+
+// AsBasicAudioAnalyzerPreset is the BasicPreset implementation for FaceDetectorPreset.
+func (fdp FaceDetectorPreset) AsBasicAudioAnalyzerPreset() (BasicAudioAnalyzerPreset, bool) {
+	return nil, false
+}
+
+// AsBuiltInStandardEncoderPreset is the BasicPreset implementation for FaceDetectorPreset.
+func (fdp FaceDetectorPreset) AsBuiltInStandardEncoderPreset() (*BuiltInStandardEncoderPreset, bool) {
+	return nil, false
+}
+
+// AsStandardEncoderPreset is the BasicPreset implementation for FaceDetectorPreset.
+func (fdp FaceDetectorPreset) AsStandardEncoderPreset() (*StandardEncoderPreset, bool) {
+	return nil, false
+}
+
+// AsVideoAnalyzerPreset is the BasicPreset implementation for FaceDetectorPreset.
+func (fdp FaceDetectorPreset) AsVideoAnalyzerPreset() (*VideoAnalyzerPreset, bool) {
+	return nil, false
+}
+
+// AsPreset is the BasicPreset implementation for FaceDetectorPreset.
+func (fdp FaceDetectorPreset) AsPreset() (*Preset, bool) {
+	return nil, false
+}
+
+// AsBasicPreset is the BasicPreset implementation for FaceDetectorPreset.
+func (fdp FaceDetectorPreset) AsBasicPreset() (BasicPreset, bool) {
+	return &fdp, true
 }
 
 // FilterProperties the Media Filter properties.
@@ -4572,9 +4708,9 @@ func (f Format) AsBasicFormat() (BasicFormat, bool) {
 // H264Layer describes the settings to be used when encoding the input video into a desired output bitrate
 // layer with the H.264 video codec.
 type H264Layer struct {
-	// Profile - Which profile of the H.264 standard should be used when encoding this layer. Default is Auto. Possible values include: 'H264VideoProfileAuto', 'H264VideoProfileBaseline', 'H264VideoProfileMain', 'H264VideoProfileHigh', 'H264VideoProfileHigh422', 'H264VideoProfileHigh444'
+	// Profile - We currently support Baseline, Main, High, High422, High444. Default is Auto. Possible values include: 'H264VideoProfileAuto', 'H264VideoProfileBaseline', 'H264VideoProfileMain', 'H264VideoProfileHigh', 'H264VideoProfileHigh422', 'H264VideoProfileHigh444'
 	Profile H264VideoProfile `json:"profile,omitempty"`
-	// Level - Which level of the H.264 standard should be used when encoding this layer. The value can be Auto, or a number that matches the H.264 profile. If not specified, the default is Auto, which lets the encoder choose the Level that is appropriate for this layer.
+	// Level - We currently support Level up to 6.2. The value can be Auto, or a number that matches the H.264 profile. If not specified, the default is Auto, which lets the encoder choose the Level that is appropriate for this layer.
 	Level *string `json:"level,omitempty"`
 	// BufferWindow - The VBV buffer window length. The value should be in ISO 8601 format. The value should be in the range [0.1-100] seconds. The default is 5 seconds (for example, PT5S).
 	BufferWindow *string `json:"bufferWindow,omitempty"`
@@ -5262,6 +5398,11 @@ func (iter JobCollectionIterator) Value() Job {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the JobCollectionIterator type.
+func NewJobCollectionIterator(page JobCollectionPage) JobCollectionIterator {
+	return JobCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (jc JobCollection) IsEmpty() bool {
 	return jc.Value == nil || len(*jc.Value) == 0
@@ -5329,6 +5470,11 @@ func (page JobCollectionPage) Values() []Job {
 		return nil
 	}
 	return *page.jc.Value
+}
+
+// Creates a new instance of the JobCollectionPage type.
+func NewJobCollectionPage(getNextPage func(context.Context, JobCollection) (JobCollection, error)) JobCollectionPage {
+	return JobCollectionPage{fn: getNextPage}
 }
 
 // JobError details of JobOutput errors.
@@ -5467,7 +5613,7 @@ func (ji JobInput) AsBasicJobInput() (BasicJobInput, bool) {
 type JobInputAsset struct {
 	// AssetName - The name of the input Asset.
 	AssetName *string `json:"assetName,omitempty"`
-	// Files - List of files. Required for JobInputHttp.
+	// Files - List of files. Required for JobInputHttp. Maximum of 4000 characters each.
 	Files *[]string `json:"files,omitempty"`
 	// Label - A label that is assigned to a JobInputClip, that is used to satisfy a reference used in the Transform. For example, a Transform can be authored so as to take an image file with the label 'xyz' and apply it as an overlay onto the input video before it is encoded. When submitting a Job, exactly one of the JobInputs should be the image file, and it should have the label 'xyz'.
 	Label *string `json:"label,omitempty"`
@@ -5538,7 +5684,7 @@ type BasicJobInputClip interface {
 
 // JobInputClip represents input files for a Job.
 type JobInputClip struct {
-	// Files - List of files. Required for JobInputHttp.
+	// Files - List of files. Required for JobInputHttp. Maximum of 4000 characters each.
 	Files *[]string `json:"files,omitempty"`
 	// Label - A label that is assigned to a JobInputClip, that is used to satisfy a reference used in the Transform. For example, a Transform can be authored so as to take an image file with the label 'xyz' and apply it as an overlay onto the input video before it is encoded. When submitting a Job, exactly one of the JobInputs should be the image file, and it should have the label 'xyz'.
 	Label *string `json:"label,omitempty"`
@@ -5640,9 +5786,9 @@ func (jic JobInputClip) AsBasicJobInput() (BasicJobInput, bool) {
 
 // JobInputHTTP represents HTTPS job input.
 type JobInputHTTP struct {
-	// BaseURI - Base URI for HTTPS job input. It will be concatenated with provided file names.   If no base uri is given, then the provided file list is assumed to be fully qualified uris.
+	// BaseURI - Base URI for HTTPS job input. It will be concatenated with provided file names. If no base uri is given, then the provided file list is assumed to be fully qualified uris. Maximum length of 4000 characters.
 	BaseURI *string `json:"baseUri,omitempty"`
-	// Files - List of files. Required for JobInputHttp.
+	// Files - List of files. Required for JobInputHttp. Maximum of 4000 characters each.
 	Files *[]string `json:"files,omitempty"`
 	// Label - A label that is assigned to a JobInputClip, that is used to satisfy a reference used in the Transform. For example, a Transform can be authored so as to take an image file with the label 'xyz' and apply it as an overlay onto the input video before it is encoded. When submitting a Job, exactly one of the JobInputs should be the image file, and it should have the label 'xyz'.
 	Label *string `json:"label,omitempty"`
@@ -5704,7 +5850,7 @@ func (jih JobInputHTTP) AsBasicJobInput() (BasicJobInput, bool) {
 	return &jih, true
 }
 
-// JobInputs describes a list of of inputs to a Job.
+// JobInputs describes a list of inputs to a Job.
 type JobInputs struct {
 	// Inputs - List of inputs to a Job.
 	Inputs *[]BasicJobInput `json:"inputs,omitempty"`
@@ -5958,7 +6104,7 @@ type JobProperties struct {
 	Outputs *[]BasicJobOutput `json:"outputs,omitempty"`
 	// Priority - Priority with which the job should be processed. Higher priority jobs are processed before lower priority jobs. If not set, the default is normal. Possible values include: 'Low', 'Normal', 'High'
 	Priority Priority `json:"priority,omitempty"`
-	// CorrelationData - Customer provided correlation data that will be returned in Job and JobOutput state events.
+	// CorrelationData - Customer provided key, value pairs that will be returned in Job and JobOutput state events.
 	CorrelationData map[string]*string `json:"correlationData"`
 }
 
@@ -6616,7 +6762,7 @@ type LiveEventActionInput struct {
 
 // LiveEventEncoding the Live Event encoding.
 type LiveEventEncoding struct {
-	// EncodingType - The encoding type for Live Event.  This value is specified at creation time and cannot be updated. Possible values include: 'LiveEventEncodingTypeNone', 'LiveEventEncodingTypeBasic'
+	// EncodingType - The encoding type for Live Event.  This value is specified at creation time and cannot be updated. Possible values include: 'LiveEventEncodingTypeNone', 'LiveEventEncodingTypeBasic', 'LiveEventEncodingTypeStandard'
 	EncodingType LiveEventEncodingType `json:"encodingType,omitempty"`
 	// PresetName - The encoding preset name.  This value is specified at creation time and cannot be updated.
 	PresetName *string `json:"presetName,omitempty"`
@@ -6719,6 +6865,11 @@ func (iter LiveEventListResultIterator) Value() LiveEvent {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the LiveEventListResultIterator type.
+func NewLiveEventListResultIterator(page LiveEventListResultPage) LiveEventListResultIterator {
+	return LiveEventListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (lelr LiveEventListResult) IsEmpty() bool {
 	return lelr.Value == nil || len(*lelr.Value) == 0
@@ -6786,6 +6937,11 @@ func (page LiveEventListResultPage) Values() []LiveEvent {
 		return nil
 	}
 	return *page.lelr.Value
+}
+
+// Creates a new instance of the LiveEventListResultPage type.
+func NewLiveEventListResultPage(getNextPage func(context.Context, LiveEventListResult) (LiveEventListResult, error)) LiveEventListResultPage {
+	return LiveEventListResultPage{fn: getNextPage}
 }
 
 // LiveEventPreview the Live Event preview.
@@ -7135,6 +7291,11 @@ func (iter LiveOutputListResultIterator) Value() LiveOutput {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the LiveOutputListResultIterator type.
+func NewLiveOutputListResultIterator(page LiveOutputListResultPage) LiveOutputListResultIterator {
+	return LiveOutputListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (lolr LiveOutputListResult) IsEmpty() bool {
 	return lolr.Value == nil || len(*lolr.Value) == 0
@@ -7202,6 +7363,11 @@ func (page LiveOutputListResultPage) Values() []LiveOutput {
 		return nil
 	}
 	return *page.lolr.Value
+}
+
+// Creates a new instance of the LiveOutputListResultPage type.
+func NewLiveOutputListResultPage(getNextPage func(context.Context, LiveOutputListResult) (LiveOutputListResult, error)) LiveOutputListResultPage {
+	return LiveOutputListResultPage{fn: getNextPage}
 }
 
 // LiveOutputProperties the JSON object that contains the properties required to create a Live Output.
@@ -7618,6 +7784,11 @@ func (iter OperationCollectionIterator) Value() Operation {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the OperationCollectionIterator type.
+func NewOperationCollectionIterator(page OperationCollectionPage) OperationCollectionIterator {
+	return OperationCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (oc OperationCollection) IsEmpty() bool {
 	return oc.Value == nil || len(*oc.Value) == 0
@@ -7685,6 +7856,11 @@ func (page OperationCollectionPage) Values() []Operation {
 		return nil
 	}
 	return *page.oc.Value
+}
+
+// Creates a new instance of the OperationCollectionPage type.
+func NewOperationCollectionPage(getNextPage func(context.Context, OperationCollection) (OperationCollection, error)) OperationCollectionPage {
+	return OperationCollectionPage{fn: getNextPage}
 }
 
 // OperationDisplay operation details.
@@ -8097,6 +8273,7 @@ type PresentationTimeRange struct {
 // BasicPreset base type for all Presets, which define the recipe or instructions on how the input media files should
 // be processed.
 type BasicPreset interface {
+	AsFaceDetectorPreset() (*FaceDetectorPreset, bool)
 	AsAudioAnalyzerPreset() (*AudioAnalyzerPreset, bool)
 	AsBasicAudioAnalyzerPreset() (BasicAudioAnalyzerPreset, bool)
 	AsBuiltInStandardEncoderPreset() (*BuiltInStandardEncoderPreset, bool)
@@ -8108,7 +8285,7 @@ type BasicPreset interface {
 // Preset base type for all Presets, which define the recipe or instructions on how the input media files
 // should be processed.
 type Preset struct {
-	// OdataType - Possible values include: 'OdataTypePreset', 'OdataTypeMicrosoftMediaAudioAnalyzerPreset', 'OdataTypeMicrosoftMediaBuiltInStandardEncoderPreset', 'OdataTypeMicrosoftMediaStandardEncoderPreset', 'OdataTypeMicrosoftMediaVideoAnalyzerPreset'
+	// OdataType - Possible values include: 'OdataTypePreset', 'OdataTypeMicrosoftMediaFaceDetectorPreset', 'OdataTypeMicrosoftMediaAudioAnalyzerPreset', 'OdataTypeMicrosoftMediaBuiltInStandardEncoderPreset', 'OdataTypeMicrosoftMediaStandardEncoderPreset', 'OdataTypeMicrosoftMediaVideoAnalyzerPreset'
 	OdataType OdataTypeBasicPreset `json:"@odata.type,omitempty"`
 }
 
@@ -8120,6 +8297,10 @@ func unmarshalBasicPreset(body []byte) (BasicPreset, error) {
 	}
 
 	switch m["@odata.type"] {
+	case string(OdataTypeMicrosoftMediaFaceDetectorPreset):
+		var fdp FaceDetectorPreset
+		err := json.Unmarshal(body, &fdp)
+		return fdp, err
 	case string(OdataTypeMicrosoftMediaAudioAnalyzerPreset):
 		var aap AudioAnalyzerPreset
 		err := json.Unmarshal(body, &aap)
@@ -8169,6 +8350,11 @@ func (p Preset) MarshalJSON() ([]byte, error) {
 		objectMap["@odata.type"] = p.OdataType
 	}
 	return json.Marshal(objectMap)
+}
+
+// AsFaceDetectorPreset is the BasicPreset implementation for Preset.
+func (p Preset) AsFaceDetectorPreset() (*FaceDetectorPreset, bool) {
+	return nil, false
 }
 
 // AsAudioAnalyzerPreset is the BasicPreset implementation for Preset.
@@ -8422,6 +8608,11 @@ func (iter ServiceCollectionIterator) Value() Service {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ServiceCollectionIterator type.
+func NewServiceCollectionIterator(page ServiceCollectionPage) ServiceCollectionIterator {
+	return ServiceCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (sc ServiceCollection) IsEmpty() bool {
 	return sc.Value == nil || len(*sc.Value) == 0
@@ -8491,6 +8682,11 @@ func (page ServiceCollectionPage) Values() []Service {
 	return *page.sc.Value
 }
 
+// Creates a new instance of the ServiceCollectionPage type.
+func NewServiceCollectionPage(getNextPage func(context.Context, ServiceCollection) (ServiceCollection, error)) ServiceCollectionPage {
+	return ServiceCollectionPage{fn: getNextPage}
+}
+
 // ServiceProperties properties of the Media Services account.
 type ServiceProperties struct {
 	// MediaServiceID - The Media Services account ID.
@@ -8514,7 +8710,7 @@ type StandardEncoderPreset struct {
 	Codecs *[]BasicCodec `json:"codecs,omitempty"`
 	// Formats - The list of outputs to be produced by the encoder.
 	Formats *[]BasicFormat `json:"formats,omitempty"`
-	// OdataType - Possible values include: 'OdataTypePreset', 'OdataTypeMicrosoftMediaAudioAnalyzerPreset', 'OdataTypeMicrosoftMediaBuiltInStandardEncoderPreset', 'OdataTypeMicrosoftMediaStandardEncoderPreset', 'OdataTypeMicrosoftMediaVideoAnalyzerPreset'
+	// OdataType - Possible values include: 'OdataTypePreset', 'OdataTypeMicrosoftMediaFaceDetectorPreset', 'OdataTypeMicrosoftMediaAudioAnalyzerPreset', 'OdataTypeMicrosoftMediaBuiltInStandardEncoderPreset', 'OdataTypeMicrosoftMediaStandardEncoderPreset', 'OdataTypeMicrosoftMediaVideoAnalyzerPreset'
 	OdataType OdataTypeBasicPreset `json:"@odata.type,omitempty"`
 }
 
@@ -8535,6 +8731,11 @@ func (sep StandardEncoderPreset) MarshalJSON() ([]byte, error) {
 		objectMap["@odata.type"] = sep.OdataType
 	}
 	return json.Marshal(objectMap)
+}
+
+// AsFaceDetectorPreset is the BasicPreset implementation for StandardEncoderPreset.
+func (sep StandardEncoderPreset) AsFaceDetectorPreset() (*FaceDetectorPreset, bool) {
+	return nil, false
 }
 
 // AsAudioAnalyzerPreset is the BasicPreset implementation for StandardEncoderPreset.
@@ -8826,6 +9027,11 @@ func (iter StreamingEndpointListResultIterator) Value() StreamingEndpoint {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the StreamingEndpointListResultIterator type.
+func NewStreamingEndpointListResultIterator(page StreamingEndpointListResultPage) StreamingEndpointListResultIterator {
+	return StreamingEndpointListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (selr StreamingEndpointListResult) IsEmpty() bool {
 	return selr.Value == nil || len(*selr.Value) == 0
@@ -8893,6 +9099,11 @@ func (page StreamingEndpointListResultPage) Values() []StreamingEndpoint {
 		return nil
 	}
 	return *page.selr.Value
+}
+
+// Creates a new instance of the StreamingEndpointListResultPage type.
+func NewStreamingEndpointListResultPage(getNextPage func(context.Context, StreamingEndpointListResult) (StreamingEndpointListResult, error)) StreamingEndpointListResultPage {
+	return StreamingEndpointListResultPage{fn: getNextPage}
 }
 
 // StreamingEndpointProperties the StreamingEndpoint properties.
@@ -9235,6 +9446,11 @@ func (iter StreamingLocatorCollectionIterator) Value() StreamingLocator {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the StreamingLocatorCollectionIterator type.
+func NewStreamingLocatorCollectionIterator(page StreamingLocatorCollectionPage) StreamingLocatorCollectionIterator {
+	return StreamingLocatorCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (slc StreamingLocatorCollection) IsEmpty() bool {
 	return slc.Value == nil || len(*slc.Value) == 0
@@ -9304,6 +9520,11 @@ func (page StreamingLocatorCollectionPage) Values() []StreamingLocator {
 	return *page.slc.Value
 }
 
+// Creates a new instance of the StreamingLocatorCollectionPage type.
+func NewStreamingLocatorCollectionPage(getNextPage func(context.Context, StreamingLocatorCollection) (StreamingLocatorCollection, error)) StreamingLocatorCollectionPage {
+	return StreamingLocatorCollectionPage{fn: getNextPage}
+}
+
 // StreamingLocatorContentKey class for content key in Streaming Locator
 type StreamingLocatorContentKey struct {
 	// ID - ID of Content Key
@@ -9312,7 +9533,7 @@ type StreamingLocatorContentKey struct {
 	Type StreamingLocatorContentKeyType `json:"type,omitempty"`
 	// LabelReferenceInStreamingPolicy - Label of Content Key as specified in the Streaming Policy
 	LabelReferenceInStreamingPolicy *string `json:"labelReferenceInStreamingPolicy,omitempty"`
-	// Value - Value of  of Content Key
+	// Value - Value of Content Key
 	Value *string `json:"value,omitempty"`
 	// PolicyName - ContentKeyPolicy used by Content Key
 	PolicyName *string `json:"policyName,omitempty"`
@@ -9340,6 +9561,8 @@ type StreamingLocatorProperties struct {
 	ContentKeys *[]StreamingLocatorContentKey `json:"contentKeys,omitempty"`
 	// AlternativeMediaID - Alternative Media ID of this Streaming Locator
 	AlternativeMediaID *string `json:"alternativeMediaId,omitempty"`
+	// Filters - A list of asset or account filters which apply to this streaming locator
+	Filters *[]string `json:"filters,omitempty"`
 }
 
 // StreamingPath class of paths for streaming
@@ -9500,6 +9723,11 @@ func (iter StreamingPolicyCollectionIterator) Value() StreamingPolicy {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the StreamingPolicyCollectionIterator type.
+func NewStreamingPolicyCollectionIterator(page StreamingPolicyCollectionPage) StreamingPolicyCollectionIterator {
+	return StreamingPolicyCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (spc StreamingPolicyCollection) IsEmpty() bool {
 	return spc.Value == nil || len(*spc.Value) == 0
@@ -9569,6 +9797,11 @@ func (page StreamingPolicyCollectionPage) Values() []StreamingPolicy {
 	return *page.spc.Value
 }
 
+// Creates a new instance of the StreamingPolicyCollectionPage type.
+func NewStreamingPolicyCollectionPage(getNextPage func(context.Context, StreamingPolicyCollection) (StreamingPolicyCollection, error)) StreamingPolicyCollectionPage {
+	return StreamingPolicyCollectionPage{fn: getNextPage}
+}
+
 // StreamingPolicyContentKey class to specify properties of content key
 type StreamingPolicyContentKey struct {
 	// Label - Label can be used to specify Content Key when creating a Streaming Locator
@@ -9589,7 +9822,7 @@ type StreamingPolicyContentKeys struct {
 
 // StreamingPolicyFairPlayConfiguration class to specify configurations of FairPlay in Streaming Policy
 type StreamingPolicyFairPlayConfiguration struct {
-	// CustomLicenseAcquisitionURLTemplate - The template for a customer service to deliver keys to end users.  Not needed when using Azure Media Services for issuing keys.
+	// CustomLicenseAcquisitionURLTemplate - Template for the URL of the custom service delivering licenses to end user players.  Not required when using Azure Media Services for issuing licenses.  The template supports replaceable tokens that the service will update at runtime with the value specific to the request.  The currently supported token values are {AlternativeMediaId}, which is replaced with the value of StreamingLocatorId.AlternativeMediaId, and {ContentKeyId}, which is replaced with the value of identifier of the key being requested.
 	CustomLicenseAcquisitionURLTemplate *string `json:"customLicenseAcquisitionUrlTemplate,omitempty"`
 	// AllowPersistentLicense - All license to be persistent or not
 	AllowPersistentLicense *bool `json:"allowPersistentLicense,omitempty"`
@@ -9597,7 +9830,7 @@ type StreamingPolicyFairPlayConfiguration struct {
 
 // StreamingPolicyPlayReadyConfiguration class to specify configurations of PlayReady in Streaming Policy
 type StreamingPolicyPlayReadyConfiguration struct {
-	// CustomLicenseAcquisitionURLTemplate - The template for a customer service to deliver keys to end users.  Not needed when using Azure Media Services for issuing keys.
+	// CustomLicenseAcquisitionURLTemplate - Template for the URL of the custom service delivering licenses to end user players.  Not required when using Azure Media Services for issuing licenses.  The template supports replaceable tokens that the service will update at runtime with the value specific to the request.  The currently supported token values are {AlternativeMediaId}, which is replaced with the value of StreamingLocatorId.AlternativeMediaId, and {ContentKeyId}, which is replaced with the value of identifier of the key being requested.
 	CustomLicenseAcquisitionURLTemplate *string `json:"customLicenseAcquisitionUrlTemplate,omitempty"`
 	// PlayReadyCustomAttributes - Custom attributes for PlayReady
 	PlayReadyCustomAttributes *string `json:"playReadyCustomAttributes,omitempty"`
@@ -9621,7 +9854,7 @@ type StreamingPolicyProperties struct {
 
 // StreamingPolicyWidevineConfiguration class to specify configurations of Widevine in Streaming Policy
 type StreamingPolicyWidevineConfiguration struct {
-	// CustomLicenseAcquisitionURLTemplate - The template for a customer service to deliver keys to end users.  Not needed when using Azure Media Services for issuing keys.
+	// CustomLicenseAcquisitionURLTemplate - Template for the URL of the custom service delivering licenses to end user players.  Not required when using Azure Media Services for issuing licenses.  The template supports replaceable tokens that the service will update at runtime with the value specific to the request.  The currently supported token values are {AlternativeMediaId}, which is replaced with the value of StreamingLocatorId.AlternativeMediaId, and {ContentKeyId}, which is replaced with the value of identifier of the key being requested.
 	CustomLicenseAcquisitionURLTemplate *string `json:"customLicenseAcquisitionUrlTemplate,omitempty"`
 }
 
@@ -9803,6 +10036,11 @@ func (iter SubscriptionMediaServiceCollectionIterator) Value() SubscriptionMedia
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the SubscriptionMediaServiceCollectionIterator type.
+func NewSubscriptionMediaServiceCollectionIterator(page SubscriptionMediaServiceCollectionPage) SubscriptionMediaServiceCollectionIterator {
+	return SubscriptionMediaServiceCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (smsc SubscriptionMediaServiceCollection) IsEmpty() bool {
 	return smsc.Value == nil || len(*smsc.Value) == 0
@@ -9870,6 +10108,11 @@ func (page SubscriptionMediaServiceCollectionPage) Values() []SubscriptionMediaS
 		return nil
 	}
 	return *page.smsc.Value
+}
+
+// Creates a new instance of the SubscriptionMediaServiceCollectionPage type.
+func NewSubscriptionMediaServiceCollectionPage(getNextPage func(context.Context, SubscriptionMediaServiceCollection) (SubscriptionMediaServiceCollection, error)) SubscriptionMediaServiceCollectionPage {
+	return SubscriptionMediaServiceCollectionPage{fn: getNextPage}
 }
 
 // SyncStorageKeysInput the input to the sync storage keys request.
@@ -10080,6 +10323,11 @@ func (iter TransformCollectionIterator) Value() Transform {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the TransformCollectionIterator type.
+func NewTransformCollectionIterator(page TransformCollectionPage) TransformCollectionIterator {
+	return TransformCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (tc TransformCollection) IsEmpty() bool {
 	return tc.Value == nil || len(*tc.Value) == 0
@@ -10147,6 +10395,11 @@ func (page TransformCollectionPage) Values() []Transform {
 		return nil
 	}
 	return *page.tc.Value
+}
+
+// Creates a new instance of the TransformCollectionPage type.
+func NewTransformCollectionPage(getNextPage func(context.Context, TransformCollection) (TransformCollection, error)) TransformCollectionPage {
+	return TransformCollectionPage{fn: getNextPage}
 }
 
 // TransformOutput describes the properties of a TransformOutput, which are the rules to be applied while
@@ -10453,11 +10706,11 @@ func (vVar Video) AsBasicCodec() (BasicCodec, bool) {
 // VideoAnalyzerPreset a video analyzer preset that extracts insights (rich metadata) from both audio and
 // video, and outputs a JSON format file.
 type VideoAnalyzerPreset struct {
-	// InsightsToExtract - The type of insights to be extracted. If not set then based on the content the type will selected.  If the content is audi only then only audio insights are extraced and if it is video only. Possible values include: 'AudioInsightsOnly', 'VideoInsightsOnly', 'AllInsights'
+	// InsightsToExtract - The type of insights to be extracted. If not set then based on the content the type will selected.  If the content is audio only then only audio insights are extracted and if it is video only. Possible values include: 'AudioInsightsOnly', 'VideoInsightsOnly', 'AllInsights'
 	InsightsToExtract InsightsType `json:"insightsToExtract,omitempty"`
-	// AudioLanguage - The language for the audio payload in the input using the BCP-47 format of 'language tag-region' (e.g: 'en-US'). The list of supported languages are, 'en-US', 'en-GB', 'es-ES', 'es-MX', 'fr-FR', 'it-IT', 'ja-JP', 'pt-BR', 'zh-CN', 'de-DE', 'ar-EG', 'ru-RU', 'hi-IN'. If not specified, automatic language detection would be employed. This feature currently supports English, Chinese, French, German, Italian, Japanese, Spanish, Russian, and Portuguese. The automatic detection works best with audio recordings with clearly discernable speech. If automatic detection fails to find the language, transcription would fallback to English.
+	// AudioLanguage - The language for the audio payload in the input using the BCP-47 format of 'language tag-region' (e.g: 'en-US').  The list of supported languages are English ('en-US' and 'en-GB'), Spanish ('es-ES' and 'es-MX'), French ('fr-FR'), Italian ('it-IT'), Japanese ('ja-JP'), Portuguese ('pt-BR'), Chinese ('zh-CN'), German ('de-DE'), Arabic ('ar-EG' and 'ar-SY'), Russian ('ru-RU'), Hindi ('hi-IN'), and Korean ('ko-KR'). If you know the language of your content, it is recommended that you specify it. If the language isn't specified or set to null, automatic language detection will choose the first language detected and process with the selected language for the duration of the file. This language detection feature currently supports English, Chinese, French, German, Italian, Japanese, Spanish, Russian, and Portuguese. It does not currently support dynamically switching between languages after the first language is detected. The automatic detection works best with audio recordings with clearly discernable speech. If automatic detection fails to find the language, transcription would fallback to 'en-US'."
 	AudioLanguage *string `json:"audioLanguage,omitempty"`
-	// OdataType - Possible values include: 'OdataTypePreset', 'OdataTypeMicrosoftMediaAudioAnalyzerPreset', 'OdataTypeMicrosoftMediaBuiltInStandardEncoderPreset', 'OdataTypeMicrosoftMediaStandardEncoderPreset', 'OdataTypeMicrosoftMediaVideoAnalyzerPreset'
+	// OdataType - Possible values include: 'OdataTypePreset', 'OdataTypeMicrosoftMediaFaceDetectorPreset', 'OdataTypeMicrosoftMediaAudioAnalyzerPreset', 'OdataTypeMicrosoftMediaBuiltInStandardEncoderPreset', 'OdataTypeMicrosoftMediaStandardEncoderPreset', 'OdataTypeMicrosoftMediaVideoAnalyzerPreset'
 	OdataType OdataTypeBasicPreset `json:"@odata.type,omitempty"`
 }
 
@@ -10475,6 +10728,11 @@ func (vap VideoAnalyzerPreset) MarshalJSON() ([]byte, error) {
 		objectMap["@odata.type"] = vap.OdataType
 	}
 	return json.Marshal(objectMap)
+}
+
+// AsFaceDetectorPreset is the BasicPreset implementation for VideoAnalyzerPreset.
+func (vap VideoAnalyzerPreset) AsFaceDetectorPreset() (*FaceDetectorPreset, bool) {
+	return nil, false
 }
 
 // AsAudioAnalyzerPreset is the BasicPreset implementation for VideoAnalyzerPreset.

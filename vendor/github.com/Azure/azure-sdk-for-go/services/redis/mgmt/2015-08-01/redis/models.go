@@ -286,6 +286,11 @@ func (iter ListResultIterator) Value() ResourceType {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ListResultIterator type.
+func NewListResultIterator(page ListResultPage) ListResultIterator {
+	return ListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (lr ListResult) IsEmpty() bool {
 	return lr.Value == nil || len(*lr.Value) == 0
@@ -355,6 +360,11 @@ func (page ListResultPage) Values() []ResourceType {
 	return *page.lr.Value
 }
 
+// Creates a new instance of the ListResultPage type.
+func NewListResultPage(getNextPage func(context.Context, ListResult) (ListResult, error)) ListResultPage {
+	return ListResultPage{fn: getNextPage}
+}
+
 // Properties parameters supplied to CreateOrUpdate Redis operation.
 type Properties struct {
 	// RedisVersion - RedisVersion parameter has been deprecated. As such, it is no longer necessary to provide this parameter and any value specified is ignored.
@@ -369,7 +379,7 @@ type Properties struct {
 	TenantSettings map[string]*string `json:"tenantSettings"`
 	// ShardCount - The number of shards to be created on a Premium Cluster Cache.
 	ShardCount *int32 `json:"shardCount,omitempty"`
-	// VirtualNetwork - The exact ARM resource ID of the virtual network to deploy the Redis cache in. Example format: /subscriptions/{subid}/resourceGroups/{resourceGroupName}/Microsoft.ClassicNetwork/VirtualNetworks/vnet1
+	// VirtualNetwork - The exact ARM resource ID of the virtual network to deploy the Redis cache in. Example format: /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/Microsoft.ClassicNetwork/VirtualNetworks/vnet1
 	VirtualNetwork *string `json:"virtualNetwork,omitempty"`
 	// Subnet - Required when deploying a Redis cache inside an existing Azure Virtual Network.
 	Subnet *string `json:"subnet,omitempty"`
@@ -432,7 +442,7 @@ type ReadableProperties struct {
 	TenantSettings map[string]*string `json:"tenantSettings"`
 	// ShardCount - The number of shards to be created on a Premium Cluster Cache.
 	ShardCount *int32 `json:"shardCount,omitempty"`
-	// VirtualNetwork - The exact ARM resource ID of the virtual network to deploy the Redis cache in. Example format: /subscriptions/{subid}/resourceGroups/{resourceGroupName}/Microsoft.ClassicNetwork/VirtualNetworks/vnet1
+	// VirtualNetwork - The exact ARM resource ID of the virtual network to deploy the Redis cache in. Example format: /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/Microsoft.ClassicNetwork/VirtualNetworks/vnet1
 	VirtualNetwork *string `json:"virtualNetwork,omitempty"`
 	// Subnet - Required when deploying a Redis cache inside an existing Azure Virtual Network.
 	Subnet *string `json:"subnet,omitempty"`
@@ -509,7 +519,7 @@ type ReadablePropertiesWithAccessKey struct {
 	TenantSettings map[string]*string `json:"tenantSettings"`
 	// ShardCount - The number of shards to be created on a Premium Cluster Cache.
 	ShardCount *int32 `json:"shardCount,omitempty"`
-	// VirtualNetwork - The exact ARM resource ID of the virtual network to deploy the Redis cache in. Example format: /subscriptions/{subid}/resourceGroups/{resourceGroupName}/Microsoft.ClassicNetwork/VirtualNetworks/vnet1
+	// VirtualNetwork - The exact ARM resource ID of the virtual network to deploy the Redis cache in. Example format: /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/Microsoft.ClassicNetwork/VirtualNetworks/vnet1
 	VirtualNetwork *string `json:"virtualNetwork,omitempty"`
 	// Subnet - Required when deploying a Redis cache inside an existing Azure Virtual Network.
 	Subnet *string `json:"subnet,omitempty"`

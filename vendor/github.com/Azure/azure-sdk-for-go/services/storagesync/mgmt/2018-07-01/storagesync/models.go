@@ -669,6 +669,11 @@ func (iter OperationEntityListResultIterator) Value() OperationEntity {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the OperationEntityListResultIterator type.
+func NewOperationEntityListResultIterator(page OperationEntityListResultPage) OperationEntityListResultIterator {
+	return OperationEntityListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (oelr OperationEntityListResult) IsEmpty() bool {
 	return oelr.Value == nil || len(*oelr.Value) == 0
@@ -736,6 +741,11 @@ func (page OperationEntityListResultPage) Values() []OperationEntity {
 		return nil
 	}
 	return *page.oelr.Value
+}
+
+// Creates a new instance of the OperationEntityListResultPage type.
+func NewOperationEntityListResultPage(getNextPage func(context.Context, OperationEntityListResult) (OperationEntityListResult, error)) OperationEntityListResultPage {
+	return OperationEntityListResultPage{fn: getNextPage}
 }
 
 // PostBackupResponse post Backup Response
@@ -1496,7 +1506,7 @@ func (future *ServerEndpointsUpdateFuture) Result(client ServerEndpointsClient) 
 
 // ServerEndpointUpdateParameters parameters for updating an Server Endpoint.
 type ServerEndpointUpdateParameters struct {
-	// ServerEndpointUpdateProperties - The properties of the serverendpoint.
+	// ServerEndpointUpdateProperties - The properties of the server endpoint.
 	*ServerEndpointUpdateProperties `json:"properties,omitempty"`
 }
 

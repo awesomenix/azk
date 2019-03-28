@@ -132,7 +132,7 @@ func (at *AgreementTerms) UnmarshalJSON(body []byte) error {
 	return nil
 }
 
-// ErrorResponse error reponse indicates Microsoft.MarketplaceOrdering service is not able to process the
+// ErrorResponse error response indicates Microsoft.MarketplaceOrdering service is not able to process the
 // incoming request. The reason is provided in the error message.
 type ErrorResponse struct {
 	// Error - The details of the error.
@@ -145,6 +145,12 @@ type ErrorResponseError struct {
 	Code *string `json:"code,omitempty"`
 	// Message - Error message indicating why the operation failed.
 	Message *string `json:"message,omitempty"`
+}
+
+// ListAgreementTerms ...
+type ListAgreementTerms struct {
+	autorest.Response `json:"-"`
+	Value             *[]AgreementTerms `json:"value,omitempty"`
 }
 
 // Operation microsoft.MarketplaceOrdering REST API operation
@@ -233,6 +239,11 @@ func (iter OperationListResultIterator) Value() Operation {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the OperationListResultIterator type.
+func NewOperationListResultIterator(page OperationListResultPage) OperationListResultIterator {
+	return OperationListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (olr OperationListResult) IsEmpty() bool {
 	return olr.Value == nil || len(*olr.Value) == 0
@@ -300,6 +311,11 @@ func (page OperationListResultPage) Values() []Operation {
 		return nil
 	}
 	return *page.olr.Value
+}
+
+// Creates a new instance of the OperationListResultPage type.
+func NewOperationListResultPage(getNextPage func(context.Context, OperationListResult) (OperationListResult, error)) OperationListResultPage {
+	return OperationListResultPage{fn: getNextPage}
 }
 
 // Resource ARM resource.

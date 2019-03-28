@@ -759,7 +759,7 @@ type AdditionalUnattendContent struct {
 
 // APIEntityReference the API entity reference.
 type APIEntityReference struct {
-	// ID - The ARM resource id in the form of /subscriptions/{SubcriptionId}/resourceGroups/{ResourceGroupName}/...
+	// ID - The ARM resource id in the form of /subscriptions/{SubscriptionId}/resourceGroups/{ResourceGroupName}/...
 	ID *string `json:"id,omitempty"`
 }
 
@@ -798,7 +798,7 @@ type AutoOSUpgradePolicy struct {
 // maximize availability. For more information about availability sets, see [Manage the availability of
 // virtual
 // machines](https://docs.microsoft.com/azure/virtual-machines/virtual-machines-windows-manage-availability?toc=%2fazure%2fvirtual-machines%2fwindows%2ftoc.json).
-// <br><br> For more information on Azure planned maintainance, see [Planned maintenance for virtual
+// <br><br> For more information on Azure planned maintenance, see [Planned maintenance for virtual
 // machines in
 // Azure](https://docs.microsoft.com/azure/virtual-machines/virtual-machines-windows-planned-maintenance?toc=%2fazure%2fvirtual-machines%2fwindows%2ftoc.json)
 // <br><br> Currently, a VM can only be added to availability set at creation time. An existing VM cannot
@@ -992,6 +992,11 @@ func (iter AvailabilitySetListResultIterator) Value() AvailabilitySet {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the AvailabilitySetListResultIterator type.
+func NewAvailabilitySetListResultIterator(page AvailabilitySetListResultPage) AvailabilitySetListResultIterator {
+	return AvailabilitySetListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (aslr AvailabilitySetListResult) IsEmpty() bool {
 	return aslr.Value == nil || len(*aslr.Value) == 0
@@ -1059,6 +1064,11 @@ func (page AvailabilitySetListResultPage) Values() []AvailabilitySet {
 		return nil
 	}
 	return *page.aslr.Value
+}
+
+// Creates a new instance of the AvailabilitySetListResultPage type.
+func NewAvailabilitySetListResultPage(getNextPage func(context.Context, AvailabilitySetListResult) (AvailabilitySetListResult, error)) AvailabilitySetListResultPage {
+	return AvailabilitySetListResultPage{fn: getNextPage}
 }
 
 // AvailabilitySetProperties the instance view of a resource.
@@ -1415,6 +1425,11 @@ func (iter ImageListResultIterator) Value() Image {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ImageListResultIterator type.
+func NewImageListResultIterator(page ImageListResultPage) ImageListResultIterator {
+	return ImageListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (ilr ImageListResult) IsEmpty() bool {
 	return ilr.Value == nil || len(*ilr.Value) == 0
@@ -1482,6 +1497,11 @@ func (page ImageListResultPage) Values() []Image {
 		return nil
 	}
 	return *page.ilr.Value
+}
+
+// Creates a new instance of the ImageListResultPage type.
+func NewImageListResultPage(getNextPage func(context.Context, ImageListResult) (ImageListResult, error)) ImageListResultPage {
+	return ImageListResultPage{fn: getNextPage}
 }
 
 // ImageOSDisk describes an Operating System disk.
@@ -1795,6 +1815,11 @@ func (iter ListUsagesResultIterator) Value() Usage {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ListUsagesResultIterator type.
+func NewListUsagesResultIterator(page ListUsagesResultPage) ListUsagesResultIterator {
+	return ListUsagesResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (lur ListUsagesResult) IsEmpty() bool {
 	return lur.Value == nil || len(*lur.Value) == 0
@@ -1862,6 +1887,11 @@ func (page ListUsagesResultPage) Values() []Usage {
 		return nil
 	}
 	return *page.lur.Value
+}
+
+// Creates a new instance of the ListUsagesResultPage type.
+func NewListUsagesResultPage(getNextPage func(context.Context, ListUsagesResult) (ListUsagesResult, error)) ListUsagesResultPage {
+	return ListUsagesResultPage{fn: getNextPage}
 }
 
 // ListVirtualMachineExtensionImage ...
@@ -1944,7 +1974,7 @@ type LogAnalyticsInputBase struct {
 	ToTime *date.Time `json:"toTime,omitempty"`
 	// GroupByThrottlePolicy - Group query result by Throttle Policy applied.
 	GroupByThrottlePolicy *bool `json:"groupByThrottlePolicy,omitempty"`
-	// GroupByOperationName - Group query result by  by Operation Name.
+	// GroupByOperationName - Group query result by Operation Name.
 	GroupByOperationName *bool `json:"groupByOperationName,omitempty"`
 	// GroupByResourceName - Group query result by Resource Name.
 	GroupByResourceName *bool `json:"groupByResourceName,omitempty"`
@@ -2203,7 +2233,7 @@ type OSDiskImage struct {
 
 // OSProfile specifies the operating system settings for the virtual machine.
 type OSProfile struct {
-	// ComputerName - Specifies the host OS name of the virtual machine. <br><br> **Max-length (Windows):** 15 characters <br><br> **Max-length (Linux):** 64 characters. <br><br> For naming conventions and restrictions see [Azure infrastructure services implementation guidelines](https://docs.microsoft.com/azure/virtual-machines/virtual-machines-linux-infrastructure-subscription-accounts-guidelines?toc=%2fazure%2fvirtual-machines%2flinux%2ftoc.json#1-naming-conventions).
+	// ComputerName - Specifies the host OS name of the virtual machine. <br><br> This name cannot be updated after the VM is created. <br><br> **Max-length (Windows):** 15 characters <br><br> **Max-length (Linux):** 64 characters. <br><br> For naming conventions and restrictions see [Azure infrastructure services implementation guidelines](https://docs.microsoft.com/azure/virtual-machines/virtual-machines-linux-infrastructure-subscription-accounts-guidelines?toc=%2fazure%2fvirtual-machines%2flinux%2ftoc.json#1-naming-conventions).
 	ComputerName *string `json:"computerName,omitempty"`
 	// AdminUsername - Specifies the name of the administrator account. <br><br> **Windows-only restriction:** Cannot end in "." <br><br> **Disallowed values:** "administrator", "admin", "user", "user1", "test", "user2", "test1", "user3", "admin1", "1", "123", "a", "actuser", "adm", "admin2", "aspnet", "backup", "console", "david", "guest", "john", "owner", "root", "server", "sql", "support", "support_388945a0", "sys", "test2", "test3", "user4", "user5". <br><br> **Minimum-length (Linux):** 1  character <br><br> **Max-length (Linux):** 64 characters <br><br> **Max-length (Windows):** 20 characters  <br><br><li> For root access to the Linux VM, see [Using root privileges on Linux virtual machines in Azure](https://docs.microsoft.com/azure/virtual-machines/virtual-machines-linux-use-root-privileges?toc=%2fazure%2fvirtual-machines%2flinux%2ftoc.json)<br><li> For a list of built-in system users on Linux that should not be used in this field, see [Selecting User Names for Linux on Azure](https://docs.microsoft.com/azure/virtual-machines/virtual-machines-linux-usernames?toc=%2fazure%2fvirtual-machines%2flinux%2ftoc.json)
 	AdminUsername *string `json:"adminUsername,omitempty"`
@@ -2266,7 +2296,7 @@ type RequestRateByIntervalInput struct {
 	ToTime *date.Time `json:"toTime,omitempty"`
 	// GroupByThrottlePolicy - Group query result by Throttle Policy applied.
 	GroupByThrottlePolicy *bool `json:"groupByThrottlePolicy,omitempty"`
-	// GroupByOperationName - Group query result by  by Operation Name.
+	// GroupByOperationName - Group query result by Operation Name.
 	GroupByOperationName *bool `json:"groupByOperationName,omitempty"`
 	// GroupByResourceName - Group query result by Resource Name.
 	GroupByResourceName *bool `json:"groupByResourceName,omitempty"`
@@ -2593,6 +2623,11 @@ func (iter RunCommandListResultIterator) Value() RunCommandDocumentBase {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the RunCommandListResultIterator type.
+func NewRunCommandListResultIterator(page RunCommandListResultPage) RunCommandListResultIterator {
+	return RunCommandListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (rclr RunCommandListResult) IsEmpty() bool {
 	return rclr.Value == nil || len(*rclr.Value) == 0
@@ -2660,6 +2695,11 @@ func (page RunCommandListResultPage) Values() []RunCommandDocumentBase {
 		return nil
 	}
 	return *page.rclr.Value
+}
+
+// Creates a new instance of the RunCommandListResultPage type.
+func NewRunCommandListResultPage(getNextPage func(context.Context, RunCommandListResult) (RunCommandListResult, error)) RunCommandListResultPage {
+	return RunCommandListResultPage{fn: getNextPage}
 }
 
 // RunCommandParameterDefinition describes the properties of a run command parameter.
@@ -2846,7 +2886,7 @@ type ThrottledRequestsInput struct {
 	ToTime *date.Time `json:"toTime,omitempty"`
 	// GroupByThrottlePolicy - Group query result by Throttle Policy applied.
 	GroupByThrottlePolicy *bool `json:"groupByThrottlePolicy,omitempty"`
-	// GroupByOperationName - Group query result by  by Operation Name.
+	// GroupByOperationName - Group query result by Operation Name.
 	GroupByOperationName *bool `json:"groupByOperationName,omitempty"`
 	// GroupByResourceName - Group query result by Resource Name.
 	GroupByResourceName *bool `json:"groupByResourceName,omitempty"`
@@ -2882,7 +2922,7 @@ type UpgradeOperationHistoricalStatusInfo struct {
 type UpgradeOperationHistoricalStatusInfoProperties struct {
 	// RunningStatus - Information about the overall status of the upgrade operation.
 	RunningStatus *UpgradeOperationHistoryStatus `json:"runningStatus,omitempty"`
-	// Progress - Counts of the VM's in each state.
+	// Progress - Counts of the VMs in each state.
 	Progress *RollingUpgradeProgressInfo `json:"progress,omitempty"`
 	// Error - Error Details for this upgrade if there are any.
 	Error *APIError `json:"error,omitempty"`
@@ -2941,7 +2981,7 @@ type UsageName struct {
 type VaultCertificate struct {
 	// CertificateURL - This is the URL of a certificate that has been uploaded to Key Vault as a secret. For adding a secret to the Key Vault, see [Add a key or secret to the key vault](https://docs.microsoft.com/azure/key-vault/key-vault-get-started/#add). In this case, your certificate needs to be It is the Base64 encoding of the following JSON Object which is encoded in UTF-8: <br><br> {<br>  "data":"<Base64-encoded-certificate>",<br>  "dataType":"pfx",<br>  "password":"<pfx-file-password>"<br>}
 	CertificateURL *string `json:"certificateUrl,omitempty"`
-	// CertificateStore - For Windows VMs, specifies the certificate store on the Virtual Machine to which the certificate should be added. The specified certificate store is implicitly in the LocalMachine account. <br><br>For Linux VMs, the certificate file is placed under the /var/lib/waagent directory, with the file name <UppercaseThumbprint>.crt for the X509 certificate file and <UppercaseThumbpring>.prv for private key. Both of these files are .pem formatted.
+	// CertificateStore - For Windows VMs, specifies the certificate store on the Virtual Machine to which the certificate should be added. The specified certificate store is implicitly in the LocalMachine account. <br><br>For Linux VMs, the certificate file is placed under the /var/lib/waagent directory, with the file name &lt;UppercaseThumbprint&gt;.crt for the X509 certificate file and &lt;UppercaseThumbprint&gt;.prv for private key. Both of these files are .pem formatted.
 	CertificateStore *string `json:"certificateStore,omitempty"`
 }
 
@@ -3891,6 +3931,11 @@ func (iter VirtualMachineListResultIterator) Value() VirtualMachine {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the VirtualMachineListResultIterator type.
+func NewVirtualMachineListResultIterator(page VirtualMachineListResultPage) VirtualMachineListResultIterator {
+	return VirtualMachineListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (vmlr VirtualMachineListResult) IsEmpty() bool {
 	return vmlr.Value == nil || len(*vmlr.Value) == 0
@@ -3960,6 +4005,11 @@ func (page VirtualMachineListResultPage) Values() []VirtualMachine {
 	return *page.vmlr.Value
 }
 
+// Creates a new instance of the VirtualMachineListResultPage type.
+func NewVirtualMachineListResultPage(getNextPage func(context.Context, VirtualMachineListResult) (VirtualMachineListResult, error)) VirtualMachineListResultPage {
+	return VirtualMachineListResultPage{fn: getNextPage}
+}
+
 // VirtualMachineProperties describes the properties of a Virtual Machine.
 type VirtualMachineProperties struct {
 	// HardwareProfile - Specifies the hardware settings for the virtual machine.
@@ -3972,7 +4022,7 @@ type VirtualMachineProperties struct {
 	NetworkProfile *NetworkProfile `json:"networkProfile,omitempty"`
 	// DiagnosticsProfile - Specifies the boot diagnostic settings state. <br><br>Minimum api-version: 2015-06-15.
 	DiagnosticsProfile *DiagnosticsProfile `json:"diagnosticsProfile,omitempty"`
-	// AvailabilitySet - Specifies information about the availability set that the virtual machine should be assigned to. Virtual machines specified in the same availability set are allocated to different nodes to maximize availability. For more information about availability sets, see [Manage the availability of virtual machines](https://docs.microsoft.com/azure/virtual-machines/virtual-machines-windows-manage-availability?toc=%2fazure%2fvirtual-machines%2fwindows%2ftoc.json). <br><br> For more information on Azure planned maintainance, see [Planned maintenance for virtual machines in Azure](https://docs.microsoft.com/azure/virtual-machines/virtual-machines-windows-planned-maintenance?toc=%2fazure%2fvirtual-machines%2fwindows%2ftoc.json) <br><br> Currently, a VM can only be added to availability set at creation time. An existing VM cannot be added to an availability set.
+	// AvailabilitySet - Specifies information about the availability set that the virtual machine should be assigned to. Virtual machines specified in the same availability set are allocated to different nodes to maximize availability. For more information about availability sets, see [Manage the availability of virtual machines](https://docs.microsoft.com/azure/virtual-machines/virtual-machines-windows-manage-availability?toc=%2fazure%2fvirtual-machines%2fwindows%2ftoc.json). <br><br> For more information on Azure planned maintenance, see [Planned maintenance for virtual machines in Azure](https://docs.microsoft.com/azure/virtual-machines/virtual-machines-windows-planned-maintenance?toc=%2fazure%2fvirtual-machines%2fwindows%2ftoc.json) <br><br> Currently, a VM can only be added to availability set at creation time. An existing VM cannot be added to an availability set.
 	AvailabilitySet *SubResource `json:"availabilitySet,omitempty"`
 	// ProvisioningState - The provisioning state, which only appears in the response.
 	ProvisioningState *string `json:"provisioningState,omitempty"`
@@ -4302,6 +4352,11 @@ func (iter VirtualMachineScaleSetExtensionListResultIterator) Value() VirtualMac
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the VirtualMachineScaleSetExtensionListResultIterator type.
+func NewVirtualMachineScaleSetExtensionListResultIterator(page VirtualMachineScaleSetExtensionListResultPage) VirtualMachineScaleSetExtensionListResultIterator {
+	return VirtualMachineScaleSetExtensionListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (vmsselr VirtualMachineScaleSetExtensionListResult) IsEmpty() bool {
 	return vmsselr.Value == nil || len(*vmsselr.Value) == 0
@@ -4369,6 +4424,11 @@ func (page VirtualMachineScaleSetExtensionListResultPage) Values() []VirtualMach
 		return nil
 	}
 	return *page.vmsselr.Value
+}
+
+// Creates a new instance of the VirtualMachineScaleSetExtensionListResultPage type.
+func NewVirtualMachineScaleSetExtensionListResultPage(getNextPage func(context.Context, VirtualMachineScaleSetExtensionListResult) (VirtualMachineScaleSetExtensionListResult, error)) VirtualMachineScaleSetExtensionListResultPage {
+	return VirtualMachineScaleSetExtensionListResultPage{fn: getNextPage}
 }
 
 // VirtualMachineScaleSetExtensionProfile describes a virtual machine scale set extension profile.
@@ -4641,6 +4701,11 @@ func (iter VirtualMachineScaleSetListOSUpgradeHistoryIterator) Value() UpgradeOp
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the VirtualMachineScaleSetListOSUpgradeHistoryIterator type.
+func NewVirtualMachineScaleSetListOSUpgradeHistoryIterator(page VirtualMachineScaleSetListOSUpgradeHistoryPage) VirtualMachineScaleSetListOSUpgradeHistoryIterator {
+	return VirtualMachineScaleSetListOSUpgradeHistoryIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (vmsslouh VirtualMachineScaleSetListOSUpgradeHistory) IsEmpty() bool {
 	return vmsslouh.Value == nil || len(*vmsslouh.Value) == 0
@@ -4711,6 +4776,11 @@ func (page VirtualMachineScaleSetListOSUpgradeHistoryPage) Values() []UpgradeOpe
 	return *page.vmsslouh.Value
 }
 
+// Creates a new instance of the VirtualMachineScaleSetListOSUpgradeHistoryPage type.
+func NewVirtualMachineScaleSetListOSUpgradeHistoryPage(getNextPage func(context.Context, VirtualMachineScaleSetListOSUpgradeHistory) (VirtualMachineScaleSetListOSUpgradeHistory, error)) VirtualMachineScaleSetListOSUpgradeHistoryPage {
+	return VirtualMachineScaleSetListOSUpgradeHistoryPage{fn: getNextPage}
+}
+
 // VirtualMachineScaleSetListResult the List Virtual Machine operation response.
 type VirtualMachineScaleSetListResult struct {
 	autorest.Response `json:"-"`
@@ -4777,6 +4847,11 @@ func (iter VirtualMachineScaleSetListResultIterator) Value() VirtualMachineScale
 		return VirtualMachineScaleSet{}
 	}
 	return iter.page.Values()[iter.i]
+}
+
+// Creates a new instance of the VirtualMachineScaleSetListResultIterator type.
+func NewVirtualMachineScaleSetListResultIterator(page VirtualMachineScaleSetListResultPage) VirtualMachineScaleSetListResultIterator {
+	return VirtualMachineScaleSetListResultIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -4848,6 +4923,11 @@ func (page VirtualMachineScaleSetListResultPage) Values() []VirtualMachineScaleS
 	return *page.vmsslr.Value
 }
 
+// Creates a new instance of the VirtualMachineScaleSetListResultPage type.
+func NewVirtualMachineScaleSetListResultPage(getNextPage func(context.Context, VirtualMachineScaleSetListResult) (VirtualMachineScaleSetListResult, error)) VirtualMachineScaleSetListResultPage {
+	return VirtualMachineScaleSetListResultPage{fn: getNextPage}
+}
+
 // VirtualMachineScaleSetListSkusResult the Virtual Machine Scale Set List Skus operation response.
 type VirtualMachineScaleSetListSkusResult struct {
 	autorest.Response `json:"-"`
@@ -4914,6 +4994,11 @@ func (iter VirtualMachineScaleSetListSkusResultIterator) Value() VirtualMachineS
 		return VirtualMachineScaleSetSku{}
 	}
 	return iter.page.Values()[iter.i]
+}
+
+// Creates a new instance of the VirtualMachineScaleSetListSkusResultIterator type.
+func NewVirtualMachineScaleSetListSkusResultIterator(page VirtualMachineScaleSetListSkusResultPage) VirtualMachineScaleSetListSkusResultIterator {
+	return VirtualMachineScaleSetListSkusResultIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -4985,6 +5070,11 @@ func (page VirtualMachineScaleSetListSkusResultPage) Values() []VirtualMachineSc
 	return *page.vmsslsr.Value
 }
 
+// Creates a new instance of the VirtualMachineScaleSetListSkusResultPage type.
+func NewVirtualMachineScaleSetListSkusResultPage(getNextPage func(context.Context, VirtualMachineScaleSetListSkusResult) (VirtualMachineScaleSetListSkusResult, error)) VirtualMachineScaleSetListSkusResultPage {
+	return VirtualMachineScaleSetListSkusResultPage{fn: getNextPage}
+}
+
 // VirtualMachineScaleSetListWithLinkResult the List Virtual Machine operation response.
 type VirtualMachineScaleSetListWithLinkResult struct {
 	autorest.Response `json:"-"`
@@ -5051,6 +5141,11 @@ func (iter VirtualMachineScaleSetListWithLinkResultIterator) Value() VirtualMach
 		return VirtualMachineScaleSet{}
 	}
 	return iter.page.Values()[iter.i]
+}
+
+// Creates a new instance of the VirtualMachineScaleSetListWithLinkResultIterator type.
+func NewVirtualMachineScaleSetListWithLinkResultIterator(page VirtualMachineScaleSetListWithLinkResultPage) VirtualMachineScaleSetListWithLinkResultIterator {
+	return VirtualMachineScaleSetListWithLinkResultIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -5120,6 +5215,11 @@ func (page VirtualMachineScaleSetListWithLinkResultPage) Values() []VirtualMachi
 		return nil
 	}
 	return *page.vmsslwlr.Value
+}
+
+// Creates a new instance of the VirtualMachineScaleSetListWithLinkResultPage type.
+func NewVirtualMachineScaleSetListWithLinkResultPage(getNextPage func(context.Context, VirtualMachineScaleSetListWithLinkResult) (VirtualMachineScaleSetListWithLinkResult, error)) VirtualMachineScaleSetListWithLinkResultPage {
+	return VirtualMachineScaleSetListWithLinkResultPage{fn: getNextPage}
 }
 
 // VirtualMachineScaleSetManagedDiskParameters describes the parameters of a ScaleSet managed disk.
@@ -5279,7 +5379,7 @@ type VirtualMachineScaleSetProperties struct {
 	UniqueID *string `json:"uniqueId,omitempty"`
 	// SinglePlacementGroup - When true this limits the scale set to a single placement group, of max size 100 virtual machines.
 	SinglePlacementGroup *bool `json:"singlePlacementGroup,omitempty"`
-	// ZoneBalance - Whether to force stictly even Virtual Machine distribution cross x-zones in case there is zone outage.
+	// ZoneBalance - Whether to force strictly even Virtual Machine distribution cross x-zones in case there is zone outage.
 	ZoneBalance *bool `json:"zoneBalance,omitempty"`
 	// PlatformFaultDomainCount - Fault Domain count for each placement group.
 	PlatformFaultDomainCount *int32 `json:"platformFaultDomainCount,omitempty"`
@@ -6502,6 +6602,11 @@ func (iter VirtualMachineScaleSetVMListResultIterator) Value() VirtualMachineSca
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the VirtualMachineScaleSetVMListResultIterator type.
+func NewVirtualMachineScaleSetVMListResultIterator(page VirtualMachineScaleSetVMListResultPage) VirtualMachineScaleSetVMListResultIterator {
+	return VirtualMachineScaleSetVMListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (vmssvlr VirtualMachineScaleSetVMListResult) IsEmpty() bool {
 	return vmssvlr.Value == nil || len(*vmssvlr.Value) == 0
@@ -6571,6 +6676,11 @@ func (page VirtualMachineScaleSetVMListResultPage) Values() []VirtualMachineScal
 	return *page.vmssvlr.Value
 }
 
+// Creates a new instance of the VirtualMachineScaleSetVMListResultPage type.
+func NewVirtualMachineScaleSetVMListResultPage(getNextPage func(context.Context, VirtualMachineScaleSetVMListResult) (VirtualMachineScaleSetVMListResult, error)) VirtualMachineScaleSetVMListResultPage {
+	return VirtualMachineScaleSetVMListResultPage{fn: getNextPage}
+}
+
 // VirtualMachineScaleSetVMProfile describes a virtual machine scale set virtual machine profile.
 type VirtualMachineScaleSetVMProfile struct {
 	// OsProfile - Specifies the operating system settings for the virtual machines in the scale set.
@@ -6610,7 +6720,7 @@ type VirtualMachineScaleSetVMProperties struct {
 	NetworkProfile *NetworkProfile `json:"networkProfile,omitempty"`
 	// DiagnosticsProfile - Specifies the boot diagnostic settings state. <br><br>Minimum api-version: 2015-06-15.
 	DiagnosticsProfile *DiagnosticsProfile `json:"diagnosticsProfile,omitempty"`
-	// AvailabilitySet - Specifies information about the availability set that the virtual machine should be assigned to. Virtual machines specified in the same availability set are allocated to different nodes to maximize availability. For more information about availability sets, see [Manage the availability of virtual machines](https://docs.microsoft.com/azure/virtual-machines/virtual-machines-windows-manage-availability?toc=%2fazure%2fvirtual-machines%2fwindows%2ftoc.json). <br><br> For more information on Azure planned maintainance, see [Planned maintenance for virtual machines in Azure](https://docs.microsoft.com/azure/virtual-machines/virtual-machines-windows-planned-maintenance?toc=%2fazure%2fvirtual-machines%2fwindows%2ftoc.json) <br><br> Currently, a VM can only be added to availability set at creation time. An existing VM cannot be added to an availability set.
+	// AvailabilitySet - Specifies information about the availability set that the virtual machine should be assigned to. Virtual machines specified in the same availability set are allocated to different nodes to maximize availability. For more information about availability sets, see [Manage the availability of virtual machines](https://docs.microsoft.com/azure/virtual-machines/virtual-machines-windows-manage-availability?toc=%2fazure%2fvirtual-machines%2fwindows%2ftoc.json). <br><br> For more information on Azure planned maintenance, see [Planned maintenance for virtual machines in Azure](https://docs.microsoft.com/azure/virtual-machines/virtual-machines-windows-planned-maintenance?toc=%2fazure%2fvirtual-machines%2fwindows%2ftoc.json) <br><br> Currently, a VM can only be added to availability set at creation time. An existing VM cannot be added to an availability set.
 	AvailabilitySet *SubResource `json:"availabilitySet,omitempty"`
 	// ProvisioningState - The provisioning state, which only appears in the response.
 	ProvisioningState *string `json:"provisioningState,omitempty"`

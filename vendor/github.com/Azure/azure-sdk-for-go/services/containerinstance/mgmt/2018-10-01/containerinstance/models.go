@@ -201,6 +201,77 @@ type AzureFileVolume struct {
 	StorageAccountKey *string `json:"storageAccountKey,omitempty"`
 }
 
+// CachedImages the cached image and OS type.
+type CachedImages struct {
+	// ID - The resource Id of the cached image.
+	ID *string `json:"id,omitempty"`
+	// OsType - The OS type of the cached image.
+	OsType *string `json:"osType,omitempty"`
+	// Image - The cached image name.
+	Image *string `json:"image,omitempty"`
+}
+
+// CachedImagesListResult the response containing cached images.
+type CachedImagesListResult struct {
+	autorest.Response `json:"-"`
+	// Value - The list of cached images.
+	Value *[]CachedImages `json:"value,omitempty"`
+	// NextLink - The URI to fetch the next page of cached images.
+	NextLink *string `json:"nextLink,omitempty"`
+}
+
+// Capabilities the regional capabilities.
+type Capabilities struct {
+	// ResourceType - The resource type that this capability describes.
+	ResourceType *string `json:"resourceType,omitempty"`
+	// OsType - The OS type that this capability describes.
+	OsType *string `json:"osType,omitempty"`
+	// Location - The resource location.
+	Location *string `json:"location,omitempty"`
+	// IPAddressType - The ip address type that this capability describes.
+	IPAddressType *string `json:"ipAddressType,omitempty"`
+	// Gpu - The GPU sku that this capability describes.
+	Gpu *string `json:"gpu,omitempty"`
+	// Capabilities - The supported capabilities.
+	Capabilities *CapabilitiesCapabilities `json:"capabilities,omitempty"`
+}
+
+// CapabilitiesCapabilities the supported capabilities.
+type CapabilitiesCapabilities struct {
+	// MaxMemoryInGB - The maximum allowed memory request in GB.
+	MaxMemoryInGB *float64 `json:"maxMemoryInGB,omitempty"`
+	// MaxCPU - The maximum allowed CPU request in cores.
+	MaxCPU *float64 `json:"maxCpu,omitempty"`
+	// MaxGpuCount - The maximum allowed GPU count.
+	MaxGpuCount *float64 `json:"maxGpuCount,omitempty"`
+}
+
+// CapabilitiesListResult the response containing list of capabilities.
+type CapabilitiesListResult struct {
+	autorest.Response `json:"-"`
+	// Value - The list of capabilities.
+	Value *[]Capabilities `json:"value,omitempty"`
+	// NextLink - The URI to fetch the next page of capabilities.
+	NextLink *string `json:"nextLink,omitempty"`
+}
+
+// CloudError an error response from the Batch service.
+type CloudError struct {
+	Error *CloudErrorBody `json:"error,omitempty"`
+}
+
+// CloudErrorBody an error response from the Batch service.
+type CloudErrorBody struct {
+	// Code - An identifier for the error. Codes are invariant and are intended to be consumed programmatically.
+	Code *string `json:"code,omitempty"`
+	// Message - A message describing the error, intended to be suitable for display in a user interface.
+	Message *string `json:"message,omitempty"`
+	// Target - The target of the particular error. For example, the name of the property in error.
+	Target *string `json:"target,omitempty"`
+	// Details - A list of additional details about the error.
+	Details *[]CloudErrorBody `json:"details,omitempty"`
+}
+
 // Container a container instance.
 type Container struct {
 	// Name - The user-provided name of the container instance.
@@ -519,6 +590,11 @@ func (iter ContainerGroupListResultIterator) Value() ContainerGroup {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ContainerGroupListResultIterator type.
+func NewContainerGroupListResultIterator(page ContainerGroupListResultPage) ContainerGroupListResultIterator {
+	return ContainerGroupListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (cglr ContainerGroupListResult) IsEmpty() bool {
 	return cglr.Value == nil || len(*cglr.Value) == 0
@@ -586,6 +662,11 @@ func (page ContainerGroupListResultPage) Values() []ContainerGroup {
 		return nil
 	}
 	return *page.cglr.Value
+}
+
+// Creates a new instance of the ContainerGroupListResultPage type.
+func NewContainerGroupListResultPage(getNextPage func(context.Context, ContainerGroupListResult) (ContainerGroupListResult, error)) ContainerGroupListResultPage {
+	return ContainerGroupListResultPage{fn: getNextPage}
 }
 
 // ContainerGroupNetworkProfile container group network profile information.
@@ -678,6 +759,29 @@ func (future *ContainerGroupsRestartFuture) Result(client ContainerGroupsClient)
 	}
 	if !done {
 		err = azure.NewAsyncOpIncompleteError("containerinstance.ContainerGroupsRestartFuture")
+		return
+	}
+	ar.Response = future.Response()
+	return
+}
+
+// ContainerGroupsStartFuture an abstraction for monitoring and retrieving the results of a long-running
+// operation.
+type ContainerGroupsStartFuture struct {
+	azure.Future
+}
+
+// Result returns the result of the asynchronous operation.
+// If the operation has not completed it will return an error.
+func (future *ContainerGroupsStartFuture) Result(client ContainerGroupsClient) (ar autorest.Response, err error) {
+	var done bool
+	done, err = future.Done(client)
+	if err != nil {
+		err = autorest.NewErrorWithError(err, "containerinstance.ContainerGroupsStartFuture", "Result", future.Response(), "Polling failure")
+		return
+	}
+	if !done {
+		err = azure.NewAsyncOpIncompleteError("containerinstance.ContainerGroupsStartFuture")
 		return
 	}
 	ar.Response = future.Response()
@@ -889,6 +993,8 @@ type Operation struct {
 	Name *string `json:"name,omitempty"`
 	// Display - The display information of the operation.
 	Display *OperationDisplay `json:"display,omitempty"`
+	// Properties - The additional properties.
+	Properties interface{} `json:"properties,omitempty"`
 	// Origin - The intended executor of the operation. Possible values include: 'User', 'System'
 	Origin OperationsOrigin `json:"origin,omitempty"`
 }

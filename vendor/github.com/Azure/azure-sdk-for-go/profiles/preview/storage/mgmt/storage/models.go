@@ -1,6 +1,6 @@
 // +build go1.9
 
-// Copyright 2018 Microsoft Corporation
+// Copyright 2019 Microsoft Corporation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,23 +19,23 @@
 
 package storage
 
-import original "github.com/Azure/azure-sdk-for-go/services/storage/mgmt/2018-07-01/storage"
-
-type AccountsClient = original.AccountsClient
-type BlobContainersClient = original.BlobContainersClient
-type BlobServicesClient = original.BlobServicesClient
+import original "github.com/Azure/azure-sdk-for-go/services/storage/mgmt/2018-11-01/storage"
 
 const (
 	DefaultBaseURI = original.DefaultBaseURI
 )
 
-type BaseClient = original.BaseClient
-type ManagementPoliciesClient = original.ManagementPoliciesClient
 type AccessTier = original.AccessTier
 
 const (
 	Cool AccessTier = original.Cool
 	Hot  AccessTier = original.Hot
+)
+
+type AccountExpand = original.AccountExpand
+
+const (
+	AccountExpandGeoReplicationStats AccountExpand = original.AccountExpandGeoReplicationStats
 )
 
 type AccountStatus = original.AccountStatus
@@ -65,6 +65,14 @@ type DefaultAction = original.DefaultAction
 const (
 	DefaultActionAllow DefaultAction = original.DefaultActionAllow
 	DefaultActionDeny  DefaultAction = original.DefaultActionDeny
+)
+
+type GeoReplicationStatus = original.GeoReplicationStatus
+
+const (
+	GeoReplicationStatusBootstrap   GeoReplicationStatus = original.GeoReplicationStatusBootstrap
+	GeoReplicationStatusLive        GeoReplicationStatus = original.GeoReplicationStatusLive
+	GeoReplicationStatusUnavailable GeoReplicationStatus = original.GeoReplicationStatusUnavailable
 )
 
 type HTTPProtocol = original.HTTPProtocol
@@ -251,35 +259,41 @@ type AccountCreateParameters = original.AccountCreateParameters
 type AccountKey = original.AccountKey
 type AccountListKeysResult = original.AccountListKeysResult
 type AccountListResult = original.AccountListResult
-type AccountManagementPolicies = original.AccountManagementPolicies
-type AccountManagementPoliciesRulesProperty = original.AccountManagementPoliciesRulesProperty
 type AccountProperties = original.AccountProperties
 type AccountPropertiesCreateParameters = original.AccountPropertiesCreateParameters
 type AccountPropertiesUpdateParameters = original.AccountPropertiesUpdateParameters
 type AccountRegenerateKeyParameters = original.AccountRegenerateKeyParameters
 type AccountSasParameters = original.AccountSasParameters
-type AccountsCreateFuture = original.AccountsCreateFuture
 type AccountUpdateParameters = original.AccountUpdateParameters
+type AccountsClient = original.AccountsClient
+type AccountsCreateFuture = original.AccountsCreateFuture
+type AccountsFailoverFuture = original.AccountsFailoverFuture
 type AzureEntityResource = original.AzureEntityResource
+type BaseClient = original.BaseClient
 type BlobContainer = original.BlobContainer
+type BlobContainersClient = original.BlobContainersClient
 type BlobServiceProperties = original.BlobServiceProperties
 type BlobServicePropertiesProperties = original.BlobServicePropertiesProperties
+type BlobServicesClient = original.BlobServicesClient
 type CheckNameAvailabilityResult = original.CheckNameAvailabilityResult
 type ContainerProperties = original.ContainerProperties
 type CorsRule = original.CorsRule
 type CorsRules = original.CorsRules
 type CustomDomain = original.CustomDomain
+type DateAfterCreation = original.DateAfterCreation
+type DateAfterModification = original.DateAfterModification
 type DeleteRetentionPolicy = original.DeleteRetentionPolicy
 type Dimension = original.Dimension
 type Encryption = original.Encryption
 type EncryptionService = original.EncryptionService
 type EncryptionServices = original.EncryptionServices
 type Endpoints = original.Endpoints
+type GeoReplicationStats = original.GeoReplicationStats
+type IPRule = original.IPRule
 type Identity = original.Identity
 type ImmutabilityPolicy = original.ImmutabilityPolicy
 type ImmutabilityPolicyProperties = original.ImmutabilityPolicyProperties
 type ImmutabilityPolicyProperty = original.ImmutabilityPolicyProperty
-type IPRule = original.IPRule
 type KeyVaultProperties = original.KeyVaultProperties
 type LegalHold = original.LegalHold
 type LegalHoldProperties = original.LegalHoldProperties
@@ -287,33 +301,44 @@ type ListAccountSasResponse = original.ListAccountSasResponse
 type ListContainerItem = original.ListContainerItem
 type ListContainerItems = original.ListContainerItems
 type ListServiceSasResponse = original.ListServiceSasResponse
-type ManagementPoliciesRules = original.ManagementPoliciesRules
-type ManagementPoliciesRulesSetParameter = original.ManagementPoliciesRulesSetParameter
+type ManagementPoliciesClient = original.ManagementPoliciesClient
+type ManagementPolicy = original.ManagementPolicy
+type ManagementPolicyAction = original.ManagementPolicyAction
+type ManagementPolicyBaseBlob = original.ManagementPolicyBaseBlob
+type ManagementPolicyDefinition = original.ManagementPolicyDefinition
+type ManagementPolicyFilter = original.ManagementPolicyFilter
+type ManagementPolicyProperties = original.ManagementPolicyProperties
+type ManagementPolicyRule = original.ManagementPolicyRule
+type ManagementPolicySchema = original.ManagementPolicySchema
+type ManagementPolicySnapShot = original.ManagementPolicySnapShot
 type MetricSpecification = original.MetricSpecification
 type NetworkRuleSet = original.NetworkRuleSet
 type Operation = original.Operation
 type OperationDisplay = original.OperationDisplay
 type OperationListResult = original.OperationListResult
 type OperationProperties = original.OperationProperties
+type OperationsClient = original.OperationsClient
 type ProxyResource = original.ProxyResource
 type Resource = original.Resource
 type Restriction = original.Restriction
+type SKUCapability = original.SKUCapability
 type ServiceSasParameters = original.ServiceSasParameters
 type ServiceSpecification = original.ServiceSpecification
 type Sku = original.Sku
-type SKUCapability = original.SKUCapability
 type SkuListResult = original.SkuListResult
+type SkusClient = original.SkusClient
 type TagProperty = original.TagProperty
 type TrackedResource = original.TrackedResource
 type UpdateHistoryProperty = original.UpdateHistoryProperty
 type Usage = original.Usage
 type UsageListResult = original.UsageListResult
 type UsageName = original.UsageName
-type VirtualNetworkRule = original.VirtualNetworkRule
-type OperationsClient = original.OperationsClient
-type SkusClient = original.SkusClient
 type UsagesClient = original.UsagesClient
+type VirtualNetworkRule = original.VirtualNetworkRule
 
+func New(subscriptionID string) BaseClient {
+	return original.New(subscriptionID)
+}
 func NewAccountsClient(subscriptionID string) AccountsClient {
 	return original.NewAccountsClient(subscriptionID)
 }
@@ -332,20 +357,38 @@ func NewBlobServicesClient(subscriptionID string) BlobServicesClient {
 func NewBlobServicesClientWithBaseURI(baseURI string, subscriptionID string) BlobServicesClient {
 	return original.NewBlobServicesClientWithBaseURI(baseURI, subscriptionID)
 }
-func New(subscriptionID string) BaseClient {
-	return original.New(subscriptionID)
-}
-func NewWithBaseURI(baseURI string, subscriptionID string) BaseClient {
-	return original.NewWithBaseURI(baseURI, subscriptionID)
-}
 func NewManagementPoliciesClient(subscriptionID string) ManagementPoliciesClient {
 	return original.NewManagementPoliciesClient(subscriptionID)
 }
 func NewManagementPoliciesClientWithBaseURI(baseURI string, subscriptionID string) ManagementPoliciesClient {
 	return original.NewManagementPoliciesClientWithBaseURI(baseURI, subscriptionID)
 }
+func NewOperationsClient(subscriptionID string) OperationsClient {
+	return original.NewOperationsClient(subscriptionID)
+}
+func NewOperationsClientWithBaseURI(baseURI string, subscriptionID string) OperationsClient {
+	return original.NewOperationsClientWithBaseURI(baseURI, subscriptionID)
+}
+func NewSkusClient(subscriptionID string) SkusClient {
+	return original.NewSkusClient(subscriptionID)
+}
+func NewSkusClientWithBaseURI(baseURI string, subscriptionID string) SkusClient {
+	return original.NewSkusClientWithBaseURI(baseURI, subscriptionID)
+}
+func NewUsagesClient(subscriptionID string) UsagesClient {
+	return original.NewUsagesClient(subscriptionID)
+}
+func NewUsagesClientWithBaseURI(baseURI string, subscriptionID string) UsagesClient {
+	return original.NewUsagesClientWithBaseURI(baseURI, subscriptionID)
+}
+func NewWithBaseURI(baseURI string, subscriptionID string) BaseClient {
+	return original.NewWithBaseURI(baseURI, subscriptionID)
+}
 func PossibleAccessTierValues() []AccessTier {
 	return original.PossibleAccessTierValues()
+}
+func PossibleAccountExpandValues() []AccountExpand {
+	return original.PossibleAccountExpandValues()
 }
 func PossibleAccountStatusValues() []AccountStatus {
 	return original.PossibleAccountStatusValues()
@@ -358,6 +401,9 @@ func PossibleBypassValues() []Bypass {
 }
 func PossibleDefaultActionValues() []DefaultAction {
 	return original.PossibleDefaultActionValues()
+}
+func PossibleGeoReplicationStatusValues() []GeoReplicationStatus {
+	return original.PossibleGeoReplicationStatusValues()
 }
 func PossibleHTTPProtocolValues() []HTTPProtocol {
 	return original.PossibleHTTPProtocolValues()
@@ -395,20 +441,20 @@ func PossibleProvisioningStateValues() []ProvisioningState {
 func PossiblePublicAccessValues() []PublicAccess {
 	return original.PossiblePublicAccessValues()
 }
-func PossibleReasonValues() []Reason {
-	return original.PossibleReasonValues()
-}
 func PossibleReasonCodeValues() []ReasonCode {
 	return original.PossibleReasonCodeValues()
+}
+func PossibleReasonValues() []Reason {
+	return original.PossibleReasonValues()
 }
 func PossibleServicesValues() []Services {
 	return original.PossibleServicesValues()
 }
-func PossibleSignedResourceValues() []SignedResource {
-	return original.PossibleSignedResourceValues()
-}
 func PossibleSignedResourceTypesValues() []SignedResourceTypes {
 	return original.PossibleSignedResourceTypesValues()
+}
+func PossibleSignedResourceValues() []SignedResource {
+	return original.PossibleSignedResourceValues()
 }
 func PossibleSkuNameValues() []SkuName {
 	return original.PossibleSkuNameValues()
@@ -421,24 +467,6 @@ func PossibleStateValues() []State {
 }
 func PossibleUsageUnitValues() []UsageUnit {
 	return original.PossibleUsageUnitValues()
-}
-func NewOperationsClient(subscriptionID string) OperationsClient {
-	return original.NewOperationsClient(subscriptionID)
-}
-func NewOperationsClientWithBaseURI(baseURI string, subscriptionID string) OperationsClient {
-	return original.NewOperationsClientWithBaseURI(baseURI, subscriptionID)
-}
-func NewSkusClient(subscriptionID string) SkusClient {
-	return original.NewSkusClient(subscriptionID)
-}
-func NewSkusClientWithBaseURI(baseURI string, subscriptionID string) SkusClient {
-	return original.NewSkusClientWithBaseURI(baseURI, subscriptionID)
-}
-func NewUsagesClient(subscriptionID string) UsagesClient {
-	return original.NewUsagesClient(subscriptionID)
-}
-func NewUsagesClientWithBaseURI(baseURI string, subscriptionID string) UsagesClient {
-	return original.NewUsagesClientWithBaseURI(baseURI, subscriptionID)
 }
 func UserAgent() string {
 	return original.UserAgent() + " profiles/preview"

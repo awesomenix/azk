@@ -102,7 +102,7 @@ type ActivationKeyResult struct {
 	ActivationKey *string `json:"activationKey,omitempty"`
 }
 
-// CustomerSubscription customer subcription.
+// CustomerSubscription customer subscription.
 type CustomerSubscription struct {
 	autorest.Response `json:"-"`
 	// CustomerSubscriptionProperties - Customer subscription properties.
@@ -113,7 +113,7 @@ type CustomerSubscription struct {
 	Name *string `json:"name,omitempty"`
 	// Type - Type of Resource.
 	Type *string `json:"type,omitempty"`
-	// Etag - The entity tag used for optimistic concurency when modifying the resource.
+	// Etag - The entity tag used for optimistic concurrency when modifying the resource.
 	Etag *string `json:"etag,omitempty"`
 }
 
@@ -265,6 +265,11 @@ func (iter CustomerSubscriptionListIterator) Value() CustomerSubscription {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the CustomerSubscriptionListIterator type.
+func NewCustomerSubscriptionListIterator(page CustomerSubscriptionListPage) CustomerSubscriptionListIterator {
+	return CustomerSubscriptionListIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (csl CustomerSubscriptionList) IsEmpty() bool {
 	return csl.Value == nil || len(*csl.Value) == 0
@@ -332,6 +337,11 @@ func (page CustomerSubscriptionListPage) Values() []CustomerSubscription {
 		return nil
 	}
 	return *page.csl.Value
+}
+
+// Creates a new instance of the CustomerSubscriptionListPage type.
+func NewCustomerSubscriptionListPage(getNextPage func(context.Context, CustomerSubscriptionList) (CustomerSubscriptionList, error)) CustomerSubscriptionListPage {
+	return CustomerSubscriptionListPage{fn: getNextPage}
 }
 
 // CustomerSubscriptionProperties customer subscription properties.
@@ -447,7 +457,7 @@ func (ep *ExtendedProduct) UnmarshalJSON(body []byte) error {
 
 // ExtendedProductProperties product information.
 type ExtendedProductProperties struct {
-	// ComputeRole - Specifies kind of compute role inclided in the package. Possible values include: 'None', 'IaaS', 'PaaS'
+	// ComputeRole - Specifies kind of compute role included in the package. Possible values include: 'None', 'IaaS', 'PaaS'
 	ComputeRole ComputeRole `json:"computeRole,omitempty"`
 	// IsSystemExtension - Specifies if product is a Virtual Machine Extension.
 	IsSystemExtension *bool `json:"isSystemExtension,omitempty"`
@@ -687,6 +697,11 @@ func (iter OperationListIterator) Value() Operation {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the OperationListIterator type.
+func NewOperationListIterator(page OperationListPage) OperationListIterator {
+	return OperationListIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (ol OperationList) IsEmpty() bool {
 	return ol.Value == nil || len(*ol.Value) == 0
@@ -756,6 +771,11 @@ func (page OperationListPage) Values() []Operation {
 	return *page.ol.Value
 }
 
+// Creates a new instance of the OperationListPage type.
+func NewOperationListPage(getNextPage func(context.Context, OperationList) (OperationList, error)) OperationListPage {
+	return OperationListPage{fn: getNextPage}
+}
+
 // OsDiskImage OS disk image.
 type OsDiskImage struct {
 	// OperatingSystem - OS operating system type. Possible values include: 'OperatingSystemNone', 'OperatingSystemWindows', 'OperatingSystemLinux'
@@ -775,7 +795,7 @@ type Product struct {
 	Name *string `json:"name,omitempty"`
 	// Type - Type of Resource.
 	Type *string `json:"type,omitempty"`
-	// Etag - The entity tag used for optimistic concurency when modifying the resource.
+	// Etag - The entity tag used for optimistic concurrency when modifying the resource.
 	Etag *string `json:"etag,omitempty"`
 }
 
@@ -935,6 +955,11 @@ func (iter ProductListIterator) Value() Product {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ProductListIterator type.
+func NewProductListIterator(page ProductListPage) ProductListIterator {
+	return ProductListIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (pl ProductList) IsEmpty() bool {
 	return pl.Value == nil || len(*pl.Value) == 0
@@ -1004,6 +1029,11 @@ func (page ProductListPage) Values() []Product {
 	return *page.pl.Value
 }
 
+// Creates a new instance of the ProductListPage type.
+func NewProductListPage(getNextPage func(context.Context, ProductList) (ProductList, error)) ProductListPage {
+	return ProductListPage{fn: getNextPage}
+}
+
 // ProductNestedProperties properties portion of the product resource.
 type ProductNestedProperties struct {
 	// DisplayName - The display name of the product.
@@ -1063,7 +1093,7 @@ type Registration struct {
 	Location *string `json:"location,omitempty"`
 	// Tags - Custom tags for the resource.
 	Tags map[string]*string `json:"tags"`
-	// Etag - The entity tag used for optimistic concurency when modifying the resource.
+	// Etag - The entity tag used for optimistic concurrency when modifying the resource.
 	Etag *string `json:"etag,omitempty"`
 }
 
@@ -1239,6 +1269,11 @@ func (iter RegistrationListIterator) Value() Registration {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the RegistrationListIterator type.
+func NewRegistrationListIterator(page RegistrationListPage) RegistrationListIterator {
+	return RegistrationListIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (rl RegistrationList) IsEmpty() bool {
 	return rl.Value == nil || len(*rl.Value) == 0
@@ -1308,6 +1343,11 @@ func (page RegistrationListPage) Values() []Registration {
 	return *page.rl.Value
 }
 
+// Creates a new instance of the RegistrationListPage type.
+func NewRegistrationListPage(getNextPage func(context.Context, RegistrationList) (RegistrationList, error)) RegistrationListPage {
+	return RegistrationListPage{fn: getNextPage}
+}
+
 // RegistrationParameter registration resource
 type RegistrationParameter struct {
 	// RegistrationParameterProperties - Properties of the Azure Stack registration resource
@@ -1361,7 +1401,7 @@ func (rp *RegistrationParameter) UnmarshalJSON(body []byte) error {
 	return nil
 }
 
-// RegistrationParameterProperties properties of the Azure Stack regstration resource
+// RegistrationParameterProperties properties of the Azure Stack registration resource
 type RegistrationParameterProperties struct {
 	// RegistrationToken - The token identifying registered Azure Stack
 	RegistrationToken *string `json:"registrationToken,omitempty"`
@@ -1385,7 +1425,7 @@ type Resource struct {
 	Name *string `json:"name,omitempty"`
 	// Type - Type of Resource.
 	Type *string `json:"type,omitempty"`
-	// Etag - The entity tag used for optimistic concurency when modifying the resource.
+	// Etag - The entity tag used for optimistic concurrency when modifying the resource.
 	Etag *string `json:"etag,omitempty"`
 }
 
@@ -1401,7 +1441,7 @@ type TrackedResource struct {
 	Location *string `json:"location,omitempty"`
 	// Tags - Custom tags for the resource.
 	Tags map[string]*string `json:"tags"`
-	// Etag - The entity tag used for optimistic concurency when modifying the resource.
+	// Etag - The entity tag used for optimistic concurrency when modifying the resource.
 	Etag *string `json:"etag,omitempty"`
 }
 
@@ -1437,7 +1477,7 @@ type URI struct {
 
 // VirtualMachineExtensionProductProperties product information.
 type VirtualMachineExtensionProductProperties struct {
-	// ComputeRole - Specifies kind of compute role inclided in the package. Possible values include: 'None', 'IaaS', 'PaaS'
+	// ComputeRole - Specifies kind of compute role included in the package. Possible values include: 'None', 'IaaS', 'PaaS'
 	ComputeRole ComputeRole `json:"computeRole,omitempty"`
 	// IsSystemExtension - Specifies if product is a Virtual Machine Extension.
 	IsSystemExtension *bool `json:"isSystemExtension,omitempty"`

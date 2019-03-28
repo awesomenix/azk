@@ -7,7 +7,7 @@ import (
 	"encoding/base64"
 	"fmt"
 
-	"github.com/Azure/azure-sdk-for-go/services/compute/mgmt/2018-04-01/compute"
+	"github.com/Azure/azure-sdk-for-go/services/compute/mgmt/2018-10-01/compute"
 	"github.com/Azure/go-autorest/autorest/to"
 	"github.com/awesomenix/azk/pkg/helpers"
 	"golang.org/x/crypto/ssh"
@@ -138,8 +138,10 @@ func (c *CloudConfiguration) CreateVMSS(ctx context.Context,
 			VirtualMachineScaleSetProperties: &compute.VirtualMachineScaleSetProperties{
 				Overprovision: to.BoolPtr(false),
 				UpgradePolicy: &compute.UpgradePolicy{
-					Mode:               compute.Manual,
-					AutomaticOSUpgrade: to.BoolPtr(false),
+					Mode: compute.Manual,
+					AutomaticOSUpgradePolicy: &compute.AutomaticOSUpgradePolicy{
+						EnableAutomaticOSUpgrade: to.BoolPtr(false),
+					},
 				},
 				VirtualMachineProfile: &compute.VirtualMachineScaleSetVMProfile{
 					OsProfile: &compute.VirtualMachineScaleSetOSProfile{

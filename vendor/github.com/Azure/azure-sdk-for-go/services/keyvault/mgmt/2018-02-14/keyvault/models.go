@@ -380,6 +380,11 @@ func (iter DeletedVaultListResultIterator) Value() DeletedVault {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the DeletedVaultListResultIterator type.
+func NewDeletedVaultListResultIterator(page DeletedVaultListResultPage) DeletedVaultListResultIterator {
+	return DeletedVaultListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (dvlr DeletedVaultListResult) IsEmpty() bool {
 	return dvlr.Value == nil || len(*dvlr.Value) == 0
@@ -449,6 +454,11 @@ func (page DeletedVaultListResultPage) Values() []DeletedVault {
 	return *page.dvlr.Value
 }
 
+// Creates a new instance of the DeletedVaultListResultPage type.
+func NewDeletedVaultListResultPage(getNextPage func(context.Context, DeletedVaultListResult) (DeletedVaultListResult, error)) DeletedVaultListResultPage {
+	return DeletedVaultListResultPage{fn: getNextPage}
+}
+
 // DeletedVaultProperties properties of the deleted vault.
 type DeletedVaultProperties struct {
 	// VaultID - The resource id of the original vault.
@@ -484,7 +494,7 @@ func (dvp DeletedVaultProperties) MarshalJSON() ([]byte, error) {
 	return json.Marshal(objectMap)
 }
 
-// IPRule a rule governing the accesibility of a vault from a specific ip address or ip range.
+// IPRule a rule governing the accessibility of a vault from a specific ip address or ip range.
 type IPRule struct {
 	// Value - An IPv4 address range in CIDR notation, such as '124.56.78.91' (simple IP address) or '124.56.78.0/24' (all addresses that start with 124.56.78).
 	Value *string `json:"value,omitempty"`
@@ -601,7 +611,7 @@ type OperationDisplay struct {
 	Resource *string `json:"resource,omitempty"`
 	// Operation - Type of operation: get, read, delete, etc.
 	Operation *string `json:"operation,omitempty"`
-	// Description - Decription of operation.
+	// Description - Description of operation.
 	Description *string `json:"description,omitempty"`
 }
 
@@ -673,6 +683,11 @@ func (iter OperationListResultIterator) Value() Operation {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the OperationListResultIterator type.
+func NewOperationListResultIterator(page OperationListResultPage) OperationListResultIterator {
+	return OperationListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (olr OperationListResult) IsEmpty() bool {
 	return olr.Value == nil || len(*olr.Value) == 0
@@ -740,6 +755,11 @@ func (page OperationListResultPage) Values() []Operation {
 		return nil
 	}
 	return *page.olr.Value
+}
+
+// Creates a new instance of the OperationListResultPage type.
+func NewOperationListResultPage(getNextPage func(context.Context, OperationListResult) (OperationListResult, error)) OperationListResultPage {
+	return OperationListResultPage{fn: getNextPage}
 }
 
 // OperationProperties properties of operation, include metric specifications.
@@ -862,6 +882,11 @@ func (iter ResourceListResultIterator) Value() Resource {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ResourceListResultIterator type.
+func NewResourceListResultIterator(page ResourceListResultPage) ResourceListResultIterator {
+	return ResourceListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (rlr ResourceListResult) IsEmpty() bool {
 	return rlr.Value == nil || len(*rlr.Value) == 0
@@ -931,6 +956,11 @@ func (page ResourceListResultPage) Values() []Resource {
 	return *page.rlr.Value
 }
 
+// Creates a new instance of the ResourceListResultPage type.
+func NewResourceListResultPage(getNextPage func(context.Context, ResourceListResult) (ResourceListResult, error)) ResourceListResultPage {
+	return ResourceListResultPage{fn: getNextPage}
+}
+
 // ServiceSpecification one property of operation, include log specifications.
 type ServiceSpecification struct {
 	// LogSpecifications - Log specifications of operation.
@@ -995,7 +1025,7 @@ type VaultAccessPolicyParameters struct {
 	Name *string `json:"name,omitempty"`
 	// Type - The resource name of the access policy.
 	Type *string `json:"type,omitempty"`
-	// Location - The resource type of the the access policy.
+	// Location - The resource type of the access policy.
 	Location *string `json:"location,omitempty"`
 	// Properties - Properties of the access policy
 	Properties *VaultAccessPolicyProperties `json:"properties,omitempty"`
@@ -1007,7 +1037,7 @@ type VaultAccessPolicyProperties struct {
 	AccessPolicies *[]AccessPolicyEntry `json:"accessPolicies,omitempty"`
 }
 
-// VaultCheckNameAvailabilityParameters the parameters used to check the availabity of the vault name.
+// VaultCheckNameAvailabilityParameters the parameters used to check the availability of the vault name.
 type VaultCheckNameAvailabilityParameters struct {
 	// Name - The vault name.
 	Name *string `json:"name,omitempty"`
@@ -1107,6 +1137,11 @@ func (iter VaultListResultIterator) Value() Vault {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the VaultListResultIterator type.
+func NewVaultListResultIterator(page VaultListResultPage) VaultListResultIterator {
+	return VaultListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (vlr VaultListResult) IsEmpty() bool {
 	return vlr.Value == nil || len(*vlr.Value) == 0
@@ -1176,6 +1211,11 @@ func (page VaultListResultPage) Values() []Vault {
 	return *page.vlr.Value
 }
 
+// Creates a new instance of the VaultListResultPage type.
+func NewVaultListResultPage(getNextPage func(context.Context, VaultListResult) (VaultListResult, error)) VaultListResultPage {
+	return VaultListResultPage{fn: getNextPage}
+}
+
 // VaultPatchParameters parameters for creating or updating a vault
 type VaultPatchParameters struct {
 	// Tags - The tags that will be assigned to the key vault.
@@ -1226,7 +1266,7 @@ type VaultProperties struct {
 	TenantID *uuid.UUID `json:"tenantId,omitempty"`
 	// Sku - SKU details
 	Sku *Sku `json:"sku,omitempty"`
-	// AccessPolicies - An array of 0 to 16 identities that have access to the key vault. All identities in the array must use the same tenant ID as the key vault's tenant ID.
+	// AccessPolicies - An array of 0 to 16 identities that have access to the key vault. All identities in the array must use the same tenant ID as the key vault's tenant ID. When `createMode` is set to `recover`, access policies are not required. Otherwise, access policies are required.
 	AccessPolicies *[]AccessPolicyEntry `json:"accessPolicies,omitempty"`
 	// VaultURI - The URI of the vault for performing operations on keys and secrets.
 	VaultURI *string `json:"vaultUri,omitempty"`
@@ -1298,7 +1338,7 @@ func (future *VaultsPurgeDeletedFuture) Result(client VaultsClient) (ar autorest
 	return
 }
 
-// VirtualNetworkRule a rule governing the accesibility of a vault from a specific virtual network.
+// VirtualNetworkRule a rule governing the accessibility of a vault from a specific virtual network.
 type VirtualNetworkRule struct {
 	// ID - Full resource id of a vnet subnet, such as '/subscriptions/subid/resourceGroups/rg1/providers/Microsoft.Network/virtualNetworks/test-vnet/subnets/subnet1'.
 	ID *string `json:"id,omitempty"`

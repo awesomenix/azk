@@ -143,6 +143,11 @@ func (iter AvailabilityStatusListResultIterator) Value() AvailabilityStatus {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the AvailabilityStatusListResultIterator type.
+func NewAvailabilityStatusListResultIterator(page AvailabilityStatusListResultPage) AvailabilityStatusListResultIterator {
+	return AvailabilityStatusListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (aslr AvailabilityStatusListResult) IsEmpty() bool {
 	return aslr.Value == nil || len(*aslr.Value) == 0
@@ -212,6 +217,11 @@ func (page AvailabilityStatusListResultPage) Values() []AvailabilityStatus {
 	return *page.aslr.Value
 }
 
+// Creates a new instance of the AvailabilityStatusListResultPage type.
+func NewAvailabilityStatusListResultPage(getNextPage func(context.Context, AvailabilityStatusListResult) (AvailabilityStatusListResult, error)) AvailabilityStatusListResultPage {
+	return AvailabilityStatusListResultPage{fn: getNextPage}
+}
+
 // AvailabilityStatusProperties properties of availability state.
 type AvailabilityStatusProperties struct {
 	// AvailabilityState - Availability status of the resource. Possible values include: 'Available', 'Unavailable', 'Unknown'
@@ -232,6 +242,8 @@ type AvailabilityStatusProperties struct {
 	ReasonChronicity ReasonChronicityTypes `json:"reasonChronicity,omitempty"`
 	// ReportedTime - Timestamp for when the health was last checked.
 	ReportedTime *date.Time `json:"reportedTime,omitempty"`
+	// IsArmResource - flag to show if child resource need detail health.
+	IsArmResource *bool `json:"isArmResource,omitempty"`
 	// RecentlyResolvedState - An annotation describing a change in the availabilityState to Available from Unavailable with a reasonType of type Unplanned
 	RecentlyResolvedState *AvailabilityStatusPropertiesRecentlyResolvedState `json:"recentlyResolvedState,omitempty"`
 	// RecommendedActions - Lists actions the user can take based on the current availabilityState of the resource.

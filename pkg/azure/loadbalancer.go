@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/Azure/azure-sdk-for-go/services/network/mgmt/2018-01-01/network"
+	"github.com/Azure/azure-sdk-for-go/services/network/mgmt/2018-12-01/network"
 	"github.com/Azure/go-autorest/autorest/to"
 )
 
@@ -85,7 +85,7 @@ func (c *CloudConfiguration) CreateLoadBalancer(ctx context.Context, lbName, pip
 							BackendPort:          to.Int32Ptr(6443),
 							IdleTimeoutInMinutes: to.Int32Ptr(4),
 							EnableFloatingIP:     to.BoolPtr(false),
-							LoadDistribution:     network.Default,
+							LoadDistribution:     network.LoadDistributionDefault,
 							FrontendIPConfiguration: &network.SubResource{
 								ID: to.StringPtr(fmt.Sprintf("/%s/%s/frontendIPConfigurations/%s", idPrefix, lbName, frontEndIPConfigName)),
 							},
@@ -218,7 +218,7 @@ func (c *CloudConfiguration) CreateInternalLoadBalancer(ctx context.Context, vne
 							BackendPort:          to.Int32Ptr(6443),
 							IdleTimeoutInMinutes: to.Int32Ptr(4),
 							EnableFloatingIP:     to.BoolPtr(false),
-							LoadDistribution:     network.Default,
+							LoadDistribution:     network.LoadDistributionDefault,
 							FrontendIPConfiguration: &network.SubResource{
 								ID: to.StringPtr(fmt.Sprintf("/%s/%s/frontendIPConfigurations/%s", idPrefix, lbName, frontEndIPConfigName)),
 							},

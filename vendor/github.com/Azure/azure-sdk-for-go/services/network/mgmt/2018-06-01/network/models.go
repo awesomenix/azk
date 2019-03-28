@@ -1969,6 +1969,11 @@ func (iter ApplicationGatewayAvailableSslPredefinedPoliciesIterator) Value() App
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ApplicationGatewayAvailableSslPredefinedPoliciesIterator type.
+func NewApplicationGatewayAvailableSslPredefinedPoliciesIterator(page ApplicationGatewayAvailableSslPredefinedPoliciesPage) ApplicationGatewayAvailableSslPredefinedPoliciesIterator {
+	return ApplicationGatewayAvailableSslPredefinedPoliciesIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (agaspp ApplicationGatewayAvailableSslPredefinedPolicies) IsEmpty() bool {
 	return agaspp.Value == nil || len(*agaspp.Value) == 0
@@ -2037,6 +2042,11 @@ func (page ApplicationGatewayAvailableSslPredefinedPoliciesPage) Values() []Appl
 		return nil
 	}
 	return *page.agaspp.Value
+}
+
+// Creates a new instance of the ApplicationGatewayAvailableSslPredefinedPoliciesPage type.
+func NewApplicationGatewayAvailableSslPredefinedPoliciesPage(getNextPage func(context.Context, ApplicationGatewayAvailableSslPredefinedPolicies) (ApplicationGatewayAvailableSslPredefinedPolicies, error)) ApplicationGatewayAvailableSslPredefinedPoliciesPage {
+	return ApplicationGatewayAvailableSslPredefinedPoliciesPage{fn: getNextPage}
 }
 
 // ApplicationGatewayAvailableWafRuleSetsResult response for ApplicationGatewayAvailableWafRuleSets API
@@ -2967,6 +2977,11 @@ func (iter ApplicationGatewayListResultIterator) Value() ApplicationGateway {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ApplicationGatewayListResultIterator type.
+func NewApplicationGatewayListResultIterator(page ApplicationGatewayListResultPage) ApplicationGatewayListResultIterator {
+	return ApplicationGatewayListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (aglr ApplicationGatewayListResult) IsEmpty() bool {
 	return aglr.Value == nil || len(*aglr.Value) == 0
@@ -3034,6 +3049,11 @@ func (page ApplicationGatewayListResultPage) Values() []ApplicationGateway {
 		return nil
 	}
 	return *page.aglr.Value
+}
+
+// Creates a new instance of the ApplicationGatewayListResultPage type.
+func NewApplicationGatewayListResultPage(getNextPage func(context.Context, ApplicationGatewayListResult) (ApplicationGatewayListResult, error)) ApplicationGatewayListResultPage {
+	return ApplicationGatewayListResultPage{fn: getNextPage}
 }
 
 // ApplicationGatewayPathRule path rule of URL path map of an application gateway.
@@ -4031,7 +4051,7 @@ type ApplicationGatewayWebApplicationFirewallConfiguration struct {
 	DisabledRuleGroups *[]ApplicationGatewayFirewallDisabledRuleGroup `json:"disabledRuleGroups,omitempty"`
 	// RequestBodyCheck - Whether allow WAF to check request Body.
 	RequestBodyCheck *bool `json:"requestBodyCheck,omitempty"`
-	// MaxRequestBodySize - Maxium request body size for WAF.
+	// MaxRequestBodySize - Maximum request body size for WAF.
 	MaxRequestBodySize *int32 `json:"maxRequestBodySize,omitempty"`
 }
 
@@ -4227,6 +4247,11 @@ func (iter ApplicationSecurityGroupListResultIterator) Value() ApplicationSecuri
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ApplicationSecurityGroupListResultIterator type.
+func NewApplicationSecurityGroupListResultIterator(page ApplicationSecurityGroupListResultPage) ApplicationSecurityGroupListResultIterator {
+	return ApplicationSecurityGroupListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (asglr ApplicationSecurityGroupListResult) IsEmpty() bool {
 	return asglr.Value == nil || len(*asglr.Value) == 0
@@ -4294,6 +4319,11 @@ func (page ApplicationSecurityGroupListResultPage) Values() []ApplicationSecurit
 		return nil
 	}
 	return *page.asglr.Value
+}
+
+// Creates a new instance of the ApplicationSecurityGroupListResultPage type.
+func NewApplicationSecurityGroupListResultPage(getNextPage func(context.Context, ApplicationSecurityGroupListResult) (ApplicationSecurityGroupListResult, error)) ApplicationSecurityGroupListResultPage {
+	return ApplicationSecurityGroupListResultPage{fn: getNextPage}
 }
 
 // ApplicationSecurityGroupPropertiesFormat application security group properties.
@@ -4425,6 +4455,11 @@ func (iter AuthorizationListResultIterator) Value() ExpressRouteCircuitAuthoriza
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the AuthorizationListResultIterator type.
+func NewAuthorizationListResultIterator(page AuthorizationListResultPage) AuthorizationListResultIterator {
+	return AuthorizationListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (alr AuthorizationListResult) IsEmpty() bool {
 	return alr.Value == nil || len(*alr.Value) == 0
@@ -4492,6 +4527,11 @@ func (page AuthorizationListResultPage) Values() []ExpressRouteCircuitAuthorizat
 		return nil
 	}
 	return *page.alr.Value
+}
+
+// Creates a new instance of the AuthorizationListResultPage type.
+func NewAuthorizationListResultPage(getNextPage func(context.Context, AuthorizationListResult) (AuthorizationListResult, error)) AuthorizationListResultPage {
+	return AuthorizationListResultPage{fn: getNextPage}
 }
 
 // AuthorizationPropertiesFormat ...
@@ -4972,6 +5012,11 @@ func (iter AzureFirewallListResultIterator) Value() AzureFirewall {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the AzureFirewallListResultIterator type.
+func NewAzureFirewallListResultIterator(page AzureFirewallListResultPage) AzureFirewallListResultIterator {
+	return AzureFirewallListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (aflr AzureFirewallListResult) IsEmpty() bool {
 	return aflr.Value == nil || len(*aflr.Value) == 0
@@ -5039,6 +5084,11 @@ func (page AzureFirewallListResultPage) Values() []AzureFirewall {
 		return nil
 	}
 	return *page.aflr.Value
+}
+
+// Creates a new instance of the AzureFirewallListResultPage type.
+func NewAzureFirewallListResultPage(getNextPage func(context.Context, AzureFirewallListResult) (AzureFirewallListResult, error)) AzureFirewallListResultPage {
+	return AzureFirewallListResultPage{fn: getNextPage}
 }
 
 // AzureFirewallNetworkRule properties of the network rule.
@@ -5583,6 +5633,11 @@ func (iter BgpServiceCommunityListResultIterator) Value() BgpServiceCommunity {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the BgpServiceCommunityListResultIterator type.
+func NewBgpServiceCommunityListResultIterator(page BgpServiceCommunityListResultPage) BgpServiceCommunityListResultIterator {
+	return BgpServiceCommunityListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (bsclr BgpServiceCommunityListResult) IsEmpty() bool {
 	return bsclr.Value == nil || len(*bsclr.Value) == 0
@@ -5650,6 +5705,11 @@ func (page BgpServiceCommunityListResultPage) Values() []BgpServiceCommunity {
 		return nil
 	}
 	return *page.bsclr.Value
+}
+
+// Creates a new instance of the BgpServiceCommunityListResultPage type.
+func NewBgpServiceCommunityListResultPage(getNextPage func(context.Context, BgpServiceCommunityListResult) (BgpServiceCommunityListResult, error)) BgpServiceCommunityListResultPage {
+	return BgpServiceCommunityListResultPage{fn: getNextPage}
 }
 
 // BgpServiceCommunityPropertiesFormat properties of Service Community.
@@ -5785,7 +5845,7 @@ type ConnectionMonitorParameters struct {
 	MonitoringIntervalInSeconds *int32 `json:"monitoringIntervalInSeconds,omitempty"`
 }
 
-// ConnectionMonitorQueryResult list of connection states snaphots.
+// ConnectionMonitorQueryResult list of connection states snapshots.
 type ConnectionMonitorQueryResult struct {
 	autorest.Response `json:"-"`
 	// SourceStatus - Status of connection monitor source. Possible values include: 'Uknown', 'Active', 'Inactive'
@@ -6372,6 +6432,11 @@ func (iter DdosProtectionPlanListResultIterator) Value() DdosProtectionPlan {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the DdosProtectionPlanListResultIterator type.
+func NewDdosProtectionPlanListResultIterator(page DdosProtectionPlanListResultPage) DdosProtectionPlanListResultIterator {
+	return DdosProtectionPlanListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (dpplr DdosProtectionPlanListResult) IsEmpty() bool {
 	return dpplr.Value == nil || len(*dpplr.Value) == 0
@@ -6439,6 +6504,11 @@ func (page DdosProtectionPlanListResultPage) Values() []DdosProtectionPlan {
 		return nil
 	}
 	return *page.dpplr.Value
+}
+
+// Creates a new instance of the DdosProtectionPlanListResultPage type.
+func NewDdosProtectionPlanListResultPage(getNextPage func(context.Context, DdosProtectionPlanListResult) (DdosProtectionPlanListResult, error)) DdosProtectionPlanListResultPage {
+	return DdosProtectionPlanListResultPage{fn: getNextPage}
 }
 
 // DdosProtectionPlanPropertiesFormat dDoS protection plan properties.
@@ -6595,17 +6665,17 @@ type EffectiveNetworkSecurityRule struct {
 	SourcePortRange *string `json:"sourcePortRange,omitempty"`
 	// DestinationPortRange - The destination port or range.
 	DestinationPortRange *string `json:"destinationPortRange,omitempty"`
-	// SourcePortRanges - The source port ranges. Expected values include a single integer between 0 and 65535, a range using '-' as seperator (e.g. 100-400), or an asterix (*)
+	// SourcePortRanges - The source port ranges. Expected values include a single integer between 0 and 65535, a range using '-' as separator (e.g. 100-400), or an asterisk (*)
 	SourcePortRanges *[]string `json:"sourcePortRanges,omitempty"`
-	// DestinationPortRanges - The destination port ranges. Expected values include a single integer between 0 and 65535, a range using '-' as seperator (e.g. 100-400), or an asterix (*)
+	// DestinationPortRanges - The destination port ranges. Expected values include a single integer between 0 and 65535, a range using '-' as separator (e.g. 100-400), or an asterisk (*)
 	DestinationPortRanges *[]string `json:"destinationPortRanges,omitempty"`
 	// SourceAddressPrefix - The source address prefix.
 	SourceAddressPrefix *string `json:"sourceAddressPrefix,omitempty"`
 	// DestinationAddressPrefix - The destination address prefix.
 	DestinationAddressPrefix *string `json:"destinationAddressPrefix,omitempty"`
-	// SourceAddressPrefixes - The source address prefixes. Expected values include CIDR IP ranges, Default Tags (VirtualNetwork, AureLoadBalancer, Internet), System Tags, and the asterix (*).
+	// SourceAddressPrefixes - The source address prefixes. Expected values include CIDR IP ranges, Default Tags (VirtualNetwork, AzureLoadBalancer, Internet), System Tags, and the asterisk (*).
 	SourceAddressPrefixes *[]string `json:"sourceAddressPrefixes,omitempty"`
-	// DestinationAddressPrefixes - The destination address prefixes. Expected values include CIDR IP ranges, Default Tags (VirtualNetwork, AureLoadBalancer, Internet), System Tags, and the asterix (*).
+	// DestinationAddressPrefixes - The destination address prefixes. Expected values include CIDR IP ranges, Default Tags (VirtualNetwork, AzureLoadBalancer, Internet), System Tags, and the asterisk (*).
 	DestinationAddressPrefixes *[]string `json:"destinationAddressPrefixes,omitempty"`
 	// ExpandedSourceAddressPrefix - The expanded source address prefix.
 	ExpandedSourceAddressPrefix *[]string `json:"expandedSourceAddressPrefix,omitempty"`
@@ -6722,6 +6792,11 @@ func (iter EndpointServicesListResultIterator) Value() EndpointServiceResult {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the EndpointServicesListResultIterator type.
+func NewEndpointServicesListResultIterator(page EndpointServicesListResultPage) EndpointServicesListResultIterator {
+	return EndpointServicesListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (eslr EndpointServicesListResult) IsEmpty() bool {
 	return eslr.Value == nil || len(*eslr.Value) == 0
@@ -6789,6 +6864,11 @@ func (page EndpointServicesListResultPage) Values() []EndpointServiceResult {
 		return nil
 	}
 	return *page.eslr.Value
+}
+
+// Creates a new instance of the EndpointServicesListResultPage type.
+func NewEndpointServicesListResultPage(getNextPage func(context.Context, EndpointServicesListResult) (EndpointServicesListResult, error)) EndpointServicesListResultPage {
+	return EndpointServicesListResultPage{fn: getNextPage}
 }
 
 // Error ...
@@ -7197,7 +7277,7 @@ type ExpressRouteCircuitConnectionPropertiesFormat struct {
 	AuthorizationKey *string `json:"authorizationKey,omitempty"`
 	// CircuitConnectionStatus - Express Route Circuit Connection State. Possible values are: 'Connected' and 'Disconnected'. Possible values include: 'Connected', 'Connecting', 'Disconnected'
 	CircuitConnectionStatus CircuitConnectionStatus `json:"circuitConnectionStatus,omitempty"`
-	// ProvisioningState - Provisioning state of the circuit connection resource. Possible values are: 'Succeded', 'Updating', 'Deleting', and 'Failed'.
+	// ProvisioningState - Provisioning state of the circuit connection resource. Possible values are: 'Succeeded', 'Updating', 'Deleting', and 'Failed'.
 	ProvisioningState *string `json:"provisioningState,omitempty"`
 }
 
@@ -7321,6 +7401,11 @@ func (iter ExpressRouteCircuitListResultIterator) Value() ExpressRouteCircuit {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ExpressRouteCircuitListResultIterator type.
+func NewExpressRouteCircuitListResultIterator(page ExpressRouteCircuitListResultPage) ExpressRouteCircuitListResultIterator {
+	return ExpressRouteCircuitListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (erclr ExpressRouteCircuitListResult) IsEmpty() bool {
 	return erclr.Value == nil || len(*erclr.Value) == 0
@@ -7388,6 +7473,11 @@ func (page ExpressRouteCircuitListResultPage) Values() []ExpressRouteCircuit {
 		return nil
 	}
 	return *page.erclr.Value
+}
+
+// Creates a new instance of the ExpressRouteCircuitListResultPage type.
+func NewExpressRouteCircuitListResultPage(getNextPage func(context.Context, ExpressRouteCircuitListResult) (ExpressRouteCircuitListResult, error)) ExpressRouteCircuitListResultPage {
+	return ExpressRouteCircuitListResultPage{fn: getNextPage}
 }
 
 // ExpressRouteCircuitPeering peering in an ExpressRouteCircuit resource.
@@ -7475,7 +7565,7 @@ func (ercp *ExpressRouteCircuitPeering) UnmarshalJSON(body []byte) error {
 type ExpressRouteCircuitPeeringConfig struct {
 	// AdvertisedPublicPrefixes - The reference of AdvertisedPublicPrefixes.
 	AdvertisedPublicPrefixes *[]string `json:"advertisedPublicPrefixes,omitempty"`
-	// AdvertisedCommunities - The communities of bgp peering. Spepcified for microsoft peering
+	// AdvertisedCommunities - The communities of bgp peering. Specified for microsoft peering
 	AdvertisedCommunities *[]string `json:"advertisedCommunities,omitempty"`
 	// AdvertisedPublicPrefixesState - AdvertisedPublicPrefixState of the Peering resource. Possible values are 'NotConfigured', 'Configuring', 'Configured', and 'ValidationNeeded'. Possible values include: 'NotConfigured', 'Configuring', 'Configured', 'ValidationNeeded'
 	AdvertisedPublicPrefixesState ExpressRouteCircuitPeeringAdvertisedPublicPrefixState `json:"advertisedPublicPrefixesState,omitempty"`
@@ -7556,6 +7646,11 @@ func (iter ExpressRouteCircuitPeeringListResultIterator) Value() ExpressRouteCir
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ExpressRouteCircuitPeeringListResultIterator type.
+func NewExpressRouteCircuitPeeringListResultIterator(page ExpressRouteCircuitPeeringListResultPage) ExpressRouteCircuitPeeringListResultIterator {
+	return ExpressRouteCircuitPeeringListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (ercplr ExpressRouteCircuitPeeringListResult) IsEmpty() bool {
 	return ercplr.Value == nil || len(*ercplr.Value) == 0
@@ -7623,6 +7718,11 @@ func (page ExpressRouteCircuitPeeringListResultPage) Values() []ExpressRouteCirc
 		return nil
 	}
 	return *page.ercplr.Value
+}
+
+// Creates a new instance of the ExpressRouteCircuitPeeringListResultPage type.
+func NewExpressRouteCircuitPeeringListResultPage(getNextPage func(context.Context, ExpressRouteCircuitPeeringListResult) (ExpressRouteCircuitPeeringListResult, error)) ExpressRouteCircuitPeeringListResultPage {
+	return ExpressRouteCircuitPeeringListResultPage{fn: getNextPage}
 }
 
 // ExpressRouteCircuitPeeringPropertiesFormat ...
@@ -8198,6 +8298,11 @@ func (iter ExpressRouteCrossConnectionListResultIterator) Value() ExpressRouteCr
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ExpressRouteCrossConnectionListResultIterator type.
+func NewExpressRouteCrossConnectionListResultIterator(page ExpressRouteCrossConnectionListResultPage) ExpressRouteCrossConnectionListResultIterator {
+	return ExpressRouteCrossConnectionListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (ercclr ExpressRouteCrossConnectionListResult) IsEmpty() bool {
 	return ercclr.Value == nil || len(*ercclr.Value) == 0
@@ -8265,6 +8370,11 @@ func (page ExpressRouteCrossConnectionListResultPage) Values() []ExpressRouteCro
 		return nil
 	}
 	return *page.ercclr.Value
+}
+
+// Creates a new instance of the ExpressRouteCrossConnectionListResultPage type.
+func NewExpressRouteCrossConnectionListResultPage(getNextPage func(context.Context, ExpressRouteCrossConnectionListResult) (ExpressRouteCrossConnectionListResult, error)) ExpressRouteCrossConnectionListResultPage {
+	return ExpressRouteCrossConnectionListResultPage{fn: getNextPage}
 }
 
 // ExpressRouteCrossConnectionPeering peering in an ExpressRoute Cross Connection resource.
@@ -8417,6 +8527,11 @@ func (iter ExpressRouteCrossConnectionPeeringListIterator) Value() ExpressRouteC
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ExpressRouteCrossConnectionPeeringListIterator type.
+func NewExpressRouteCrossConnectionPeeringListIterator(page ExpressRouteCrossConnectionPeeringListPage) ExpressRouteCrossConnectionPeeringListIterator {
+	return ExpressRouteCrossConnectionPeeringListIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (erccpl ExpressRouteCrossConnectionPeeringList) IsEmpty() bool {
 	return erccpl.Value == nil || len(*erccpl.Value) == 0
@@ -8484,6 +8599,11 @@ func (page ExpressRouteCrossConnectionPeeringListPage) Values() []ExpressRouteCr
 		return nil
 	}
 	return *page.erccpl.Value
+}
+
+// Creates a new instance of the ExpressRouteCrossConnectionPeeringListPage type.
+func NewExpressRouteCrossConnectionPeeringListPage(getNextPage func(context.Context, ExpressRouteCrossConnectionPeeringList) (ExpressRouteCrossConnectionPeeringList, error)) ExpressRouteCrossConnectionPeeringListPage {
+	return ExpressRouteCrossConnectionPeeringListPage{fn: getNextPage}
 }
 
 // ExpressRouteCrossConnectionPeeringProperties ...
@@ -8948,6 +9068,11 @@ func (iter ExpressRouteServiceProviderListResultIterator) Value() ExpressRouteSe
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ExpressRouteServiceProviderListResultIterator type.
+func NewExpressRouteServiceProviderListResultIterator(page ExpressRouteServiceProviderListResultPage) ExpressRouteServiceProviderListResultIterator {
+	return ExpressRouteServiceProviderListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (ersplr ExpressRouteServiceProviderListResult) IsEmpty() bool {
 	return ersplr.Value == nil || len(*ersplr.Value) == 0
@@ -9015,6 +9140,11 @@ func (page ExpressRouteServiceProviderListResultPage) Values() []ExpressRouteSer
 		return nil
 	}
 	return *page.ersplr.Value
+}
+
+// Creates a new instance of the ExpressRouteServiceProviderListResultPage type.
+func NewExpressRouteServiceProviderListResultPage(getNextPage func(context.Context, ExpressRouteServiceProviderListResult) (ExpressRouteServiceProviderListResult, error)) ExpressRouteServiceProviderListResultPage {
+	return ExpressRouteServiceProviderListResultPage{fn: getNextPage}
 }
 
 // ExpressRouteServiceProviderPropertiesFormat properties of ExpressRouteServiceProvider.
@@ -9663,6 +9793,11 @@ func (iter InboundNatRuleListResultIterator) Value() InboundNatRule {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the InboundNatRuleListResultIterator type.
+func NewInboundNatRuleListResultIterator(page InboundNatRuleListResultPage) InboundNatRuleListResultIterator {
+	return InboundNatRuleListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (inrlr InboundNatRuleListResult) IsEmpty() bool {
 	return inrlr.Value == nil || len(*inrlr.Value) == 0
@@ -9730,6 +9865,11 @@ func (page InboundNatRuleListResultPage) Values() []InboundNatRule {
 		return nil
 	}
 	return *page.inrlr.Value
+}
+
+// Creates a new instance of the InboundNatRuleListResultPage type.
+func NewInboundNatRuleListResultPage(getNextPage func(context.Context, InboundNatRuleListResult) (InboundNatRuleListResult, error)) InboundNatRuleListResultPage {
+	return InboundNatRuleListResultPage{fn: getNextPage}
 }
 
 // InboundNatRulePropertiesFormat properties of the inbound NAT rule.
@@ -10100,6 +10240,11 @@ func (iter InterfaceIPConfigurationListResultIterator) Value() InterfaceIPConfig
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the InterfaceIPConfigurationListResultIterator type.
+func NewInterfaceIPConfigurationListResultIterator(page InterfaceIPConfigurationListResultPage) InterfaceIPConfigurationListResultIterator {
+	return InterfaceIPConfigurationListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (iiclr InterfaceIPConfigurationListResult) IsEmpty() bool {
 	return iiclr.Value == nil || len(*iiclr.Value) == 0
@@ -10167,6 +10312,11 @@ func (page InterfaceIPConfigurationListResultPage) Values() []InterfaceIPConfigu
 		return nil
 	}
 	return *page.iiclr.Value
+}
+
+// Creates a new instance of the InterfaceIPConfigurationListResultPage type.
+func NewInterfaceIPConfigurationListResultPage(getNextPage func(context.Context, InterfaceIPConfigurationListResult) (InterfaceIPConfigurationListResult, error)) InterfaceIPConfigurationListResultPage {
+	return InterfaceIPConfigurationListResultPage{fn: getNextPage}
 }
 
 // InterfaceIPConfigurationPropertiesFormat properties of IP configuration.
@@ -10262,6 +10412,11 @@ func (iter InterfaceListResultIterator) Value() Interface {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the InterfaceListResultIterator type.
+func NewInterfaceListResultIterator(page InterfaceListResultPage) InterfaceListResultIterator {
+	return InterfaceListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (ilr InterfaceListResult) IsEmpty() bool {
 	return ilr.Value == nil || len(*ilr.Value) == 0
@@ -10331,6 +10486,11 @@ func (page InterfaceListResultPage) Values() []Interface {
 	return *page.ilr.Value
 }
 
+// Creates a new instance of the InterfaceListResultPage type.
+func NewInterfaceListResultPage(getNextPage func(context.Context, InterfaceListResult) (InterfaceListResult, error)) InterfaceListResultPage {
+	return InterfaceListResultPage{fn: getNextPage}
+}
+
 // InterfaceLoadBalancerListResult response for list ip configurations API service call.
 type InterfaceLoadBalancerListResult struct {
 	autorest.Response `json:"-"`
@@ -10396,6 +10556,11 @@ func (iter InterfaceLoadBalancerListResultIterator) Value() LoadBalancer {
 		return LoadBalancer{}
 	}
 	return iter.page.Values()[iter.i]
+}
+
+// Creates a new instance of the InterfaceLoadBalancerListResultIterator type.
+func NewInterfaceLoadBalancerListResultIterator(page InterfaceLoadBalancerListResultPage) InterfaceLoadBalancerListResultIterator {
+	return InterfaceLoadBalancerListResultIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -10465,6 +10630,11 @@ func (page InterfaceLoadBalancerListResultPage) Values() []LoadBalancer {
 		return nil
 	}
 	return *page.ilblr.Value
+}
+
+// Creates a new instance of the InterfaceLoadBalancerListResultPage type.
+func NewInterfaceLoadBalancerListResultPage(getNextPage func(context.Context, InterfaceLoadBalancerListResult) (InterfaceLoadBalancerListResult, error)) InterfaceLoadBalancerListResultPage {
+	return InterfaceLoadBalancerListResultPage{fn: getNextPage}
 }
 
 // InterfacePropertiesFormat networkInterface properties.
@@ -10845,6 +11015,11 @@ func (iter ListHubVirtualNetworkConnectionsResultIterator) Value() HubVirtualNet
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ListHubVirtualNetworkConnectionsResultIterator type.
+func NewListHubVirtualNetworkConnectionsResultIterator(page ListHubVirtualNetworkConnectionsResultPage) ListHubVirtualNetworkConnectionsResultIterator {
+	return ListHubVirtualNetworkConnectionsResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (lhvncr ListHubVirtualNetworkConnectionsResult) IsEmpty() bool {
 	return lhvncr.Value == nil || len(*lhvncr.Value) == 0
@@ -10914,6 +11089,11 @@ func (page ListHubVirtualNetworkConnectionsResultPage) Values() []HubVirtualNetw
 	return *page.lhvncr.Value
 }
 
+// Creates a new instance of the ListHubVirtualNetworkConnectionsResultPage type.
+func NewListHubVirtualNetworkConnectionsResultPage(getNextPage func(context.Context, ListHubVirtualNetworkConnectionsResult) (ListHubVirtualNetworkConnectionsResult, error)) ListHubVirtualNetworkConnectionsResultPage {
+	return ListHubVirtualNetworkConnectionsResultPage{fn: getNextPage}
+}
+
 // ListVirtualHubsResult result of the request to list VirtualHubs. It contains a list of VirtualHubs and a
 // URL nextLink to get the next set of results.
 type ListVirtualHubsResult struct {
@@ -10980,6 +11160,11 @@ func (iter ListVirtualHubsResultIterator) Value() VirtualHub {
 		return VirtualHub{}
 	}
 	return iter.page.Values()[iter.i]
+}
+
+// Creates a new instance of the ListVirtualHubsResultIterator type.
+func NewListVirtualHubsResultIterator(page ListVirtualHubsResultPage) ListVirtualHubsResultIterator {
+	return ListVirtualHubsResultIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -11051,6 +11236,11 @@ func (page ListVirtualHubsResultPage) Values() []VirtualHub {
 	return *page.lvhr.Value
 }
 
+// Creates a new instance of the ListVirtualHubsResultPage type.
+func NewListVirtualHubsResultPage(getNextPage func(context.Context, ListVirtualHubsResult) (ListVirtualHubsResult, error)) ListVirtualHubsResultPage {
+	return ListVirtualHubsResultPage{fn: getNextPage}
+}
+
 // ListVirtualWANsResult result of the request to list VirtualWANs. It contains a list of VirtualWANs and a
 // URL nextLink to get the next set of results.
 type ListVirtualWANsResult struct {
@@ -11117,6 +11307,11 @@ func (iter ListVirtualWANsResultIterator) Value() VirtualWAN {
 		return VirtualWAN{}
 	}
 	return iter.page.Values()[iter.i]
+}
+
+// Creates a new instance of the ListVirtualWANsResultIterator type.
+func NewListVirtualWANsResultIterator(page ListVirtualWANsResultPage) ListVirtualWANsResultIterator {
+	return ListVirtualWANsResultIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -11188,6 +11383,11 @@ func (page ListVirtualWANsResultPage) Values() []VirtualWAN {
 	return *page.lvwnr.Value
 }
 
+// Creates a new instance of the ListVirtualWANsResultPage type.
+func NewListVirtualWANsResultPage(getNextPage func(context.Context, ListVirtualWANsResult) (ListVirtualWANsResult, error)) ListVirtualWANsResultPage {
+	return ListVirtualWANsResultPage{fn: getNextPage}
+}
+
 // ListVpnConnectionsResult result of the request to list all vpn connections to a virtual wan vpn gateway.
 // It contains a list of Vpn Connections and a URL nextLink to get the next set of results.
 type ListVpnConnectionsResult struct {
@@ -11254,6 +11454,11 @@ func (iter ListVpnConnectionsResultIterator) Value() VpnConnection {
 		return VpnConnection{}
 	}
 	return iter.page.Values()[iter.i]
+}
+
+// Creates a new instance of the ListVpnConnectionsResultIterator type.
+func NewListVpnConnectionsResultIterator(page ListVpnConnectionsResultPage) ListVpnConnectionsResultIterator {
+	return ListVpnConnectionsResultIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -11325,6 +11530,11 @@ func (page ListVpnConnectionsResultPage) Values() []VpnConnection {
 	return *page.lvcr.Value
 }
 
+// Creates a new instance of the ListVpnConnectionsResultPage type.
+func NewListVpnConnectionsResultPage(getNextPage func(context.Context, ListVpnConnectionsResult) (ListVpnConnectionsResult, error)) ListVpnConnectionsResultPage {
+	return ListVpnConnectionsResultPage{fn: getNextPage}
+}
+
 // ListVpnGatewaysResult result of the request to list VpnGateways. It contains a list of VpnGateways and a
 // URL nextLink to get the next set of results.
 type ListVpnGatewaysResult struct {
@@ -11391,6 +11601,11 @@ func (iter ListVpnGatewaysResultIterator) Value() VpnGateway {
 		return VpnGateway{}
 	}
 	return iter.page.Values()[iter.i]
+}
+
+// Creates a new instance of the ListVpnGatewaysResultIterator type.
+func NewListVpnGatewaysResultIterator(page ListVpnGatewaysResultPage) ListVpnGatewaysResultIterator {
+	return ListVpnGatewaysResultIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -11462,6 +11677,11 @@ func (page ListVpnGatewaysResultPage) Values() []VpnGateway {
 	return *page.lvgr.Value
 }
 
+// Creates a new instance of the ListVpnGatewaysResultPage type.
+func NewListVpnGatewaysResultPage(getNextPage func(context.Context, ListVpnGatewaysResult) (ListVpnGatewaysResult, error)) ListVpnGatewaysResultPage {
+	return ListVpnGatewaysResultPage{fn: getNextPage}
+}
+
 // ListVpnSitesResult result of the request to list VpnSites. It contains a list of VpnSites and a URL
 // nextLink to get the next set of results.
 type ListVpnSitesResult struct {
@@ -11528,6 +11748,11 @@ func (iter ListVpnSitesResultIterator) Value() VpnSite {
 		return VpnSite{}
 	}
 	return iter.page.Values()[iter.i]
+}
+
+// Creates a new instance of the ListVpnSitesResultIterator type.
+func NewListVpnSitesResultIterator(page ListVpnSitesResultPage) ListVpnSitesResultIterator {
+	return ListVpnSitesResultIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -11597,6 +11822,11 @@ func (page ListVpnSitesResultPage) Values() []VpnSite {
 		return nil
 	}
 	return *page.lvsr.Value
+}
+
+// Creates a new instance of the ListVpnSitesResultPage type.
+func NewListVpnSitesResultPage(getNextPage func(context.Context, ListVpnSitesResult) (ListVpnSitesResult, error)) ListVpnSitesResultPage {
+	return ListVpnSitesResultPage{fn: getNextPage}
 }
 
 // LoadBalancer loadBalancer resource
@@ -11805,6 +12035,11 @@ func (iter LoadBalancerBackendAddressPoolListResultIterator) Value() BackendAddr
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the LoadBalancerBackendAddressPoolListResultIterator type.
+func NewLoadBalancerBackendAddressPoolListResultIterator(page LoadBalancerBackendAddressPoolListResultPage) LoadBalancerBackendAddressPoolListResultIterator {
+	return LoadBalancerBackendAddressPoolListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (lbbaplr LoadBalancerBackendAddressPoolListResult) IsEmpty() bool {
 	return lbbaplr.Value == nil || len(*lbbaplr.Value) == 0
@@ -11874,6 +12109,11 @@ func (page LoadBalancerBackendAddressPoolListResultPage) Values() []BackendAddre
 	return *page.lbbaplr.Value
 }
 
+// Creates a new instance of the LoadBalancerBackendAddressPoolListResultPage type.
+func NewLoadBalancerBackendAddressPoolListResultPage(getNextPage func(context.Context, LoadBalancerBackendAddressPoolListResult) (LoadBalancerBackendAddressPoolListResult, error)) LoadBalancerBackendAddressPoolListResultPage {
+	return LoadBalancerBackendAddressPoolListResultPage{fn: getNextPage}
+}
+
 // LoadBalancerFrontendIPConfigurationListResult response for ListFrontendIPConfiguration API service call.
 type LoadBalancerFrontendIPConfigurationListResult struct {
 	autorest.Response `json:"-"`
@@ -11940,6 +12180,11 @@ func (iter LoadBalancerFrontendIPConfigurationListResultIterator) Value() Fronte
 		return FrontendIPConfiguration{}
 	}
 	return iter.page.Values()[iter.i]
+}
+
+// Creates a new instance of the LoadBalancerFrontendIPConfigurationListResultIterator type.
+func NewLoadBalancerFrontendIPConfigurationListResultIterator(page LoadBalancerFrontendIPConfigurationListResultPage) LoadBalancerFrontendIPConfigurationListResultIterator {
+	return LoadBalancerFrontendIPConfigurationListResultIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -12011,6 +12256,11 @@ func (page LoadBalancerFrontendIPConfigurationListResultPage) Values() []Fronten
 	return *page.lbficlr.Value
 }
 
+// Creates a new instance of the LoadBalancerFrontendIPConfigurationListResultPage type.
+func NewLoadBalancerFrontendIPConfigurationListResultPage(getNextPage func(context.Context, LoadBalancerFrontendIPConfigurationListResult) (LoadBalancerFrontendIPConfigurationListResult, error)) LoadBalancerFrontendIPConfigurationListResultPage {
+	return LoadBalancerFrontendIPConfigurationListResultPage{fn: getNextPage}
+}
+
 // LoadBalancerListResult response for ListLoadBalancers API service call.
 type LoadBalancerListResult struct {
 	autorest.Response `json:"-"`
@@ -12076,6 +12326,11 @@ func (iter LoadBalancerListResultIterator) Value() LoadBalancer {
 		return LoadBalancer{}
 	}
 	return iter.page.Values()[iter.i]
+}
+
+// Creates a new instance of the LoadBalancerListResultIterator type.
+func NewLoadBalancerListResultIterator(page LoadBalancerListResultPage) LoadBalancerListResultIterator {
+	return LoadBalancerListResultIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -12147,6 +12402,11 @@ func (page LoadBalancerListResultPage) Values() []LoadBalancer {
 	return *page.lblr.Value
 }
 
+// Creates a new instance of the LoadBalancerListResultPage type.
+func NewLoadBalancerListResultPage(getNextPage func(context.Context, LoadBalancerListResult) (LoadBalancerListResult, error)) LoadBalancerListResultPage {
+	return LoadBalancerListResultPage{fn: getNextPage}
+}
+
 // LoadBalancerLoadBalancingRuleListResult response for ListLoadBalancingRule API service call.
 type LoadBalancerLoadBalancingRuleListResult struct {
 	autorest.Response `json:"-"`
@@ -12213,6 +12473,11 @@ func (iter LoadBalancerLoadBalancingRuleListResultIterator) Value() LoadBalancin
 		return LoadBalancingRule{}
 	}
 	return iter.page.Values()[iter.i]
+}
+
+// Creates a new instance of the LoadBalancerLoadBalancingRuleListResultIterator type.
+func NewLoadBalancerLoadBalancingRuleListResultIterator(page LoadBalancerLoadBalancingRuleListResultPage) LoadBalancerLoadBalancingRuleListResultIterator {
+	return LoadBalancerLoadBalancingRuleListResultIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -12284,6 +12549,11 @@ func (page LoadBalancerLoadBalancingRuleListResultPage) Values() []LoadBalancing
 	return *page.lblbrlr.Value
 }
 
+// Creates a new instance of the LoadBalancerLoadBalancingRuleListResultPage type.
+func NewLoadBalancerLoadBalancingRuleListResultPage(getNextPage func(context.Context, LoadBalancerLoadBalancingRuleListResult) (LoadBalancerLoadBalancingRuleListResult, error)) LoadBalancerLoadBalancingRuleListResultPage {
+	return LoadBalancerLoadBalancingRuleListResultPage{fn: getNextPage}
+}
+
 // LoadBalancerProbeListResult response for ListProbe API service call.
 type LoadBalancerProbeListResult struct {
 	autorest.Response `json:"-"`
@@ -12349,6 +12619,11 @@ func (iter LoadBalancerProbeListResultIterator) Value() Probe {
 		return Probe{}
 	}
 	return iter.page.Values()[iter.i]
+}
+
+// Creates a new instance of the LoadBalancerProbeListResultIterator type.
+func NewLoadBalancerProbeListResultIterator(page LoadBalancerProbeListResultPage) LoadBalancerProbeListResultIterator {
+	return LoadBalancerProbeListResultIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -12418,6 +12693,11 @@ func (page LoadBalancerProbeListResultPage) Values() []Probe {
 		return nil
 	}
 	return *page.lbplr.Value
+}
+
+// Creates a new instance of the LoadBalancerProbeListResultPage type.
+func NewLoadBalancerProbeListResultPage(getNextPage func(context.Context, LoadBalancerProbeListResult) (LoadBalancerProbeListResult, error)) LoadBalancerProbeListResultPage {
+	return LoadBalancerProbeListResultPage{fn: getNextPage}
 }
 
 // LoadBalancerPropertiesFormat properties of the load balancer.
@@ -12829,6 +13109,11 @@ func (iter LocalNetworkGatewayListResultIterator) Value() LocalNetworkGateway {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the LocalNetworkGatewayListResultIterator type.
+func NewLocalNetworkGatewayListResultIterator(page LocalNetworkGatewayListResultPage) LocalNetworkGatewayListResultIterator {
+	return LocalNetworkGatewayListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (lnglr LocalNetworkGatewayListResult) IsEmpty() bool {
 	return lnglr.Value == nil || len(*lnglr.Value) == 0
@@ -12896,6 +13181,11 @@ func (page LocalNetworkGatewayListResultPage) Values() []LocalNetworkGateway {
 		return nil
 	}
 	return *page.lnglr.Value
+}
+
+// Creates a new instance of the LocalNetworkGatewayListResultPage type.
+func NewLocalNetworkGatewayListResultPage(getNextPage func(context.Context, LocalNetworkGatewayListResult) (LocalNetworkGatewayListResult, error)) LocalNetworkGatewayListResultPage {
+	return LocalNetworkGatewayListResultPage{fn: getNextPage}
 }
 
 // LocalNetworkGatewayPropertiesFormat localNetworkGateway properties
@@ -13227,6 +13517,11 @@ func (iter OperationListResultIterator) Value() Operation {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the OperationListResultIterator type.
+func NewOperationListResultIterator(page OperationListResultPage) OperationListResultIterator {
+	return OperationListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (olr OperationListResult) IsEmpty() bool {
 	return olr.Value == nil || len(*olr.Value) == 0
@@ -13294,6 +13589,11 @@ func (page OperationListResultPage) Values() []Operation {
 		return nil
 	}
 	return *page.olr.Value
+}
+
+// Creates a new instance of the OperationListResultPage type.
+func NewOperationListResultPage(getNextPage func(context.Context, OperationListResult) (OperationListResult, error)) OperationListResultPage {
+	return OperationListResultPage{fn: getNextPage}
 }
 
 // OperationPropertiesFormat description of operation properties format.
@@ -14314,6 +14614,11 @@ func (iter PublicIPAddressListResultIterator) Value() PublicIPAddress {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the PublicIPAddressListResultIterator type.
+func NewPublicIPAddressListResultIterator(page PublicIPAddressListResultPage) PublicIPAddressListResultIterator {
+	return PublicIPAddressListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (pialr PublicIPAddressListResult) IsEmpty() bool {
 	return pialr.Value == nil || len(*pialr.Value) == 0
@@ -14381,6 +14686,11 @@ func (page PublicIPAddressListResultPage) Values() []PublicIPAddress {
 		return nil
 	}
 	return *page.pialr.Value
+}
+
+// Creates a new instance of the PublicIPAddressListResultPage type.
+func NewPublicIPAddressListResultPage(getNextPage func(context.Context, PublicIPAddressListResult) (PublicIPAddressListResult, error)) PublicIPAddressListResultPage {
+	return PublicIPAddressListResultPage{fn: getNextPage}
 }
 
 // PublicIPAddressPropertiesFormat public IP address properties.
@@ -14823,6 +15133,11 @@ func (iter RouteFilterListResultIterator) Value() RouteFilter {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the RouteFilterListResultIterator type.
+func NewRouteFilterListResultIterator(page RouteFilterListResultPage) RouteFilterListResultIterator {
+	return RouteFilterListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (rflr RouteFilterListResult) IsEmpty() bool {
 	return rflr.Value == nil || len(*rflr.Value) == 0
@@ -14890,6 +15205,11 @@ func (page RouteFilterListResultPage) Values() []RouteFilter {
 		return nil
 	}
 	return *page.rflr.Value
+}
+
+// Creates a new instance of the RouteFilterListResultPage type.
+func NewRouteFilterListResultPage(getNextPage func(context.Context, RouteFilterListResult) (RouteFilterListResult, error)) RouteFilterListResultPage {
+	return RouteFilterListResultPage{fn: getNextPage}
 }
 
 // RouteFilterPropertiesFormat route Filter Resource
@@ -15064,6 +15384,11 @@ func (iter RouteFilterRuleListResultIterator) Value() RouteFilterRule {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the RouteFilterRuleListResultIterator type.
+func NewRouteFilterRuleListResultIterator(page RouteFilterRuleListResultPage) RouteFilterRuleListResultIterator {
+	return RouteFilterRuleListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (rfrlr RouteFilterRuleListResult) IsEmpty() bool {
 	return rfrlr.Value == nil || len(*rfrlr.Value) == 0
@@ -15131,6 +15456,11 @@ func (page RouteFilterRuleListResultPage) Values() []RouteFilterRule {
 		return nil
 	}
 	return *page.rfrlr.Value
+}
+
+// Creates a new instance of the RouteFilterRuleListResultPage type.
+func NewRouteFilterRuleListResultPage(getNextPage func(context.Context, RouteFilterRuleListResult) (RouteFilterRuleListResult, error)) RouteFilterRuleListResultPage {
+	return RouteFilterRuleListResultPage{fn: getNextPage}
 }
 
 // RouteFilterRulePropertiesFormat route Filter Rule Resource
@@ -15374,6 +15704,11 @@ func (iter RouteListResultIterator) Value() Route {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the RouteListResultIterator type.
+func NewRouteListResultIterator(page RouteListResultPage) RouteListResultIterator {
+	return RouteListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (rlr RouteListResult) IsEmpty() bool {
 	return rlr.Value == nil || len(*rlr.Value) == 0
@@ -15441,6 +15776,11 @@ func (page RouteListResultPage) Values() []Route {
 		return nil
 	}
 	return *page.rlr.Value
+}
+
+// Creates a new instance of the RouteListResultPage type.
+func NewRouteListResultPage(getNextPage func(context.Context, RouteListResult) (RouteListResult, error)) RouteListResultPage {
+	return RouteListResultPage{fn: getNextPage}
 }
 
 // RoutePropertiesFormat route resource
@@ -15697,6 +16037,11 @@ func (iter RouteTableListResultIterator) Value() RouteTable {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the RouteTableListResultIterator type.
+func NewRouteTableListResultIterator(page RouteTableListResultPage) RouteTableListResultIterator {
+	return RouteTableListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (rtlr RouteTableListResult) IsEmpty() bool {
 	return rtlr.Value == nil || len(*rtlr.Value) == 0
@@ -15764,6 +16109,11 @@ func (page RouteTableListResultPage) Values() []RouteTable {
 		return nil
 	}
 	return *page.rtlr.Value
+}
+
+// Creates a new instance of the RouteTableListResultPage type.
+func NewRouteTableListResultPage(getNextPage func(context.Context, RouteTableListResult) (RouteTableListResult, error)) RouteTableListResultPage {
+	return RouteTableListResultPage{fn: getNextPage}
 }
 
 // RouteTablePropertiesFormat route Table resource
@@ -16050,6 +16400,11 @@ func (iter SecurityGroupListResultIterator) Value() SecurityGroup {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the SecurityGroupListResultIterator type.
+func NewSecurityGroupListResultIterator(page SecurityGroupListResultPage) SecurityGroupListResultIterator {
+	return SecurityGroupListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (sglr SecurityGroupListResult) IsEmpty() bool {
 	return sglr.Value == nil || len(*sglr.Value) == 0
@@ -16117,6 +16472,11 @@ func (page SecurityGroupListResultPage) Values() []SecurityGroup {
 		return nil
 	}
 	return *page.sglr.Value
+}
+
+// Creates a new instance of the SecurityGroupListResultPage type.
+func NewSecurityGroupListResultPage(getNextPage func(context.Context, SecurityGroupListResult) (SecurityGroupListResult, error)) SecurityGroupListResultPage {
+	return SecurityGroupListResultPage{fn: getNextPage}
 }
 
 // SecurityGroupNetworkInterface network interface and all its associated security rules.
@@ -16404,6 +16764,11 @@ func (iter SecurityRuleListResultIterator) Value() SecurityRule {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the SecurityRuleListResultIterator type.
+func NewSecurityRuleListResultIterator(page SecurityRuleListResultPage) SecurityRuleListResultIterator {
+	return SecurityRuleListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (srlr SecurityRuleListResult) IsEmpty() bool {
 	return srlr.Value == nil || len(*srlr.Value) == 0
@@ -16473,23 +16838,28 @@ func (page SecurityRuleListResultPage) Values() []SecurityRule {
 	return *page.srlr.Value
 }
 
+// Creates a new instance of the SecurityRuleListResultPage type.
+func NewSecurityRuleListResultPage(getNextPage func(context.Context, SecurityRuleListResult) (SecurityRuleListResult, error)) SecurityRuleListResultPage {
+	return SecurityRuleListResultPage{fn: getNextPage}
+}
+
 // SecurityRulePropertiesFormat security rule resource.
 type SecurityRulePropertiesFormat struct {
 	// Description - A description for this rule. Restricted to 140 chars.
 	Description *string `json:"description,omitempty"`
 	// Protocol - Network protocol this rule applies to. Possible values are 'Tcp', 'Udp', and '*'. Possible values include: 'SecurityRuleProtocolTCP', 'SecurityRuleProtocolUDP', 'SecurityRuleProtocolAsterisk'
 	Protocol SecurityRuleProtocol `json:"protocol,omitempty"`
-	// SourcePortRange - The source port or range. Integer or range between 0 and 65535. Asterix '*' can also be used to match all ports.
+	// SourcePortRange - The source port or range. Integer or range between 0 and 65535. Asterisk '*' can also be used to match all ports.
 	SourcePortRange *string `json:"sourcePortRange,omitempty"`
-	// DestinationPortRange - The destination port or range. Integer or range between 0 and 65535. Asterix '*' can also be used to match all ports.
+	// DestinationPortRange - The destination port or range. Integer or range between 0 and 65535. Asterisk '*' can also be used to match all ports.
 	DestinationPortRange *string `json:"destinationPortRange,omitempty"`
-	// SourceAddressPrefix - The CIDR or source IP range. Asterix '*' can also be used to match all source IPs. Default tags such as 'VirtualNetwork', 'AzureLoadBalancer' and 'Internet' can also be used. If this is an ingress rule, specifies where network traffic originates from.
+	// SourceAddressPrefix - The CIDR or source IP range. Asterisk '*' can also be used to match all source IPs. Default tags such as 'VirtualNetwork', 'AzureLoadBalancer' and 'Internet' can also be used. If this is an ingress rule, specifies where network traffic originates from.
 	SourceAddressPrefix *string `json:"sourceAddressPrefix,omitempty"`
 	// SourceAddressPrefixes - The CIDR or source IP ranges.
 	SourceAddressPrefixes *[]string `json:"sourceAddressPrefixes,omitempty"`
 	// SourceApplicationSecurityGroups - The application security group specified as source.
 	SourceApplicationSecurityGroups *[]ApplicationSecurityGroup `json:"sourceApplicationSecurityGroups,omitempty"`
-	// DestinationAddressPrefix - The destination address prefix. CIDR or destination IP range. Asterix '*' can also be used to match all source IPs. Default tags such as 'VirtualNetwork', 'AzureLoadBalancer' and 'Internet' can also be used.
+	// DestinationAddressPrefix - The destination address prefix. CIDR or destination IP range. Asterisk '*' can also be used to match all source IPs. Default tags such as 'VirtualNetwork', 'AzureLoadBalancer' and 'Internet' can also be used.
 	DestinationAddressPrefix *string `json:"destinationAddressPrefix,omitempty"`
 	// DestinationAddressPrefixes - The destination address prefixes. CIDR or destination IP ranges.
 	DestinationAddressPrefixes *[]string `json:"destinationAddressPrefixes,omitempty"`
@@ -16503,7 +16873,7 @@ type SecurityRulePropertiesFormat struct {
 	Access SecurityRuleAccess `json:"access,omitempty"`
 	// Priority - The priority of the rule. The value can be between 100 and 4096. The priority number must be unique for each rule in the collection. The lower the priority number, the higher the priority of the rule.
 	Priority *int32 `json:"priority,omitempty"`
-	// Direction - The direction of the rule. The direction specifies if rule will be evaluated on incoming or outcoming traffic. Possible values are: 'Inbound' and 'Outbound'. Possible values include: 'SecurityRuleDirectionInbound', 'SecurityRuleDirectionOutbound'
+	// Direction - The direction of the rule. The direction specifies if rule will be evaluated on incoming or outgoing traffic. Possible values are: 'Inbound' and 'Outbound'. Possible values include: 'SecurityRuleDirectionInbound', 'SecurityRuleDirectionOutbound'
 	Direction SecurityRuleDirection `json:"direction,omitempty"`
 	// ProvisioningState - The provisioning state of the public IP resource. Possible values are: 'Updating', 'Deleting', and 'Failed'.
 	ProvisioningState *string `json:"provisioningState,omitempty"`
@@ -16751,6 +17121,11 @@ func (iter SubnetListResultIterator) Value() Subnet {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the SubnetListResultIterator type.
+func NewSubnetListResultIterator(page SubnetListResultPage) SubnetListResultIterator {
+	return SubnetListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (slr SubnetListResult) IsEmpty() bool {
 	return slr.Value == nil || len(*slr.Value) == 0
@@ -16818,6 +17193,11 @@ func (page SubnetListResultPage) Values() []Subnet {
 		return nil
 	}
 	return *page.slr.Value
+}
+
+// Creates a new instance of the SubnetListResultPage type.
+func NewSubnetListResultPage(getNextPage func(context.Context, SubnetListResult) (SubnetListResult, error)) SubnetListResultPage {
+	return SubnetListResultPage{fn: getNextPage}
 }
 
 // SubnetPropertiesFormat properties of the subnet.
@@ -16982,7 +17362,7 @@ type TrafficQuery struct {
 	Source *string `json:"source,omitempty"`
 	// Destination - Traffic destination. Accepted values are: '*', IP Address/CIDR, Service Tag.
 	Destination *string `json:"destination,omitempty"`
-	// DestinationPort - Traffice destination port. Accepted values are '*', port (for example, 3389) and port range (for example, 80-100).
+	// DestinationPort - Traffic destination port. Accepted values are '*', port (for example, 3389) and port range (for example, 80-100).
 	DestinationPort *string `json:"destinationPort,omitempty"`
 }
 
@@ -17188,6 +17568,11 @@ func (iter UsagesListResultIterator) Value() Usage {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the UsagesListResultIterator type.
+func NewUsagesListResultIterator(page UsagesListResultPage) UsagesListResultIterator {
+	return UsagesListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (ulr UsagesListResult) IsEmpty() bool {
 	return ulr.Value == nil || len(*ulr.Value) == 0
@@ -17255,6 +17640,11 @@ func (page UsagesListResultPage) Values() []Usage {
 		return nil
 	}
 	return *page.ulr.Value
+}
+
+// Creates a new instance of the UsagesListResultPage type.
+func NewUsagesListResultPage(getNextPage func(context.Context, UsagesListResult) (UsagesListResult, error)) UsagesListResultPage {
+	return UsagesListResultPage{fn: getNextPage}
 }
 
 // VerificationIPFlowParameters parameters that define the IP flow to be verified.
@@ -18014,7 +18404,7 @@ type VirtualNetworkGatewayConnectionListEntityPropertiesFormat struct {
 	VirtualNetworkGateway2 *VirtualNetworkConnectionGatewayReference `json:"virtualNetworkGateway2,omitempty"`
 	// LocalNetworkGateway2 - The reference to local network gateway resource.
 	LocalNetworkGateway2 *VirtualNetworkConnectionGatewayReference `json:"localNetworkGateway2,omitempty"`
-	// ConnectionType - Gateway connection type. Possible values are: 'Ipsec','Vnet2Vnet','ExpressRoute', and 'VPNClient. Possible values include: 'IPsec', 'Vnet2Vnet', 'ExpressRoute', 'VPNClient'
+	// ConnectionType - Gateway connection type. Possible values are: 'IPsec','Vnet2Vnet','ExpressRoute', and 'VPNClient. Possible values include: 'IPsec', 'Vnet2Vnet', 'ExpressRoute', 'VPNClient'
 	ConnectionType VirtualNetworkGatewayConnectionType `json:"connectionType,omitempty"`
 	// RoutingWeight - The routing weight.
 	RoutingWeight *int32 `json:"routingWeight,omitempty"`
@@ -18111,6 +18501,11 @@ func (iter VirtualNetworkGatewayConnectionListResultIterator) Value() VirtualNet
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the VirtualNetworkGatewayConnectionListResultIterator type.
+func NewVirtualNetworkGatewayConnectionListResultIterator(page VirtualNetworkGatewayConnectionListResultPage) VirtualNetworkGatewayConnectionListResultIterator {
+	return VirtualNetworkGatewayConnectionListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (vngclr VirtualNetworkGatewayConnectionListResult) IsEmpty() bool {
 	return vngclr.Value == nil || len(*vngclr.Value) == 0
@@ -18180,6 +18575,11 @@ func (page VirtualNetworkGatewayConnectionListResultPage) Values() []VirtualNetw
 	return *page.vngclr.Value
 }
 
+// Creates a new instance of the VirtualNetworkGatewayConnectionListResultPage type.
+func NewVirtualNetworkGatewayConnectionListResultPage(getNextPage func(context.Context, VirtualNetworkGatewayConnectionListResult) (VirtualNetworkGatewayConnectionListResult, error)) VirtualNetworkGatewayConnectionListResultPage {
+	return VirtualNetworkGatewayConnectionListResultPage{fn: getNextPage}
+}
+
 // VirtualNetworkGatewayConnectionPropertiesFormat virtualNetworkGatewayConnection properties
 type VirtualNetworkGatewayConnectionPropertiesFormat struct {
 	// AuthorizationKey - The authorizationKey.
@@ -18190,7 +18590,7 @@ type VirtualNetworkGatewayConnectionPropertiesFormat struct {
 	VirtualNetworkGateway2 *VirtualNetworkGateway `json:"virtualNetworkGateway2,omitempty"`
 	// LocalNetworkGateway2 - The reference to local network gateway resource.
 	LocalNetworkGateway2 *LocalNetworkGateway `json:"localNetworkGateway2,omitempty"`
-	// ConnectionType - Gateway connection type. Possible values are: 'Ipsec','Vnet2Vnet','ExpressRoute', and 'VPNClient. Possible values include: 'IPsec', 'Vnet2Vnet', 'ExpressRoute', 'VPNClient'
+	// ConnectionType - Gateway connection type. Possible values are: 'IPsec','Vnet2Vnet','ExpressRoute', and 'VPNClient. Possible values include: 'IPsec', 'Vnet2Vnet', 'ExpressRoute', 'VPNClient'
 	ConnectionType VirtualNetworkGatewayConnectionType `json:"connectionType,omitempty"`
 	// RoutingWeight - The routing weight.
 	RoutingWeight *int32 `json:"routingWeight,omitempty"`
@@ -18519,6 +18919,11 @@ func (iter VirtualNetworkGatewayListConnectionsResultIterator) Value() VirtualNe
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the VirtualNetworkGatewayListConnectionsResultIterator type.
+func NewVirtualNetworkGatewayListConnectionsResultIterator(page VirtualNetworkGatewayListConnectionsResultPage) VirtualNetworkGatewayListConnectionsResultIterator {
+	return VirtualNetworkGatewayListConnectionsResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (vnglcr VirtualNetworkGatewayListConnectionsResult) IsEmpty() bool {
 	return vnglcr.Value == nil || len(*vnglcr.Value) == 0
@@ -18589,6 +18994,11 @@ func (page VirtualNetworkGatewayListConnectionsResultPage) Values() []VirtualNet
 	return *page.vnglcr.Value
 }
 
+// Creates a new instance of the VirtualNetworkGatewayListConnectionsResultPage type.
+func NewVirtualNetworkGatewayListConnectionsResultPage(getNextPage func(context.Context, VirtualNetworkGatewayListConnectionsResult) (VirtualNetworkGatewayListConnectionsResult, error)) VirtualNetworkGatewayListConnectionsResultPage {
+	return VirtualNetworkGatewayListConnectionsResultPage{fn: getNextPage}
+}
+
 // VirtualNetworkGatewayListResult response for the ListVirtualNetworkGateways API service call.
 type VirtualNetworkGatewayListResult struct {
 	autorest.Response `json:"-"`
@@ -18655,6 +19065,11 @@ func (iter VirtualNetworkGatewayListResultIterator) Value() VirtualNetworkGatewa
 		return VirtualNetworkGateway{}
 	}
 	return iter.page.Values()[iter.i]
+}
+
+// Creates a new instance of the VirtualNetworkGatewayListResultIterator type.
+func NewVirtualNetworkGatewayListResultIterator(page VirtualNetworkGatewayListResultPage) VirtualNetworkGatewayListResultIterator {
+	return VirtualNetworkGatewayListResultIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -18724,6 +19139,11 @@ func (page VirtualNetworkGatewayListResultPage) Values() []VirtualNetworkGateway
 		return nil
 	}
 	return *page.vnglr.Value
+}
+
+// Creates a new instance of the VirtualNetworkGatewayListResultPage type.
+func NewVirtualNetworkGatewayListResultPage(getNextPage func(context.Context, VirtualNetworkGatewayListResult) (VirtualNetworkGatewayListResult, error)) VirtualNetworkGatewayListResultPage {
+	return VirtualNetworkGatewayListResultPage{fn: getNextPage}
 }
 
 // VirtualNetworkGatewayPropertiesFormat virtualNetworkGateway properties
@@ -19194,6 +19614,11 @@ func (iter VirtualNetworkListResultIterator) Value() VirtualNetwork {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the VirtualNetworkListResultIterator type.
+func NewVirtualNetworkListResultIterator(page VirtualNetworkListResultPage) VirtualNetworkListResultIterator {
+	return VirtualNetworkListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (vnlr VirtualNetworkListResult) IsEmpty() bool {
 	return vnlr.Value == nil || len(*vnlr.Value) == 0
@@ -19261,6 +19686,11 @@ func (page VirtualNetworkListResultPage) Values() []VirtualNetwork {
 		return nil
 	}
 	return *page.vnlr.Value
+}
+
+// Creates a new instance of the VirtualNetworkListResultPage type.
+func NewVirtualNetworkListResultPage(getNextPage func(context.Context, VirtualNetworkListResult) (VirtualNetworkListResult, error)) VirtualNetworkListResultPage {
+	return VirtualNetworkListResultPage{fn: getNextPage}
 }
 
 // VirtualNetworkListUsageResult response for the virtual networks GetUsage API service call.
@@ -19331,6 +19761,11 @@ func (iter VirtualNetworkListUsageResultIterator) Value() VirtualNetworkUsage {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the VirtualNetworkListUsageResultIterator type.
+func NewVirtualNetworkListUsageResultIterator(page VirtualNetworkListUsageResultPage) VirtualNetworkListUsageResultIterator {
+	return VirtualNetworkListUsageResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (vnlur VirtualNetworkListUsageResult) IsEmpty() bool {
 	return vnlur.Value == nil || len(*vnlur.Value) == 0
@@ -19398,6 +19833,11 @@ func (page VirtualNetworkListUsageResultPage) Values() []VirtualNetworkUsage {
 		return nil
 	}
 	return *page.vnlur.Value
+}
+
+// Creates a new instance of the VirtualNetworkListUsageResultPage type.
+func NewVirtualNetworkListUsageResultPage(getNextPage func(context.Context, VirtualNetworkListUsageResult) (VirtualNetworkListUsageResult, error)) VirtualNetworkListUsageResultPage {
+	return VirtualNetworkListUsageResultPage{fn: getNextPage}
 }
 
 // VirtualNetworkPeering peerings in a virtual network resource.
@@ -19551,6 +19991,11 @@ func (iter VirtualNetworkPeeringListResultIterator) Value() VirtualNetworkPeerin
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the VirtualNetworkPeeringListResultIterator type.
+func NewVirtualNetworkPeeringListResultIterator(page VirtualNetworkPeeringListResultPage) VirtualNetworkPeeringListResultIterator {
+	return VirtualNetworkPeeringListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (vnplr VirtualNetworkPeeringListResult) IsEmpty() bool {
 	return vnplr.Value == nil || len(*vnplr.Value) == 0
@@ -19618,6 +20063,11 @@ func (page VirtualNetworkPeeringListResultPage) Values() []VirtualNetworkPeering
 		return nil
 	}
 	return *page.vnplr.Value
+}
+
+// Creates a new instance of the VirtualNetworkPeeringListResultPage type.
+func NewVirtualNetworkPeeringListResultPage(getNextPage func(context.Context, VirtualNetworkPeeringListResult) (VirtualNetworkPeeringListResult, error)) VirtualNetworkPeeringListResultPage {
+	return VirtualNetworkPeeringListResultPage{fn: getNextPage}
 }
 
 // VirtualNetworkPeeringPropertiesFormat properties of the virtual network peering.

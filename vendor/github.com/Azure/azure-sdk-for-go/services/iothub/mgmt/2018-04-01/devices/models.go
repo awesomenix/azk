@@ -420,7 +420,7 @@ type CloudToDeviceProperties struct {
 type EndpointHealthData struct {
 	// EndpointID - Id of the endpoint
 	EndpointID *string `json:"endpointId,omitempty"`
-	// HealthStatus - Health status. Possible values include: 'Unknown', 'Healthy', 'Unhealthy', 'Dead'
+	// HealthStatus - Health statuses have following meanings. The 'healthy' status shows that the endpoint is accepting messages as expected. The 'unhealthy' status shows that the endpoint is not accepting messages as expected and IoT Hub is retrying to send data to this endpoint. The status of an unhealthy endpoint will be updated to healthy when IoT Hub has established an eventually consistent state of health. The 'dead' status shows that the endpoint is not accepting messages, after IoT Hub retried sending messages for the retrial period. See IoT Hub metrics to identify errors and monitor issues with endpoints. The 'unknown' status shows that the IoT Hub has not established a connection with the endpoint. No messages have been delivered to or rejected from this endpoint. Possible values include: 'Unknown', 'Healthy', 'Unhealthy', 'Dead'
 	HealthStatus EndpointHealthStatus `json:"healthStatus,omitempty"`
 }
 
@@ -491,6 +491,11 @@ func (iter EndpointHealthDataListResultIterator) Value() EndpointHealthData {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the EndpointHealthDataListResultIterator type.
+func NewEndpointHealthDataListResultIterator(page EndpointHealthDataListResultPage) EndpointHealthDataListResultIterator {
+	return EndpointHealthDataListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (ehdlr EndpointHealthDataListResult) IsEmpty() bool {
 	return ehdlr.Value == nil || len(*ehdlr.Value) == 0
@@ -558,6 +563,11 @@ func (page EndpointHealthDataListResultPage) Values() []EndpointHealthData {
 		return nil
 	}
 	return *page.ehdlr.Value
+}
+
+// Creates a new instance of the EndpointHealthDataListResultPage type.
+func NewEndpointHealthDataListResultPage(getNextPage func(context.Context, EndpointHealthDataListResult) (EndpointHealthDataListResult, error)) EndpointHealthDataListResultPage {
+	return EndpointHealthDataListResultPage{fn: getNextPage}
 }
 
 // ErrorDetails error details.
@@ -677,6 +687,11 @@ func (iter EventHubConsumerGroupsListResultIterator) Value() EventHubConsumerGro
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the EventHubConsumerGroupsListResultIterator type.
+func NewEventHubConsumerGroupsListResultIterator(page EventHubConsumerGroupsListResultPage) EventHubConsumerGroupsListResultIterator {
+	return EventHubConsumerGroupsListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (ehcglr EventHubConsumerGroupsListResult) IsEmpty() bool {
 	return ehcglr.Value == nil || len(*ehcglr.Value) == 0
@@ -744,6 +759,11 @@ func (page EventHubConsumerGroupsListResultPage) Values() []EventHubConsumerGrou
 		return nil
 	}
 	return *page.ehcglr.Value
+}
+
+// Creates a new instance of the EventHubConsumerGroupsListResultPage type.
+func NewEventHubConsumerGroupsListResultPage(getNextPage func(context.Context, EventHubConsumerGroupsListResult) (EventHubConsumerGroupsListResult, error)) EventHubConsumerGroupsListResultPage {
+	return EventHubConsumerGroupsListResultPage{fn: getNextPage}
 }
 
 // EventHubProperties the properties of the provisioned Event Hub-compatible endpoint used by the IoT hub.
@@ -931,6 +951,11 @@ func (iter IotHubDescriptionListResultIterator) Value() IotHubDescription {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the IotHubDescriptionListResultIterator type.
+func NewIotHubDescriptionListResultIterator(page IotHubDescriptionListResultPage) IotHubDescriptionListResultIterator {
+	return IotHubDescriptionListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (ihdlr IotHubDescriptionListResult) IsEmpty() bool {
 	return ihdlr.Value == nil || len(*ihdlr.Value) == 0
@@ -1000,6 +1025,11 @@ func (page IotHubDescriptionListResultPage) Values() []IotHubDescription {
 	return *page.ihdlr.Value
 }
 
+// Creates a new instance of the IotHubDescriptionListResultPage type.
+func NewIotHubDescriptionListResultPage(getNextPage func(context.Context, IotHubDescriptionListResult) (IotHubDescriptionListResult, error)) IotHubDescriptionListResultPage {
+	return IotHubDescriptionListResultPage{fn: getNextPage}
+}
+
 // IotHubNameAvailabilityInfo the properties indicating whether a given IoT hub name is available.
 type IotHubNameAvailabilityInfo struct {
 	autorest.Response `json:"-"`
@@ -1019,7 +1049,7 @@ type IotHubProperties struct {
 	IPFilterRules *[]IPFilterRule `json:"ipFilterRules,omitempty"`
 	// ProvisioningState - The provisioning state.
 	ProvisioningState *string `json:"provisioningState,omitempty"`
-	// State - Thehub state state.
+	// State - The hub state.
 	State *string `json:"state,omitempty"`
 	// HostName - The name of the host.
 	HostName *string `json:"hostName,omitempty"`
@@ -1167,6 +1197,11 @@ func (iter IotHubQuotaMetricInfoListResultIterator) Value() IotHubQuotaMetricInf
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the IotHubQuotaMetricInfoListResultIterator type.
+func NewIotHubQuotaMetricInfoListResultIterator(page IotHubQuotaMetricInfoListResultPage) IotHubQuotaMetricInfoListResultIterator {
+	return IotHubQuotaMetricInfoListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (ihqmilr IotHubQuotaMetricInfoListResult) IsEmpty() bool {
 	return ihqmilr.Value == nil || len(*ihqmilr.Value) == 0
@@ -1234,6 +1269,11 @@ func (page IotHubQuotaMetricInfoListResultPage) Values() []IotHubQuotaMetricInfo
 		return nil
 	}
 	return *page.ihqmilr.Value
+}
+
+// Creates a new instance of the IotHubQuotaMetricInfoListResultPage type.
+func NewIotHubQuotaMetricInfoListResultPage(getNextPage func(context.Context, IotHubQuotaMetricInfoListResult) (IotHubQuotaMetricInfoListResult, error)) IotHubQuotaMetricInfoListResultPage {
+	return IotHubQuotaMetricInfoListResultPage{fn: getNextPage}
 }
 
 // IotHubResourceCreateOrUpdateFuture an abstraction for monitoring and retrieving the results of a
@@ -1402,6 +1442,11 @@ func (iter IotHubSkuDescriptionListResultIterator) Value() IotHubSkuDescription 
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the IotHubSkuDescriptionListResultIterator type.
+func NewIotHubSkuDescriptionListResultIterator(page IotHubSkuDescriptionListResultPage) IotHubSkuDescriptionListResultIterator {
+	return IotHubSkuDescriptionListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (ihsdlr IotHubSkuDescriptionListResult) IsEmpty() bool {
 	return ihsdlr.Value == nil || len(*ihsdlr.Value) == 0
@@ -1469,6 +1514,11 @@ func (page IotHubSkuDescriptionListResultPage) Values() []IotHubSkuDescription {
 		return nil
 	}
 	return *page.ihsdlr.Value
+}
+
+// Creates a new instance of the IotHubSkuDescriptionListResultPage type.
+func NewIotHubSkuDescriptionListResultPage(getNextPage func(context.Context, IotHubSkuDescriptionListResult) (IotHubSkuDescriptionListResult, error)) IotHubSkuDescriptionListResultPage {
+	return IotHubSkuDescriptionListResultPage{fn: getNextPage}
 }
 
 // IotHubSkuInfo information about the SKU of the IoT hub.
@@ -1579,6 +1629,11 @@ func (iter JobResponseListResultIterator) Value() JobResponse {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the JobResponseListResultIterator type.
+func NewJobResponseListResultIterator(page JobResponseListResultPage) JobResponseListResultIterator {
+	return JobResponseListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (jrlr JobResponseListResult) IsEmpty() bool {
 	return jrlr.Value == nil || len(*jrlr.Value) == 0
@@ -1646,6 +1701,11 @@ func (page JobResponseListResultPage) Values() []JobResponse {
 		return nil
 	}
 	return *page.jrlr.Value
+}
+
+// Creates a new instance of the JobResponseListResultPage type.
+func NewJobResponseListResultPage(getNextPage func(context.Context, JobResponseListResult) (JobResponseListResult, error)) JobResponseListResultPage {
+	return JobResponseListResultPage{fn: getNextPage}
 }
 
 // MatchedRoute routes that matched
@@ -1764,6 +1824,11 @@ func (iter OperationListResultIterator) Value() Operation {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the OperationListResultIterator type.
+func NewOperationListResultIterator(page OperationListResultPage) OperationListResultIterator {
+	return OperationListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (olr OperationListResult) IsEmpty() bool {
 	return olr.Value == nil || len(*olr.Value) == 0
@@ -1831,6 +1896,11 @@ func (page OperationListResultPage) Values() []Operation {
 		return nil
 	}
 	return *page.olr.Value
+}
+
+// Creates a new instance of the OperationListResultPage type.
+func NewOperationListResultPage(getNextPage func(context.Context, OperationListResult) (OperationListResult, error)) OperationListResultPage {
+	return OperationListResultPage{fn: getNextPage}
 }
 
 // OperationsMonitoringProperties the operations monitoring properties for the IoT hub. The possible keys
@@ -2039,7 +2109,7 @@ type RoutingStorageContainerProperties struct {
 	BatchFrequencyInSeconds *int32 `json:"batchFrequencyInSeconds,omitempty"`
 	// MaxChunkSizeInBytes - Maximum number of bytes for each blob written to storage. Value should be between 10485760(10MB) and 524288000(500MB). Default value is 314572800(300MB).
 	MaxChunkSizeInBytes *int32 `json:"maxChunkSizeInBytes,omitempty"`
-	// Encoding - Encoding that is used to serialize messages to blobs. Supported values are 'avro' and 'avrodeflate'. Default value is 'avro'.
+	// Encoding - Encoding that is used to serialize messages to blobs. Supported values are 'avro' and 'avroDeflate'. Default value is 'avro'.
 	Encoding *string `json:"encoding,omitempty"`
 }
 
@@ -2145,6 +2215,11 @@ func (iter SharedAccessSignatureAuthorizationRuleListResultIterator) Value() Sha
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the SharedAccessSignatureAuthorizationRuleListResultIterator type.
+func NewSharedAccessSignatureAuthorizationRuleListResultIterator(page SharedAccessSignatureAuthorizationRuleListResultPage) SharedAccessSignatureAuthorizationRuleListResultIterator {
+	return SharedAccessSignatureAuthorizationRuleListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (sasarlr SharedAccessSignatureAuthorizationRuleListResult) IsEmpty() bool {
 	return sasarlr.Value == nil || len(*sasarlr.Value) == 0
@@ -2215,9 +2290,14 @@ func (page SharedAccessSignatureAuthorizationRuleListResultPage) Values() []Shar
 	return *page.sasarlr.Value
 }
 
+// Creates a new instance of the SharedAccessSignatureAuthorizationRuleListResultPage type.
+func NewSharedAccessSignatureAuthorizationRuleListResultPage(getNextPage func(context.Context, SharedAccessSignatureAuthorizationRuleListResult) (SharedAccessSignatureAuthorizationRuleListResult, error)) SharedAccessSignatureAuthorizationRuleListResultPage {
+	return SharedAccessSignatureAuthorizationRuleListResultPage{fn: getNextPage}
+}
+
 // StorageEndpointProperties the properties of the Azure Storage endpoint for file upload.
 type StorageEndpointProperties struct {
-	// SasTTLAsIso8601 - The period of time for which the the SAS URI generated by IoT Hub for file upload is valid. See: https://docs.microsoft.com/azure/iot-hub/iot-hub-devguide-file-upload#file-upload-notification-configuration-options.
+	// SasTTLAsIso8601 - The period of time for which the SAS URI generated by IoT Hub for file upload is valid. See: https://docs.microsoft.com/azure/iot-hub/iot-hub-devguide-file-upload#file-upload-notification-configuration-options.
 	SasTTLAsIso8601 *string `json:"sasTtlAsIso8601,omitempty"`
 	// ConnectionString - The connection string for the Azure Storage account to which files are uploaded.
 	ConnectionString *string `json:"connectionString,omitempty"`

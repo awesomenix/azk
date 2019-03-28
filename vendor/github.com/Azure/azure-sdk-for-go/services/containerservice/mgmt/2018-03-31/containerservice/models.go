@@ -486,13 +486,13 @@ type AgentPoolProfile struct {
 	OsDiskSizeGB *int32 `json:"osDiskSizeGB,omitempty"`
 	// DNSPrefix - DNS prefix to be used to create the FQDN for the agent pool.
 	DNSPrefix *string `json:"dnsPrefix,omitempty"`
-	// Fqdn - FDQN for the agent pool.
+	// Fqdn - FQDN for the agent pool.
 	Fqdn *string `json:"fqdn,omitempty"`
 	// Ports - Ports number array used to expose on this agent pool. The default opened ports are different based on your choice of orchestrator.
 	Ports *[]int32 `json:"ports,omitempty"`
 	// StorageProfile - Storage profile specifies what kind of storage used. Choose from StorageAccount and ManagedDisks. Leave it empty, we will choose for you based on the orchestrator choice. Possible values include: 'StorageAccount', 'ManagedDisks'
 	StorageProfile StorageProfileTypes `json:"storageProfile,omitempty"`
-	// VnetSubnetID - VNet SubnetID specifies the vnet's subnet identifier.
+	// VnetSubnetID - VNet SubnetID specifies the VNet's subnet identifier.
 	VnetSubnetID *string `json:"vnetSubnetID,omitempty"`
 	// OsType - OsType to be used to specify os type. Choose from Linux and Windows. Default to Linux. Possible values include: 'Linux', 'Windows'
 	OsType OSType `json:"osType,omitempty"`
@@ -671,7 +671,8 @@ type CredentialResult struct {
 // CredentialResults the list of credential result response.
 type CredentialResults struct {
 	autorest.Response `json:"-"`
-	Kubeconfigs       *[]CredentialResult `json:"kubeconfigs,omitempty"`
+	// Kubeconfigs - Base64-encoded Kubernetes configuration file.
+	Kubeconfigs *[]CredentialResult `json:"kubeconfigs,omitempty"`
 }
 
 // CustomProfile properties to configure a custom container service cluster.
@@ -771,6 +772,11 @@ func (iter ListResultIterator) Value() ContainerService {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ListResultIterator type.
+func NewListResultIterator(page ListResultPage) ListResultIterator {
+	return ListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (lr ListResult) IsEmpty() bool {
 	return lr.Value == nil || len(*lr.Value) == 0
@@ -838,6 +844,11 @@ func (page ListResultPage) Values() []ContainerService {
 		return nil
 	}
 	return *page.lr.Value
+}
+
+// Creates a new instance of the ListResultPage type.
+func NewListResultPage(getNextPage func(context.Context, ListResult) (ListResult, error)) ListResultPage {
+	return ListResultPage{fn: getNextPage}
 }
 
 // ManagedCluster managed cluster.
@@ -1104,7 +1115,7 @@ type ManagedClusterAgentPoolProfile struct {
 	OsDiskSizeGB *int32 `json:"osDiskSizeGB,omitempty"`
 	// StorageProfile - Storage profile specifies what kind of storage used. Defaults to ManagedDisks. Possible values include: 'StorageAccount', 'ManagedDisks'
 	StorageProfile StorageProfileTypes `json:"storageProfile,omitempty"`
-	// VnetSubnetID - VNet SubnetID specifies the vnet's subnet identifier.
+	// VnetSubnetID - VNet SubnetID specifies the VNet's subnet identifier.
 	VnetSubnetID *string `json:"vnetSubnetID,omitempty"`
 	// MaxPods - Maximum number of pods that can run on a node.
 	MaxPods *int32 `json:"maxPods,omitempty"`
@@ -1179,6 +1190,11 @@ func (iter ManagedClusterListResultIterator) Value() ManagedCluster {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ManagedClusterListResultIterator type.
+func NewManagedClusterListResultIterator(page ManagedClusterListResultPage) ManagedClusterListResultIterator {
+	return ManagedClusterListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (mclr ManagedClusterListResult) IsEmpty() bool {
 	return mclr.Value == nil || len(*mclr.Value) == 0
@@ -1248,6 +1264,11 @@ func (page ManagedClusterListResultPage) Values() []ManagedCluster {
 	return *page.mclr.Value
 }
 
+// Creates a new instance of the ManagedClusterListResultPage type.
+func NewManagedClusterListResultPage(getNextPage func(context.Context, ManagedClusterListResult) (ManagedClusterListResult, error)) ManagedClusterListResultPage {
+	return ManagedClusterListResultPage{fn: getNextPage}
+}
+
 // ManagedClusterPoolUpgradeProfile the list of available upgrade versions.
 type ManagedClusterPoolUpgradeProfile struct {
 	// KubernetesVersion - Kubernetes version (major, minor, patch).
@@ -1268,7 +1289,7 @@ type ManagedClusterProperties struct {
 	KubernetesVersion *string `json:"kubernetesVersion,omitempty"`
 	// DNSPrefix - DNS prefix specified when creating the managed cluster.
 	DNSPrefix *string `json:"dnsPrefix,omitempty"`
-	// Fqdn - FDQN for the master pool.
+	// Fqdn - FQDN for the master pool.
 	Fqdn *string `json:"fqdn,omitempty"`
 	// AgentPoolProfiles - Properties of the agent pool. Currently only one agent pool can exist.
 	AgentPoolProfiles *[]ManagedClusterAgentPoolProfile `json:"agentPoolProfiles,omitempty"`
@@ -1389,6 +1410,52 @@ type ManagedClusterServicePrincipalProfile struct {
 	ClientID *string `json:"clientId,omitempty"`
 	// Secret - The secret password associated with the service principal in plain text.
 	Secret *string `json:"secret,omitempty"`
+}
+
+// ManagedClustersResetAADProfileFuture an abstraction for monitoring and retrieving the results of a
+// long-running operation.
+type ManagedClustersResetAADProfileFuture struct {
+	azure.Future
+}
+
+// Result returns the result of the asynchronous operation.
+// If the operation has not completed it will return an error.
+func (future *ManagedClustersResetAADProfileFuture) Result(client ManagedClustersClient) (ar autorest.Response, err error) {
+	var done bool
+	done, err = future.Done(client)
+	if err != nil {
+		err = autorest.NewErrorWithError(err, "containerservice.ManagedClustersResetAADProfileFuture", "Result", future.Response(), "Polling failure")
+		return
+	}
+	if !done {
+		err = azure.NewAsyncOpIncompleteError("containerservice.ManagedClustersResetAADProfileFuture")
+		return
+	}
+	ar.Response = future.Response()
+	return
+}
+
+// ManagedClustersResetServicePrincipalProfileFuture an abstraction for monitoring and retrieving the
+// results of a long-running operation.
+type ManagedClustersResetServicePrincipalProfileFuture struct {
+	azure.Future
+}
+
+// Result returns the result of the asynchronous operation.
+// If the operation has not completed it will return an error.
+func (future *ManagedClustersResetServicePrincipalProfileFuture) Result(client ManagedClustersClient) (ar autorest.Response, err error) {
+	var done bool
+	done, err = future.Done(client)
+	if err != nil {
+		err = autorest.NewErrorWithError(err, "containerservice.ManagedClustersResetServicePrincipalProfileFuture", "Result", future.Response(), "Polling failure")
+		return
+	}
+	if !done {
+		err = azure.NewAsyncOpIncompleteError("containerservice.ManagedClustersResetServicePrincipalProfileFuture")
+		return
+	}
+	ar.Response = future.Response()
+	return
 }
 
 // ManagedClustersUpdateTagsFuture an abstraction for monitoring and retrieving the results of a
@@ -1520,13 +1587,13 @@ type MasterProfile struct {
 	VMSize VMSizeTypes `json:"vmSize,omitempty"`
 	// OsDiskSizeGB - OS Disk Size in GB to be used to specify the disk size for every machine in this master/agent pool. If you specify 0, it will apply the default osDisk size according to the vmSize specified.
 	OsDiskSizeGB *int32 `json:"osDiskSizeGB,omitempty"`
-	// VnetSubnetID - VNet SubnetID specifies the vnet's subnet identifier.
+	// VnetSubnetID - VNet SubnetID specifies the VNet's subnet identifier.
 	VnetSubnetID *string `json:"vnetSubnetID,omitempty"`
 	// FirstConsecutiveStaticIP - FirstConsecutiveStaticIP used to specify the first static ip of masters.
 	FirstConsecutiveStaticIP *string `json:"firstConsecutiveStaticIP,omitempty"`
 	// StorageProfile - Storage profile specifies what kind of storage used. Choose from StorageAccount and ManagedDisks. Leave it empty, we will choose for you based on the orchestrator choice. Possible values include: 'StorageAccount', 'ManagedDisks'
 	StorageProfile StorageProfileTypes `json:"storageProfile,omitempty"`
-	// Fqdn - FDQN for the master pool.
+	// Fqdn - FQDN for the master pool.
 	Fqdn *string `json:"fqdn,omitempty"`
 }
 

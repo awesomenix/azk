@@ -375,7 +375,7 @@ type CloudError struct {
 
 // CloudErrorBody describes a particular API error with an error code and a message.
 type CloudErrorBody struct {
-	// Code - An error code that describes the error condition more precisely than an HTTP status code. Can be used to programatically handle specific error cases.
+	// Code - An error code that describes the error condition more precisely than an HTTP status code. Can be used to programmatically handle specific error cases.
 	Code *string `json:"code,omitempty"`
 	// Message - A message that describes the error in detail and provides debugging information.
 	Message *string `json:"message,omitempty"`
@@ -506,7 +506,7 @@ type EnvironmentMutableProperties struct {
 	DataRetentionTime *string `json:"dataRetentionTime,omitempty"`
 }
 
-// EnvironmentResource an environment is a set of time-series data avaliable for query, and is the top
+// EnvironmentResource an environment is a set of time-series data available for query, and is the top
 // level Azure Time Series Insights resource.
 type EnvironmentResource struct {
 	autorest.Response              `json:"-"`
@@ -1902,6 +1902,11 @@ func (iter OperationListResultIterator) Value() Operation {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the OperationListResultIterator type.
+func NewOperationListResultIterator(page OperationListResultPage) OperationListResultIterator {
+	return OperationListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (olr OperationListResult) IsEmpty() bool {
 	return olr.Value == nil || len(*olr.Value) == 0
@@ -1969,6 +1974,11 @@ func (page OperationListResultPage) Values() []Operation {
 		return nil
 	}
 	return *page.olr.Value
+}
+
+// Creates a new instance of the OperationListResultPage type.
+func NewOperationListResultPage(getNextPage func(context.Context, OperationListResult) (OperationListResult, error)) OperationListResultPage {
+	return OperationListResultPage{fn: getNextPage}
 }
 
 // ReferenceDataSetCreateOrUpdateParameters ...

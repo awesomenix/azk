@@ -539,6 +539,11 @@ func (iter APICollectionIterator) Value() APIContract {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the APICollectionIterator type.
+func NewAPICollectionIterator(page APICollectionPage) APICollectionIterator {
+	return APICollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (ac APICollection) IsEmpty() bool {
 	return ac.Value == nil || len(*ac.Value) == 0
@@ -606,6 +611,11 @@ func (page APICollectionPage) Values() []APIContract {
 		return nil
 	}
 	return *page.ac.Value
+}
+
+// Creates a new instance of the APICollectionPage type.
+func NewAPICollectionPage(getNextPage func(context.Context, APICollection) (APICollection, error)) APICollectionPage {
+	return APICollectionPage{fn: getNextPage}
 }
 
 // APIContract API details.
@@ -750,6 +760,11 @@ func (iter AuthorizationServerCollectionIterator) Value() OAuth2AuthorizationSer
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the AuthorizationServerCollectionIterator type.
+func NewAuthorizationServerCollectionIterator(page AuthorizationServerCollectionPage) AuthorizationServerCollectionIterator {
+	return AuthorizationServerCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (asc AuthorizationServerCollection) IsEmpty() bool {
 	return asc.Value == nil || len(*asc.Value) == 0
@@ -817,6 +832,11 @@ func (page AuthorizationServerCollectionPage) Values() []OAuth2AuthorizationServ
 		return nil
 	}
 	return *page.asc.Value
+}
+
+// Creates a new instance of the AuthorizationServerCollectionPage type.
+func NewAuthorizationServerCollectionPage(getNextPage func(context.Context, AuthorizationServerCollection) (AuthorizationServerCollection, error)) AuthorizationServerCollectionPage {
+	return AuthorizationServerCollectionPage{fn: getNextPage}
 }
 
 // BackendAuthorizationHeaderCredentials authorization header information.
@@ -1060,6 +1080,11 @@ func (iter BackendCollectionIterator) Value() BackendResponse {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the BackendCollectionIterator type.
+func NewBackendCollectionIterator(page BackendCollectionPage) BackendCollectionIterator {
+	return BackendCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (bc BackendCollection) IsEmpty() bool {
 	return bc.Value == nil || len(*bc.Value) == 0
@@ -1127,6 +1152,11 @@ func (page BackendCollectionPage) Values() []BackendResponse {
 		return nil
 	}
 	return *page.bc.Value
+}
+
+// Creates a new instance of the BackendCollectionPage type.
+func NewBackendCollectionPage(getNextPage func(context.Context, BackendCollection) (BackendCollection, error)) BackendCollectionPage {
+	return BackendCollectionPage{fn: getNextPage}
 }
 
 // BackendContract parameters supplied to the Create Backend operation.
@@ -1456,6 +1486,11 @@ func (iter CertificateCollectionIterator) Value() CertificateContract {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the CertificateCollectionIterator type.
+func NewCertificateCollectionIterator(page CertificateCollectionPage) CertificateCollectionIterator {
+	return CertificateCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (cc CertificateCollection) IsEmpty() bool {
 	return cc.Value == nil || len(*cc.Value) == 0
@@ -1523,6 +1558,11 @@ func (page CertificateCollectionPage) Values() []CertificateContract {
 		return nil
 	}
 	return *page.cc.Value
+}
+
+// Creates a new instance of the CertificateCollectionPage type.
+func NewCertificateCollectionPage(getNextPage func(context.Context, CertificateCollection) (CertificateCollection, error)) CertificateCollectionPage {
+	return CertificateCollectionPage{fn: getNextPage}
 }
 
 // CertificateContract certificate details.
@@ -1684,6 +1724,11 @@ func (iter GroupCollectionIterator) Value() GroupContract {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the GroupCollectionIterator type.
+func NewGroupCollectionIterator(page GroupCollectionPage) GroupCollectionIterator {
+	return GroupCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (gc GroupCollection) IsEmpty() bool {
 	return gc.Value == nil || len(*gc.Value) == 0
@@ -1753,10 +1798,15 @@ func (page GroupCollectionPage) Values() []GroupContract {
 	return *page.gc.Value
 }
 
+// Creates a new instance of the GroupCollectionPage type.
+func NewGroupCollectionPage(getNextPage func(context.Context, GroupCollection) (GroupCollection, error)) GroupCollectionPage {
+	return GroupCollectionPage{fn: getNextPage}
+}
+
 // GroupContract developer group.
 type GroupContract struct {
 	autorest.Response `json:"-"`
-	// ID - Uniquely identifies the group within the current API Management service instance. The value is a valid relative URL in the format of /groups/{groupid} where {groupid} is a group identifier.
+	// ID - Uniquely identifies the group within the current API Management service instance. The value is a valid relative URL in the format of /groups/{groupId} where {groupId} is a group identifier.
 	ID *string `json:"id,omitempty"`
 	// Name - Group name.
 	Name *string `json:"name,omitempty"`
@@ -1905,6 +1955,11 @@ func (iter LoggerCollectionIterator) Value() LoggerResponse {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the LoggerCollectionIterator type.
+func NewLoggerCollectionIterator(page LoggerCollectionPage) LoggerCollectionIterator {
+	return LoggerCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (lc LoggerCollection) IsEmpty() bool {
 	return lc.Value == nil || len(*lc.Value) == 0
@@ -1972,6 +2027,11 @@ func (page LoggerCollectionPage) Values() []LoggerResponse {
 		return nil
 	}
 	return *page.lc.Value
+}
+
+// Creates a new instance of the LoggerCollectionPage type.
+func NewLoggerCollectionPage(getNextPage func(context.Context, LoggerCollection) (LoggerCollection, error)) LoggerCollectionPage {
+	return LoggerCollectionPage{fn: getNextPage}
 }
 
 // LoggerCreateParameters parameters supplied to the Create Logger operation.
@@ -2234,6 +2294,11 @@ func (iter OpenIDConnectProviderCollectionIterator) Value() OpenidConnectProvide
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the OpenIDConnectProviderCollectionIterator type.
+func NewOpenIDConnectProviderCollectionIterator(page OpenIDConnectProviderCollectionPage) OpenIDConnectProviderCollectionIterator {
+	return OpenIDConnectProviderCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (oicpc OpenIDConnectProviderCollection) IsEmpty() bool {
 	return oicpc.Value == nil || len(*oicpc.Value) == 0
@@ -2301,6 +2366,11 @@ func (page OpenIDConnectProviderCollectionPage) Values() []OpenidConnectProvider
 		return nil
 	}
 	return *page.oicpc.Value
+}
+
+// Creates a new instance of the OpenIDConnectProviderCollectionPage type.
+func NewOpenIDConnectProviderCollectionPage(getNextPage func(context.Context, OpenIDConnectProviderCollection) (OpenIDConnectProviderCollection, error)) OpenIDConnectProviderCollectionPage {
+	return OpenIDConnectProviderCollectionPage{fn: getNextPage}
 }
 
 // OpenidConnectProviderContract openID Connect Providers Contract.
@@ -2425,6 +2495,11 @@ func (iter OperationCollectionIterator) Value() OperationContract {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the OperationCollectionIterator type.
+func NewOperationCollectionIterator(page OperationCollectionPage) OperationCollectionIterator {
+	return OperationCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (oc OperationCollection) IsEmpty() bool {
 	return oc.Value == nil || len(*oc.Value) == 0
@@ -2492,6 +2567,11 @@ func (page OperationCollectionPage) Values() []OperationContract {
 		return nil
 	}
 	return *page.oc.Value
+}
+
+// Creates a new instance of the OperationCollectionPage type.
+func NewOperationCollectionPage(getNextPage func(context.Context, OperationCollection) (OperationCollection, error)) OperationCollectionPage {
+	return OperationCollectionPage{fn: getNextPage}
 }
 
 // OperationContract api Operation details.
@@ -2607,6 +2687,11 @@ func (iter OperationListResultIterator) Value() Operation {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the OperationListResultIterator type.
+func NewOperationListResultIterator(page OperationListResultPage) OperationListResultIterator {
+	return OperationListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (olr OperationListResult) IsEmpty() bool {
 	return olr.Value == nil || len(*olr.Value) == 0
@@ -2674,6 +2759,11 @@ func (page OperationListResultPage) Values() []Operation {
 		return nil
 	}
 	return *page.olr.Value
+}
+
+// Creates a new instance of the OperationListResultPage type.
+func NewOperationListResultPage(getNextPage func(context.Context, OperationListResult) (OperationListResult, error)) OperationListResultPage {
+	return OperationListResultPage{fn: getNextPage}
 }
 
 // OperationResultContract operation Result.
@@ -2816,6 +2906,11 @@ func (iter ProductCollectionIterator) Value() ProductContract {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ProductCollectionIterator type.
+func NewProductCollectionIterator(page ProductCollectionPage) ProductCollectionIterator {
+	return ProductCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (pc ProductCollection) IsEmpty() bool {
 	return pc.Value == nil || len(*pc.Value) == 0
@@ -2883,6 +2978,11 @@ func (page ProductCollectionPage) Values() []ProductContract {
 		return nil
 	}
 	return *page.pc.Value
+}
+
+// Creates a new instance of the ProductCollectionPage type.
+func NewProductCollectionPage(getNextPage func(context.Context, ProductCollection) (ProductCollection, error)) ProductCollectionPage {
+	return ProductCollectionPage{fn: getNextPage}
 }
 
 // ProductContract product profile.
@@ -2993,6 +3093,11 @@ func (iter PropertyCollectionIterator) Value() PropertyContract {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the PropertyCollectionIterator type.
+func NewPropertyCollectionIterator(page PropertyCollectionPage) PropertyCollectionIterator {
+	return PropertyCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (pc PropertyCollection) IsEmpty() bool {
 	return pc.Value == nil || len(*pc.Value) == 0
@@ -3060,6 +3165,11 @@ func (page PropertyCollectionPage) Values() []PropertyContract {
 		return nil
 	}
 	return *page.pc.Value
+}
+
+// Creates a new instance of the PropertyCollectionPage type.
+func NewPropertyCollectionPage(getNextPage func(context.Context, PropertyCollection) (PropertyCollection, error)) PropertyCollectionPage {
+	return PropertyCollectionPage{fn: getNextPage}
 }
 
 // PropertyContract property details.
@@ -3227,6 +3337,11 @@ func (iter ReportCollectionIterator) Value() ReportRecordContract {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ReportCollectionIterator type.
+func NewReportCollectionIterator(page ReportCollectionPage) ReportCollectionIterator {
+	return ReportCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (rc ReportCollection) IsEmpty() bool {
 	return rc.Value == nil || len(*rc.Value) == 0
@@ -3296,13 +3411,18 @@ func (page ReportCollectionPage) Values() []ReportRecordContract {
 	return *page.rc.Value
 }
 
+// Creates a new instance of the ReportCollectionPage type.
+func NewReportCollectionPage(getNextPage func(context.Context, ReportCollection) (ReportCollection, error)) ReportCollectionPage {
+	return ReportCollectionPage{fn: getNextPage}
+}
+
 // ReportRecordContract report data.
 type ReportRecordContract struct {
 	// Name - Name depending on report endpoint specifies product, API, operation or developer name.
 	Name *string `json:"name,omitempty"`
 	// Timestamp - Start of aggregation period. The date conforms to the following format: `yyyy-MM-ddTHH:mm:ssZ` as specified by the ISO 8601 standard.
 	Timestamp *date.Time `json:"timestamp,omitempty"`
-	// Interval - Length of agregation period.
+	// Interval - Length of aggregation period.
 	Interval *int64 `json:"interval,omitempty"`
 	// Country - Country to which this record data is related.
 	Country *string `json:"country,omitempty"`
@@ -3322,9 +3442,9 @@ type ReportRecordContract struct {
 	APIRegion *string `json:"apiRegion,omitempty"`
 	// SubscriptionID - Subscription identifier path. /subscriptions/{subscriptionId}
 	SubscriptionID *string `json:"subscriptionId,omitempty"`
-	// CallCountSuccess - Number of succesful calls. This includes calls returning HttpStatusCode <= 301 and HttpStatusCode.NotModified and HttpStatusCode.TemporaryRedirect
+	// CallCountSuccess - Number of successful calls. This includes calls returning HttpStatusCode <= 301 and HttpStatusCode.NotModified and HttpStatusCode.TemporaryRedirect
 	CallCountSuccess *int32 `json:"callCountSuccess,omitempty"`
-	// CallCountBlocked - Number of calls blocked due to invalid credentials. This includes calls returning HttpStatusCode.Unauthorize and HttpStatusCode.Forbidden and HttpStatusCode.TooManyRequests
+	// CallCountBlocked - Number of calls blocked due to invalid credentials. This includes calls returning HttpStatusCode.Unauthorized and HttpStatusCode.Forbidden and HttpStatusCode.TooManyRequests
 	CallCountBlocked *int32 `json:"callCountBlocked,omitempty"`
 	// CallCountFailed - Number of calls failed due to proxy or backend errors. This includes calls returning HttpStatusCode.BadRequest(400) and any Code between HttpStatusCode.InternalServerError (500) and 600
 	CallCountFailed *int32 `json:"callCountFailed,omitempty"`
@@ -3518,6 +3638,11 @@ func (iter ServiceListResultIterator) Value() ServiceResource {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ServiceListResultIterator type.
+func NewServiceListResultIterator(page ServiceListResultPage) ServiceListResultIterator {
+	return ServiceListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (slr ServiceListResult) IsEmpty() bool {
 	return slr.Value == nil || len(*slr.Value) == 0
@@ -3587,6 +3712,11 @@ func (page ServiceListResultPage) Values() []ServiceResource {
 	return *page.slr.Value
 }
 
+// Creates a new instance of the ServiceListResultPage type.
+func NewServiceListResultPage(getNextPage func(context.Context, ServiceListResult) (ServiceListResult, error)) ServiceListResultPage {
+	return ServiceListResultPage{fn: getNextPage}
+}
+
 // ServiceManageDeploymentsParameters parameters supplied to the ManageDeployments operation.
 type ServiceManageDeploymentsParameters struct {
 	// Location - Location of the API Management service Azure data center.
@@ -3599,7 +3729,7 @@ type ServiceManageDeploymentsParameters struct {
 	AdditionalLocations *[]AdditionalRegion `json:"additionalLocations,omitempty"`
 	// VpnConfiguration - Virtual network configuration.
 	VpnConfiguration *VirtualNetworkConfiguration `json:"vpnConfiguration,omitempty"`
-	// VpnType - The type of VPN in which API Managemet service needs to be configured in. None (Default Value) means the API Management service is not part of any Virtual Network, External means the API Management deployment is set up inside a Virtual Network having an Internet Facing Endpoint, and Internal means that the API Management service deployment is set up inside a Virtual Network having an Intranet Facing Endpoint only. When vpnConfiguration is specified, vpnType must be specified. Possible values include: 'VirtualNetworkTypeNone', 'VirtualNetworkTypeExternal', 'VirtualNetworkTypeInternal'
+	// VpnType - The type of VPN in which API Management service needs to be configured in. None (Default Value) means the API Management service is not part of any Virtual Network, External means the API Management deployment is set up inside a Virtual Network having an Internet Facing Endpoint, and Internal means that the API Management service deployment is set up inside a Virtual Network having an Intranet Facing Endpoint only. When vpnConfiguration is specified, vpnType must be specified. Possible values include: 'VirtualNetworkTypeNone', 'VirtualNetworkTypeExternal', 'VirtualNetworkTypeInternal'
 	VpnType VirtualNetworkType `json:"vpnType,omitempty"`
 }
 
@@ -3646,7 +3776,7 @@ type ServiceProperties struct {
 	AdditionalLocations *[]AdditionalRegion `json:"additionalLocations,omitempty"`
 	// CustomProperties - Custom properties of the API Management service, like disabling TLS 1.0.
 	CustomProperties map[string]*string `json:"customProperties"`
-	// VpnType - The type of VPN in which API Managemet service needs to be configured in. None (Default Value) means the API Management service is not part of any Virtual Network, External means the API Management deployment is set up inside a Virtual Network having an Internet Facing Endpoint, and Internal means that API Management deployment is setup inside a Virtual Network having an Intranet Facing Endpoint only. Possible values include: 'VirtualNetworkTypeNone', 'VirtualNetworkTypeExternal', 'VirtualNetworkTypeInternal'
+	// VpnType - The type of VPN in which API Management service needs to be configured in. None (Default Value) means the API Management service is not part of any Virtual Network, External means the API Management deployment is set up inside a Virtual Network having an Internet Facing Endpoint, and Internal means that API Management deployment is setup inside a Virtual Network having an Intranet Facing Endpoint only. Possible values include: 'VirtualNetworkTypeNone', 'VirtualNetworkTypeExternal', 'VirtualNetworkTypeInternal'
 	VpnType VirtualNetworkType `json:"vpnType,omitempty"`
 }
 
@@ -4179,6 +4309,11 @@ func (iter SubscriptionCollectionIterator) Value() SubscriptionContract {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the SubscriptionCollectionIterator type.
+func NewSubscriptionCollectionIterator(page SubscriptionCollectionPage) SubscriptionCollectionIterator {
+	return SubscriptionCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (sc SubscriptionCollection) IsEmpty() bool {
 	return sc.Value == nil || len(*sc.Value) == 0
@@ -4248,6 +4383,11 @@ func (page SubscriptionCollectionPage) Values() []SubscriptionContract {
 	return *page.sc.Value
 }
 
+// Creates a new instance of the SubscriptionCollectionPage type.
+func NewSubscriptionCollectionPage(getNextPage func(context.Context, SubscriptionCollection) (SubscriptionCollection, error)) SubscriptionCollectionPage {
+	return SubscriptionCollectionPage{fn: getNextPage}
+}
+
 // SubscriptionContract subscription details.
 type SubscriptionContract struct {
 	autorest.Response `json:"-"`
@@ -4283,7 +4423,7 @@ type SubscriptionContract struct {
 type SubscriptionCreateParameters struct {
 	// UserID - User (user id path) for whom subscription is being created in form /users/{uid}
 	UserID *string `json:"userId,omitempty"`
-	// ProductID - Product (product id path) for which subscription is being created in form /products/{productid}
+	// ProductID - Product (product id path) for which subscription is being created in form /products/{productId}
 	ProductID *string `json:"productId,omitempty"`
 	// Name - Subscription name.
 	Name *string `json:"name,omitempty"`
@@ -4506,6 +4646,11 @@ func (iter UserCollectionIterator) Value() UserContract {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the UserCollectionIterator type.
+func NewUserCollectionIterator(page UserCollectionPage) UserCollectionIterator {
+	return UserCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (uc UserCollection) IsEmpty() bool {
 	return uc.Value == nil || len(*uc.Value) == 0
@@ -4573,6 +4718,11 @@ func (page UserCollectionPage) Values() []UserContract {
 		return nil
 	}
 	return *page.uc.Value
+}
+
+// Creates a new instance of the UserCollectionPage type.
+func NewUserCollectionPage(getNextPage func(context.Context, UserCollection) (UserCollection, error)) UserCollectionPage {
+	return UserCollectionPage{fn: getNextPage}
 }
 
 // UserContract user profile.

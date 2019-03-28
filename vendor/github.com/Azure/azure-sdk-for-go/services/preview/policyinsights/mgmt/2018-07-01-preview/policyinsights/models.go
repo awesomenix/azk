@@ -65,6 +65,30 @@ type ErrorResponse struct {
 	Error *ErrorDefinition `json:"error,omitempty"`
 }
 
+// ExpressionEvaluationDetails evaluation details of policy language expressions.
+type ExpressionEvaluationDetails struct {
+	// Result - Evaluation result.
+	Result *string `json:"result,omitempty"`
+	// Expression - Expression evaluated.
+	Expression *string `json:"expression,omitempty"`
+	// Path - Property path if the expression is a field or an alias.
+	Path *string `json:"path,omitempty"`
+	// ExpressionValue - Value of the expression.
+	ExpressionValue *string `json:"expressionValue,omitempty"`
+	// TargetValue - Target value to be compared with the expression value.
+	TargetValue *string `json:"targetValue,omitempty"`
+	// Operator - Operator to compare the expression value and the target value.
+	Operator *string `json:"operator,omitempty"`
+}
+
+// IfNotExistsEvaluationDetails evaluation details of IfNotExists effect.
+type IfNotExistsEvaluationDetails struct {
+	// ResourceID - ID of the last evaluated resource for IfNotExists effect.
+	ResourceID *string `json:"resourceId,omitempty"`
+	// TotalResources - Total number of resources to which the existence condition is applicable.
+	TotalResources *int32 `json:"totalResources,omitempty"`
+}
+
 // Operation operation definition.
 type Operation struct {
 	// Name - Operation name.
@@ -134,6 +158,14 @@ type PolicyDetails struct {
 	PolicyDefinitionReferenceID *string `json:"policyDefinitionReferenceId,omitempty"`
 }
 
+// PolicyEvaluationDetails policy evaluation details.
+type PolicyEvaluationDetails struct {
+	// EvaluatedExpressions - Details of the evaluated expressions.
+	EvaluatedExpressions *[]ExpressionEvaluationDetails `json:"evaluatedExpressions,omitempty"`
+	// IfNotExistsDetails - Evaluation details of IfNotExists effect.
+	IfNotExistsDetails *IfNotExistsEvaluationDetails `json:"ifNotExistsDetails,omitempty"`
+}
+
 // PolicyEvent policy event record.
 type PolicyEvent struct {
 	// AdditionalProperties - Unmatched properties from the message are deserialized this collection
@@ -188,7 +220,7 @@ type PolicyEvent struct {
 	PolicySetDefinitionCategory *string `json:"policySetDefinitionCategory,omitempty"`
 	// PolicySetDefinitionParameters - Policy set definition parameters, if the policy assignment is for a policy set.
 	PolicySetDefinitionParameters *string `json:"policySetDefinitionParameters,omitempty"`
-	// ManagementGroupIds - Comma seperated list of management group IDs, which represent the hierarchy of the management groups the resource is under.
+	// ManagementGroupIds - Comma separated list of management group IDs, which represent the hierarchy of the management groups the resource is under.
 	ManagementGroupIds *string `json:"managementGroupIds,omitempty"`
 	// PolicyDefinitionReferenceID - Reference ID for the policy definition inside the policy set, if the policy assignment is for a policy set.
 	PolicyDefinitionReferenceID *string `json:"policyDefinitionReferenceId,omitempty"`
@@ -647,10 +679,14 @@ type PolicyState struct {
 	PolicySetDefinitionCategory *string `json:"policySetDefinitionCategory,omitempty"`
 	// PolicySetDefinitionParameters - Policy set definition parameters, if the policy assignment is for a policy set.
 	PolicySetDefinitionParameters *string `json:"policySetDefinitionParameters,omitempty"`
-	// ManagementGroupIds - Comma seperated list of management group IDs, which represent the hierarchy of the management groups the resource is under.
+	// ManagementGroupIds - Comma separated list of management group IDs, which represent the hierarchy of the management groups the resource is under.
 	ManagementGroupIds *string `json:"managementGroupIds,omitempty"`
 	// PolicyDefinitionReferenceID - Reference ID for the policy definition inside the policy set, if the policy assignment is for a policy set.
 	PolicyDefinitionReferenceID *string `json:"policyDefinitionReferenceId,omitempty"`
+	// ComplianceState - Compliance state of the resource.
+	ComplianceState *string `json:"complianceState,omitempty"`
+	// PolicyEvaluationDetails - Policy evaluation details.
+	PolicyEvaluationDetails *PolicyEvaluationDetails `json:"policyEvaluationDetails,omitempty"`
 }
 
 // MarshalJSON is the custom marshaler for PolicyState.
@@ -736,6 +772,12 @@ func (ps PolicyState) MarshalJSON() ([]byte, error) {
 	}
 	if ps.PolicyDefinitionReferenceID != nil {
 		objectMap["policyDefinitionReferenceId"] = ps.PolicyDefinitionReferenceID
+	}
+	if ps.ComplianceState != nil {
+		objectMap["complianceState"] = ps.ComplianceState
+	}
+	if ps.PolicyEvaluationDetails != nil {
+		objectMap["policyEvaluationDetails"] = ps.PolicyEvaluationDetails
 	}
 	for k, v := range ps.AdditionalProperties {
 		objectMap[k] = v
@@ -1007,6 +1049,24 @@ func (ps *PolicyState) UnmarshalJSON(body []byte) error {
 				}
 				ps.PolicyDefinitionReferenceID = &policyDefinitionReferenceID
 			}
+		case "complianceState":
+			if v != nil {
+				var complianceState string
+				err = json.Unmarshal(*v, &complianceState)
+				if err != nil {
+					return err
+				}
+				ps.ComplianceState = &complianceState
+			}
+		case "policyEvaluationDetails":
+			if v != nil {
+				var policyEvaluationDetails PolicyEvaluationDetails
+				err = json.Unmarshal(*v, &policyEvaluationDetails)
+				if err != nil {
+					return err
+				}
+				ps.PolicyEvaluationDetails = &policyEvaluationDetails
+			}
 		}
 	}
 
@@ -1106,6 +1166,11 @@ func (iter PolicyTrackedResourcesQueryResultsIterator) Value() PolicyTrackedReso
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the PolicyTrackedResourcesQueryResultsIterator type.
+func NewPolicyTrackedResourcesQueryResultsIterator(page PolicyTrackedResourcesQueryResultsPage) PolicyTrackedResourcesQueryResultsIterator {
+	return PolicyTrackedResourcesQueryResultsIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (ptrqr PolicyTrackedResourcesQueryResults) IsEmpty() bool {
 	return ptrqr.Value == nil || len(*ptrqr.Value) == 0
@@ -1173,6 +1238,11 @@ func (page PolicyTrackedResourcesQueryResultsPage) Values() []PolicyTrackedResou
 		return nil
 	}
 	return *page.ptrqr.Value
+}
+
+// Creates a new instance of the PolicyTrackedResourcesQueryResultsPage type.
+func NewPolicyTrackedResourcesQueryResultsPage(getNextPage func(context.Context, PolicyTrackedResourcesQueryResults) (PolicyTrackedResourcesQueryResults, error)) PolicyTrackedResourcesQueryResultsPage {
+	return PolicyTrackedResourcesQueryResultsPage{fn: getNextPage}
 }
 
 // QueryFailure error response.
@@ -1357,6 +1427,11 @@ func (iter RemediationDeploymentsListResultIterator) Value() RemediationDeployme
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the RemediationDeploymentsListResultIterator type.
+func NewRemediationDeploymentsListResultIterator(page RemediationDeploymentsListResultPage) RemediationDeploymentsListResultIterator {
+	return RemediationDeploymentsListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (rdlr RemediationDeploymentsListResult) IsEmpty() bool {
 	return rdlr.Value == nil || len(*rdlr.Value) == 0
@@ -1426,7 +1501,12 @@ func (page RemediationDeploymentsListResultPage) Values() []RemediationDeploymen
 	return *page.rdlr.Value
 }
 
-// RemediationDeploymentSummary the deployment status summary for all deplyoments created by the
+// Creates a new instance of the RemediationDeploymentsListResultPage type.
+func NewRemediationDeploymentsListResultPage(getNextPage func(context.Context, RemediationDeploymentsListResult) (RemediationDeploymentsListResult, error)) RemediationDeploymentsListResultPage {
+	return RemediationDeploymentsListResultPage{fn: getNextPage}
+}
+
+// RemediationDeploymentSummary the deployment status summary for all deployments created by the
 // remediation.
 type RemediationDeploymentSummary struct {
 	// TotalDeployments - The number of deployments required by the remediation.
@@ -1510,6 +1590,11 @@ func (iter RemediationListResultIterator) Value() Remediation {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the RemediationListResultIterator type.
+func NewRemediationListResultIterator(page RemediationListResultPage) RemediationListResultIterator {
+	return RemediationListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (rlr RemediationListResult) IsEmpty() bool {
 	return rlr.Value == nil || len(*rlr.Value) == 0
@@ -1579,6 +1664,11 @@ func (page RemediationListResultPage) Values() []Remediation {
 	return *page.rlr.Value
 }
 
+// Creates a new instance of the RemediationListResultPage type.
+func NewRemediationListResultPage(getNextPage func(context.Context, RemediationListResult) (RemediationListResult, error)) RemediationListResultPage {
+	return RemediationListResultPage{fn: getNextPage}
+}
+
 // RemediationProperties the remediation properties.
 type RemediationProperties struct {
 	// PolicyAssignmentID - The resource ID of the policy assignment that should be remediated.
@@ -1593,7 +1683,7 @@ type RemediationProperties struct {
 	LastUpdatedOn *date.Time `json:"lastUpdatedOn,omitempty"`
 	// Filters - The filters that will be applied to determine which resources to remediate.
 	Filters *RemediationFilters `json:"filters,omitempty"`
-	// DeploymentStatus - The deployment status summary for all deplyoments created by the remediation.
+	// DeploymentStatus - The deployment status summary for all deployments created by the remediation.
 	DeploymentStatus *RemediationDeploymentSummary `json:"deploymentStatus,omitempty"`
 }
 

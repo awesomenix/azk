@@ -164,7 +164,7 @@ type AgentPoolProfile struct {
 	VMSize VMSizeTypes `json:"vmSize,omitempty"`
 	// DNSPrefix - DNS prefix to be used to create the FQDN for the agent pool.
 	DNSPrefix *string `json:"dnsPrefix,omitempty"`
-	// Fqdn - FDQN for the agent pool.
+	// Fqdn - FQDN for the agent pool.
 	Fqdn *string `json:"fqdn,omitempty"`
 }
 
@@ -416,6 +416,11 @@ func (iter ListResultIterator) Value() ContainerService {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ListResultIterator type.
+func NewListResultIterator(page ListResultPage) ListResultIterator {
+	return ListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (lr ListResult) IsEmpty() bool {
 	return lr.Value == nil || len(*lr.Value) == 0
@@ -485,13 +490,18 @@ func (page ListResultPage) Values() []ContainerService {
 	return *page.lr.Value
 }
 
+// Creates a new instance of the ListResultPage type.
+func NewListResultPage(getNextPage func(context.Context, ListResult) (ListResult, error)) ListResultPage {
+	return ListResultPage{fn: getNextPage}
+}
+
 // MasterProfile profile for the container service master.
 type MasterProfile struct {
 	// Count - Number of masters (VMs) in the container service cluster. Allowed values are 1, 3, and 5. The default value is 1.
 	Count *int32 `json:"count,omitempty"`
 	// DNSPrefix - DNS prefix to be used to create the FQDN for master.
 	DNSPrefix *string `json:"dnsPrefix,omitempty"`
-	// Fqdn - FDQN for the master.
+	// Fqdn - FQDN for the master.
 	Fqdn *string `json:"fqdn,omitempty"`
 }
 

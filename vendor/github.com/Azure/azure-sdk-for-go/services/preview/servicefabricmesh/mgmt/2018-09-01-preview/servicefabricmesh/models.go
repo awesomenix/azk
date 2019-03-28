@@ -294,7 +294,7 @@ type ResourceStatus string
 const (
 	// Creating Indicates the resource is being created. The value is 3.
 	Creating ResourceStatus = "Creating"
-	// Deleting Indicates the resource is being deletd. The value is 4.
+	// Deleting Indicates the resource is being deleted. The value is 4.
 	Deleting ResourceStatus = "Deleting"
 	// Failed Indicates the resource is not functional due to persistent failures. See statusDetails property
 	// for more details. The value is 5.
@@ -602,6 +602,11 @@ func (iter ApplicationResourceDescriptionListIterator) Value() ApplicationResour
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ApplicationResourceDescriptionListIterator type.
+func NewApplicationResourceDescriptionListIterator(page ApplicationResourceDescriptionListPage) ApplicationResourceDescriptionListIterator {
+	return ApplicationResourceDescriptionListIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (ardl ApplicationResourceDescriptionList) IsEmpty() bool {
 	return ardl.Value == nil || len(*ardl.Value) == 0
@@ -669,6 +674,11 @@ func (page ApplicationResourceDescriptionListPage) Values() []ApplicationResourc
 		return nil
 	}
 	return *page.ardl.Value
+}
+
+// Creates a new instance of the ApplicationResourceDescriptionListPage type.
+func NewApplicationResourceDescriptionListPage(getNextPage func(context.Context, ApplicationResourceDescriptionList) (ApplicationResourceDescriptionList, error)) ApplicationResourceDescriptionListPage {
+	return ApplicationResourceDescriptionListPage{fn: getNextPage}
 }
 
 // ApplicationResourceProperties this type describes properties of an application resource.
@@ -1404,7 +1414,7 @@ type ContainerCodePackageProperties struct {
 	Volumes *[]ApplicationScopedVolume `json:"volumes,omitempty"`
 	// Diagnostics - Reference to sinks in DiagnosticsDescription.
 	Diagnostics *DiagnosticsRef `json:"diagnostics,omitempty"`
-	// ReliableCollectionsRefs - A list of ReliableCollection resources used by this particular code package. Please refer to ReliablecollectionsRef for more details.
+	// ReliableCollectionsRefs - A list of ReliableCollection resources used by this particular code package. Please refer to ReliableCollectionsRef for more details.
 	ReliableCollectionsRefs *[]ReliableCollectionsRef `json:"reliableCollectionsRefs,omitempty"`
 	// InstanceView - Runtime information of a container instance.
 	InstanceView *ContainerInstanceView `json:"instanceView,omitempty"`
@@ -1863,6 +1873,11 @@ func (iter GatewayResourceDescriptionListIterator) Value() GatewayResourceDescri
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the GatewayResourceDescriptionListIterator type.
+func NewGatewayResourceDescriptionListIterator(page GatewayResourceDescriptionListPage) GatewayResourceDescriptionListIterator {
+	return GatewayResourceDescriptionListIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (grdl GatewayResourceDescriptionList) IsEmpty() bool {
 	return grdl.Value == nil || len(*grdl.Value) == 0
@@ -1932,6 +1947,11 @@ func (page GatewayResourceDescriptionListPage) Values() []GatewayResourceDescrip
 	return *page.grdl.Value
 }
 
+// Creates a new instance of the GatewayResourceDescriptionListPage type.
+func NewGatewayResourceDescriptionListPage(getNextPage func(context.Context, GatewayResourceDescriptionList) (GatewayResourceDescriptionList, error)) GatewayResourceDescriptionListPage {
+	return GatewayResourceDescriptionListPage{fn: getNextPage}
+}
+
 // GatewayResourceProperties this type describes properties of a gateway resource.
 type GatewayResourceProperties struct {
 	// ProvisioningState - State of the resource.
@@ -1968,7 +1988,7 @@ type HTTPConfig struct {
 type HTTPHostConfig struct {
 	// Name - http hostname config name.
 	Name *string `json:"name,omitempty"`
-	// Routes - Route information to use for routing. Routes are processed in the order they are specified. Specify routes that are more specific before routes that can hamdle general cases.
+	// Routes - Route information to use for routing. Routes are processed in the order they are specified. Specify routes that are more specific before routes that can handle general cases.
 	Routes *[]HTTPRouteConfig `json:"routes,omitempty"`
 }
 
@@ -2351,6 +2371,11 @@ func (iter NetworkResourceDescriptionListIterator) Value() NetworkResourceDescri
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the NetworkResourceDescriptionListIterator type.
+func NewNetworkResourceDescriptionListIterator(page NetworkResourceDescriptionListPage) NetworkResourceDescriptionListIterator {
+	return NetworkResourceDescriptionListIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (nrdl NetworkResourceDescriptionList) IsEmpty() bool {
 	return nrdl.Value == nil || len(*nrdl.Value) == 0
@@ -2418,6 +2443,11 @@ func (page NetworkResourceDescriptionListPage) Values() []NetworkResourceDescrip
 		return nil
 	}
 	return *page.nrdl.Value
+}
+
+// Creates a new instance of the NetworkResourceDescriptionListPage type.
+func NewNetworkResourceDescriptionListPage(getNextPage func(context.Context, NetworkResourceDescriptionList) (NetworkResourceDescriptionList, error)) NetworkResourceDescriptionListPage {
+	return NetworkResourceDescriptionListPage{fn: getNextPage}
 }
 
 // BasicNetworkResourceProperties describes properties of a network resource.
@@ -2686,6 +2716,11 @@ func (iter OperationListResultIterator) Value() OperationResult {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the OperationListResultIterator type.
+func NewOperationListResultIterator(page OperationListResultPage) OperationListResultIterator {
+	return OperationListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (olr OperationListResult) IsEmpty() bool {
 	return olr.Value == nil || len(*olr.Value) == 0
@@ -2753,6 +2788,11 @@ func (page OperationListResultPage) Values() []OperationResult {
 		return nil
 	}
 	return *page.olr.Value
+}
+
+// Creates a new instance of the OperationListResultPage type.
+func NewOperationListResultPage(getNextPage func(context.Context, OperationListResult) (OperationListResult, error)) OperationListResultPage {
+	return OperationListResultPage{fn: getNextPage}
 }
 
 // OperationResult list of operations available at the listed Azure resource provider.
@@ -3005,6 +3045,11 @@ func (iter SecretResourceDescriptionListIterator) Value() SecretResourceDescript
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the SecretResourceDescriptionListIterator type.
+func NewSecretResourceDescriptionListIterator(page SecretResourceDescriptionListPage) SecretResourceDescriptionListIterator {
+	return SecretResourceDescriptionListIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (srdl SecretResourceDescriptionList) IsEmpty() bool {
 	return srdl.Value == nil || len(*srdl.Value) == 0
@@ -3072,6 +3117,11 @@ func (page SecretResourceDescriptionListPage) Values() []SecretResourceDescripti
 		return nil
 	}
 	return *page.srdl.Value
+}
+
+// Creates a new instance of the SecretResourceDescriptionListPage type.
+func NewSecretResourceDescriptionListPage(getNextPage func(context.Context, SecretResourceDescriptionList) (SecretResourceDescriptionList, error)) SecretResourceDescriptionListPage {
+	return SecretResourceDescriptionListPage{fn: getNextPage}
 }
 
 // BasicSecretResourceProperties describes the properties of a secret resource.
@@ -3403,7 +3453,7 @@ func (svrd *SecretValueResourceDescription) UnmarshalJSON(body []byte) error {
 }
 
 // SecretValueResourceDescriptionList a pageable list of values of a secret resource. The information does
-// not include only the name of the value and not the actual unecrypted value.
+// not include only the name of the value and not the actual unencrypted value.
 type SecretValueResourceDescriptionList struct {
 	autorest.Response `json:"-"`
 	// Value - One page of the list.
@@ -3469,6 +3519,11 @@ func (iter SecretValueResourceDescriptionListIterator) Value() SecretValueResour
 		return SecretValueResourceDescription{}
 	}
 	return iter.page.Values()[iter.i]
+}
+
+// Creates a new instance of the SecretValueResourceDescriptionListIterator type.
+func NewSecretValueResourceDescriptionListIterator(page SecretValueResourceDescriptionListPage) SecretValueResourceDescriptionListIterator {
+	return SecretValueResourceDescriptionListIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -3538,6 +3593,11 @@ func (page SecretValueResourceDescriptionListPage) Values() []SecretValueResourc
 		return nil
 	}
 	return *page.svrdl.Value
+}
+
+// Creates a new instance of the SecretValueResourceDescriptionListPage type.
+func NewSecretValueResourceDescriptionListPage(getNextPage func(context.Context, SecretValueResourceDescriptionList) (SecretValueResourceDescriptionList, error)) SecretValueResourceDescriptionListPage {
+	return SecretValueResourceDescriptionListPage{fn: getNextPage}
 }
 
 // SecretValueResourceProperties this type describes properties of a secret value resource.
@@ -3649,6 +3709,11 @@ func (iter ServiceReplicaDescriptionListIterator) Value() ServiceReplicaDescript
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ServiceReplicaDescriptionListIterator type.
+func NewServiceReplicaDescriptionListIterator(page ServiceReplicaDescriptionListPage) ServiceReplicaDescriptionListIterator {
+	return ServiceReplicaDescriptionListIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (srdl ServiceReplicaDescriptionList) IsEmpty() bool {
 	return srdl.Value == nil || len(*srdl.Value) == 0
@@ -3716,6 +3781,11 @@ func (page ServiceReplicaDescriptionListPage) Values() []ServiceReplicaDescripti
 		return nil
 	}
 	return *page.srdl.Value
+}
+
+// Creates a new instance of the ServiceReplicaDescriptionListPage type.
+func NewServiceReplicaDescriptionListPage(getNextPage func(context.Context, ServiceReplicaDescriptionList) (ServiceReplicaDescriptionList, error)) ServiceReplicaDescriptionListPage {
+	return ServiceReplicaDescriptionListPage{fn: getNextPage}
 }
 
 // ServiceReplicaProperties describes the properties of a service replica.
@@ -3880,6 +3950,11 @@ func (iter ServiceResourceDescriptionListIterator) Value() ServiceResourceDescri
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ServiceResourceDescriptionListIterator type.
+func NewServiceResourceDescriptionListIterator(page ServiceResourceDescriptionListPage) ServiceResourceDescriptionListIterator {
+	return ServiceResourceDescriptionListIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (srdl ServiceResourceDescriptionList) IsEmpty() bool {
 	return srdl.Value == nil || len(*srdl.Value) == 0
@@ -3947,6 +4022,11 @@ func (page ServiceResourceDescriptionListPage) Values() []ServiceResourceDescrip
 		return nil
 	}
 	return *page.srdl.Value
+}
+
+// Creates a new instance of the ServiceResourceDescriptionListPage type.
+func NewServiceResourceDescriptionListPage(getNextPage func(context.Context, ServiceResourceDescriptionList) (ServiceResourceDescriptionList, error)) ServiceResourceDescriptionListPage {
+	return ServiceResourceDescriptionListPage{fn: getNextPage}
 }
 
 // ServiceResourceProperties this type describes properties of a service resource.
@@ -4244,6 +4324,11 @@ func (iter VolumeResourceDescriptionListIterator) Value() VolumeResourceDescript
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the VolumeResourceDescriptionListIterator type.
+func NewVolumeResourceDescriptionListIterator(page VolumeResourceDescriptionListPage) VolumeResourceDescriptionListIterator {
+	return VolumeResourceDescriptionListIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (vrdl VolumeResourceDescriptionList) IsEmpty() bool {
 	return vrdl.Value == nil || len(*vrdl.Value) == 0
@@ -4311,6 +4396,11 @@ func (page VolumeResourceDescriptionListPage) Values() []VolumeResourceDescripti
 		return nil
 	}
 	return *page.vrdl.Value
+}
+
+// Creates a new instance of the VolumeResourceDescriptionListPage type.
+func NewVolumeResourceDescriptionListPage(getNextPage func(context.Context, VolumeResourceDescriptionList) (VolumeResourceDescriptionList, error)) VolumeResourceDescriptionListPage {
+	return VolumeResourceDescriptionListPage{fn: getNextPage}
 }
 
 // VolumeResourceProperties this type describes properties of a volume resource.

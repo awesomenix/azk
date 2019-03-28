@@ -336,6 +336,11 @@ func (iter OperationListResultIterator) Value() Operation {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the OperationListResultIterator type.
+func NewOperationListResultIterator(page OperationListResultPage) OperationListResultIterator {
+	return OperationListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (olr OperationListResult) IsEmpty() bool {
 	return olr.Value == nil || len(*olr.Value) == 0
@@ -403,6 +408,11 @@ func (page OperationListResultPage) Values() []Operation {
 		return nil
 	}
 	return *page.olr.Value
+}
+
+// Creates a new instance of the OperationListResultPage type.
+func NewOperationListResultPage(getNextPage func(context.Context, OperationListResult) (OperationListResult, error)) OperationListResultPage {
+	return OperationListResultPage{fn: getNextPage}
 }
 
 // Query ...
@@ -625,7 +635,7 @@ type ReportConfigAggregation struct {
 
 // ReportConfigComparisonExpression the comparison expression to be used in the report.
 type ReportConfigComparisonExpression struct {
-	// Name - The name of the column to use in comaprison.
+	// Name - The name of the column to use in comparison.
 	Name *string `json:"name,omitempty"`
 	// Operator - The operator to use for comparison.
 	Operator *string `json:"operator,omitempty"`
@@ -639,9 +649,9 @@ type ReportConfigDataset struct {
 	Granularity GranularityType `json:"granularity,omitempty"`
 	// Configuration - Has configuration information for the data in the report. The configuration will be ignored if aggregation and grouping are provided.
 	Configuration *ReportConfigDatasetConfiguration `json:"configuration,omitempty"`
-	// Aggregation - Dictionary of aggregation expression to use in the report. The key of each item in the dictionary is the alias for the aggregated column. Report can have upto 2 aggregation clauses.
+	// Aggregation - Dictionary of aggregation expression to use in the report. The key of each item in the dictionary is the alias for the aggregated column. Report can have up to 2 aggregation clauses.
 	Aggregation map[string]*ReportConfigAggregation `json:"aggregation"`
-	// Grouping - Array of group by expression to use in the report. Report can have upto 2 group by clauses.
+	// Grouping - Array of group by expression to use in the report. Report can have up to 2 group by clauses.
 	Grouping *[]ReportConfigGrouping `json:"grouping,omitempty"`
 	// Filter - Has filter expression to use in the report.
 	Filter *ReportConfigFilter `json:"filter,omitempty"`
@@ -704,9 +714,9 @@ type ReportConfigDeliveryInfo struct {
 
 // ReportConfigFilter the filter expression to be used in the report.
 type ReportConfigFilter struct {
-	// And - The logical "AND" expression. Must have atleast 2 items.
+	// And - The logical "AND" expression. Must have at least 2 items.
 	And *[]ReportConfigFilter `json:"and,omitempty"`
-	// Or - The logical "OR" expression. Must have atleast 2 items.
+	// Or - The logical "OR" expression. Must have at least 2 items.
 	Or *[]ReportConfigFilter `json:"or,omitempty"`
 	// Not - The logical "NOT" expression.
 	Not *ReportConfigFilter `json:"not,omitempty"`

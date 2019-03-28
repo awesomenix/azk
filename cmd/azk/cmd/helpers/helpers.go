@@ -50,7 +50,8 @@ func KubectlApply(manifestPath, kubeconfig string) error {
 }
 
 func KubectlApplyFolder(folder string, kubeconfig string, fs http.FileSystem) error {
-	tmpAssetsDir := "/tmp/azk-assets/" + folder
+	const azkAssetDir = "/tmp/azk-assets/"
+	tmpAssetsDir := azkAssetDir + folder
 	defer os.RemoveAll(tmpAssetsDir)
 
 	f, err := fs.Open(folder)
@@ -79,7 +80,7 @@ func KubectlApplyFolder(folder string, kubeconfig string, fs http.FileSystem) er
 				return err
 			}
 			os.MkdirAll(tmpAssetsDir, os.ModePerm)
-			fileName := tmpAssetsDir + "/" + assetFileName
+			fileName := azkAssetDir + "/" + assetFileName
 			err = ioutil.WriteFile(fileName, bytes, 0644)
 			if err != nil {
 				log.Error(err, "Failed to write file", "File", fileName)

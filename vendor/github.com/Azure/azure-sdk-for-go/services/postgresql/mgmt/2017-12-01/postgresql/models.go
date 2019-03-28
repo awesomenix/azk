@@ -1383,6 +1383,29 @@ func (spfr ServerPropertiesForRestore) AsBasicServerPropertiesForCreate() (Basic
 	return &spfr, true
 }
 
+// ServerRestartFuture an abstraction for monitoring and retrieving the results of a long-running
+// operation.
+type ServerRestartFuture struct {
+	azure.Future
+}
+
+// Result returns the result of the asynchronous operation.
+// If the operation has not completed it will return an error.
+func (future *ServerRestartFuture) Result(client ServerClient) (ar autorest.Response, err error) {
+	var done bool
+	done, err = future.Done(client)
+	if err != nil {
+		err = autorest.NewErrorWithError(err, "postgresql.ServerRestartFuture", "Result", future.Response(), "Polling failure")
+		return
+	}
+	if !done {
+		err = azure.NewAsyncOpIncompleteError("postgresql.ServerRestartFuture")
+		return
+	}
+	ar.Response = future.Response()
+	return
+}
+
 // ServersCreateFuture an abstraction for monitoring and retrieving the results of a long-running
 // operation.
 type ServersCreateFuture struct {
@@ -1575,7 +1598,7 @@ func (future *ServersUpdateFuture) Result(client ServersClient) (s Server, err e
 	return
 }
 
-// ServerUpdateParameters parameters allowd to update for a server.
+// ServerUpdateParameters parameters allowed to update for a server.
 type ServerUpdateParameters struct {
 	// Sku - The SKU (pricing tier) of the server.
 	Sku *Sku `json:"sku,omitempty"`
@@ -1862,6 +1885,11 @@ func (iter VirtualNetworkRuleListResultIterator) Value() VirtualNetworkRule {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the VirtualNetworkRuleListResultIterator type.
+func NewVirtualNetworkRuleListResultIterator(page VirtualNetworkRuleListResultPage) VirtualNetworkRuleListResultIterator {
+	return VirtualNetworkRuleListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (vnrlr VirtualNetworkRuleListResult) IsEmpty() bool {
 	return vnrlr.Value == nil || len(*vnrlr.Value) == 0
@@ -1929,6 +1957,11 @@ func (page VirtualNetworkRuleListResultPage) Values() []VirtualNetworkRule {
 		return nil
 	}
 	return *page.vnrlr.Value
+}
+
+// Creates a new instance of the VirtualNetworkRuleListResultPage type.
+func NewVirtualNetworkRuleListResultPage(getNextPage func(context.Context, VirtualNetworkRuleListResult) (VirtualNetworkRuleListResult, error)) VirtualNetworkRuleListResultPage {
+	return VirtualNetworkRuleListResultPage{fn: getNextPage}
 }
 
 // VirtualNetworkRuleProperties properties of a virtual network rule.

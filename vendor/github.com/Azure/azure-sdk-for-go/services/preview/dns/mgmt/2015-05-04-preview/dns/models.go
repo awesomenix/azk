@@ -232,6 +232,11 @@ func (iter RecordSetListResultIterator) Value() RecordSet {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the RecordSetListResultIterator type.
+func NewRecordSetListResultIterator(page RecordSetListResultPage) RecordSetListResultIterator {
+	return RecordSetListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (rslr RecordSetListResult) IsEmpty() bool {
 	return rslr.Value == nil || len(*rslr.Value) == 0
@@ -301,6 +306,11 @@ func (page RecordSetListResultPage) Values() []RecordSet {
 	return *page.rslr.Value
 }
 
+// Creates a new instance of the RecordSetListResultPage type.
+func NewRecordSetListResultPage(getNextPage func(context.Context, RecordSetListResult) (RecordSetListResult, error)) RecordSetListResultPage {
+	return RecordSetListResultPage{fn: getNextPage}
+}
+
 // RecordSetProperties represents the properties of the records in the RecordSet.
 type RecordSetProperties struct {
 	// TTL - Gets or sets the TTL of the records in the RecordSet.
@@ -337,7 +347,7 @@ type Resource struct {
 
 // SoaRecord an SOA record.
 type SoaRecord struct {
-	// Host - Gets or sets the domain name of the authoritative name server, without a temrinating dot.
+	// Host - Gets or sets the domain name of the authoritative name server, without a terminating dot.
 	Host *string `json:"host,omitempty"`
 	// Email - Gets or sets the email for this record.
 	Email *string `json:"email,omitempty"`
@@ -357,7 +367,7 @@ type SoaRecord struct {
 type SrvRecord struct {
 	// Priority - Gets or sets the priority metric for this record.
 	Priority *int32 `json:"priority,omitempty"`
-	// Weight - Gets or sets the weight metric for this this record.
+	// Weight - Gets or sets the weight metric for this record.
 	Weight *int32 `json:"weight,omitempty"`
 	// Port - Gets or sets the port of the service for this record.
 	Port *int32 `json:"port,omitempty"`
@@ -525,6 +535,11 @@ func (iter ZoneListResultIterator) Value() Zone {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ZoneListResultIterator type.
+func NewZoneListResultIterator(page ZoneListResultPage) ZoneListResultIterator {
+	return ZoneListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (zlr ZoneListResult) IsEmpty() bool {
 	return zlr.Value == nil || len(*zlr.Value) == 0
@@ -592,6 +607,11 @@ func (page ZoneListResultPage) Values() []Zone {
 		return nil
 	}
 	return *page.zlr.Value
+}
+
+// Creates a new instance of the ZoneListResultPage type.
+func NewZoneListResultPage(getNextPage func(context.Context, ZoneListResult) (ZoneListResult, error)) ZoneListResultPage {
+	return ZoneListResultPage{fn: getNextPage}
 }
 
 // ZoneProperties represents the properties of the zone.

@@ -343,6 +343,11 @@ func (iter OperationListIterator) Value() Operation {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the OperationListIterator type.
+func NewOperationListIterator(page OperationListPage) OperationListIterator {
+	return OperationListIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (ol OperationList) IsEmpty() bool {
 	return ol.Value == nil || len(*ol.Value) == 0
@@ -412,6 +417,11 @@ func (page OperationListPage) Values() []Operation {
 	return *page.ol.Value
 }
 
+// Creates a new instance of the OperationListPage type.
+func NewOperationListPage(getNextPage func(context.Context, OperationList) (OperationList, error)) OperationListPage {
+	return OperationListPage{fn: getNextPage}
+}
+
 // OperationProperties extra Operation properties.
 type OperationProperties struct {
 	// ServiceSpecification - The service specifications.
@@ -477,7 +487,7 @@ type RegenerateKeyParameters struct {
 type Resource struct {
 	// ID - Fully qualified resource Id for the resource.
 	ID *string `json:"id,omitempty"`
-	// Name - The name of the resouce.
+	// Name - The name of the resource.
 	Name *string `json:"name,omitempty"`
 	// Type - The type of the service - e.g. "Microsoft.SignalRService/SignalR"
 	Type *string `json:"type,omitempty"`
@@ -551,6 +561,11 @@ func (iter ResourceListIterator) Value() ResourceType {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ResourceListIterator type.
+func NewResourceListIterator(page ResourceListPage) ResourceListIterator {
+	return ResourceListIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (rl ResourceList) IsEmpty() bool {
 	return rl.Value == nil || len(*rl.Value) == 0
@@ -620,6 +635,11 @@ func (page ResourceListPage) Values() []ResourceType {
 	return *page.rl.Value
 }
 
+// Creates a new instance of the ResourceListPage type.
+func NewResourceListPage(getNextPage func(context.Context, ResourceList) (ResourceList, error)) ResourceListPage {
+	return ResourceListPage{fn: getNextPage}
+}
+
 // ResourceSku the billing information of the resource.(e.g. basic vs. standard)
 type ResourceSku struct {
 	// Name - The name of the SKU. This is typically a letter + number code, such as A0 or P3.  Required (if sku is specified)
@@ -648,7 +668,7 @@ type ResourceType struct {
 	Tags map[string]*string `json:"tags"`
 	// ID - Fully qualified resource Id for the resource.
 	ID *string `json:"id,omitempty"`
-	// Name - The name of the resouce.
+	// Name - The name of the resource.
 	Name *string `json:"name,omitempty"`
 	// Type - The type of the service - e.g. "Microsoft.SignalRService/SignalR"
 	Type *string `json:"type,omitempty"`
@@ -773,7 +793,7 @@ type TrackedResource struct {
 	Tags map[string]*string `json:"tags"`
 	// ID - Fully qualified resource Id for the resource.
 	ID *string `json:"id,omitempty"`
-	// Name - The name of the resouce.
+	// Name - The name of the resource.
 	Name *string `json:"name,omitempty"`
 	// Type - The type of the service - e.g. "Microsoft.SignalRService/SignalR"
 	Type *string `json:"type,omitempty"`
@@ -935,6 +955,11 @@ func (iter UsageListIterator) Value() Usage {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the UsageListIterator type.
+func NewUsageListIterator(page UsageListPage) UsageListIterator {
+	return UsageListIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (ul UsageList) IsEmpty() bool {
 	return ul.Value == nil || len(*ul.Value) == 0
@@ -1004,9 +1029,14 @@ func (page UsageListPage) Values() []Usage {
 	return *page.ul.Value
 }
 
+// Creates a new instance of the UsageListPage type.
+func NewUsageListPage(getNextPage func(context.Context, UsageList) (UsageList, error)) UsageListPage {
+	return UsageListPage{fn: getNextPage}
+}
+
 // UsageName localizable String object containing the name and a localized value.
 type UsageName struct {
-	// Value - The indentifier of the usage.
+	// Value - The identifier of the usage.
 	Value *string `json:"value,omitempty"`
 	// LocalizedValue - Localized name of the usage.
 	LocalizedValue *string `json:"localizedValue,omitempty"`

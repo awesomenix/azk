@@ -152,13 +152,13 @@ func PossibleCertificateStoreLocationValues() []CertificateStoreLocation {
 type CertificateVisibility string
 
 const (
-	// CertificateVisibilityRemoteUser The certificate should be visibile to the user accounts under which
-	// users remotely access the node.
+	// CertificateVisibilityRemoteUser The certificate should be visible to the user accounts under which users
+	// remotely access the node.
 	CertificateVisibilityRemoteUser CertificateVisibility = "remoteuser"
 	// CertificateVisibilityStartTask The certificate should be visible to the user account under which the
 	// start task is run.
 	CertificateVisibilityStartTask CertificateVisibility = "starttask"
-	// CertificateVisibilityTask The certificate should be visibile to the user accounts under which job tasks
+	// CertificateVisibilityTask The certificate should be visible to the user accounts under which job tasks
 	// are run.
 	CertificateVisibilityTask CertificateVisibility = "task"
 )
@@ -272,7 +272,7 @@ const (
 	// Offline The node is not currently running a task, and scheduling of new tasks to the node is disabled.
 	Offline ComputeNodeState = "offline"
 	// Preempted The low-priority node has been preempted. Tasks which were running on the node when it was
-	// pre-empted will be rescheduled when another node becomes available.
+	// preempted will be rescheduled when another node becomes available.
 	Preempted ComputeNodeState = "preempted"
 	// Rebooting The node is rebooting.
 	Rebooting ComputeNodeState = "rebooting"
@@ -853,6 +853,11 @@ func (iter AccountListNodeAgentSkusResultIterator) Value() NodeAgentSku {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the AccountListNodeAgentSkusResultIterator type.
+func NewAccountListNodeAgentSkusResultIterator(page AccountListNodeAgentSkusResultPage) AccountListNodeAgentSkusResultIterator {
+	return AccountListNodeAgentSkusResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (alnasr AccountListNodeAgentSkusResult) IsEmpty() bool {
 	return alnasr.Value == nil || len(*alnasr.Value) == 0
@@ -920,6 +925,11 @@ func (page AccountListNodeAgentSkusResultPage) Values() []NodeAgentSku {
 		return nil
 	}
 	return *page.alnasr.Value
+}
+
+// Creates a new instance of the AccountListNodeAgentSkusResultPage type.
+func NewAccountListNodeAgentSkusResultPage(getNextPage func(context.Context, AccountListNodeAgentSkusResult) (AccountListNodeAgentSkusResult, error)) AccountListNodeAgentSkusResultPage {
+	return AccountListNodeAgentSkusResultPage{fn: getNextPage}
 }
 
 // AffinityInformation ...
@@ -993,6 +1003,11 @@ func (iter ApplicationListResultIterator) Value() ApplicationSummary {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ApplicationListResultIterator type.
+func NewApplicationListResultIterator(page ApplicationListResultPage) ApplicationListResultIterator {
+	return ApplicationListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (alr ApplicationListResult) IsEmpty() bool {
 	return alr.Value == nil || len(*alr.Value) == 0
@@ -1060,6 +1075,11 @@ func (page ApplicationListResultPage) Values() []ApplicationSummary {
 		return nil
 	}
 	return *page.alr.Value
+}
+
+// Creates a new instance of the ApplicationListResultPage type.
+func NewApplicationListResultPage(getNextPage func(context.Context, ApplicationListResult) (ApplicationListResult, error)) ApplicationListResultPage {
+	return ApplicationListResultPage{fn: getNextPage}
 }
 
 // ApplicationPackageReference ...
@@ -1213,6 +1233,11 @@ func (iter CertificateListResultIterator) Value() Certificate {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the CertificateListResultIterator type.
+func NewCertificateListResultIterator(page CertificateListResultPage) CertificateListResultIterator {
+	return CertificateListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (clr CertificateListResult) IsEmpty() bool {
 	return clr.Value == nil || len(*clr.Value) == 0
@@ -1280,6 +1305,11 @@ func (page CertificateListResultPage) Values() []Certificate {
 		return nil
 	}
 	return *page.clr.Value
+}
+
+// Creates a new instance of the CertificateListResultPage type.
+func NewCertificateListResultPage(getNextPage func(context.Context, CertificateListResult) (CertificateListResult, error)) CertificateListResultPage {
+	return CertificateListResultPage{fn: getNextPage}
 }
 
 // CertificateReference ...
@@ -1401,6 +1431,11 @@ func (iter CloudJobListPreparationAndReleaseTaskStatusResultIterator) Value() Jo
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the CloudJobListPreparationAndReleaseTaskStatusResultIterator type.
+func NewCloudJobListPreparationAndReleaseTaskStatusResultIterator(page CloudJobListPreparationAndReleaseTaskStatusResultPage) CloudJobListPreparationAndReleaseTaskStatusResultIterator {
+	return CloudJobListPreparationAndReleaseTaskStatusResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (cjlpartsr CloudJobListPreparationAndReleaseTaskStatusResult) IsEmpty() bool {
 	return cjlpartsr.Value == nil || len(*cjlpartsr.Value) == 0
@@ -1471,6 +1506,11 @@ func (page CloudJobListPreparationAndReleaseTaskStatusResultPage) Values() []Job
 	return *page.cjlpartsr.Value
 }
 
+// Creates a new instance of the CloudJobListPreparationAndReleaseTaskStatusResultPage type.
+func NewCloudJobListPreparationAndReleaseTaskStatusResultPage(getNextPage func(context.Context, CloudJobListPreparationAndReleaseTaskStatusResult) (CloudJobListPreparationAndReleaseTaskStatusResult, error)) CloudJobListPreparationAndReleaseTaskStatusResultPage {
+	return CloudJobListPreparationAndReleaseTaskStatusResultPage{fn: getNextPage}
+}
+
 // CloudJobListResult ...
 type CloudJobListResult struct {
 	autorest.Response `json:"-"`
@@ -1534,6 +1574,11 @@ func (iter CloudJobListResultIterator) Value() CloudJob {
 		return CloudJob{}
 	}
 	return iter.page.Values()[iter.i]
+}
+
+// Creates a new instance of the CloudJobListResultIterator type.
+func NewCloudJobListResultIterator(page CloudJobListResultPage) CloudJobListResultIterator {
+	return CloudJobListResultIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -1603,6 +1648,11 @@ func (page CloudJobListResultPage) Values() []CloudJob {
 		return nil
 	}
 	return *page.cjlr.Value
+}
+
+// Creates a new instance of the CloudJobListResultPage type.
+func NewCloudJobListResultPage(getNextPage func(context.Context, CloudJobListResult) (CloudJobListResult, error)) CloudJobListResultPage {
+	return CloudJobListResultPage{fn: getNextPage}
 }
 
 // CloudJobSchedule ...
@@ -1696,6 +1746,11 @@ func (iter CloudJobScheduleListResultIterator) Value() CloudJobSchedule {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the CloudJobScheduleListResultIterator type.
+func NewCloudJobScheduleListResultIterator(page CloudJobScheduleListResultPage) CloudJobScheduleListResultIterator {
+	return CloudJobScheduleListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (cjslr CloudJobScheduleListResult) IsEmpty() bool {
 	return cjslr.Value == nil || len(*cjslr.Value) == 0
@@ -1763,6 +1818,11 @@ func (page CloudJobScheduleListResultPage) Values() []CloudJobSchedule {
 		return nil
 	}
 	return *page.cjslr.Value
+}
+
+// Creates a new instance of the CloudJobScheduleListResultPage type.
+func NewCloudJobScheduleListResultPage(getNextPage func(context.Context, CloudJobScheduleListResult) (CloudJobScheduleListResult, error)) CloudJobScheduleListResultPage {
+	return CloudJobScheduleListResultPage{fn: getNextPage}
 }
 
 // CloudPool ...
@@ -1888,6 +1948,11 @@ func (iter CloudPoolListResultIterator) Value() CloudPool {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the CloudPoolListResultIterator type.
+func NewCloudPoolListResultIterator(page CloudPoolListResultPage) CloudPoolListResultIterator {
+	return CloudPoolListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (cplr CloudPoolListResult) IsEmpty() bool {
 	return cplr.Value == nil || len(*cplr.Value) == 0
@@ -1955,6 +2020,11 @@ func (page CloudPoolListResultPage) Values() []CloudPool {
 		return nil
 	}
 	return *page.cplr.Value
+}
+
+// Creates a new instance of the CloudPoolListResultPage type.
+func NewCloudPoolListResultPage(getNextPage func(context.Context, CloudPoolListResult) (CloudPoolListResult, error)) CloudPoolListResultPage {
+	return CloudPoolListResultPage{fn: getNextPage}
 }
 
 // CloudServiceConfiguration ...
@@ -2084,6 +2154,11 @@ func (iter CloudTaskListResultIterator) Value() CloudTask {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the CloudTaskListResultIterator type.
+func NewCloudTaskListResultIterator(page CloudTaskListResultPage) CloudTaskListResultIterator {
+	return CloudTaskListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (ctlr CloudTaskListResult) IsEmpty() bool {
 	return ctlr.Value == nil || len(*ctlr.Value) == 0
@@ -2153,6 +2228,11 @@ func (page CloudTaskListResultPage) Values() []CloudTask {
 	return *page.ctlr.Value
 }
 
+// Creates a new instance of the CloudTaskListResultPage type.
+func NewCloudTaskListResultPage(getNextPage func(context.Context, CloudTaskListResult) (CloudTaskListResult, error)) CloudTaskListResultPage {
+	return CloudTaskListResultPage{fn: getNextPage}
+}
+
 // CloudTaskListSubtasksResult ...
 type CloudTaskListSubtasksResult struct {
 	autorest.Response `json:"-"`
@@ -2165,7 +2245,7 @@ type ComputeNode struct {
 	// ID - Every node that is added to a pool is assigned a unique ID. Whenever a node is removed from a pool, all of its local files are deleted, and the ID is reclaimed and could be reused for new nodes.
 	ID  *string `json:"id,omitempty"`
 	URL *string `json:"url,omitempty"`
-	// State - The low-priority node has been preempted. Tasks which were running on the node when it was pre-empted will be rescheduled when another node becomes available. Possible values include: 'Idle', 'Rebooting', 'Reimaging', 'Running', 'Unusable', 'Creating', 'Starting', 'WaitingForStartTask', 'StartTaskFailed', 'Unknown', 'LeavingPool', 'Offline', 'Preempted'
+	// State - The low-priority node has been preempted. Tasks which were running on the node when it was preempted will be rescheduled when another node becomes available. Possible values include: 'Idle', 'Rebooting', 'Reimaging', 'Running', 'Unusable', 'Creating', 'Starting', 'WaitingForStartTask', 'StartTaskFailed', 'Unknown', 'LeavingPool', 'Offline', 'Preempted'
 	State ComputeNodeState `json:"state,omitempty"`
 	// SchedulingState - Possible values include: 'Enabled', 'Disabled'
 	SchedulingState     SchedulingState `json:"schedulingState,omitempty"`
@@ -2287,6 +2367,11 @@ func (iter ComputeNodeListResultIterator) Value() ComputeNode {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ComputeNodeListResultIterator type.
+func NewComputeNodeListResultIterator(page ComputeNodeListResultPage) ComputeNodeListResultIterator {
+	return ComputeNodeListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (cnlr ComputeNodeListResult) IsEmpty() bool {
 	return cnlr.Value == nil || len(*cnlr.Value) == 0
@@ -2354,6 +2439,11 @@ func (page ComputeNodeListResultPage) Values() []ComputeNode {
 		return nil
 	}
 	return *page.cnlr.Value
+}
+
+// Creates a new instance of the ComputeNodeListResultPage type.
+func NewComputeNodeListResultPage(getNextPage func(context.Context, ComputeNodeListResult) (ComputeNodeListResult, error)) ComputeNodeListResultPage {
+	return ComputeNodeListResultPage{fn: getNextPage}
 }
 
 // ComputeNodeUser ...
@@ -2450,13 +2540,13 @@ type ExitConditions struct {
 	PreProcessingError *ExitOptions            `json:"preProcessingError,omitempty"`
 	// FileUploadError - If the task exited with an exit code that was specified via exitCodes or exitCodeRanges, and then encountered a file upload error, then the action specified by the exit code takes precedence.
 	FileUploadError *ExitOptions `json:"fileUploadError,omitempty"`
-	// Default - This value is used if the task exits with any nonzero exit code not listed in the exitCodes or exitCodeRanges collection, with a pre-processing error if the preProcessingError property is not present, or with a file upload error if the fileUploadError property is not present. If you want non-default behaviour on exit code 0, you must list it explicitly using the exitCodes or exitCodeRanges collection.
+	// Default - This value is used if the task exits with any nonzero exit code not listed in the exitCodes or exitCodeRanges collection, with a pre-processing error if the preProcessingError property is not present, or with a file upload error if the fileUploadError property is not present. If you want non-default behavior on exit code 0, you must list it explicitly using the exitCodes or exitCodeRanges collection.
 	Default *ExitOptions `json:"default,omitempty"`
 }
 
 // ExitOptions ...
 type ExitOptions struct {
-	// JobAction - The default is none for exit code 0 and terminate for all other exit conditions. If the job's onTaskFailed property is noaction, then specifying this property returns an error and the add task request fails with an invalid property value error; if you are calling the REST API directly, the HTTP status code is 400 (Bad Request). Possible values include: 'JobActionNone', 'JobActionDisable', 'JobActionTerminate'
+	// JobAction - The default is none for exit code 0 and terminate for all other exit conditions. If the job's onTaskFailed property is noAction, then specifying this property returns an error and the add task request fails with an invalid property value error; if you are calling the REST API directly, the HTTP status code is 400 (Bad Request). Possible values include: 'JobActionNone', 'JobActionDisable', 'JobActionTerminate'
 	JobAction JobAction `json:"jobAction,omitempty"`
 	// DependencyAction - The default is 'satisfy' for exit code 0, and 'block' for all other exit conditions. If the job's usesTaskDependencies property is set to false, then specifying the dependencyAction property returns an error and the add task request fails with an invalid property value error; if you are calling the REST API directly, the HTTP status code is 400  (Bad Request). Possible values include: 'Satisfy', 'Block'
 	DependencyAction DependencyAction `json:"dependencyAction,omitempty"`
@@ -2673,7 +2763,7 @@ type JobPreparationTask struct {
 	Constraints         *TaskConstraints      `json:"constraints,omitempty"`
 	// WaitForSuccess - If true and the Job Preparation task fails on a compute node, the Batch service retries the Job Preparation task up to its maximum retry count (as specified in the constraints element). If the task has still not completed successfully after all retries, then the Batch service will not schedule tasks of the job to the compute node. The compute node remains active and eligible to run tasks of other jobs. If false, the Batch service will not wait for the Job Preparation task to complete. In this case, other tasks of the job can start executing on the compute node while the Job Preparation task is still running; and even if the Job Preparation task fails, new tasks will continue to be scheduled on the node. The default value is true.
 	WaitForSuccess *bool `json:"waitForSuccess,omitempty"`
-	// UserIdentity - If omitted, the task runs as a non-administrative user unique to the task on Windows nodes, or a a non-administrative user unique to the pool on Linux nodes.
+	// UserIdentity - If omitted, the task runs as a non-administrative user unique to the task on Windows nodes, or a non-administrative user unique to the pool on Linux nodes.
 	UserIdentity *UserIdentity `json:"userIdentity,omitempty"`
 	// RerunOnNodeRebootAfterSuccess - The Job Preparation task is always rerun if a compute node is reimaged, or if the Job Preparation task did not complete (e.g. because the reboot occurred while the task was running). Therefore, you should always write a Job Preparation task to be idempotent and to behave correctly if run multiple times. The default value is true.
 	RerunOnNodeRebootAfterSuccess *bool `json:"rerunOnNodeRebootAfterSuccess,omitempty"`
@@ -3049,6 +3139,11 @@ func (iter NodeFileListResultIterator) Value() NodeFile {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the NodeFileListResultIterator type.
+func NewNodeFileListResultIterator(page NodeFileListResultPage) NodeFileListResultIterator {
+	return NodeFileListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (nflr NodeFileListResult) IsEmpty() bool {
 	return nflr.Value == nil || len(*nflr.Value) == 0
@@ -3116,6 +3211,11 @@ func (page NodeFileListResultPage) Values() []NodeFile {
 		return nil
 	}
 	return *page.nflr.Value
+}
+
+// Creates a new instance of the NodeFileListResultPage type.
+func NewNodeFileListResultPage(getNextPage func(context.Context, NodeFileListResult) (NodeFileListResult, error)) NodeFileListResultPage {
+	return NodeFileListResultPage{fn: getNextPage}
 }
 
 // NodeRebootParameter ...
@@ -3317,6 +3417,11 @@ func (iter PoolListUsageMetricsResultIterator) Value() PoolUsageMetrics {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the PoolListUsageMetricsResultIterator type.
+func NewPoolListUsageMetricsResultIterator(page PoolListUsageMetricsResultPage) PoolListUsageMetricsResultIterator {
+	return PoolListUsageMetricsResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (plumr PoolListUsageMetricsResult) IsEmpty() bool {
 	return plumr.Value == nil || len(*plumr.Value) == 0
@@ -3384,6 +3489,11 @@ func (page PoolListUsageMetricsResultPage) Values() []PoolUsageMetrics {
 		return nil
 	}
 	return *page.plumr.Value
+}
+
+// Creates a new instance of the PoolListUsageMetricsResultPage type.
+func NewPoolListUsageMetricsResultPage(getNextPage func(context.Context, PoolListUsageMetricsResult) (PoolListUsageMetricsResult, error)) PoolListUsageMetricsResultPage {
+	return PoolListUsageMetricsResultPage{fn: getNextPage}
 }
 
 // PoolNodeCounts ...
@@ -3459,6 +3569,11 @@ func (iter PoolNodeCountsListResultIterator) Value() PoolNodeCounts {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the PoolNodeCountsListResultIterator type.
+func NewPoolNodeCountsListResultIterator(page PoolNodeCountsListResultPage) PoolNodeCountsListResultIterator {
+	return PoolNodeCountsListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (pnclr PoolNodeCountsListResult) IsEmpty() bool {
 	return pnclr.Value == nil || len(*pnclr.Value) == 0
@@ -3526,6 +3641,11 @@ func (page PoolNodeCountsListResultPage) Values() []PoolNodeCounts {
 		return nil
 	}
 	return *page.pnclr.Value
+}
+
+// Creates a new instance of the PoolNodeCountsListResultPage type.
+func NewPoolNodeCountsListResultPage(getNextPage func(context.Context, PoolNodeCountsListResult) (PoolNodeCountsListResult, error)) PoolNodeCountsListResultPage {
+	return PoolNodeCountsListResultPage{fn: getNextPage}
 }
 
 // PoolPatchParameter ...

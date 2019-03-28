@@ -238,14 +238,14 @@ type ErrorMesssage struct {
 	Details *string `json:"details,omitempty"`
 }
 
-// IotDpsPropertiesDescription the service specific properties of a provisoning service, including keys,
+// IotDpsPropertiesDescription the service specific properties of a provisioning service, including keys,
 // linked iot hubs, current state, and system generated properties such as hostname and idScope
 type IotDpsPropertiesDescription struct {
 	// State - Current state of the provisioning service. Possible values include: 'Activating', 'Active', 'Deleting', 'Deleted', 'ActivationFailed', 'DeletionFailed', 'Transitioning', 'Suspending', 'Suspended', 'Resuming', 'FailingOver', 'FailoverFailed'
 	State State `json:"state,omitempty"`
 	// ProvisioningState - The ARM provisioning state of the provisioning service.
 	ProvisioningState *string `json:"provisioningState,omitempty"`
-	// IotHubs - List of IoT hubs assosciated with this provisioning service.
+	// IotHubs - List of IoT hubs associated with this provisioning service.
 	IotHubs *[]DefinitionDescription `json:"iotHubs,omitempty"`
 	// AllocationPolicy - Allocation policy to be used by this provisioning service. Possible values include: 'Hashed', 'GeoLatency', 'Static'
 	AllocationPolicy AllocationPolicy `json:"allocationPolicy,omitempty"`
@@ -340,7 +340,7 @@ func (future *IotDpsResourceUpdateFuture) Result(client IotDpsResourceClient) (p
 	return
 }
 
-// IotDpsSkuDefinition available SKU's of tier and units.
+// IotDpsSkuDefinition available SKUs of tier and units.
 type IotDpsSkuDefinition struct {
 	// Name - SKU name. Possible values include: 'S1'
 	Name IotDpsSku `json:"name,omitempty"`
@@ -349,7 +349,7 @@ type IotDpsSkuDefinition struct {
 // IotDpsSkuDefinitionListResult list of available SKUs.
 type IotDpsSkuDefinitionListResult struct {
 	autorest.Response `json:"-"`
-	// Value - The list of SKU's
+	// Value - The list of SKUs
 	Value *[]IotDpsSkuDefinition `json:"value,omitempty"`
 	// NextLink - The next link.
 	NextLink *string `json:"nextLink,omitempty"`
@@ -412,6 +412,11 @@ func (iter IotDpsSkuDefinitionListResultIterator) Value() IotDpsSkuDefinition {
 		return IotDpsSkuDefinition{}
 	}
 	return iter.page.Values()[iter.i]
+}
+
+// Creates a new instance of the IotDpsSkuDefinitionListResultIterator type.
+func NewIotDpsSkuDefinitionListResultIterator(page IotDpsSkuDefinitionListResultPage) IotDpsSkuDefinitionListResultIterator {
+	return IotDpsSkuDefinitionListResultIterator{page: page}
 }
 
 // IsEmpty returns true if the ListResult contains no values.
@@ -483,7 +488,12 @@ func (page IotDpsSkuDefinitionListResultPage) Values() []IotDpsSkuDefinition {
 	return *page.idsdlr.Value
 }
 
-// IotDpsSkuInfo list of possible provisoning service SKUs.
+// Creates a new instance of the IotDpsSkuDefinitionListResultPage type.
+func NewIotDpsSkuDefinitionListResultPage(getNextPage func(context.Context, IotDpsSkuDefinitionListResult) (IotDpsSkuDefinitionListResult, error)) IotDpsSkuDefinitionListResultPage {
+	return IotDpsSkuDefinitionListResultPage{fn: getNextPage}
+}
+
+// IotDpsSkuInfo list of possible provisioning service SKUs.
 type IotDpsSkuInfo struct {
 	// Name - Sku name. Possible values include: 'S1'
 	Name IotDpsSku `json:"name,omitempty"`
@@ -500,7 +510,7 @@ type NameAvailabilityInfo struct {
 	NameAvailable *bool `json:"nameAvailable,omitempty"`
 	// Reason - specifies the reason a name is unavailable. Possible values include: 'Invalid', 'AlreadyExists'
 	Reason NameUnavailabilityReason `json:"reason,omitempty"`
-	// Message - message containing a etailed reason name is unavailable
+	// Message - message containing a detailed reason name is unavailable
 	Message *string `json:"message,omitempty"`
 }
 
@@ -596,6 +606,11 @@ func (iter OperationListResultIterator) Value() Operation {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the OperationListResultIterator type.
+func NewOperationListResultIterator(page OperationListResultPage) OperationListResultIterator {
+	return OperationListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (olr OperationListResult) IsEmpty() bool {
 	return olr.Value == nil || len(*olr.Value) == 0
@@ -663,6 +678,11 @@ func (page OperationListResultPage) Values() []Operation {
 		return nil
 	}
 	return *page.olr.Value
+}
+
+// Creates a new instance of the OperationListResultPage type.
+func NewOperationListResultPage(getNextPage func(context.Context, OperationListResult) (OperationListResult, error)) OperationListResultPage {
+	return OperationListResultPage{fn: getNextPage}
 }
 
 // ProvisioningServiceDescription the description of the provisioning service.
@@ -784,6 +804,11 @@ func (iter ProvisioningServiceDescriptionListResultIterator) Value() Provisionin
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ProvisioningServiceDescriptionListResultIterator type.
+func NewProvisioningServiceDescriptionListResultIterator(page ProvisioningServiceDescriptionListResultPage) ProvisioningServiceDescriptionListResultIterator {
+	return ProvisioningServiceDescriptionListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (psdlr ProvisioningServiceDescriptionListResult) IsEmpty() bool {
 	return psdlr.Value == nil || len(*psdlr.Value) == 0
@@ -851,6 +876,11 @@ func (page ProvisioningServiceDescriptionListResultPage) Values() []Provisioning
 		return nil
 	}
 	return *page.psdlr.Value
+}
+
+// Creates a new instance of the ProvisioningServiceDescriptionListResultPage type.
+func NewProvisioningServiceDescriptionListResultPage(getNextPage func(context.Context, ProvisioningServiceDescriptionListResult) (ProvisioningServiceDescriptionListResult, error)) ProvisioningServiceDescriptionListResultPage {
+	return ProvisioningServiceDescriptionListResultPage{fn: getNextPage}
 }
 
 // Resource the common properties of an Azure resource.
@@ -969,6 +999,11 @@ func (iter SharedAccessSignatureAuthorizationRuleListResultIterator) Value() Sha
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the SharedAccessSignatureAuthorizationRuleListResultIterator type.
+func NewSharedAccessSignatureAuthorizationRuleListResultIterator(page SharedAccessSignatureAuthorizationRuleListResultPage) SharedAccessSignatureAuthorizationRuleListResultIterator {
+	return SharedAccessSignatureAuthorizationRuleListResultIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (sasarlr SharedAccessSignatureAuthorizationRuleListResult) IsEmpty() bool {
 	return sasarlr.Value == nil || len(*sasarlr.Value) == 0
@@ -1037,6 +1072,11 @@ func (page SharedAccessSignatureAuthorizationRuleListResultPage) Values() []Shar
 		return nil
 	}
 	return *page.sasarlr.Value
+}
+
+// Creates a new instance of the SharedAccessSignatureAuthorizationRuleListResultPage type.
+func NewSharedAccessSignatureAuthorizationRuleListResultPage(getNextPage func(context.Context, SharedAccessSignatureAuthorizationRuleListResult) (SharedAccessSignatureAuthorizationRuleListResult, error)) SharedAccessSignatureAuthorizationRuleListResultPage {
+	return SharedAccessSignatureAuthorizationRuleListResultPage{fn: getNextPage}
 }
 
 // TagsResource a container holding only the Tags for a resource, allowing the user to update the tags on a

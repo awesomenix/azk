@@ -42,16 +42,16 @@ vet:
 generate:
 	go get -u github.com/shurcooL/vfsgen/cmd/vfsgendev
 	go generate ./pkg/... ./cmd/...
+	kustomize build config/default > config/deployment/azk-deployment.yaml
 	go generate -tags dev ./assets/...
 	go generate -tags dev ./assets/addons/...
-	kustomize build config/default > config/deployment/azk-deployment.yaml
 
 # Build the docker image
 docker-build: test
 	docker build . -t ${IMG}
 
 # Push the docker image
-docker-push: docker-build
+docker-push:
 	docker push ${IMG}
 
 release:

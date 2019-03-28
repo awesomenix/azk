@@ -18,22 +18,20 @@
   version = "v0.2.0"
 
 [[projects]]
-  digest = "1:3f6d6cffe85ab27ff5df04f6ba64717d9609f8490ea5cee46b8dbdf70c9d5d4e"
+  digest = "1:d2df62243d39abdd4c2aed6caebd8423771a71d0196aa878473c0cb590111c69"
   name = "github.com/Azure/azure-sdk-for-go"
   packages = [
     "profiles/latest/compute/mgmt/compute",
     "profiles/preview/preview/subscription/mgmt/subscription",
-    "services/compute/mgmt/2018-04-01/compute",
     "services/compute/mgmt/2018-10-01/compute",
-    "services/network/mgmt/2018-01-01/network",
+    "services/network/mgmt/2018-12-01/network",
     "services/preview/subscription/mgmt/2018-03-01-preview/subscription",
-    "services/resources/mgmt/2017-05-10/resources",
     "services/resources/mgmt/2018-05-01/resources",
     "version",
   ]
   pruneopts = "T"
-  revision = "9699bdefa481d47c5c7638a1cc05d87ce53601fd"
-  version = "v22.2.2"
+  revision = "f0ff339f1297d3374fc36bcbfc7d1bbba045d992"
+  version = "v26.7.0"
 
 [[projects]]
   branch = "master"
@@ -126,6 +124,14 @@
   packages = ["quantile"]
   pruneopts = "T"
   revision = "3a771d992973f24aa725d07868b467d1ddfceafb"
+
+[[projects]]
+  digest = "1:76c2e7829a529425078ded6db0e72fcb26d9f555fd98a916989629c378a5f9f8"
+  name = "github.com/blang/semver"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "2ee87856327ba09384cabd113bc6b5d174e9ec0f"
+  version = "v3.5.1"
 
 [[projects]]
   digest = "1:13a2e65a8efedb67233c27afd523f4ce00cb8602dba83193e5c6a37d706716a2"
@@ -229,12 +235,12 @@
   version = "v2.9.0"
 
 [[projects]]
-  digest = "1:90171b862cb6ec187304a593e4d78bfcbcf0f4394870eb66e0eb62cc06b144ad"
+  digest = "1:75c3d1e7907ed7a800afd0569783a99a2b6421b634c404565de537b224826703"
   name = "github.com/evanphx/json-patch"
   packages = ["."]
   pruneopts = "T"
-  revision = "72bf35d0ff611848c1dc9df0f976c81192392fa5"
-  version = "v4.1.0"
+  revision = "afac545df32f2287a079e2dfb7ba2745a643747e"
+  version = "v3.0.0"
 
 [[projects]]
   branch = "master"
@@ -1130,7 +1136,7 @@
   version = "v2.2.2"
 
 [[projects]]
-  digest = "1:b84a6534f40032bc9c7aa97b3c577306e3d97b9a7752f285abb29bf15b4fcf9b"
+  digest = "1:a361d526b77e9f68ba9f5d6f2f24e58e00d87f837b1d4cfc977047a37a7522cf"
   name = "k8s.io/api"
   packages = [
     "admission/v1beta1",
@@ -1169,11 +1175,11 @@
     "storage/v1beta1",
   ]
   pruneopts = "T"
-  revision = "74b699b93c15473932b89e3d1818ba8282f3b5ab"
-  version = "kubernetes-1.13.3"
+  revision = "5cb15d34447165a97c76ed5a60e4e99c8a01ecfe"
+  version = "kubernetes-1.13.5"
 
 [[projects]]
-  digest = "1:33786f45cdfd217b9beff0a5da5751d3cf81ca64d53dae6771543e83f423e4f0"
+  digest = "1:3ffb40da648cab1795da29295604aef4575862d57973278104937d1cd40b5a5f"
   name = "k8s.io/apiextensions-apiserver"
   packages = [
     "pkg/apis/apiextensions",
@@ -1184,11 +1190,11 @@
     "pkg/features",
   ]
   pruneopts = "T"
-  revision = "d4288ab6494571219e781fa423db363247635942"
-  version = "kubernetes-1.13.3"
+  revision = "475668423e9f8feb5e3cc53f37bfeb1ce37f2ce5"
+  version = "kubernetes-1.13.5"
 
 [[projects]]
-  digest = "1:a7b151b4238f885a02d292c665ce15407429d748619a9c5f29078f63db0b1f78"
+  digest = "1:82717527f44f2cb9a2a784a427a7ab9bd7f883848bdfabcf70bef8e300b69fa5"
   name = "k8s.io/apimachinery"
   packages = [
     "pkg/api/equality",
@@ -1246,22 +1252,22 @@
     "third_party/forked/golang/reflect",
   ]
   pruneopts = "T"
-  revision = "572dfc7bdfcb4531361a17d27b92851f59acf0dc"
-  version = "kubernetes-1.13.3"
+  revision = "86fb29eff6288413d76bd8506874fddd9fccdff0"
+  version = "kubernetes-1.13.5"
 
 [[projects]]
-  digest = "1:da776dfd04fb719e79285f6a2db89376af1482a280e84a278c62360cffdd9c32"
+  digest = "1:ac347a16998a3c13df6b3fcdb332d56606dc9b81193980855d39dca545eb6018"
   name = "k8s.io/apiserver"
   packages = [
     "pkg/features",
     "pkg/util/feature",
   ]
   pruneopts = "T"
-  revision = "26bc712632e1faf9efc6b63f712325c760ad1ebe"
-  version = "kubernetes-1.13.3"
+  revision = "a4358799e4fec459cf9babfca7c5acf3eed2cef8"
+  version = "kubernetes-1.13.5"
 
 [[projects]]
-  digest = "1:21452b586b4fd1ff0e4df211c097ecd1fd7bad8a4c76165b04a21884cd0f941e"
+  digest = "1:a3eb68ed310fd35bafa300ce6944eabb16c942644d7b2e4b6ef4ca1df259d0a9"
   name = "k8s.io/cli-runtime"
   packages = [
     "pkg/genericclioptions",
@@ -1269,11 +1275,11 @@
     "pkg/genericclioptions/resource",
   ]
   pruneopts = "T"
-  revision = "491c94071cfae3b539753adf65705d8a333fb92b"
-  version = "kubernetes-1.13.3"
+  revision = "f2b4781c3ae1e55b0657ab4fa0c8b702282d018f"
+  version = "kubernetes-1.13.5"
 
 [[projects]]
-  digest = "1:aed3bb8785aec725a564291f79abf365c5ba013e41c7c38c9287fb7d69e9affd"
+  digest = "1:2f627a97480c9cf291aabc20649c564cf26b2c666116a2e9a17d10c3aea4eae8"
   name = "k8s.io/client-go"
   packages = [
     "discovery",
@@ -1393,8 +1399,8 @@
     "util/workqueue",
   ]
   pruneopts = "T"
-  revision = "6e4752048fde21176ab35eb54ec1117359830d8a"
-  version = "kubernetes-1.13.3"
+  revision = "7621a5ebb88b1e49ce7e7837ae8e99ca030a3c13"
+  version = "kubernetes-1.13.5"
 
 [[projects]]
   branch = "master"
@@ -1425,7 +1431,7 @@
   ]
   pruneopts = "T"
   revision = "c2090bec4d9b1fb25de3812f868accc2bc9ecbae"
-  version = "kubernetes-1.13.3"
+  version = "kubernetes-1.13.5"
 
 [[projects]]
   branch = "master"
@@ -1463,7 +1469,7 @@
   revision = "aa8624f5a2df0ffbc1e8f4c9f37a2ad5cfcba13b"
 
 [[projects]]
-  digest = "1:7efe1fa6e975ed7e44d545966348883d10ddc6335ca7793d940947049f2910ae"
+  digest = "1:9e0807262494c15e39c4ab431530243bf6b9af774ec6dd724835c680253f8dce"
   name = "k8s.io/kubernetes"
   packages = [
     "cmd/kubeadm/app/apis/kubeadm",
@@ -1524,8 +1530,8 @@
     "pkg/version",
   ]
   pruneopts = "T"
-  revision = "721bfa751924da8d1680787490c54b9179b1fed0"
-  version = "v1.13.3"
+  revision = "2166946f41b36dea2c4626f90a77706f426cdea2"
+  version = "v1.13.5"
 
 [[projects]]
   branch = "master"
@@ -1625,16 +1631,15 @@
   input-imports = [
     "github.com/Azure/azure-sdk-for-go/profiles/latest/compute/mgmt/compute",
     "github.com/Azure/azure-sdk-for-go/profiles/preview/preview/subscription/mgmt/subscription",
-    "github.com/Azure/azure-sdk-for-go/services/compute/mgmt/2018-04-01/compute",
     "github.com/Azure/azure-sdk-for-go/services/compute/mgmt/2018-10-01/compute",
-    "github.com/Azure/azure-sdk-for-go/services/network/mgmt/2018-01-01/network",
-    "github.com/Azure/azure-sdk-for-go/services/resources/mgmt/2017-05-10/resources",
+    "github.com/Azure/azure-sdk-for-go/services/network/mgmt/2018-12-01/network",
     "github.com/Azure/azure-sdk-for-go/services/resources/mgmt/2018-05-01/resources",
     "github.com/Azure/go-autorest/autorest",
     "github.com/Azure/go-autorest/autorest/adal",
     "github.com/Azure/go-autorest/autorest/azure",
     "github.com/Azure/go-autorest/autorest/to",
     "github.com/Masterminds/semver",
+    "github.com/blang/semver",
     "github.com/briandowns/spinner",
     "github.com/emicklei/go-restful",
     "github.com/manifoldco/promptui",

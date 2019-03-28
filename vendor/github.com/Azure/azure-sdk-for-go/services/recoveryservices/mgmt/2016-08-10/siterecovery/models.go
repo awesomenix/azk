@@ -1970,6 +1970,11 @@ func (iter AlertCollectionIterator) Value() Alert {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the AlertCollectionIterator type.
+func NewAlertCollectionIterator(page AlertCollectionPage) AlertCollectionIterator {
+	return AlertCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (ac AlertCollection) IsEmpty() bool {
 	return ac.Value == nil || len(*ac.Value) == 0
@@ -2039,7 +2044,12 @@ func (page AlertCollectionPage) Values() []Alert {
 	return *page.ac.Value
 }
 
-// AlertProperties the proprties of an alert.
+// Creates a new instance of the AlertCollectionPage type.
+func NewAlertCollectionPage(getNextPage func(context.Context, AlertCollection) (AlertCollection, error)) AlertCollectionPage {
+	return AlertCollectionPage{fn: getNextPage}
+}
+
+// AlertProperties the properties of an alert.
 type AlertProperties struct {
 	// SendToOwners - A value indicating whether to send email to subscription administrator.
 	SendToOwners *string `json:"sendToOwners,omitempty"`
@@ -2673,7 +2683,7 @@ func (afsd AzureFabricSpecificDetails) AsBasicFabricSpecificDetails() (BasicFabr
 	return &afsd, true
 }
 
-// AzureToAzureCreateNetworkMappingInput create network mappings input properties/behaviour specific to
+// AzureToAzureCreateNetworkMappingInput create network mappings input properties/behavior specific to
 // Azure to Azure Network mapping.
 type AzureToAzureCreateNetworkMappingInput struct {
 	// PrimaryNetworkID - The primary azure vnet Id.
@@ -2971,7 +2981,7 @@ type ConfigureAlertRequestProperties struct {
 }
 
 // ConsistencyCheckTaskDetails this class contains monitoring details of all the inconsistent Protected
-// Entites in Vmm.
+// Entities in Vmm.
 type ConsistencyCheckTaskDetails struct {
 	// VMDetails - The list of inconsistent Vm details.
 	VMDetails *[]InconsistentVMDetails `json:"vmDetails,omitempty"`
@@ -3213,7 +3223,7 @@ type CurrentScenarioDetails struct {
 	StartTime *date.Time `json:"startTime,omitempty"`
 }
 
-// DataStore the datastore details of the MT.
+// DataStore the data store details of the MT.
 type DataStore struct {
 	// SymbolicName - The symbolic name of data store.
 	SymbolicName *string `json:"symbolicName,omitempty"`
@@ -3363,7 +3373,7 @@ type DiscoverProtectableItemRequestProperties struct {
 	OsType *string `json:"osType,omitempty"`
 }
 
-// DiskDetails onprem disk details data.
+// DiskDetails on-prem disk details data.
 type DiskDetails struct {
 	// MaxSizeMB - The hard disk max size in MB.
 	MaxSizeMB *int64 `json:"maxSizeMB,omitempty"`
@@ -3660,6 +3670,11 @@ func (iter EventCollectionIterator) Value() Event {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the EventCollectionIterator type.
+func NewEventCollectionIterator(page EventCollectionPage) EventCollectionIterator {
+	return EventCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (ec EventCollection) IsEmpty() bool {
 	return ec.Value == nil || len(*ec.Value) == 0
@@ -3729,6 +3744,11 @@ func (page EventCollectionPage) Values() []Event {
 	return *page.ec.Value
 }
 
+// Creates a new instance of the EventCollectionPage type.
+func NewEventCollectionPage(getNextPage func(context.Context, EventCollection) (EventCollection, error)) EventCollectionPage {
+	return EventCollectionPage{fn: getNextPage}
+}
+
 // EventProperties the properties of a monitoring event.
 type EventProperties struct {
 	// EventCode - The Id of the monitoring event.
@@ -3741,7 +3761,7 @@ type EventProperties struct {
 	AffectedObjectFriendlyName *string `json:"affectedObjectFriendlyName,omitempty"`
 	// Severity - The severity of the event.
 	Severity *string `json:"severity,omitempty"`
-	// TimeOfOccurrence - The time of occurence of the event.
+	// TimeOfOccurrence - The time of occurrence of the event.
 	TimeOfOccurrence *date.Time `json:"timeOfOccurrence,omitempty"`
 	// FabricID - The ARM ID of the fabric.
 	FabricID *string `json:"fabricId,omitempty"`
@@ -4220,6 +4240,11 @@ func (iter FabricCollectionIterator) Value() Fabric {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the FabricCollectionIterator type.
+func NewFabricCollectionIterator(page FabricCollectionPage) FabricCollectionIterator {
+	return FabricCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (fc FabricCollection) IsEmpty() bool {
 	return fc.Value == nil || len(*fc.Value) == 0
@@ -4287,6 +4312,11 @@ func (page FabricCollectionPage) Values() []Fabric {
 		return nil
 	}
 	return *page.fc.Value
+}
+
+// Creates a new instance of the FabricCollectionPage type.
+func NewFabricCollectionPage(getNextPage func(context.Context, FabricCollection) (FabricCollection, error)) FabricCollectionPage {
+	return FabricCollectionPage{fn: getNextPage}
 }
 
 // FabricCreationInput site details provided during the time of site creation
@@ -7994,7 +8024,7 @@ type InMageAzureV2ReplicationDetails struct {
 	DiscoveryType *string `json:"discoveryType,omitempty"`
 	// EnableRDPOnTargetOption - The selected option to enable RDP\SSH on target vm after failover. String value of {SrsDataContract.EnableRDPOnTargetOption} enum.
 	EnableRDPOnTargetOption *string `json:"enableRDPOnTargetOption,omitempty"`
-	// Datastores - The datastores of the on-premise machine. Value can be list of strings that contain datastore names.
+	// Datastores - The data stores of the on-premise machine. Value can be list of strings that contain data store names.
 	Datastores *[]string `json:"datastores,omitempty"`
 	// TargetVMID - The ARM Id of the target Azure VM. This value will be null until the VM is failed over. Only after failure it will be populated with the ARM Id of the Azure VM.
 	TargetVMID *string `json:"targetVmId,omitempty"`
@@ -8534,7 +8564,7 @@ type InMageEnableProtectionInput struct {
 	MultiVMGroupID *string `json:"multiVmGroupId,omitempty"`
 	// MultiVMGroupName - The multi vm group name.
 	MultiVMGroupName *string `json:"multiVmGroupName,omitempty"`
-	// DatastoreName - The target datastore name.
+	// DatastoreName - The target data store name.
 	DatastoreName *string `json:"datastoreName,omitempty"`
 	// DiskExclusionInput - The enable disk exclusion input.
 	DiskExclusionInput *InMageDiskExclusionInput `json:"diskExclusionInput,omitempty"`
@@ -8955,7 +8985,7 @@ type InMageReplicationDetails struct {
 	DiscoveryType *string `json:"discoveryType,omitempty"`
 	// AzureStorageAccountID - A value indicating the underlying Azure storage account. If the VM is not running in Azure, this value shall be set to null.
 	AzureStorageAccountID *string `json:"azureStorageAccountId,omitempty"`
-	// Datastores - The datastores of the on-premise machine Value can be list of strings that contain datastore names
+	// Datastores - The data stores of the on-premise machine Value can be list of strings that contain data store names
 	Datastores *[]string `json:"datastores,omitempty"`
 	// ValidationErrors - The validation errors of the on-premise machine Value can be list of validation errors
 	ValidationErrors *[]HealthError `json:"validationErrors,omitempty"`
@@ -9147,7 +9177,7 @@ type InMageReprotectInput struct {
 	RetentionDrive *string `json:"retentionDrive,omitempty"`
 	// RunAsAccountID - The CS account Id.
 	RunAsAccountID *string `json:"runAsAccountId,omitempty"`
-	// DatastoreName - The target datastore name.
+	// DatastoreName - The target data store name.
 	DatastoreName *string `json:"datastoreName,omitempty"`
 	// DiskExclusionInput - The enable disk exclusion input.
 	DiskExclusionInput *InMageDiskExclusionInput `json:"diskExclusionInput,omitempty"`
@@ -9334,6 +9364,11 @@ func (iter JobCollectionIterator) Value() Job {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the JobCollectionIterator type.
+func NewJobCollectionIterator(page JobCollectionPage) JobCollectionIterator {
+	return JobCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (jc JobCollection) IsEmpty() bool {
 	return jc.Value == nil || len(*jc.Value) == 0
@@ -9401,6 +9436,11 @@ func (page JobCollectionPage) Values() []Job {
 		return nil
 	}
 	return *page.jc.Value
+}
+
+// Creates a new instance of the JobCollectionPage type.
+func NewJobCollectionPage(getNextPage func(context.Context, JobCollection) (JobCollection, error)) JobCollectionPage {
+	return JobCollectionPage{fn: getNextPage}
 }
 
 // BasicJobDetails job details based on specific job type.
@@ -9728,7 +9768,7 @@ func (jp *JobProperties) UnmarshalJSON(body []byte) error {
 type JobQueryParameter struct {
 	// StartTime - Date time to get jobs from.
 	StartTime *string `json:"startTime,omitempty"`
-	// EndTime - Date time to get jobs upto.
+	// EndTime - Date time to get jobs up to.
 	EndTime *string `json:"endTime,omitempty"`
 	// FabricID - The Id of the fabric to search jobs under.
 	FabricID *string `json:"fabricId,omitempty"`
@@ -9943,6 +9983,11 @@ func (iter LogicalNetworkCollectionIterator) Value() LogicalNetwork {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the LogicalNetworkCollectionIterator type.
+func NewLogicalNetworkCollectionIterator(page LogicalNetworkCollectionPage) LogicalNetworkCollectionIterator {
+	return LogicalNetworkCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (lnc LogicalNetworkCollection) IsEmpty() bool {
 	return lnc.Value == nil || len(*lnc.Value) == 0
@@ -10010,6 +10055,11 @@ func (page LogicalNetworkCollectionPage) Values() []LogicalNetwork {
 		return nil
 	}
 	return *page.lnc.Value
+}
+
+// Creates a new instance of the LogicalNetworkCollectionPage type.
+func NewLogicalNetworkCollectionPage(getNextPage func(context.Context, LogicalNetworkCollection) (LogicalNetworkCollection, error)) LogicalNetworkCollectionPage {
+	return LogicalNetworkCollectionPage{fn: getNextPage}
 }
 
 // LogicalNetworkProperties logical Network Properties.
@@ -10235,6 +10285,11 @@ func (iter NetworkCollectionIterator) Value() Network {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the NetworkCollectionIterator type.
+func NewNetworkCollectionIterator(page NetworkCollectionPage) NetworkCollectionIterator {
+	return NetworkCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (nc NetworkCollection) IsEmpty() bool {
 	return nc.Value == nil || len(*nc.Value) == 0
@@ -10304,11 +10359,16 @@ func (page NetworkCollectionPage) Values() []Network {
 	return *page.nc.Value
 }
 
+// Creates a new instance of the NetworkCollectionPage type.
+func NewNetworkCollectionPage(getNextPage func(context.Context, NetworkCollection) (NetworkCollection, error)) NetworkCollectionPage {
+	return NetworkCollectionPage{fn: getNextPage}
+}
+
 // NetworkMapping network Mapping model. Ideally it should have been possible to inherit this class from
 // prev version in InheritedModels as long as there is no difference in structure or method signature.
 // Since there were no base Models for certain fields and methods viz NetworkMappingProperties and Load
 // with required return type, the class has been introduced in its entirety with references to base models
-// to facilitate exensions in subsequent versions.
+// to facilitate extensions in subsequent versions.
 type NetworkMapping struct {
 	autorest.Response `json:"-"`
 	// Properties - The Network Mapping Properties.
@@ -10393,6 +10453,11 @@ func (iter NetworkMappingCollectionIterator) Value() NetworkMapping {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the NetworkMappingCollectionIterator type.
+func NewNetworkMappingCollectionIterator(page NetworkMappingCollectionPage) NetworkMappingCollectionIterator {
+	return NetworkMappingCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (nmc NetworkMappingCollection) IsEmpty() bool {
 	return nmc.Value == nil || len(*nmc.Value) == 0
@@ -10460,6 +10525,11 @@ func (page NetworkMappingCollectionPage) Values() []NetworkMapping {
 		return nil
 	}
 	return *page.nmc.Value
+}
+
+// Creates a new instance of the NetworkMappingCollectionPage type.
+func NewNetworkMappingCollectionPage(getNextPage func(context.Context, NetworkMappingCollection) (NetworkMappingCollection, error)) NetworkMappingCollectionPage {
+	return NetworkMappingCollectionPage{fn: getNextPage}
 }
 
 // BasicNetworkMappingFabricSpecificSettings network Mapping fabric specific settings.
@@ -10765,6 +10835,11 @@ func (iter OperationsDiscoveryCollectionIterator) Value() OperationsDiscovery {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the OperationsDiscoveryCollectionIterator type.
+func NewOperationsDiscoveryCollectionIterator(page OperationsDiscoveryCollectionPage) OperationsDiscoveryCollectionIterator {
+	return OperationsDiscoveryCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (odc OperationsDiscoveryCollection) IsEmpty() bool {
 	return odc.Value == nil || len(*odc.Value) == 0
@@ -10832,6 +10907,11 @@ func (page OperationsDiscoveryCollectionPage) Values() []OperationsDiscovery {
 		return nil
 	}
 	return *page.odc.Value
+}
+
+// Creates a new instance of the OperationsDiscoveryCollectionPage type.
+func NewOperationsDiscoveryCollectionPage(getNextPage func(context.Context, OperationsDiscoveryCollection) (OperationsDiscoveryCollection, error)) OperationsDiscoveryCollectionPage {
+	return OperationsDiscoveryCollectionPage{fn: getNextPage}
 }
 
 // OSDetails disk Details.
@@ -10988,6 +11068,11 @@ func (iter PolicyCollectionIterator) Value() Policy {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the PolicyCollectionIterator type.
+func NewPolicyCollectionIterator(page PolicyCollectionPage) PolicyCollectionIterator {
+	return PolicyCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (pc PolicyCollection) IsEmpty() bool {
 	return pc.Value == nil || len(*pc.Value) == 0
@@ -11055,6 +11140,11 @@ func (page PolicyCollectionPage) Values() []Policy {
 		return nil
 	}
 	return *page.pc.Value
+}
+
+// Creates a new instance of the PolicyCollectionPage type.
+func NewPolicyCollectionPage(getNextPage func(context.Context, PolicyCollection) (PolicyCollection, error)) PolicyCollectionPage {
+	return PolicyCollectionPage{fn: getNextPage}
 }
 
 // PolicyProperties protection profile custom data details.
@@ -11531,6 +11621,11 @@ func (iter ProtectableItemCollectionIterator) Value() ProtectableItem {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ProtectableItemCollectionIterator type.
+func NewProtectableItemCollectionIterator(page ProtectableItemCollectionPage) ProtectableItemCollectionIterator {
+	return ProtectableItemCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (pic ProtectableItemCollection) IsEmpty() bool {
 	return pic.Value == nil || len(*pic.Value) == 0
@@ -11598,6 +11693,11 @@ func (page ProtectableItemCollectionPage) Values() []ProtectableItem {
 		return nil
 	}
 	return *page.pic.Value
+}
+
+// Creates a new instance of the ProtectableItemCollectionPage type.
+func NewProtectableItemCollectionPage(getNextPage func(context.Context, ProtectableItemCollection) (ProtectableItemCollection, error)) ProtectableItemCollectionPage {
+	return ProtectableItemCollectionPage{fn: getNextPage}
 }
 
 // ProtectableItemProperties replication protected item custom data details.
@@ -11788,6 +11888,11 @@ func (iter ProtectionContainerCollectionIterator) Value() ProtectionContainer {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ProtectionContainerCollectionIterator type.
+func NewProtectionContainerCollectionIterator(page ProtectionContainerCollectionPage) ProtectionContainerCollectionIterator {
+	return ProtectionContainerCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (pcc ProtectionContainerCollection) IsEmpty() bool {
 	return pcc.Value == nil || len(*pcc.Value) == 0
@@ -11857,9 +11962,14 @@ func (page ProtectionContainerCollectionPage) Values() []ProtectionContainer {
 	return *page.pcc.Value
 }
 
+// Creates a new instance of the ProtectionContainerCollectionPage type.
+func NewProtectionContainerCollectionPage(getNextPage func(context.Context, ProtectionContainerCollection) (ProtectionContainerCollection, error)) ProtectionContainerCollectionPage {
+	return ProtectionContainerCollectionPage{fn: getNextPage}
+}
+
 // ProtectionContainerFabricSpecificDetails base class for fabric specific details of container.
 type ProtectionContainerFabricSpecificDetails struct {
-	// InstanceType - Gets the class type. Overriden in derived classes.
+	// InstanceType - Gets the class type. Overridden in derived classes.
 	InstanceType *string `json:"instanceType,omitempty"`
 }
 
@@ -11946,6 +12056,11 @@ func (iter ProtectionContainerMappingCollectionIterator) Value() ProtectionConta
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ProtectionContainerMappingCollectionIterator type.
+func NewProtectionContainerMappingCollectionIterator(page ProtectionContainerMappingCollectionPage) ProtectionContainerMappingCollectionIterator {
+	return ProtectionContainerMappingCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (pcmc ProtectionContainerMappingCollection) IsEmpty() bool {
 	return pcmc.Value == nil || len(*pcmc.Value) == 0
@@ -12015,6 +12130,11 @@ func (page ProtectionContainerMappingCollectionPage) Values() []ProtectionContai
 	return *page.pcmc.Value
 }
 
+// Creates a new instance of the ProtectionContainerMappingCollectionPage type.
+func NewProtectionContainerMappingCollectionPage(getNextPage func(context.Context, ProtectionContainerMappingCollection) (ProtectionContainerMappingCollection, error)) ProtectionContainerMappingCollectionPage {
+	return ProtectionContainerMappingCollectionPage{fn: getNextPage}
+}
+
 // ProtectionContainerMappingProperties protection container mapping properties.
 type ProtectionContainerMappingProperties struct {
 	// TargetProtectionContainerID - Paired protection container ARM ID.
@@ -12043,7 +12163,7 @@ type ProtectionContainerMappingProperties struct {
 
 // ProtectionContainerMappingProviderSpecificDetails container mapping provider specific details.
 type ProtectionContainerMappingProviderSpecificDetails struct {
-	// InstanceType - Gets the class type. Overriden in derived classes.
+	// InstanceType - Gets the class type. Overridden in derived classes.
 	InstanceType *string `json:"instanceType,omitempty"`
 }
 
@@ -12655,6 +12775,11 @@ func (iter RecoveryPlanCollectionIterator) Value() RecoveryPlan {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the RecoveryPlanCollectionIterator type.
+func NewRecoveryPlanCollectionIterator(page RecoveryPlanCollectionPage) RecoveryPlanCollectionIterator {
+	return RecoveryPlanCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (RPCVar RecoveryPlanCollection) IsEmpty() bool {
 	return RPCVar.Value == nil || len(*RPCVar.Value) == 0
@@ -12722,6 +12847,11 @@ func (page RecoveryPlanCollectionPage) Values() []RecoveryPlan {
 		return nil
 	}
 	return *page.RPCVar.Value
+}
+
+// Creates a new instance of the RecoveryPlanCollectionPage type.
+func NewRecoveryPlanCollectionPage(getNextPage func(context.Context, RecoveryPlanCollection) (RecoveryPlanCollection, error)) RecoveryPlanCollectionPage {
+	return RecoveryPlanCollectionPage{fn: getNextPage}
 }
 
 // RecoveryPlanGroup recovery plan group details.
@@ -13647,6 +13777,11 @@ func (iter RecoveryPointCollectionIterator) Value() RecoveryPoint {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the RecoveryPointCollectionIterator type.
+func NewRecoveryPointCollectionIterator(page RecoveryPointCollectionPage) RecoveryPointCollectionIterator {
+	return RecoveryPointCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (RPCVar RecoveryPointCollection) IsEmpty() bool {
 	return RPCVar.Value == nil || len(*RPCVar.Value) == 0
@@ -13714,6 +13849,11 @@ func (page RecoveryPointCollectionPage) Values() []RecoveryPoint {
 		return nil
 	}
 	return *page.RPCVar.Value
+}
+
+// Creates a new instance of the RecoveryPointCollectionPage type.
+func NewRecoveryPointCollectionPage(getNextPage func(context.Context, RecoveryPointCollection) (RecoveryPointCollection, error)) RecoveryPointCollectionPage {
+	return RecoveryPointCollectionPage{fn: getNextPage}
 }
 
 // RecoveryPointProperties recovery point properties.
@@ -13809,6 +13949,11 @@ func (iter RecoveryServicesProviderCollectionIterator) Value() RecoveryServicesP
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the RecoveryServicesProviderCollectionIterator type.
+func NewRecoveryServicesProviderCollectionIterator(page RecoveryServicesProviderCollectionPage) RecoveryServicesProviderCollectionIterator {
+	return RecoveryServicesProviderCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (rspc RecoveryServicesProviderCollection) IsEmpty() bool {
 	return rspc.Value == nil || len(*rspc.Value) == 0
@@ -13876,6 +14021,11 @@ func (page RecoveryServicesProviderCollectionPage) Values() []RecoveryServicesPr
 		return nil
 	}
 	return *page.rspc.Value
+}
+
+// Creates a new instance of the RecoveryServicesProviderCollectionPage type.
+func NewRecoveryServicesProviderCollectionPage(getNextPage func(context.Context, RecoveryServicesProviderCollection) (RecoveryServicesProviderCollection, error)) RecoveryServicesProviderCollectionPage {
+	return RecoveryServicesProviderCollectionPage{fn: getNextPage}
 }
 
 // RecoveryServicesProviderProperties recovery services provider properties.
@@ -14521,6 +14671,11 @@ func (iter ReplicationProtectedItemCollectionIterator) Value() ReplicationProtec
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the ReplicationProtectedItemCollectionIterator type.
+func NewReplicationProtectedItemCollectionIterator(page ReplicationProtectedItemCollectionPage) ReplicationProtectedItemCollectionIterator {
+	return ReplicationProtectedItemCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (rpic ReplicationProtectedItemCollection) IsEmpty() bool {
 	return rpic.Value == nil || len(*rpic.Value) == 0
@@ -14588,6 +14743,11 @@ func (page ReplicationProtectedItemCollectionPage) Values() []ReplicationProtect
 		return nil
 	}
 	return *page.rpic.Value
+}
+
+// Creates a new instance of the ReplicationProtectedItemCollectionPage type.
+func NewReplicationProtectedItemCollectionPage(getNextPage func(context.Context, ReplicationProtectedItemCollection) (ReplicationProtectedItemCollection, error)) ReplicationProtectedItemCollectionPage {
+	return ReplicationProtectedItemCollectionPage{fn: getNextPage}
 }
 
 // ReplicationProtectedItemProperties replication protected item custom data details.
@@ -16153,7 +16313,7 @@ type Resource struct {
 // ResourceHealthSummary base class to define the health summary of the resources contained under an Arm
 // resource.
 type ResourceHealthSummary struct {
-	// ResourceCount - The count of total resources umder the container.
+	// ResourceCount - The count of total resources under the container.
 	ResourceCount *int32 `json:"resourceCount,omitempty"`
 	// Issues - The list of summary of health errors across the resources under the container.
 	Issues *[]HealthErrorSummary `json:"issues,omitempty"`
@@ -16509,7 +16669,7 @@ type ServiceError struct {
 // StorageClassification storage object definition.
 type StorageClassification struct {
 	autorest.Response `json:"-"`
-	// Properties - Proprties of the storage object.
+	// Properties - Properties of the storage object.
 	Properties *StorageClassificationProperties `json:"properties,omitempty"`
 	// ID - Resource Id
 	ID *string `json:"id,omitempty"`
@@ -16589,6 +16749,11 @@ func (iter StorageClassificationCollectionIterator) Value() StorageClassificatio
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the StorageClassificationCollectionIterator type.
+func NewStorageClassificationCollectionIterator(page StorageClassificationCollectionPage) StorageClassificationCollectionIterator {
+	return StorageClassificationCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (scc StorageClassificationCollection) IsEmpty() bool {
 	return scc.Value == nil || len(*scc.Value) == 0
@@ -16658,10 +16823,15 @@ func (page StorageClassificationCollectionPage) Values() []StorageClassification
 	return *page.scc.Value
 }
 
+// Creates a new instance of the StorageClassificationCollectionPage type.
+func NewStorageClassificationCollectionPage(getNextPage func(context.Context, StorageClassificationCollection) (StorageClassificationCollection, error)) StorageClassificationCollectionPage {
+	return StorageClassificationCollectionPage{fn: getNextPage}
+}
+
 // StorageClassificationMapping storage mapping object.
 type StorageClassificationMapping struct {
 	autorest.Response `json:"-"`
-	// Properties - Proprties of the storage mappping object.
+	// Properties - Properties of the storage mapping object.
 	Properties *StorageClassificationMappingProperties `json:"properties,omitempty"`
 	// ID - Resource Id
 	ID *string `json:"id,omitempty"`
@@ -16741,6 +16911,11 @@ func (iter StorageClassificationMappingCollectionIterator) Value() StorageClassi
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the StorageClassificationMappingCollectionIterator type.
+func NewStorageClassificationMappingCollectionIterator(page StorageClassificationMappingCollectionPage) StorageClassificationMappingCollectionIterator {
+	return StorageClassificationMappingCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (scmc StorageClassificationMappingCollection) IsEmpty() bool {
 	return scmc.Value == nil || len(*scmc.Value) == 0
@@ -16808,6 +16983,11 @@ func (page StorageClassificationMappingCollectionPage) Values() []StorageClassif
 		return nil
 	}
 	return *page.scmc.Value
+}
+
+// Creates a new instance of the StorageClassificationMappingCollectionPage type.
+func NewStorageClassificationMappingCollectionPage(getNextPage func(context.Context, StorageClassificationMappingCollection) (StorageClassificationMappingCollection, error)) StorageClassificationMappingCollectionPage {
+	return StorageClassificationMappingCollectionPage{fn: getNextPage}
 }
 
 // StorageClassificationMappingInput storage mapping input.
@@ -17513,7 +17693,7 @@ type UpdateRecoveryPlanInput struct {
 	Properties *UpdateRecoveryPlanInputProperties `json:"properties,omitempty"`
 }
 
-// UpdateRecoveryPlanInputProperties recovery plan updation properties.
+// UpdateRecoveryPlanInputProperties recovery plan update properties.
 type UpdateRecoveryPlanInputProperties struct {
 	// Groups - The recovery plan groups.
 	Groups *[]RecoveryPlanGroup `json:"groups,omitempty"`
@@ -17741,7 +17921,7 @@ type UpdateVCenterRequestProperties struct {
 	ProcessServerID *string `json:"processServerId,omitempty"`
 	// Port - The port number for discovery.
 	Port *string `json:"port,omitempty"`
-	// RunAsAccountID - The CS account Id which has priviliges to update the vCenter.
+	// RunAsAccountID - The CS account Id which has privileges to update the vCenter.
 	RunAsAccountID *string `json:"runAsAccountId,omitempty"`
 }
 
@@ -17852,6 +18032,11 @@ func (iter VCenterCollectionIterator) Value() VCenter {
 	return iter.page.Values()[iter.i]
 }
 
+// Creates a new instance of the VCenterCollectionIterator type.
+func NewVCenterCollectionIterator(page VCenterCollectionPage) VCenterCollectionIterator {
+	return VCenterCollectionIterator{page: page}
+}
+
 // IsEmpty returns true if the ListResult contains no values.
 func (vcc VCenterCollection) IsEmpty() bool {
 	return vcc.Value == nil || len(*vcc.Value) == 0
@@ -17921,13 +18106,18 @@ func (page VCenterCollectionPage) Values() []VCenter {
 	return *page.vcc.Value
 }
 
+// Creates a new instance of the VCenterCollectionPage type.
+func NewVCenterCollectionPage(getNextPage func(context.Context, VCenterCollection) (VCenterCollection, error)) VCenterCollectionPage {
+	return VCenterCollectionPage{fn: getNextPage}
+}
+
 // VCenterProperties vCenter properties.
 type VCenterProperties struct {
 	// FriendlyName - Friendly name of the vCenter.
 	FriendlyName *string `json:"friendlyName,omitempty"`
 	// InternalID - VCenter internal ID.
 	InternalID *string `json:"internalId,omitempty"`
-	// LastHeartbeat - The time when the last heartbeat was reveived by vCenter.
+	// LastHeartbeat - The time when the last heartbeat was received by vCenter.
 	LastHeartbeat *date.Time `json:"lastHeartbeat,omitempty"`
 	// DiscoveryStatus - The VCenter discovery status.
 	DiscoveryStatus *string `json:"discoveryStatus,omitempty"`
@@ -18077,8 +18267,8 @@ func (vd VmmDetails) AsBasicFabricSpecificDetails() (BasicFabricSpecificDetails,
 	return &vd, true
 }
 
-// VmmToAzureCreateNetworkMappingInput create network mappings input properties/behaviour specific to Vmm
-// to Azure Network mapping.
+// VmmToAzureCreateNetworkMappingInput create network mappings input properties/behavior specific to Vmm to
+// Azure Network mapping.
 type VmmToAzureCreateNetworkMappingInput struct {
 	// InstanceType - Possible values include: 'InstanceTypeFabricSpecificCreateNetworkMappingInput', 'InstanceTypeAzureToAzure', 'InstanceTypeVmmToAzure', 'InstanceTypeVmmToVmm'
 	InstanceType InstanceTypeBasicFabricSpecificCreateNetworkMappingInput `json:"instanceType,omitempty"`
@@ -18160,8 +18350,8 @@ func (vtanms VmmToAzureNetworkMappingSettings) AsBasicNetworkMappingFabricSpecif
 	return &vtanms, true
 }
 
-// VmmToAzureUpdateNetworkMappingInput update network mappings input properties/behaviour specific to vmm
-// to azure.
+// VmmToAzureUpdateNetworkMappingInput update network mappings input properties/behavior specific to vmm to
+// azure.
 type VmmToAzureUpdateNetworkMappingInput struct {
 	// InstanceType - Possible values include: 'InstanceTypeBasicFabricSpecificUpdateNetworkMappingInputInstanceTypeFabricSpecificUpdateNetworkMappingInput', 'InstanceTypeBasicFabricSpecificUpdateNetworkMappingInputInstanceTypeAzureToAzure', 'InstanceTypeBasicFabricSpecificUpdateNetworkMappingInputInstanceTypeVmmToAzure', 'InstanceTypeBasicFabricSpecificUpdateNetworkMappingInputInstanceTypeVmmToVmm'
 	InstanceType InstanceTypeBasicFabricSpecificUpdateNetworkMappingInput `json:"instanceType,omitempty"`
@@ -18202,7 +18392,7 @@ func (vtaunmi VmmToAzureUpdateNetworkMappingInput) AsBasicFabricSpecificUpdateNe
 	return &vtaunmi, true
 }
 
-// VmmToVmmCreateNetworkMappingInput create network mappings input properties/behaviour specific to vmm to
+// VmmToVmmCreateNetworkMappingInput create network mappings input properties/behavior specific to vmm to
 // vmm Network mapping.
 type VmmToVmmCreateNetworkMappingInput struct {
 	// InstanceType - Possible values include: 'InstanceTypeFabricSpecificCreateNetworkMappingInput', 'InstanceTypeAzureToAzure', 'InstanceTypeVmmToAzure', 'InstanceTypeVmmToVmm'
@@ -18285,7 +18475,7 @@ func (vtvnms VmmToVmmNetworkMappingSettings) AsBasicNetworkMappingFabricSpecific
 	return &vtvnms, true
 }
 
-// VmmToVmmUpdateNetworkMappingInput update network mappings input properties/behaviour specific to vmm to
+// VmmToVmmUpdateNetworkMappingInput update network mappings input properties/behavior specific to vmm to
 // vmm.
 type VmmToVmmUpdateNetworkMappingInput struct {
 	// InstanceType - Possible values include: 'InstanceTypeBasicFabricSpecificUpdateNetworkMappingInputInstanceTypeFabricSpecificUpdateNetworkMappingInput', 'InstanceTypeBasicFabricSpecificUpdateNetworkMappingInputInstanceTypeAzureToAzure', 'InstanceTypeBasicFabricSpecificUpdateNetworkMappingInputInstanceTypeVmmToAzure', 'InstanceTypeBasicFabricSpecificUpdateNetworkMappingInputInstanceTypeVmmToVmm'
@@ -18934,7 +19124,7 @@ type VMwareVirtualMachineDetails struct {
 	PoweredOn *string `json:"poweredOn,omitempty"`
 	// VCenterInfrastructureID - The VCenter infrastructure Id.
 	VCenterInfrastructureID *string `json:"vCenterInfrastructureId,omitempty"`
-	// DiscoveryType - A value inidicating the discovery type of the machine. Value can be vCenter or physical.
+	// DiscoveryType - A value indicating the discovery type of the machine. Value can be vCenter or physical.
 	DiscoveryType *string `json:"discoveryType,omitempty"`
 	// DiskDetails - The disk details.
 	DiskDetails *[]InMageDiskDetails `json:"diskDetails,omitempty"`

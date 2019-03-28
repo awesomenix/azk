@@ -15,6 +15,7 @@ import (
 	"github.com/Azure/go-autorest/autorest/adal"
 	"github.com/Azure/go-autorest/autorest/azure"
 	"github.com/awesomenix/azk/cmd/azk/cmd/cluster"
+	"github.com/blang/semver"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
@@ -100,6 +101,22 @@ func RunFlow() error {
 		return err
 	}
 
+	kubernetesVersion, err := getInput("Kubernetes Version", func(i string) error {
+		input, err := semver.Make(i)
+		if err != nil {
+			return fmt.Errorf("invalid semver %s", i)
+		}
+		greater, _ := semver.Make("1.13.0")
+		less, _ := semver.Make("1.13.5")
+		if input.GTE(greater) && input.LTE(less) {
+			return nil
+		}
+		return fmt.Errorf("invalid kubernetes input %s", input)
+	})
+	if err != nil {
+		return err
+	}
+
 	nodepoolCount, err := getInput("Node Pool Count", func(i string) error {
 		_, err := strconv.ParseUint(i, 10, 32)
 		if err != nil {
@@ -121,7 +138,7 @@ func RunFlow() error {
 		ResourceGroup:     resourceGroupName,
 		ResourceLocation:  region,
 		DNSPrefix:         dnsPrefix,
-		KubernetesVersion: "stable",
+		KubernetesVersion: kubernetesVersion,
 		NodePoolName:      "nodepool1",
 		NodePoolCount:     int32(nodeCount),
 		VMSKUType:         vmsize,

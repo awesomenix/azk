@@ -1,6 +1,6 @@
 // +build go1.9
 
-// Copyright 2018 Microsoft Corporation
+// Copyright 2019 Microsoft Corporation
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,15 +19,16 @@
 
 package aad
 
-import original "github.com/Azure/azure-sdk-for-go/services/domainservices/mgmt/2017-01-01/aad"
+import (
+	"context"
+
+	original "github.com/Azure/azure-sdk-for-go/services/domainservices/mgmt/2017-06-01/aad"
+)
 
 const (
 	DefaultBaseURI = original.DefaultBaseURI
 )
 
-type BaseClient = original.BaseClient
-type DomainServiceOperationsClient = original.DomainServiceOperationsClient
-type DomainServicesClient = original.DomainServicesClient
 type ExternalAccess = original.ExternalAccess
 
 const (
@@ -84,13 +85,15 @@ const (
 	TLSV1Enabled  TLSV1 = original.TLSV1Enabled
 )
 
+type BaseClient = original.BaseClient
 type DomainSecuritySettings = original.DomainSecuritySettings
 type DomainService = original.DomainService
 type DomainServiceListResult = original.DomainServiceListResult
 type DomainServiceListResultIterator = original.DomainServiceListResultIterator
 type DomainServiceListResultPage = original.DomainServiceListResultPage
-type DomainServicePatchProperties = original.DomainServicePatchProperties
+type DomainServiceOperationsClient = original.DomainServiceOperationsClient
 type DomainServiceProperties = original.DomainServiceProperties
+type DomainServicesClient = original.DomainServicesClient
 type DomainServicesCreateOrUpdateFuture = original.DomainServicesCreateOrUpdateFuture
 type DomainServicesDeleteFuture = original.DomainServicesDeleteFuture
 type DomainServicesUpdateFuture = original.DomainServicesUpdateFuture
@@ -108,8 +111,11 @@ type Resource = original.Resource
 func New(subscriptionID string) BaseClient {
 	return original.New(subscriptionID)
 }
-func NewWithBaseURI(baseURI string, subscriptionID string) BaseClient {
-	return original.NewWithBaseURI(baseURI, subscriptionID)
+func NewDomainServiceListResultIterator(page DomainServiceListResultPage) DomainServiceListResultIterator {
+	return original.NewDomainServiceListResultIterator(page)
+}
+func NewDomainServiceListResultPage(getNextPage func(context.Context, DomainServiceListResult) (DomainServiceListResult, error)) DomainServiceListResultPage {
+	return original.NewDomainServiceListResultPage(getNextPage)
 }
 func NewDomainServiceOperationsClient(subscriptionID string) DomainServiceOperationsClient {
 	return original.NewDomainServiceOperationsClient(subscriptionID)
@@ -122,6 +128,15 @@ func NewDomainServicesClient(subscriptionID string) DomainServicesClient {
 }
 func NewDomainServicesClientWithBaseURI(baseURI string, subscriptionID string) DomainServicesClient {
 	return original.NewDomainServicesClientWithBaseURI(baseURI, subscriptionID)
+}
+func NewOperationEntityListResultIterator(page OperationEntityListResultPage) OperationEntityListResultIterator {
+	return original.NewOperationEntityListResultIterator(page)
+}
+func NewOperationEntityListResultPage(getNextPage func(context.Context, OperationEntityListResult) (OperationEntityListResult, error)) OperationEntityListResultPage {
+	return original.NewOperationEntityListResultPage(getNextPage)
+}
+func NewWithBaseURI(baseURI string, subscriptionID string) BaseClient {
+	return original.NewWithBaseURI(baseURI, subscriptionID)
 }
 func PossibleExternalAccessValues() []ExternalAccess {
 	return original.PossibleExternalAccessValues()

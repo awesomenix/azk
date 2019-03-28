@@ -1,4 +1,4 @@
-package cmd
+package helpers
 
 import (
 	"fmt"
@@ -11,9 +11,12 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 	kubectlapply "k8s.io/kubernetes/pkg/kubectl/cmd/apply"
 	cmdutil "k8s.io/kubernetes/pkg/kubectl/cmd/util"
+	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 )
 
-func kubectlApply(manifestPath, kubeconfig string) error {
+var log = logf.Log.WithName("azk")
+
+func KubectlApply(manifestPath, kubeconfig string) error {
 	clientcfg, err := clientcmd.NewClientConfigFromBytes([]byte(kubeconfig))
 	if err != nil {
 		return err
@@ -46,7 +49,7 @@ func kubectlApply(manifestPath, kubeconfig string) error {
 	return nil
 }
 
-func kubectlApplyFolder(folder string, kubeconfig string, fs http.FileSystem) error {
+func KubectlApplyFolder(folder string, kubeconfig string, fs http.FileSystem) error {
 	tmpAssetsDir := "/tmp/azk-assets/" + folder
 	defer os.RemoveAll(tmpAssetsDir)
 
@@ -85,7 +88,7 @@ func kubectlApplyFolder(folder string, kubeconfig string, fs http.FileSystem) er
 		}
 	}
 
-	if err := kubectlApply(tmpAssetsDir, kubeconfig); err != nil {
+	if err := KubectlApply(tmpAssetsDir, kubeconfig); err != nil {
 		log.Error(err, "Failed to apply to cluster", "Resource", folder)
 	}
 	return nil

@@ -1,4 +1,4 @@
-package cmd
+package flow
 
 import (
 	"context"
@@ -14,11 +14,15 @@ import (
 	"github.com/Azure/go-autorest/autorest"
 	"github.com/Azure/go-autorest/autorest/adal"
 	"github.com/Azure/go-autorest/autorest/azure"
+	"github.com/awesomenix/azk/cmd/azk/cmd/cluster"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
+	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 )
 
-var flowCmd = &cobra.Command{
+var log = logf.Log.WithName("azk")
+
+var FlowCmd = &cobra.Command{
 	Use:   "flow",
 	Short: "Create a Kubernetes Cluster on Azure",
 	Long:  `Create a Kubernetes Cluster on Azure with interactive flow`,
@@ -28,10 +32,6 @@ var flowCmd = &cobra.Command{
 			os.Exit(1)
 		}
 	},
-}
-
-func init() {
-	createClusterCmd.AddCommand(flowCmd)
 }
 
 func RunFlow() error {
@@ -106,7 +106,7 @@ func RunFlow() error {
 
 	nodeCount, _ := strconv.ParseUint(nodepoolCount, 10, 32)
 
-	copt := &CreateOptions{
+	copt := &cluster.CreateOptions{
 		SubscriptionID:    subscriptionID,
 		ClientID:          clientID,
 		ClientSecret:      clientSecret,
@@ -121,7 +121,7 @@ func RunFlow() error {
 		KubeconfigOutput:  "kubeconfig",
 	}
 
-	return RunCreate(copt)
+	return cluster.RunCreate(copt)
 }
 
 func getInput(label string, validate func(string) error) (string, error) {

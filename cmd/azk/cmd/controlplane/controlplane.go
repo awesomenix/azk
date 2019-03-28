@@ -1,4 +1,4 @@
-package cmd
+package controlplane
 
 import (
 	"context"
@@ -15,41 +15,33 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/clientcmd"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 )
 
-var controlPlaneCmd = &cobra.Command{
-	Use:   "controlplane",
-	Short: "Manage a Control Plane for Kubernetes Cluster on Azure",
-	Long:  `Manage a Control Plane for Kubernetes Cluster on Azure with one command`,
-}
+var log = logf.Log.WithName("azk")
 
 func init() {
-	RootCmd.AddCommand(controlPlaneCmd)
-
 	// Create
-	createControlPlaneCmd.Flags().StringVarP(&ccpo.SubscriptionID, "subscriptionid", "s", "", "SubscriptionID Required.")
-	createControlPlaneCmd.MarkFlagRequired("subscriptionid")
-	createControlPlaneCmd.Flags().StringVarP(&ccpo.ResourceGroup, "resourcegroup", "r", "", "Resource Group Name, in which all resources are created Required.")
-	createControlPlaneCmd.MarkFlagRequired("resourcegroup")
+	CreateControlPlaneCmd.Flags().StringVarP(&ccpo.SubscriptionID, "subscriptionid", "s", "", "SubscriptionID Required.")
+	CreateControlPlaneCmd.MarkFlagRequired("subscriptionid")
+	CreateControlPlaneCmd.Flags().StringVarP(&ccpo.ResourceGroup, "resourcegroup", "r", "", "Resource Group Name, in which all resources are created Required.")
+	CreateControlPlaneCmd.MarkFlagRequired("resourcegroup")
 
 	// Optional flags
-	createControlPlaneCmd.Flags().StringVarP(&ccpo.MasterKubernetesVersion, "kubernetesversion", "k", "stable", "Master Kubernetes version, Optional, Uses Stable version as default.")
-
-	controlPlaneCmd.AddCommand(createControlPlaneCmd)
+	CreateControlPlaneCmd.Flags().StringVarP(&ccpo.MasterKubernetesVersion, "kubernetesversion", "k", "stable", "Master Kubernetes version, Optional, Uses Stable version as default.")
 
 	// Upgrade
-	upgradeControlPlaneCmd.Flags().StringVarP(&ucpo.SubscriptionID, "subscriptionid", "s", "", "SubscriptionID Required.")
-	upgradeControlPlaneCmd.MarkFlagRequired("subscriptionid")
-	upgradeControlPlaneCmd.Flags().StringVarP(&ucpo.ResourceGroup, "resourcegroup", "r", "", "Resource Group Name, in which all resources are created Required.")
-	upgradeControlPlaneCmd.MarkFlagRequired("resourcegroup")
+	UpgradeControlPlaneCmd.Flags().StringVarP(&ucpo.SubscriptionID, "subscriptionid", "s", "", "SubscriptionID Required.")
+	UpgradeControlPlaneCmd.MarkFlagRequired("subscriptionid")
+	UpgradeControlPlaneCmd.Flags().StringVarP(&ucpo.ResourceGroup, "resourcegroup", "r", "", "Resource Group Name, in which all resources are created Required.")
+	UpgradeControlPlaneCmd.MarkFlagRequired("resourcegroup")
 
 	// Optional flags
-	upgradeControlPlaneCmd.Flags().StringVarP(&ucpo.MasterKubernetesVersion, "kubernetesversion", "k", "stable", "Master Kubernetes version, Optional, Uses Stable version as default.")
-	controlPlaneCmd.AddCommand(upgradeControlPlaneCmd)
+	UpgradeControlPlaneCmd.Flags().StringVarP(&ucpo.MasterKubernetesVersion, "kubernetesversion", "k", "stable", "Master Kubernetes version, Optional, Uses Stable version as default.")
 }
 
-var createControlPlaneCmd = &cobra.Command{
-	Use:   "create",
+var CreateControlPlaneCmd = &cobra.Command{
+	Use:   "controlplane",
 	Short: "Create kubernetes control plane",
 	Long:  `Create a kubernetes control plane with one command`,
 	Run: func(cmd *cobra.Command, args []string) {
@@ -60,8 +52,8 @@ var createControlPlaneCmd = &cobra.Command{
 	},
 }
 
-var upgradeControlPlaneCmd = &cobra.Command{
-	Use:   "upgrade",
+var UpgradeControlPlaneCmd = &cobra.Command{
+	Use:   "controlplane",
 	Short: "Upgrade kubernetes control plane",
 	Long:  `Upgrade a kubernetes control plane with one command`,
 	Run: func(cmd *cobra.Command, args []string) {
@@ -179,29 +171,29 @@ func UpgradeControlPlane(ucpo *UpgradeControlPlaneOptions) error {
 	h.Write([]byte(fmt.Sprintf("%s/%s", ucpo.SubscriptionID, ucpo.ResourceGroup)))
 	clusterName := fmt.Sprintf("%x", h.Sum64())
 
-	controlplane := &enginev1alpha1.ControlPlane{}
-	if err := kClient.Get(context.TODO(), types.NamespacedName{Namespace: clusterName, Name: clusterName}, controlplane); err != nil {
+	cp := &enginev1alpha1.ControlPlane{}
+	if err := kClient.Get(context.TODO(), types.NamespacedName{Namespace: clusterName, Name: clusterName}, cp); err != nil {
 		log.Error(err, "Failed to get control plane", "Name", clusterName)
 		return err
 	}
 
 	s := spinner.New(spinner.CharSets[11], 200*time.Millisecond)
 	s.Color("green")
-	s.Suffix = fmt.Sprintf(" Upgrading ControlPlane %s from %s to %s .. timeout 15m0s", unpo.Name, controlplane.Status.KubernetesVersion, ucpo.MasterKubernetesVersion)
+	s.Suffix = fmt.Sprintf(" Upgrading ControlPlane %s from %s to %s .. timeout 15m0s", cp.Name, cp.Status.KubernetesVersion, ucpo.MasterKubernetesVersion)
 	s.Start()
 
-	controlplane.Spec.KubernetesVersion = ucpo.MasterKubernetesVersion
-	if err := kClient.Update(context.TODO(), controlplane); err != nil {
+	cp.Spec.KubernetesVersion = ucpo.MasterKubernetesVersion
+	if err := kClient.Update(context.TODO(), cp); err != nil {
 		log.Error(err, "Failed to upgrade control plane", "Name", clusterName)
 		return err
 	}
 
 	start := time.Now()
-	controlplane = &enginev1alpha1.ControlPlane{}
+	cp = &enginev1alpha1.ControlPlane{}
 	for i := 0; i < 30; i++ {
-		if err := kClient.Get(context.TODO(), types.NamespacedName{Namespace: clusterName, Name: clusterName}, controlplane); err == nil {
-			if controlplane.Status.ProvisioningState == "Succeeded" &&
-				controlplane.Status.KubernetesVersion == ucpo.MasterKubernetesVersion {
+		if err := kClient.Get(context.TODO(), types.NamespacedName{Namespace: clusterName, Name: clusterName}, cp); err == nil {
+			if cp.Status.ProvisioningState == "Succeeded" &&
+				cp.Status.KubernetesVersion == ucpo.MasterKubernetesVersion {
 				s.Stop()
 				fmt.Fprintf(s.Writer, " ✓ Successfully Upgraded Control Plane %s in %s\n", clusterName, time.Since(start))
 				return nil

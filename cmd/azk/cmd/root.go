@@ -42,5 +42,5 @@ func exitWithHelp(cmd *cobra.Command, err string) {
 func init() {
 	enginev1alpha1.AddToScheme(scheme.Scheme)
 	flag.CommandLine.Set("logtostderr", "true")
-	RootCmd.PersistentFlags().AddGoFlagSet(flag.CommandLine)
+	//RootCmd.PersistentFlags().AddGoFlagSet(flag.CommandLine)
 }

@@ -1,4 +1,4 @@
-package cmd
+package cluster
 
 import (
 	"context"
@@ -12,8 +12,9 @@ import (
 	"time"
 
 	"github.com/awesomenix/azk/assets"
+	cmdhelpers "github.com/awesomenix/azk/cmd/azk/cmd/helpers"
 	enginev1alpha1 "github.com/awesomenix/azk/pkg/apis/engine/v1alpha1"
-	"github.com/awesomenix/azk/pkg/azure"
+	azhelpers "github.com/awesomenix/azk/pkg/azure"
 	"github.com/awesomenix/azk/pkg/bootstrap"
 	"github.com/awesomenix/azk/pkg/helpers"
 	"github.com/briandowns/spinner"
@@ -24,53 +25,44 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/clientcmd"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 )
 
-var clusterCmd = &cobra.Command{
-	Use:   "cluster",
-	Short: "Manage a Kubernetes Cluster on Azure",
-	Long:  `Manage a Kubernetes Cluster on Azure with one command`,
-}
+var log = logf.Log.WithName("azk")
 
 func init() {
-	RootCmd.AddCommand(clusterCmd)
-
 	// Create
-	createClusterCmd.Flags().StringVarP(&co.SubscriptionID, "subscriptionid", "s", "", "SubscriptionID Required.")
-	createClusterCmd.MarkFlagRequired("subscriptionid")
-	createClusterCmd.Flags().StringVarP(&co.ClientID, "clientid", "i", "", "Client ID Required.")
-	createClusterCmd.MarkFlagRequired("clientid")
-	createClusterCmd.Flags().StringVarP(&co.ClientSecret, "clientsecret", "e", "", "Client Secret Required.")
-	createClusterCmd.MarkFlagRequired("clientsecret")
-	createClusterCmd.Flags().StringVarP(&co.TenantID, "tenantid", "t", "", "Tenant ID Required.")
-	createClusterCmd.MarkFlagRequired("tenantid")
-	createClusterCmd.Flags().StringVarP(&co.ResourceGroup, "resourcegroup", "r", "", "Resource Group Name, in which all resources are created Required.")
-	createClusterCmd.MarkFlagRequired("resourcegroup")
-	createClusterCmd.Flags().StringVarP(&co.ResourceLocation, "location", "l", "", "Resource Group Location, in which all resources are created Required.")
-	createClusterCmd.MarkFlagRequired("location")
-	createClusterCmd.Flags().StringVarP(&co.DNSPrefix, "dnsprefix", "d", "dnsprefix", "DNS prefix for public loadbalancer")
-	createClusterCmd.Flags().StringVarP(&co.KubernetesVersion, "kubernetesversion", "k", "stable", "Master Kubernetes Version")
-	createClusterCmd.Flags().StringVarP(&co.NodePoolName, "nodepoolname", "n", "nodepool1", "Nodepool Name, Optional, default nodepool1")
-	createClusterCmd.Flags().Int32VarP(&co.NodePoolCount, "nodepoolcount", "c", 1, "Nodepool Count, Optional, default 1")
-	createClusterCmd.Flags().BoolVarP(&co.IsDevelopment, "isdev", "m", false, "Is development mode")
-	createClusterCmd.Flags().StringVarP(&co.VMSKUType, "vmskutype", "u", "Standard_DS2_v2", "VM SKU Type, default: Standard_DS2_v2")
+	CreateClusterCmd.Flags().StringVarP(&co.SubscriptionID, "subscriptionid", "s", "", "SubscriptionID Required.")
+	CreateClusterCmd.MarkFlagRequired("subscriptionid")
+	CreateClusterCmd.Flags().StringVarP(&co.ClientID, "clientid", "i", "", "Client ID Required.")
+	CreateClusterCmd.MarkFlagRequired("clientid")
+	CreateClusterCmd.Flags().StringVarP(&co.ClientSecret, "clientsecret", "e", "", "Client Secret Required.")
+	CreateClusterCmd.MarkFlagRequired("clientsecret")
+	CreateClusterCmd.Flags().StringVarP(&co.TenantID, "tenantid", "t", "", "Tenant ID Required.")
+	CreateClusterCmd.MarkFlagRequired("tenantid")
+	CreateClusterCmd.Flags().StringVarP(&co.ResourceGroup, "resourcegroup", "r", "", "Resource Group Name, in which all resources are created Required.")
+	CreateClusterCmd.MarkFlagRequired("resourcegroup")
+	CreateClusterCmd.Flags().StringVarP(&co.ResourceLocation, "location", "l", "", "Resource Group Location, in which all resources are created Required.")
+	CreateClusterCmd.MarkFlagRequired("location")
+	CreateClusterCmd.Flags().StringVarP(&co.DNSPrefix, "dnsprefix", "d", "dnsprefix", "DNS prefix for public loadbalancer")
+	CreateClusterCmd.Flags().StringVarP(&co.KubernetesVersion, "kubernetesversion", "k", "stable", "Master Kubernetes Version")
+	CreateClusterCmd.Flags().StringVarP(&co.NodePoolName, "nodepoolname", "n", "nodepool1", "Nodepool Name, Optional, default nodepool1")
+	CreateClusterCmd.Flags().Int32VarP(&co.NodePoolCount, "nodepoolcount", "c", 1, "Nodepool Count, Optional, default 1")
+	CreateClusterCmd.Flags().BoolVarP(&co.IsDevelopment, "isdev", "m", false, "Is development mode")
+	CreateClusterCmd.Flags().StringVarP(&co.VMSKUType, "vmskutype", "u", "Standard_DS2_v2", "VM SKU Type, default: Standard_DS2_v2")
 
 	// Optional flags
-	createClusterCmd.Flags().StringVarP(&co.KubeconfigOutput, "kubeconfigout", "o", "kubeconfig", "Where to output the kubeconfig for the provisioned cluster")
-
-	clusterCmd.AddCommand(createClusterCmd)
+	CreateClusterCmd.Flags().StringVarP(&co.KubeconfigOutput, "kubeconfigout", "o", "kubeconfig", "Where to output the kubeconfig for the provisioned cluster")
 
 	// Delete
-	deleteClusterCmd.Flags().StringVarP(&do.SubscriptionID, "subscriptionid", "s", "", "SubscriptionID Required.")
-	deleteClusterCmd.MarkFlagRequired("subscriptionid")
-	deleteClusterCmd.Flags().StringVarP(&do.ResourceGroup, "resourcegroup", "r", "", "Resource Group Name, in which all resources are created Required.")
-	deleteClusterCmd.MarkFlagRequired("resourcegroup")
-
-	clusterCmd.AddCommand(deleteClusterCmd)
+	DeleteClusterCmd.Flags().StringVarP(&do.SubscriptionID, "subscriptionid", "s", "", "SubscriptionID Required.")
+	DeleteClusterCmd.MarkFlagRequired("subscriptionid")
+	DeleteClusterCmd.Flags().StringVarP(&do.ResourceGroup, "resourcegroup", "r", "", "Resource Group Name, in which all resources are created Required.")
+	DeleteClusterCmd.MarkFlagRequired("resourcegroup")
 }
 
-var createClusterCmd = &cobra.Command{
-	Use:   "create",
+var CreateClusterCmd = &cobra.Command{
+	Use:   "cluster",
 	Short: "Create kubernetes cluster",
 	Long:  `Create a kubernetes cluster with one command`,
 	Run: func(cmd *cobra.Command, args []string) {
@@ -81,8 +73,8 @@ var createClusterCmd = &cobra.Command{
 	},
 }
 
-var deleteClusterCmd = &cobra.Command{
-	Use:   "delete",
+var DeleteClusterCmd = &cobra.Command{
+	Use:   "cluster",
 	Short: "Delete kubernetes cluster",
 	Long:  `Delete a kubernetes cluster with one command`,
 	Run: func(cmd *cobra.Command, args []string) {
@@ -488,7 +480,7 @@ func kubectlApplyResources(kubeconfig string, isDevlopment bool) error {
 	}
 
 	for _, folder := range folders {
-		if err := kubectlApplyFolder(folder, kubeconfig, assets.Assets); err != nil {
+		if err := cmdhelpers.KubectlApplyFolder(folder, kubeconfig, assets.Assets); err != nil {
 			return err
 		}
 	}

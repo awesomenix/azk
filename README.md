@@ -46,5 +46,5 @@ go get -u github.com/awesomenix/azk/cmd/azk
 Follow the prompts in
 
 ```
-azk cluster create flow
+azk create flow
 ```

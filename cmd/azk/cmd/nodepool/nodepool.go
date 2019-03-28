@@ -1,4 +1,4 @@
-package cmd
+package nodepool
 
 import (
 	"context"
@@ -15,21 +15,18 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/clientcmd"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 )
 
-var nodepoolCmd = &cobra.Command{
-	Use:   "nodepool",
-	Short: "Manage a Node Pool in Kubernetes Cluster on Azure",
-	Long:  `Manage a Node Pool in Kubernetes Cluster on Azure with one command`,
-}
+var log = logf.Log.WithName("azk")
 
 var cnpo = &CreateNodePoolOptions{}
 var dnpo = &DeleteNodePoolOptions{}
 var snpo = &ScaleNodePoolOptions{}
 var unpo = &UpgradeNodePoolOptions{}
 
-var createNodepoolCmd = &cobra.Command{
-	Use:   "create",
+var CreateNodepoolCmd = &cobra.Command{
+	Use:   "nodepool",
 	Short: "Create Node Pool",
 	Long:  `Create a Node Pool with one command`,
 	Run: func(cmd *cobra.Command, args []string) {
@@ -40,8 +37,8 @@ var createNodepoolCmd = &cobra.Command{
 	},
 }
 
-var deleteNodepoolCmd = &cobra.Command{
-	Use:   "delete",
+var DeleteNodepoolCmd = &cobra.Command{
+	Use:   "nodepool",
 	Short: "Delete Node Pool",
 	Long:  `Delete a node pool with one command`,
 	Run: func(cmd *cobra.Command, args []string) {
@@ -52,20 +49,20 @@ var deleteNodepoolCmd = &cobra.Command{
 	},
 }
 
-var scaleNodepoolCmd = &cobra.Command{
-	Use:   "scale",
+var ScaleNodepoolCmd = &cobra.Command{
+	Use:   "nodepool",
 	Short: "Scale Node Pool",
 	Long:  `Scale a node pool with one command`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if err := ScaleNodePool(snpo); err != nil {
-			log.Error(err, "Failed to delete cluster")
+			log.Error(err, "Failed to scale cluster")
 			os.Exit(1)
 		}
 	},
 }
 
-var upgradeNodepoolCmd = &cobra.Command{
-	Use:   "upgrade",
+var UpgradeNodepoolCmd = &cobra.Command{
+	Use:   "nodepool",
 	Short: "Upgrade Node Pool",
 	Long:  `Upgrade a node pool with one command`,
 	Run: func(cmd *cobra.Command, args []string) {
@@ -77,57 +74,46 @@ var upgradeNodepoolCmd = &cobra.Command{
 }
 
 func init() {
-	RootCmd.AddCommand(nodepoolCmd)
-
 	// Create
-	createNodepoolCmd.Flags().StringVarP(&cnpo.SubscriptionID, "subscriptionid", "s", "", "SubscriptionID Required.")
-	createNodepoolCmd.MarkFlagRequired("subscriptionid")
-	createNodepoolCmd.Flags().StringVarP(&cnpo.ResourceGroup, "resourcegroup", "r", "", "Resource Group Name, in which all resources are created Required.")
-	createNodepoolCmd.MarkFlagRequired("resourcegroup")
-	createNodepoolCmd.Flags().StringVarP(&cnpo.Name, "name", "n", "", "Nodepool Name Required.")
-	createNodepoolCmd.MarkFlagRequired("name")
-	createNodepoolCmd.Flags().Int32VarP(&cnpo.Count, "count", "c", 1, "Nodepool Count, Optional, default 1")
+	CreateNodepoolCmd.Flags().StringVarP(&cnpo.SubscriptionID, "subscriptionid", "s", "", "SubscriptionID Required.")
+	CreateNodepoolCmd.MarkFlagRequired("subscriptionid")
+	CreateNodepoolCmd.Flags().StringVarP(&cnpo.ResourceGroup, "resourcegroup", "r", "", "Resource Group Name, in which all resources are created Required.")
+	CreateNodepoolCmd.MarkFlagRequired("resourcegroup")
+	CreateNodepoolCmd.Flags().StringVarP(&cnpo.Name, "name", "n", "", "Nodepool Name Required.")
+	CreateNodepoolCmd.MarkFlagRequired("name")
+	CreateNodepoolCmd.Flags().Int32VarP(&cnpo.Count, "count", "c", 1, "Nodepool Count, Optional, default 1")
 
 	// Optional flags
-	createNodepoolCmd.Flags().StringVarP(&cnpo.AgentKubernetesVersion, "kubernetesversion", "k", "stable", "Agent Kubernetes version, Optional, Uses stable version as default.")
-
-	nodepoolCmd.AddCommand(createNodepoolCmd)
+	CreateNodepoolCmd.Flags().StringVarP(&cnpo.AgentKubernetesVersion, "kubernetesversion", "k", "stable", "Agent Kubernetes version, Optional, Uses stable version as default.")
 
 	// Delete
-	deleteNodepoolCmd.Flags().StringVarP(&dnpo.SubscriptionID, "subscriptionid", "s", "", "SubscriptionID Required.")
-	deleteNodepoolCmd.MarkFlagRequired("subscriptionid")
-	deleteNodepoolCmd.Flags().StringVarP(&dnpo.ResourceGroup, "resourcegroup", "r", "", "Resource Group Name, in which all resources are created Required.")
-	deleteNodepoolCmd.MarkFlagRequired("resourcegroup")
-	deleteNodepoolCmd.Flags().StringVarP(&dnpo.Name, "name", "n", "", "Nodepool Name Required.")
-	deleteNodepoolCmd.MarkFlagRequired("name")
-
-	nodepoolCmd.AddCommand(deleteNodepoolCmd)
+	DeleteNodepoolCmd.Flags().StringVarP(&dnpo.SubscriptionID, "subscriptionid", "s", "", "SubscriptionID Required.")
+	DeleteNodepoolCmd.MarkFlagRequired("subscriptionid")
+	DeleteNodepoolCmd.Flags().StringVarP(&dnpo.ResourceGroup, "resourcegroup", "r", "", "Resource Group Name, in which all resources are created Required.")
+	DeleteNodepoolCmd.MarkFlagRequired("resourcegroup")
+	DeleteNodepoolCmd.Flags().StringVarP(&dnpo.Name, "name", "n", "", "Nodepool Name Required.")
+	DeleteNodepoolCmd.MarkFlagRequired("name")
 
 	// Scale
 
-	scaleNodepoolCmd.Flags().StringVarP(&snpo.SubscriptionID, "subscriptionid", "s", "", "SubscriptionID Required.")
-	scaleNodepoolCmd.MarkFlagRequired("subscriptionid")
-	scaleNodepoolCmd.Flags().StringVarP(&snpo.ResourceGroup, "resourcegroup", "r", "", "Resource Group Name, in which all resources are created Required.")
-	scaleNodepoolCmd.MarkFlagRequired("resourcegroup")
-	scaleNodepoolCmd.Flags().StringVarP(&snpo.Name, "name", "n", "", "Nodepool Name Required.")
-	scaleNodepoolCmd.MarkFlagRequired("name")
-	scaleNodepoolCmd.Flags().Int32VarP(&snpo.Count, "count", "c", 1, "Nodepool Count, Optional, default 1")
-	scaleNodepoolCmd.MarkFlagRequired("count")
-
-	nodepoolCmd.AddCommand(scaleNodepoolCmd)
+	ScaleNodepoolCmd.Flags().StringVarP(&snpo.SubscriptionID, "subscriptionid", "s", "", "SubscriptionID Required.")
+	ScaleNodepoolCmd.MarkFlagRequired("subscriptionid")
+	ScaleNodepoolCmd.Flags().StringVarP(&snpo.ResourceGroup, "resourcegroup", "r", "", "Resource Group Name, in which all resources are created Required.")
+	ScaleNodepoolCmd.MarkFlagRequired("resourcegroup")
+	ScaleNodepoolCmd.Flags().StringVarP(&snpo.Name, "name", "n", "", "Nodepool Name Required.")
+	ScaleNodepoolCmd.MarkFlagRequired("name")
+	ScaleNodepoolCmd.Flags().Int32VarP(&snpo.Count, "count", "c", 1, "Nodepool Count, Optional, default 1")
+	ScaleNodepoolCmd.MarkFlagRequired("count")
 
 	// Upgrade
-	upgradeNodepoolCmd.Flags().StringVarP(&unpo.SubscriptionID, "subscriptionid", "s", "", "SubscriptionID Required.")
-	upgradeNodepoolCmd.MarkFlagRequired("subscriptionid")
-	upgradeNodepoolCmd.Flags().StringVarP(&unpo.ResourceGroup, "resourcegroup", "r", "", "Resource Group Name, in which all resources are created Required.")
-	upgradeNodepoolCmd.MarkFlagRequired("resourcegroup")
-	upgradeNodepoolCmd.Flags().StringVarP(&unpo.Name, "name", "n", "", "Nodepool Name Required.")
-	upgradeNodepoolCmd.MarkFlagRequired("name")
-	upgradeNodepoolCmd.Flags().StringVarP(&unpo.AgentKubernetesVersion, "kubernetesversion", "k", "stable", "Nodepool Kubernetes Version, Default. stable")
-	upgradeNodepoolCmd.MarkFlagRequired("kubernetesversion")
-
-	nodepoolCmd.AddCommand(upgradeNodepoolCmd)
-
+	UpgradeNodepoolCmd.Flags().StringVarP(&unpo.SubscriptionID, "subscriptionid", "s", "", "SubscriptionID Required.")
+	UpgradeNodepoolCmd.MarkFlagRequired("subscriptionid")
+	UpgradeNodepoolCmd.Flags().StringVarP(&unpo.ResourceGroup, "resourcegroup", "r", "", "Resource Group Name, in which all resources are created Required.")
+	UpgradeNodepoolCmd.MarkFlagRequired("resourcegroup")
+	UpgradeNodepoolCmd.Flags().StringVarP(&unpo.Name, "name", "n", "", "Nodepool Name Required.")
+	UpgradeNodepoolCmd.MarkFlagRequired("name")
+	UpgradeNodepoolCmd.Flags().StringVarP(&unpo.AgentKubernetesVersion, "kubernetesversion", "k", "stable", "Nodepool Kubernetes Version, Default. stable")
+	UpgradeNodepoolCmd.MarkFlagRequired("kubernetesversion")
 }
 
 type CreateNodePoolOptions struct {

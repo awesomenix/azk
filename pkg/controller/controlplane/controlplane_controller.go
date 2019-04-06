@@ -31,15 +31,15 @@ const (
 	controlPlaneFinalizerName = "controlplane.finalizers.engine.azk.io"
 )
 
-func preRequisites(kubernetesVersion, internalDNSName string) string {
+func preRequisites(kubernetesVersion, apiServerIP, internalDNSName string) string {
 	return fmt.Sprintf(`
 %[1]s
 sudo cp -f /etc/hosts /tmp/hostsupdate
 sudo chown $(id -u):$(id -g) /tmp/hostsupdate
-echo '10.0.0.4 %[2]s' >> /tmp/hostsupdate
+echo '%[2]s %[3]s' >> /tmp/hostsupdate
 sudo mv /etc/hosts /etc/hosts.bak
 sudo mv /tmp/hostsupdate /etc/hosts
-`, helpers.PreRequisitesInstallScript(kubernetesVersion), internalDNSName)
+`, helpers.PreRequisitesInstallScript(kubernetesVersion), apiServerIP, internalDNSName)
 }
 
 func kubeadmJoinConfig(bootstrapToken, internalDNSName, discoveryHash string) string {
@@ -66,7 +66,7 @@ EOF
 	)
 }
 
-func getSecondaryMasterStartupScript(kubernetesVersion, internalDNSName, bootstrapToken, discoveryHash string) string {
+func getMasterStartupScript(kubernetesVersion, apiServerIP, internalDNSName, bootstrapToken, discoveryHash string) string {
 	return fmt.Sprintf(`
 %[1]s
 %[2]s
@@ -76,7 +76,7 @@ sudo cp -f /etc/hosts.bak /tmp/hostsupdate
 sudo chown $(id -u):$(id -g) /tmp/hostsupdate
 echo '127.0.0.1 %[3]s' >> /tmp/hostsupdate
 sudo mv /tmp/hostsupdate /etc/hosts
-`, preRequisites(kubernetesVersion, internalDNSName),
+`, preRequisites(kubernetesVersion, apiServerIP, internalDNSName),
 		kubeadmJoinConfig(bootstrapToken, internalDNSName, discoveryHash),
 		internalDNSName,
 	)
@@ -251,19 +251,19 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 			wg.Add(1)
 			go func(vmIndex int) {
 				defer wg.Done()
-				customRunData := map[string]string{
-					"/etc/kubernetes/init-azure-bootstrap.sh": cluster.Spec.GetPrimaryMasterStartupScript(instance.Spec.KubernetesVersion),
+				apiServerIP := "10.0.0.4"
+				if vmIndex == 0 {
+					apiServerIP = "10.0.0.5"
 				}
-				startupScript := getSecondaryMasterStartupScript(
+				startupScript := getMasterStartupScript(
 					instance.Spec.KubernetesVersion,
+					apiServerIP,
 					cluster.Spec.InternalDNSName,
 					bootstrapToken,
 					cluster.Spec.DiscoveryHashes[0])
 
-				if vmIndex > 0 {
-					customRunData = map[string]string{
-						"/etc/kubernetes/init-azure-bootstrap.sh": startupScript,
-					}
+				customRunData := map[string]string{
+					"/etc/kubernetes/init-azure-bootstrap.sh": startupScript,
 				}
 				vmName := fmt.Sprintf("%s-mastervm-%d", instance.Name, vmIndex)
 				log.Info("Creating", "VM", vmName)

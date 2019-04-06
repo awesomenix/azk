@@ -72,11 +72,11 @@ EOF
 		kubernetesVersion)
 }
 
-func (spec *Spec) GetEncodedPrimaryMasterStartupScript(kubernetesVersion string) string {
-	return base64.StdEncoding.EncodeToString([]byte(spec.GetPrimaryMasterStartupScript(kubernetesVersion)))
+func (spec *Spec) GetEncodedBootstrapStartupScript(kubernetesVersion string) string {
+	return base64.StdEncoding.EncodeToString([]byte(spec.GetBootstrapStartupScript(kubernetesVersion)))
 }
 
-func (spec *Spec) GetPrimaryMasterStartupScript(kubernetesVersion string) string {
+func (spec *Spec) GetBootstrapStartupScript(kubernetesVersion string) string {
 	return fmt.Sprintf(`
 %[1]s
 %[2]s
@@ -167,7 +167,7 @@ func (spec *Spec) CreateInfrastructure() error {
 	}
 
 	customRunData := map[string]string{
-		"/etc/kubernetes/init-azure-bootstrap.sh": spec.GetPrimaryMasterStartupScript(spec.BootstrapKubernetesVersion),
+		"/etc/kubernetes/init-azure-bootstrap.sh": spec.GetBootstrapStartupScript(spec.BootstrapKubernetesVersion),
 	}
 
 	vmName := fmt.Sprintf("%s-mastervm-0", spec.ClusterName)

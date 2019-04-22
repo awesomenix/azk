@@ -51,11 +51,15 @@ azk create flow
 
 ## Controllers
 
-- __cluster__ - manages base infrastructure like  
+- __cluster__  
+    Manages base infrastructure like  
     - *resource group*  
     - *vnet*
     - *load balancers*  
     - *network security groups*
-- __nodeset__ - manages set of azure vmss/availability set instances, immutable vm size, immutable kubernetes version
-- __nodepool__ - manages node sets, if a vm size/kubernetes version changes, creates a rollout for creating new and deprecating old
-- __addonmanager__ - manages addon list, apply/remove addons listed in addons directory (controller by crd instead of directory)
+- __nodeset__  
+    Manages set of azure vmss/availability set instances, immutable vm size, immutable kubernetes version
+- __nodepool__  
+    Manages node sets, if a vm size/kubernetes version changes, creates a rollout for creating new and deprecating old
+- __addonmanager__  
+    Manages addon list, apply/remove addons listed in addons directory (controller by crd instead of directory)

@@ -7,7 +7,6 @@ import (
 	"github.com/awesomenix/azk/pkg/apis"
 	"github.com/awesomenix/azk/pkg/controller"
 	"github.com/awesomenix/azk/pkg/webhook"
-	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"

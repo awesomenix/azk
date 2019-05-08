@@ -39,6 +39,15 @@ spec:
           properties:
             kubernetesVersion:
               type: string
+            nodeStatus:
+              items:
+                properties:
+                  vmComputerName:
+                    type: string
+                  vmInstanceID:
+                    type: string
+                type: object
+              type: array
             provisioningState:
               type: string
           type: object

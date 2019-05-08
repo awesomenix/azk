@@ -12,8 +12,9 @@ type ControlPlaneSpec struct {
 
 // ControlPlaneStatus defines the observed state of ControlPlane
 type ControlPlaneStatus struct {
-	KubernetesVersion string `json:"kubernetesVersion,omitempty"`
-	ProvisioningState string `json:"provisioningState,omitempty"`
+	KubernetesVersion string     `json:"kubernetesVersion,omitempty"`
+	ProvisioningState string     `json:"provisioningState,omitempty"`
+	NodeStatus        []VMStatus `json:"nodeStatus,omitempty"`
 }
 
 // +genclient

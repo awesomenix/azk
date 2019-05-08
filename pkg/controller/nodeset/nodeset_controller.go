@@ -198,11 +198,16 @@ func (r *ReconcileNodeSet) Reconcile(request reconcile.Request) (reconcile.Resul
 			return reconcile.Result{Requeue: true, RequeueAfter: 30 * time.Second}, err
 		}
 
+		subnetID := fmt.Sprintf(
+			"/subscriptions/%s/resourceGroups/%s/providers/Microsoft.Network/virtualNetworks/azk-vnet/subnets/agent-subnet",
+			cluster.Spec.SubscriptionID,
+			cluster.Spec.GroupName)
+
 		if err := cloudConfig.CreateVMSS(
 			context.TODO(),
 			instance.Name+"-agentvmss",
-			"azk-vnet",
-			"agent-subnet",
+			subnetID,
+			nil,
 			customDataStr,
 			vmSKUType,
 			int(*instance.Spec.Replicas),
@@ -295,15 +300,15 @@ func updateNodeSet(instance *enginev1alpha1.NodeSet, cloudConfig azhelpers.Cloud
 		return err
 	}
 
-	var nodesetVMStatus []enginev1alpha1.NodeSetVMStatus
+	var vmStatus []enginev1alpha1.VMStatus
 	for _, vmID := range result.Values() {
 		log.Info("Appending to VMSS Nodepool list", "VM", *vmID.OsProfile.ComputerName)
-		var status enginev1alpha1.NodeSetVMStatus
+		var status enginev1alpha1.VMStatus
 		status.VMComputerName = *vmID.OsProfile.ComputerName
 		status.VMInstanceID = *vmID.InstanceID
-		nodesetVMStatus = append(nodesetVMStatus, status)
+		vmStatus = append(vmStatus, status)
 	}
-	instance.Status.NodeStatus = nodesetVMStatus
+	instance.Status.NodeStatus = vmStatus
 	return nil
 }
 

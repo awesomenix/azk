@@ -13,14 +13,14 @@ type NodeSetSpec struct {
 
 // NodeSetStatus defines the observed state of NodeSet
 type NodeSetStatus struct {
-	Replicas          int32             `json:"replicas,omitempty"`
-	KubernetesVersion string            `json:"kubernetesVersion,omitempty"`
-	ProvisioningState string            `json:"provisioningState,omitempty"`
-	Kubeconfig        string            `json:"kubeConfig,omitempty"`
-	NodeStatus        []NodeSetVMStatus `json:"nodeStatus,omitempty"`
+	Replicas          int32      `json:"replicas,omitempty"`
+	KubernetesVersion string     `json:"kubernetesVersion,omitempty"`
+	ProvisioningState string     `json:"provisioningState,omitempty"`
+	Kubeconfig        string     `json:"kubeConfig,omitempty"`
+	NodeStatus        []VMStatus `json:"nodeStatus,omitempty"`
 }
 
-type NodeSetVMStatus struct {
+type VMStatus struct {
 	VMComputerName string `json:"vmComputerName,omitempty"`
 	VMInstanceID   string `json:"vmInstanceID,omitempty"`
 }

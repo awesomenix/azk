@@ -14,7 +14,7 @@ const (
 	azkLoadBalancerName         = "azk-lb"
 	azkInternalLoadBalancerName = "azk-internal-lb"
 	azkPublicIPName             = "azk-publicip"
-	masterAvailabilitySetName   = "azk-masters-availabilityset"
+	masterVmssName              = "azk-master-vmss"
 )
 
 func (spec *Spec) preRequisites(kubernetesVersion string) string {
@@ -105,14 +105,6 @@ func (spec *Spec) CreateBaseInfrastructure() error {
 	}
 	log.Info("Successfully Created", "VNET", "azk-vnet", "Location", spec.GroupLocation)
 
-	log.Info("Creating", "AvailabilitySet", masterAvailabilitySetName)
-	if _, err := spec.CreateAvailabilitySet(
-		context.TODO(),
-		masterAvailabilitySetName); err != nil {
-		return err
-	}
-	log.Info("Successfully Created", "AvailabilitySet", masterAvailabilitySetName)
-
 	log.Info("Creating Internal Load Balancer", "Name", azkInternalLoadBalancerName)
 	if err := spec.CreateInternalLoadBalancer(
 		context.TODO(),
@@ -170,24 +162,27 @@ func (spec *Spec) CreateInfrastructure() error {
 		"/etc/kubernetes/init-azure-bootstrap.sh": spec.GetBootstrapStartupScript(spec.BootstrapKubernetesVersion),
 	}
 
-	vmName := fmt.Sprintf("%s-mastervm-0", spec.ClusterName)
-	log.Info("Creating", "VM", vmName)
-	if err := spec.CreateVMWithLoadBalancer(
+	prefix := fmt.Sprintf("/subscriptions/%s/resourceGroups/%s/providers", spec.SubscriptionID, spec.GroupName)
+
+	subnetID := prefix + "/Microsoft.Network/virtualNetworks/azk-vnet/subnets/master-subnet"
+
+	loadbalancerIDs := []string{
+		prefix + "/Microsoft.Network/loadBalancers/azk-lb/backendAddressPools/master-backEndPool",
+		prefix + "/Microsoft.Network/loadBalancers/azk-internal-lb/backendAddressPools/master-internal-backEndPool",
+	}
+
+	log.Info("Creating", "VMSS", masterVmssName)
+	if err := spec.CreateVMSS(
 		context.TODO(),
-		vmName,
-		"azk-lb",
-		"azk-internal-lb",
-		"azk-vnet",
-		"master-subnet",
-		fmt.Sprintf("10.0.0.4"),
+		masterVmssName,
+		subnetID,
+		loadbalancerIDs,
 		base64.StdEncoding.EncodeToString([]byte(azhelpers.GetCustomData(customData, customRunData))),
-		masterAvailabilitySetName,
-		vmSKUType,
-		0); err != nil {
-		log.Error(err, "Creation Failed", "VM", vmName)
+		spec.BootstrapVMSKUType,
+		1); err != nil {
 		return err
 	}
-	log.Info("Successfully Created", "VM", vmName)
+	log.Info("Successfully Created", "VMSS", masterVmssName)
 
 	return nil
 }

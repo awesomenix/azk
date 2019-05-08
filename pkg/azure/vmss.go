@@ -6,6 +6,7 @@ import (
 	"crypto/rsa"
 	"encoding/base64"
 	"fmt"
+	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/services/compute/mgmt/2018-10-01/compute"
 	"github.com/Azure/go-autorest/autorest/to"
@@ -91,21 +92,16 @@ func (c *CloudConfiguration) GetVMSSVMsClient() (compute.VirtualMachineScaleSetV
 // Username, password, and sshPublicKeyPath determine logon credentials.
 func (c *CloudConfiguration) CreateVMSS(ctx context.Context,
 	vmssName,
-	vnetName,
-	subnetName,
+	subnetID string,
+	loadbalancerIDs []string,
 	//startupScript,
 	customData,
 	vmSKUType string,
 	count int) error {
 
-	subnetClient, err := c.GetSubnetsClient()
-	if err != nil {
-		return err
-	}
-
-	subnet, err := subnetClient.Get(ctx, c.GroupName, vnetName, subnetName, "")
-	if err != nil {
-		return err
+	var backendAddressPools []compute.SubResource
+	for _, loadBalancerID := range loadbalancerIDs {
+		backendAddressPools = append(backendAddressPools, compute.SubResource{ID: to.StringPtr(loadBalancerID)})
 	}
 
 	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
@@ -125,88 +121,101 @@ func (c *CloudConfiguration) CreateVMSS(ctx context.Context,
 		return err
 	}
 
-	future, err := vmssClient.CreateOrUpdate(
-		ctx,
-		c.GroupName,
-		vmssName,
-		compute.VirtualMachineScaleSet{
-			Location: to.StringPtr(c.GroupLocation),
-			Sku: &compute.Sku{
-				Name:     to.StringPtr(vmSKUType),
-				Capacity: to.Int64Ptr(int64(count)),
-			},
-			VirtualMachineScaleSetProperties: &compute.VirtualMachineScaleSetProperties{
-				Overprovision: to.BoolPtr(false),
-				UpgradePolicy: &compute.UpgradePolicy{
-					Mode: compute.Manual,
-					AutomaticOSUpgradePolicy: &compute.AutomaticOSUpgradePolicy{
-						EnableAutomaticOSUpgrade: to.BoolPtr(false),
-					},
+	zones, err := c.getZones(vmSKUType)
+	if err != nil {
+		return err
+	}
+
+	virtualMachineScaleSet := compute.VirtualMachineScaleSet{
+		Location: to.StringPtr(c.GroupLocation),
+		Sku: &compute.Sku{
+			Name:     to.StringPtr(vmSKUType),
+			Capacity: to.Int64Ptr(int64(count)),
+		},
+		VirtualMachineScaleSetProperties: &compute.VirtualMachineScaleSetProperties{
+			Overprovision: to.BoolPtr(false),
+			UpgradePolicy: &compute.UpgradePolicy{
+				Mode: compute.Manual,
+				AutomaticOSUpgradePolicy: &compute.AutomaticOSUpgradePolicy{
+					EnableAutomaticOSUpgrade: to.BoolPtr(false),
 				},
-				VirtualMachineProfile: &compute.VirtualMachineScaleSetVMProfile{
-					OsProfile: &compute.VirtualMachineScaleSetOSProfile{
-						ComputerNamePrefix: to.StringPtr(vmssName),
-						AdminUsername:      to.StringPtr("azureuser"),
-						AdminPassword:      to.StringPtr(helpers.GenerateRandomHexString(32)),
-						CustomData:         to.StringPtr(customData),
-						LinuxConfiguration: &compute.LinuxConfiguration{
-							SSH: &compute.SSHConfiguration{
-								PublicKeys: &[]compute.SSHPublicKey{
-									{
-										Path:    to.StringPtr("/home/azureuser/.ssh/authorized_keys"),
-										KeyData: to.StringPtr(sshKeyData),
-									},
+			},
+			VirtualMachineProfile: &compute.VirtualMachineScaleSetVMProfile{
+				OsProfile: &compute.VirtualMachineScaleSetOSProfile{
+					ComputerNamePrefix: to.StringPtr(vmssName),
+					AdminUsername:      to.StringPtr("azureuser"),
+					AdminPassword:      to.StringPtr(helpers.GenerateRandomHexString(32)),
+					CustomData:         to.StringPtr(customData),
+					LinuxConfiguration: &compute.LinuxConfiguration{
+						SSH: &compute.SSHConfiguration{
+							PublicKeys: &[]compute.SSHPublicKey{
+								{
+									Path:    to.StringPtr("/home/azureuser/.ssh/authorized_keys"),
+									KeyData: to.StringPtr(sshKeyData),
 								},
 							},
 						},
 					},
-					StorageProfile: &compute.VirtualMachineScaleSetStorageProfile{
-						ImageReference: &compute.ImageReference{
-							Offer:     to.StringPtr("UbuntuServer"),
-							Publisher: to.StringPtr("Canonical"),
-							Sku:       to.StringPtr("18.04-LTS"),
-							Version:   to.StringPtr("latest"),
-						},
+				},
+				StorageProfile: &compute.VirtualMachineScaleSetStorageProfile{
+					ImageReference: &compute.ImageReference{
+						Offer:     to.StringPtr("UbuntuServer"),
+						Publisher: to.StringPtr("Canonical"),
+						Sku:       to.StringPtr("18.04-LTS"),
+						Version:   to.StringPtr("latest"),
 					},
-					NetworkProfile: &compute.VirtualMachineScaleSetNetworkProfile{
-						NetworkInterfaceConfigurations: &[]compute.VirtualMachineScaleSetNetworkConfiguration{
-							{
-								Name: to.StringPtr(vmssName),
-								VirtualMachineScaleSetNetworkConfigurationProperties: &compute.VirtualMachineScaleSetNetworkConfigurationProperties{
-									Primary:            to.BoolPtr(true),
-									EnableIPForwarding: to.BoolPtr(true),
-									IPConfigurations: &[]compute.VirtualMachineScaleSetIPConfiguration{
-										{
-											Name: to.StringPtr(vmssName),
-											VirtualMachineScaleSetIPConfigurationProperties: &compute.VirtualMachineScaleSetIPConfigurationProperties{
-												Subnet: &compute.APIEntityReference{
-													ID: subnet.ID,
-												},
+				},
+				NetworkProfile: &compute.VirtualMachineScaleSetNetworkProfile{
+					NetworkInterfaceConfigurations: &[]compute.VirtualMachineScaleSetNetworkConfiguration{
+						{
+							Name: to.StringPtr(vmssName),
+							VirtualMachineScaleSetNetworkConfigurationProperties: &compute.VirtualMachineScaleSetNetworkConfigurationProperties{
+								Primary:            to.BoolPtr(true),
+								EnableIPForwarding: to.BoolPtr(true),
+								IPConfigurations: &[]compute.VirtualMachineScaleSetIPConfiguration{
+									{
+										Name: to.StringPtr(vmssName),
+										VirtualMachineScaleSetIPConfigurationProperties: &compute.VirtualMachineScaleSetIPConfigurationProperties{
+											Subnet: &compute.APIEntityReference{
+												ID: to.StringPtr(subnetID),
 											},
+											LoadBalancerBackendAddressPools: &backendAddressPools,
 										},
 									},
 								},
 							},
 						},
 					},
-					// ExtensionProfile: &compute.VirtualMachineScaleSetExtensionProfile{
-					// 	Extensions: &[]compute.VirtualMachineScaleSetExtension{
-					// 		{
-					// 			Name: to.StringPtr("startup_script"),
-					// 			VirtualMachineScaleSetExtensionProperties: &compute.VirtualMachineScaleSetExtensionProperties{
-					// 				Type:                    to.StringPtr("CustomScript"),
-					// 				TypeHandlerVersion:      to.StringPtr("2.0"),
-					// 				AutoUpgradeMinorVersion: to.BoolPtr(true),
-					// 				Settings:                map[string]bool{"skipDos2Unix": true},
-					// 				Publisher:               to.StringPtr("Microsoft.Azure.Extensions"),
-					// 				ProtectedSettings:       map[string]string{"script": startupScript},
-					// 			},
-					// 		},
-					// 	},
-					// },
 				},
+				// ExtensionProfile: &compute.VirtualMachineScaleSetExtensionProfile{
+				// 	Extensions: &[]compute.VirtualMachineScaleSetExtension{
+				// 		{
+				// 			Name: to.StringPtr("startup_script"),
+				// 			VirtualMachineScaleSetExtensionProperties: &compute.VirtualMachineScaleSetExtensionProperties{
+				// 				Type:                    to.StringPtr("CustomScript"),
+				// 				TypeHandlerVersion:      to.StringPtr("2.0"),
+				// 				AutoUpgradeMinorVersion: to.BoolPtr(true),
+				// 				Settings:                map[string]bool{"skipDos2Unix": true},
+				// 				Publisher:               to.StringPtr("Microsoft.Azure.Extensions"),
+				// 				ProtectedSettings:       map[string]string{"script": startupScript},
+				// 			},
+				// 		},
+				// 	},
+				// },
 			},
 		},
+	}
+
+	if zones != nil && len(zones) > 0 {
+		virtualMachineScaleSet.Zones = &zones
+		virtualMachineScaleSet.VirtualMachineScaleSetProperties.ZoneBalance = to.BoolPtr(true)
+	}
+
+	future, err := vmssClient.CreateOrUpdate(
+		ctx,
+		c.GroupName,
+		vmssName,
+		virtualMachineScaleSet,
 	)
 	if err != nil {
 		return fmt.Errorf("cannot create vmss: %v", err)
@@ -315,6 +324,36 @@ func (c *CloudConfiguration) DeleteVMSS(ctx context.Context, vmssName string) er
 
 	_, err = future.Result(vmssClient)
 	return err
+}
+
+func (c *CloudConfiguration) getZones(vmSKU string) ([]string, error) {
+	resClient := compute.NewResourceSkusClient(c.SubscriptionID)
+	a, err := c.getAuthorizerForResource()
+	if err != nil {
+		return nil, err
+	}
+	resClient.Authorizer = a
+	resClient.AddToUserAgent(c.UserAgent)
+
+	res, err := resClient.List(context.TODO())
+	if err != nil {
+		return nil, err
+	}
+
+	var zones []string
+	for _, resSku := range res.Values() {
+		if !strings.EqualFold(*resSku.Name, vmSKU) {
+			continue
+		}
+		for _, locationInfo := range *resSku.LocationInfo {
+			if !strings.EqualFold(*locationInfo.Location, c.GroupLocation) {
+				continue
+			}
+			zones = *locationInfo.Zones
+		}
+
+	}
+	return zones, nil
 }
 
 // StartVMSS starts the selected VMSS

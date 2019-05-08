@@ -211,7 +211,7 @@ func RunCreate(co *CreateOptions) error {
 			time.Sleep(3 * time.Second)
 			continue
 		}
-		if err := helpers.WaitForNodesReady(waitclient, "-mastervm-", 1); err != nil {
+		if err := helpers.WaitForNodesReady(waitclient, "azk-master-vmss", 1); err != nil {
 			loopErr = err
 			time.Sleep(3 * time.Second)
 			continue

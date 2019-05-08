@@ -4,9 +4,9 @@ import (
 	"context"
 	"encoding/base64"
 	"fmt"
-	"sync"
 	"time"
 
+	"github.com/Azure/azure-sdk-for-go/profiles/latest/compute/mgmt/compute"
 	enginev1alpha1 "github.com/awesomenix/azk/pkg/apis/engine/v1alpha1"
 	azhelpers "github.com/awesomenix/azk/pkg/azure"
 	"github.com/awesomenix/azk/pkg/bootstrap"
@@ -27,8 +27,7 @@ import (
 var log = logf.Log.WithName("controller")
 
 const (
-	masterAvailabilitySetName = "azk-masters-availabilityset"
-	controlPlaneFinalizerName = "controlplane.finalizers.engine.azk.io"
+	masterVmssName = "azk-master-vmss"
 )
 
 func preRequisites(kubernetesVersion, apiServerIP, internalDNSName string) string {
@@ -154,45 +153,6 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 		return reconcile.Result{}, err
 	}
 
-	if instance.ObjectMeta.DeletionTimestamp.IsZero() {
-		// The object is not being deleted, so if it does not have our finalizer,
-		// then lets add the finalizer and update the object.
-		if !helpers.ContainsFinalizer(instance.ObjectMeta.Finalizers, controlPlaneFinalizerName) {
-			instance.ObjectMeta.Finalizers = append(instance.ObjectMeta.Finalizers, controlPlaneFinalizerName)
-			if err := r.Update(context.TODO(), instance); err != nil {
-				return reconcile.Result{Requeue: true}, err
-			}
-			// Once updates object changes we need to requeue
-			return reconcile.Result{Requeue: true}, nil
-		}
-	} else {
-		if helpers.ContainsFinalizer(instance.ObjectMeta.Finalizers, controlPlaneFinalizerName) {
-			cluster, err := r.getCluster(context.TODO(), instance.Namespace)
-
-			if err == nil && cluster.Spec.IsValid() {
-				// resourceName := fmt.Sprintf("%s-mastervm", instance.Name)
-				// log.Info("Deleting Resources", "Name", resourceName)
-				// our finalizer is present, so lets handle our external dependency
-				// if err := cluster.Spec.DeleteResources(context.TODO(), resourceName); err != nil {
-				// 	// if fail to delete the external dependency here, return with error
-				// 	// so that it can be retried
-				// 	// meh! its fine if it fails, we definitely need to wait here for it to be deleted
-				// 	log.Error(err, "Error Deleting Resources", "Name", resourceName)
-				// } else {
-				// 	log.Info("Successfully Deleted Resources", "Name", resourceName)
-				// }
-			}
-
-			// remove our finalizer from the list and update it.
-			instance.ObjectMeta.Finalizers = helpers.RemoveFinalizer(instance.ObjectMeta.Finalizers, controlPlaneFinalizerName)
-			if err := r.Update(context.TODO(), instance); err != nil {
-				return reconcile.Result{Requeue: true}, nil
-			}
-		}
-
-		return reconcile.Result{}, nil
-	}
-
 	if instance.Spec.KubernetesVersion == instance.Status.KubernetesVersion {
 		return reconcile.Result{}, nil
 	}
@@ -205,6 +165,10 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 	if cluster.Status.ProvisioningState != "Succeeded" {
 		// Wait for cluster to initialize
 		return reconcile.Result{Requeue: true, RequeueAfter: 10 * time.Second}, nil
+	}
+
+	if err := updateVMSSStatus(instance, cluster); err != nil {
+		return reconcile.Result{}, err
 	}
 
 	if instance.Status.ProvisioningState == "Succeeded" &&
@@ -244,77 +208,64 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 		return reconcile.Result{Requeue: true, RequeueAfter: 30 * time.Second}, err
 	}
 
-	var globalErr error
-	if instance.Status.KubernetesVersion == "" {
-		var wg sync.WaitGroup
-		for i := 0; i < 3; i++ {
-			wg.Add(1)
-			go func(vmIndex int) {
-				defer wg.Done()
-				apiServerIP := "10.0.0.4"
-				if vmIndex == 0 {
-					apiServerIP = "10.0.0.5"
-				}
-				startupScript := getMasterStartupScript(
-					instance.Spec.KubernetesVersion,
-					apiServerIP,
-					cluster.Spec.InternalDNSName,
-					bootstrapToken,
-					cluster.Spec.DiscoveryHashes[0])
+	startupScript := getMasterStartupScript(
+		instance.Spec.KubernetesVersion,
+		"10.0.0.4",
+		cluster.Spec.InternalDNSName,
+		bootstrapToken,
+		cluster.Spec.DiscoveryHashes[0])
 
-				customRunData := map[string]string{
-					"/etc/kubernetes/init-azure-bootstrap.sh": startupScript,
-				}
-				vmName := fmt.Sprintf("%s-mastervm-%d", instance.Name, vmIndex)
-				log.Info("Creating", "VM", vmName)
-				if err := cluster.Spec.CreateVMWithLoadBalancer(
-					context.TODO(),
-					vmName,
-					"azk-lb",
-					"azk-internal-lb",
-					"azk-vnet",
-					"master-subnet",
-					fmt.Sprintf("10.0.0.%d", vmIndex+4),
-					base64.StdEncoding.EncodeToString([]byte(azhelpers.GetCustomData(customData, customRunData))),
-					masterAvailabilitySetName,
-					vmSKUType,
-					vmIndex); err != nil {
-					log.Error(err, "Creation Failed", "VM", vmName)
-					globalErr = err
-					return
-				}
-				r.recorder.Event(instance, "Normal", "Created", fmt.Sprintf("%s", vmName))
-				log.Info("Successfully Created", "VM", vmName)
-			}(i)
+	customRunData := map[string]string{
+		"/etc/kubernetes/init-azure-bootstrap.sh": startupScript,
+	}
+
+	prefix := fmt.Sprintf(
+		"/subscriptions/%s/resourceGroups/%s/providers",
+		cluster.Spec.SubscriptionID,
+		cluster.Spec.GroupName)
+
+	subnetID := prefix + "/Microsoft.Network/virtualNetworks/azk-vnet/subnets/master-subnet"
+
+	loadbalancerIDs := []string{
+		prefix + "/Microsoft.Network/loadBalancers/azk-lb/backendAddressPools/master-backEndPool",
+		prefix + "/Microsoft.Network/loadBalancers/azk-internal-lb/backendAddressPools/master-internal-backEndPool",
+	}
+
+	if len(instance.Status.NodeStatus) != 3 {
+		log.Info("Creating or Updating", "VMSS", masterVmssName)
+		if err := cluster.Spec.CreateVMSS(
+			context.TODO(),
+			masterVmssName,
+			subnetID,
+			loadbalancerIDs,
+			base64.StdEncoding.EncodeToString([]byte(azhelpers.GetCustomData(customData, customRunData))),
+			vmSKUType,
+			3); err != nil {
+			return reconcile.Result{}, err
 		}
-		wg.Wait()
+		log.Info("Successfully Created or Updated", "VMSS", masterVmssName)
 	} else if instance.Status.KubernetesVersion != instance.Spec.KubernetesVersion {
 		// Upgrading scenario
-		for i := 0; i < 3; i++ {
-			vmName := fmt.Sprintf("%s-mastervm-%d", instance.Name, i)
-			log.Info("Running Custom Script Extension, Upgrading", "VM", vmName, "KubernetesVersion", instance.Spec.KubernetesVersion)
-			if err := cluster.Spec.AddCustomScriptsExtension(
-				context.TODO(),
-				vmName,
-				"upgrade_"+instance.Spec.KubernetesVersion,
-				base64.StdEncoding.EncodeToString([]byte(getUpgradeScript(instance)))); err != nil {
-				log.Error(err, "Error Executing Custom Script Extension", "VM", vmName)
-				globalErr = err
-				continue
-			}
-			cluster.Spec.DeleteCustomScriptsExtension(
-				context.TODO(),
-				vmName,
-				"upgrade_"+instance.Spec.KubernetesVersion)
-			log.Info("Successfully Executed Custom Script Extension", "VM", vmName, "KubernetesVersion", instance.Spec.KubernetesVersion)
-		}
+		// for i := 0; i < 3; i++ {
+		// 	vmName := fmt.Sprintf("%s-mastervm-%d", instance.Name, i)
+		// 	log.Info("Running Custom Script Extension, Upgrading", "VM", vmName, "KubernetesVersion", instance.Spec.KubernetesVersion)
+		// 	if err := cluster.Spec.UpdateVmsss(
+		// 		context.TODO(),
+		// 		vmName,
+		// 		"upgrade_"+instance.Spec.KubernetesVersion,
+		// 		base64.StdEncoding.EncodeToString([]byte(getUpgradeScript(instance)))); err != nil {
+		// 		log.Error(err, "Error Executing Custom Script Extension", "VM", vmName)
+		// 		globalErr = err
+		// 		continue
+		// 	}
+		// 	cluster.Spec.DeleteCustomScriptsExtension(
+		// 		context.TODO(),
+		// 		vmName,
+		// 		"upgrade_"+instance.Spec.KubernetesVersion)
+		// 	log.Info("Successfully Executed Custom Script Extension", "VM", vmName, "KubernetesVersion", instance.Spec.KubernetesVersion)
+		// }
 	}
-
-	if globalErr != nil {
-		return reconcile.Result{}, globalErr
-	}
-
-	if err := helpers.WaitForNodesReady(r.Client, "-mastervm-", 3); err != nil {
+	if err := helpers.WaitForNodesReady(r.Client, masterVmssName, 3); err != nil {
 		return reconcile.Result{Requeue: true, RequeueAfter: 30 * time.Second}, err
 	}
 
@@ -353,4 +304,29 @@ func (r *ReconcileControlPlane) getCluster(ctx context.Context, namespace string
 	default:
 		return nil, fmt.Errorf("multiple clusters defined")
 	}
+}
+
+func updateVMSSStatus(instance *enginev1alpha1.ControlPlane, cluster *enginev1alpha1.Cluster) error {
+	vmssClient, err := cluster.Spec.GetVMSSVMsClient()
+	if err != nil {
+		log.Error(err, "Error GetVMSSVMsClient", "VMSS", masterVmssName)
+		return err
+	}
+
+	result, err := vmssClient.List(context.TODO(), cluster.Spec.GroupName, masterVmssName, "", "", string(compute.InstanceView))
+	if err != nil {
+		log.Error(err, "Error VMSSClient List", "VMSS", masterVmssName)
+		return err
+	}
+
+	var vmStatus []enginev1alpha1.VMStatus
+	for _, vmID := range result.Values() {
+		log.Info("Appending to VMSS ControlPlane list", "VM", *vmID.OsProfile.ComputerName)
+		var status enginev1alpha1.VMStatus
+		status.VMComputerName = *vmID.OsProfile.ComputerName
+		status.VMInstanceID = *vmID.InstanceID
+		vmStatus = append(vmStatus, status)
+	}
+	instance.Status.NodeStatus = vmStatus
+	return nil
 }

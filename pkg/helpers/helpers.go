@@ -202,6 +202,19 @@ func WaitForNodeVersionReady(kclient client.Client, nodeName string, kubernetesV
 	return localErr
 }
 
+func IsNodeUpdated(kclient client.Client, nodeName string, kubernetesVersion string) (bool, error) {
+	node := &corev1.Node{}
+	if err := kclient.Get(context.TODO(), client.ObjectKey{Name: nodeName, Namespace: ""}, node); err != nil {
+		return false, err
+	}
+
+	if node.Status.NodeInfo.KubeletVersion == "v"+kubernetesVersion {
+		return true, nil
+	}
+
+	return false, nil
+}
+
 func Recover() {
 	// recover from panic if one occured. Set err to nil otherwise.
 	if r := recover(); r != nil {

@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	addonassets "github.com/awesomenix/azk/assets/addons"
+	addonassets "github.com/awesomenix/azk/addonassets"
 	cmdhelpers "github.com/awesomenix/azk/cmd/azk/cmd/helpers"
 	"github.com/spf13/cobra"
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"

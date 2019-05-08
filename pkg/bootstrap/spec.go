@@ -41,6 +41,7 @@ type Spec struct {
 	CustomerKubeConfig           string   `json:"customerKubeConfig,omitempty"`
 	DiscoveryHashes              []string `json:"discoveryHashes,omitempty"`
 	PublicDNSName                string   `json:"publicDNSName,omitempty"`
+	PublicIPAdress               string   `json:"publicIPAddress,omitempty"`
 	InternalDNSName              string   `json:"internalDNSName,omitempty"`
 	AzureCloudProviderConfig     string   `json:"azureCloudProviderConfig,omitempty"`
 	BootstrapVMSKUType           string   `json:"bootstrapVMSKUType,omitempty"`
@@ -140,7 +141,7 @@ func CreateSpec(cloudConfig *azhelpers.CloudConfiguration, dnsPrefix, vmSKUType,
 		log.Info("Creating Customer Kubeconfig", "DNS", publicDNSName)
 		os.Remove(tmpDirName + "/kubeconfigs/admin.conf")
 		cfg.LocalAPIEndpoint = kubeadmapi.APIEndpoint{AdvertiseAddress: "10.0.0.4", BindPort: 6443}
-		cfg.ControlPlaneEndpoint = fmt.Sprintf("%s:443", publicDNSName)
+		cfg.ControlPlaneEndpoint = fmt.Sprintf("%s:6443", publicDNSName)
 		if err := kubeconfigphase.CreateKubeConfigFile(kubeadmconstants.AdminKubeConfigFileName, kubeConfigDir, cfg); err != nil {
 			return nil, err
 		}

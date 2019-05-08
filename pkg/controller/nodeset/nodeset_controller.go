@@ -275,7 +275,7 @@ func deleteNodeSet(ctx context.Context, instance *enginev1alpha1.NodeSet, cloudC
 	vmssName := instance.Name + "-agentvmss"
 
 	for _, vms := range instance.Status.NodeStatus {
-		err := cordonDrainAndDeleteNode(instance.Status.Kubeconfig, vms.VMComputerName)
+		err := helpers.CordonDrainAndDeleteNode(instance.Status.Kubeconfig, vms.VMComputerName)
 		if err != nil {
 			log.Info("Error in Cordon and Drain", "Error", err, "VM", vms.VMComputerName)
 		}
@@ -323,7 +323,7 @@ func scaleNodeSet(ctx context.Context, instance *enginev1alpha1.NodeSet, cluster
 			continue
 		}
 
-		err := cordonDrainAndDeleteNode(instance.Status.Kubeconfig, nodeStatus.VMComputerName)
+		err := helpers.CordonDrainAndDeleteNode(instance.Status.Kubeconfig, nodeStatus.VMComputerName)
 		if err != nil {
 			return err
 		}

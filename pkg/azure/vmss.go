@@ -141,7 +141,7 @@ func (c *CloudConfiguration) CreateVMSS(ctx context.Context,
 		VirtualMachineScaleSetProperties: &compute.VirtualMachineScaleSetProperties{
 			Overprovision: to.BoolPtr(false),
 			UpgradePolicy: &compute.UpgradePolicy{
-				Mode: compute.Manual,
+				Mode: compute.Automatic,
 				AutomaticOSUpgradePolicy: &compute.AutomaticOSUpgradePolicy{
 					EnableAutomaticOSUpgrade: to.BoolPtr(false),
 				},

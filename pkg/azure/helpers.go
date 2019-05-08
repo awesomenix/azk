@@ -23,6 +23,14 @@ type CloudConfiguration struct {
 	UserAgent      string
 }
 
+// ResourceNotFound parses the error to check if its a resource not found
+func ResourceNotFound(err error) bool {
+	if derr, ok := err.(autorest.DetailedError); ok && derr.StatusCode == 404 {
+		return true
+	}
+	return false
+}
+
 func (c *CloudConfiguration) getAuthorizerForResource() (autorest.Authorizer, error) {
 	env, err := azure.EnvironmentFromName(c.CloudName)
 	if err != nil {

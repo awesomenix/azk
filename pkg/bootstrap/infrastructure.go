@@ -81,7 +81,9 @@ func (spec *Spec) GetBootstrapStartupScript(kubernetesVersion string) string {
 set -eux
 %[1]s
 %[2]s
-sudo kubeadm init --config /tmp/kubeadm-config.yaml
+until sudo kubeadm init --config /tmp/kubeadm-config.yaml > /dev/null; do
+	sleep 30
+done
 mkdir -p $HOME/.kube
 sudo cp -f /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
@@ -136,10 +138,15 @@ func (spec *Spec) CreateBaseInfrastructure() error {
 	}
 	log.Info("Successfully Established Public IP", "Name", publicIPName, "Address", *pip.PublicIPAddressPropertiesFormat.IPAddress)
 
+	spec.PublicIPAdress = *pip.PublicIPAddressPropertiesFormat.IPAddress
+
 	return nil
 }
 
 func (spec *Spec) CreateInfrastructure() error {
+	if _, err := spec.GetVMSS(context.TODO(), masterVmssName); err != nil && !azhelpers.ResourceNotFound(err) {
+		return err
+	}
 
 	vmSKUType := spec.BootstrapVMSKUType
 	if vmSKUType == "" {

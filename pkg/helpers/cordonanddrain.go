@@ -1,10 +1,9 @@
-package nodeset
+package helpers
 
 import (
 	"fmt"
 	"os"
 
-	"github.com/awesomenix/azk/pkg/helpers"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/client-go/tools/clientcmd"
@@ -12,7 +11,7 @@ import (
 	cmdutil "k8s.io/kubernetes/pkg/kubectl/cmd/util"
 )
 
-func cordonDrainAndDeleteNode(kubeconfig string, vmName string) error {
+func CordonDrainAndDeleteNode(kubeconfig string, vmName string) error {
 	if kubeconfig == "" {
 		// empty kubeconfig, skip cordon and delete
 		return nil
@@ -22,7 +21,7 @@ func cordonDrainAndDeleteNode(kubeconfig string, vmName string) error {
 	if err != nil {
 		return fmt.Errorf("error setting up kubeconfig: %v", err)
 	}
-	f := cmdutil.NewFactory(&helpers.RestClientGetter{Config: clientConfig})
+	f := cmdutil.NewFactory(&RestClientGetter{Config: clientConfig})
 
 	streams := genericclioptions.IOStreams{
 		Out:    os.Stdout,

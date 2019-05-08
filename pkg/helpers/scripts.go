@@ -14,6 +14,7 @@ deb https://apt.kubernetes.io/ kubernetes-xenial main
 EOF
 sudo mv /tmp/kubernetes.list /etc/apt/sources.list.d/kubernetes.list
 sudo apt-get update
+sudo apt-get install -y etcd-client
 sudo apt-get install -y kubernetes-cni=0.6.0-00
 sudo apt-get install -y kubelet=%[1]s-00 kubectl=%[1]s-00 kubeadm=%[1]s-00
 sudo apt-mark hold kubelet kubeadm kubectl

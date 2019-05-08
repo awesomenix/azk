@@ -67,13 +67,18 @@ EOF
 	)
 }
 
-func getMasterStartupScript(kubernetesVersion, apiServerIP, internalDNSName, bootstrapToken, discoveryHash string) string {
+func getMasterStartupScript(kubernetesVersion, apiServerIP, internalDNSName, bootstrapToken, discoveryHash, etcdEndpoints string) string {
 	return fmt.Sprintf(`
 set -eux
 %[1]s
 %[2]s
 #Setup using kubeadm
-sudo kubeadm join --config /tmp/kubeadm-config.yaml
+until sudo kubeadm join --config /tmp/kubeadm-config.yaml > /dev/null; do
+	MEMBER_ID=$(sudo etcdctl --cert-file /etc/kubernetes/pki/etcd/server.crt --key-file /etc/kubernetes/pki/etcd/server.key --ca-file /etc/kubernetes/pki/etcd/ca.crt --endpoints \"%[4]s\" member list | grep -i $(uname -n) | cut -d ':' -f1)
+	[ ! -z "$MEMBER_ID" ] && sudo etcdctl --cert-file /etc/kubernetes/pki/etcd/server.crt --key-file /etc/kubernetes/pki/etcd/server.key --ca-file /etc/kubernetes/pki/etcd/ca.crt --endpoints \"%[4]s\" member remove $MEMBER_ID
+	sudo rm -rf /etc/kubernetes/manifests
+	sleep 30
+done
 sudo cp -f /etc/hosts.bak /tmp/hostsupdate
 sudo chown $(id -u):$(id -g) /tmp/hostsupdate
 echo '127.0.0.1 %[3]s' >> /tmp/hostsupdate
@@ -81,6 +86,7 @@ sudo mv /tmp/hostsupdate /etc/hosts
 `, preRequisites(kubernetesVersion, apiServerIP, internalDNSName),
 		kubeadmJoinConfig(bootstrapToken, internalDNSName, discoveryHash),
 		internalDNSName,
+		etcdEndpoints,
 	)
 }
 
@@ -212,12 +218,23 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 		return reconcile.Result{Requeue: true, RequeueAfter: 30 * time.Second}, err
 	}
 
+	var etcdEndpoints string
+	for _, nodeStatus := range instance.Status.NodeStatus {
+		if etcdEndpoints == "" {
+			etcdEndpoints = fmt.Sprintf("https://%s:2379", nodeStatus.VMComputerName)
+			continue
+		}
+		etcdEndpoints = fmt.Sprintf("%s,https://%s:2379", etcdEndpoints, nodeStatus.VMComputerName)
+	}
+
 	startupScript := getMasterStartupScript(
 		instance.Spec.KubernetesVersion,
-		"10.0.0.4",
+		cluster.Spec.PublicIPAdress,
 		cluster.Spec.InternalDNSName,
 		bootstrapToken,
-		cluster.Spec.DiscoveryHashes[0])
+		cluster.Spec.DiscoveryHashes[0],
+		etcdEndpoints,
+	)
 
 	customRunData := map[string]string{
 		"/etc/kubernetes/init-azure-bootstrap.sh": startupScript,
@@ -339,6 +356,14 @@ func (r *ReconcileControlPlane) upgradeVMSS(instance *enginev1alpha1.ControlPlan
 	}
 
 	for _, nodeStatus := range instance.Status.NodeStatus {
+		if isUpdated, err := helpers.IsNodeUpdated(r.Client, nodeStatus.VMComputerName, instance.Spec.KubernetesVersion); err != nil {
+			log.Error(err, "Error checking upgrade version", "VM", nodeStatus.VMComputerName)
+			return err
+		} else if isUpdated {
+			log.Info("Node Already at Expected Kubernetes Version", "VM", nodeStatus.VMComputerName)
+			continue
+		}
+
 		log.Info("Running Custom Script Extension, Upgrading", "VM", nodeStatus.VMComputerName, "KubernetesVersion", instance.Spec.KubernetesVersion)
 
 		future, err := vmssVMClient.RunCommand(context.TODO(), cluster.Spec.GroupName, masterVmssName, nodeStatus.VMInstanceID, upgradeCommand)
@@ -363,6 +388,56 @@ func (r *ReconcileControlPlane) upgradeVMSS(instance *enginev1alpha1.ControlPlan
 		}
 
 		log.Info("Successfully Executed Custom Script Extension", "VM", nodeStatus.VMComputerName, "KubernetesVersion", instance.Spec.KubernetesVersion)
+	}
+
+	return nil
+}
+
+func (r *ReconcileControlPlane) upgradeVMSSWithReimage(instance *enginev1alpha1.ControlPlane, cluster *enginev1alpha1.Cluster) error {
+	vmssVMClient, err := cluster.Spec.GetVMSSVMsClient()
+	if err != nil {
+		log.Error(err, "Error GetVMSSVMsClient", "VMSS", masterVmssName)
+		return err
+	}
+
+	for _, nodeStatus := range instance.Status.NodeStatus {
+		if isUpdated, err := helpers.IsNodeUpdated(r.Client, nodeStatus.VMComputerName, instance.Spec.KubernetesVersion); err != nil {
+			log.Error(err, "Error checking upgrade version", "VM", nodeStatus.VMComputerName)
+			return err
+		} else if isUpdated {
+			log.Info("Node Already at Expected Kubernetes Version", "VM", nodeStatus.VMComputerName)
+			continue
+		}
+
+		log.Info("Cordon, Drain and Delete Node", "VM", nodeStatus.VMComputerName, "KubernetesVersion", instance.Spec.KubernetesVersion)
+		if err := helpers.CordonDrainAndDeleteNode(cluster.Spec.CustomerKubeConfig, nodeStatus.VMComputerName); err != nil {
+			log.Info("Error in Cordon and Drain", "Error", err, "VM", nodeStatus.VMComputerName)
+		}
+
+		log.Info("Upgrading using Reimage", "VM", nodeStatus.VMComputerName, "KubernetesVersion", instance.Spec.KubernetesVersion)
+
+		future, err := vmssVMClient.Reimage(context.TODO(), cluster.Spec.GroupName, masterVmssName, nodeStatus.VMInstanceID, nil)
+		if err != nil {
+			log.Error(err, "Error vmssVMClient Upgrade", "VMSS", masterVmssName)
+			return err
+		}
+		err = future.WaitForCompletionRef(context.TODO(), vmssVMClient.Client)
+		if err != nil {
+			return fmt.Errorf("cannot get the vmss update future response: %v", err)
+		}
+
+		_, err = future.Result(vmssVMClient)
+		if err != nil {
+			log.Error(err, "Error Upgrading", "VMSS", masterVmssName, "VM", nodeStatus.VMComputerName)
+			return err
+		}
+
+		if err := helpers.WaitForNodeVersionReady(r.Client, nodeStatus.VMComputerName, instance.Spec.KubernetesVersion); err != nil {
+			log.Error(err, "Error waiting for upgrade", "VMSS", masterVmssName, "VM", nodeStatus.VMComputerName)
+			return err
+		}
+
+		log.Info("Successfully Upgraded using Reimage", "VM", nodeStatus.VMComputerName, "KubernetesVersion", instance.Spec.KubernetesVersion)
 	}
 
 	return nil

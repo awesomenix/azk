@@ -81,7 +81,7 @@ func (c *CloudConfiguration) CreateLoadBalancer(ctx context.Context, lbName, pip
 						Name: to.StringPtr("LBRuleHTTPS"),
 						LoadBalancingRulePropertiesFormat: &network.LoadBalancingRulePropertiesFormat{
 							Protocol:             network.TransportProtocolTCP,
-							FrontendPort:         to.Int32Ptr(443),
+							FrontendPort:         to.Int32Ptr(6443),
 							BackendPort:          to.Int32Ptr(6443),
 							IdleTimeoutInMinutes: to.Int32Ptr(4),
 							EnableFloatingIP:     to.BoolPtr(false),

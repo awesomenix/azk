@@ -86,6 +86,7 @@ sudo mv /tmp/hostsupdate /etc/hosts
 
 func getUpgradeScript(instance *enginev1alpha1.ControlPlane) string {
 	return fmt.Sprintf(`
+sudo apt-get upgrade -y kubectl=%[1]s-00 kubeadm=%[1]s-00
 sudo kubeadm upgrade apply --force --yes v%[1]s
 sudo kubectl --kubeconfig /etc/kubernetes/admin.conf drain $(uname -n) --ignore-daemonsets
 sudo apt-mark unhold kubelet
@@ -234,12 +235,17 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 		prefix + "/Microsoft.Network/loadBalancers/azk-internal-lb/backendAddressPools/master-internal-backEndPool",
 	}
 
+	natPoolIDs := []string{
+		prefix + "/Microsoft.Network/loadBalancers/azk-lb/inboundNatPools/natSSHPool",
+	}
+
 	log.Info("Creating or Updating", "VMSS", masterVmssName)
 	if err := cluster.Spec.CreateVMSS(
 		context.TODO(),
 		masterVmssName,
 		subnetID,
 		loadbalancerIDs,
+		natPoolIDs,
 		base64.StdEncoding.EncodeToString([]byte(azhelpers.GetCustomData(customData, customRunData))),
 		vmSKUType,
 		3); err != nil {
@@ -248,7 +254,7 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 	log.Info("Successfully Created or Updated", "VMSS", masterVmssName)
 	if instance.Status.KubernetesVersion != "" &&
 		instance.Status.KubernetesVersion != instance.Spec.KubernetesVersion {
-		if err := upgradeVMSS(instance, cluster); err != nil {
+		if err := r.upgradeVMSS(instance, cluster); err != nil {
 			return reconcile.Result{}, err
 		}
 	}
@@ -318,7 +324,7 @@ func updateVMSSStatus(instance *enginev1alpha1.ControlPlane, cluster *enginev1al
 	return nil
 }
 
-func upgradeVMSS(instance *enginev1alpha1.ControlPlane, cluster *enginev1alpha1.Cluster) error {
+func (r *ReconcileControlPlane) upgradeVMSS(instance *enginev1alpha1.ControlPlane, cluster *enginev1alpha1.Cluster) error {
 	vmssVMClient, err := cluster.Spec.GetVMSSVMsClient()
 	if err != nil {
 		log.Error(err, "Error GetVMSSVMsClient", "VMSS", masterVmssName)
@@ -326,9 +332,9 @@ func upgradeVMSS(instance *enginev1alpha1.ControlPlane, cluster *enginev1alpha1.
 	}
 
 	upgradeCommand := compute.RunCommandInput{
-		CommandID: to.StringPtr("upgrade_kubernetes_" + instance.Spec.KubernetesVersion),
+		CommandID: to.StringPtr("RunShellScript"),
 		Script: &[]string{
-			base64.StdEncoding.EncodeToString([]byte(getUpgradeScript(instance))),
+			getUpgradeScript(instance),
 		},
 	}
 
@@ -348,6 +354,11 @@ func upgradeVMSS(instance *enginev1alpha1.ControlPlane, cluster *enginev1alpha1.
 		_, err = future.Result(vmssVMClient)
 		if err != nil {
 			log.Error(err, "Error Upgrading", "VMSS", masterVmssName, "VM", nodeStatus.VMComputerName)
+			return err
+		}
+
+		if err := helpers.WaitForNodeVersionReady(r.Client, nodeStatus.VMComputerName, instance.Spec.KubernetesVersion); err != nil {
+			log.Error(err, "Error waiting for upgrade", "VMSS", masterVmssName, "VM", nodeStatus.VMComputerName)
 			return err
 		}
 

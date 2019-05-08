@@ -208,6 +208,7 @@ func (r *ReconcileNodeSet) Reconcile(request reconcile.Request) (reconcile.Resul
 			instance.Name+"-agentvmss",
 			subnetID,
 			nil,
+			nil,
 			customDataStr,
 			vmSKUType,
 			int(*instance.Spec.Replicas),

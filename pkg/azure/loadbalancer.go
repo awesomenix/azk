@@ -99,48 +99,21 @@ func (c *CloudConfiguration) CreateLoadBalancer(ctx context.Context, lbName, pip
 						},
 					},
 				},
-				InboundNatRules: &[]network.InboundNatRule{
-					{
-						Name: to.StringPtr("natRule1"),
-						InboundNatRulePropertiesFormat: &network.InboundNatRulePropertiesFormat{
-							Protocol:             network.TransportProtocolTCP,
-							FrontendPort:         to.Int32Ptr(22),
-							BackendPort:          to.Int32Ptr(22),
-							EnableFloatingIP:     to.BoolPtr(false),
-							IdleTimeoutInMinutes: to.Int32Ptr(4),
+				InboundNatPools: &[]network.InboundNatPool{
+					network.InboundNatPool{
+						InboundNatPoolPropertiesFormat: &network.InboundNatPoolPropertiesFormat{
 							FrontendIPConfiguration: &network.SubResource{
 								ID: to.StringPtr(fmt.Sprintf("/%s/%s/frontendIPConfigurations/%s", idPrefix, lbName, frontEndIPConfigName)),
 							},
-							EnableTCPReset: to.BoolPtr(true),
+							Protocol:               network.TransportProtocolTCP,
+							FrontendPortRangeStart: to.Int32Ptr(2200),
+							FrontendPortRangeEnd:   to.Int32Ptr(2210),
+							BackendPort:            to.Int32Ptr(22),
+							EnableFloatingIP:       to.BoolPtr(false),
+							IdleTimeoutInMinutes:   to.Int32Ptr(4),
+							EnableTCPReset:         to.BoolPtr(true),
 						},
-					},
-					{
-						Name: to.StringPtr("natRule2"),
-						InboundNatRulePropertiesFormat: &network.InboundNatRulePropertiesFormat{
-							Protocol:             network.TransportProtocolTCP,
-							FrontendPort:         to.Int32Ptr(2201),
-							BackendPort:          to.Int32Ptr(22),
-							EnableFloatingIP:     to.BoolPtr(false),
-							IdleTimeoutInMinutes: to.Int32Ptr(4),
-							FrontendIPConfiguration: &network.SubResource{
-								ID: to.StringPtr(fmt.Sprintf("/%s/%s/frontendIPConfigurations/%s", idPrefix, lbName, frontEndIPConfigName)),
-							},
-							EnableTCPReset: to.BoolPtr(true),
-						},
-					},
-					{
-						Name: to.StringPtr("natRule3"),
-						InboundNatRulePropertiesFormat: &network.InboundNatRulePropertiesFormat{
-							Protocol:             network.TransportProtocolTCP,
-							FrontendPort:         to.Int32Ptr(2202),
-							BackendPort:          to.Int32Ptr(22),
-							EnableFloatingIP:     to.BoolPtr(false),
-							IdleTimeoutInMinutes: to.Int32Ptr(4),
-							FrontendIPConfiguration: &network.SubResource{
-								ID: to.StringPtr(fmt.Sprintf("/%s/%s/frontendIPConfigurations/%s", idPrefix, lbName, frontEndIPConfigName)),
-							},
-							EnableTCPReset: to.BoolPtr(true),
-						},
+						Name: to.StringPtr("natSSHPool"),
 					},
 				},
 			},

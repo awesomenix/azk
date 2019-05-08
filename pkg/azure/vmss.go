@@ -94,6 +94,7 @@ func (c *CloudConfiguration) CreateVMSS(ctx context.Context,
 	vmssName,
 	subnetID string,
 	loadbalancerIDs []string,
+	natPoolIDs []string,
 	//startupScript,
 	customData,
 	vmSKUType string,
@@ -102,6 +103,11 @@ func (c *CloudConfiguration) CreateVMSS(ctx context.Context,
 	var backendAddressPools []compute.SubResource
 	for _, loadBalancerID := range loadbalancerIDs {
 		backendAddressPools = append(backendAddressPools, compute.SubResource{ID: to.StringPtr(loadBalancerID)})
+	}
+
+	var inboundNatPools []compute.SubResource
+	for _, natPoolID := range natPoolIDs {
+		inboundNatPools = append(inboundNatPools, compute.SubResource{ID: to.StringPtr(natPoolID)})
 	}
 
 	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
@@ -188,6 +194,7 @@ func (c *CloudConfiguration) CreateVMSS(ctx context.Context,
 												ID: to.StringPtr(subnetID),
 											},
 											LoadBalancerBackendAddressPools: &backendAddressPools,
+											LoadBalancerInboundNatPools:     &inboundNatPools,
 										},
 									},
 								},

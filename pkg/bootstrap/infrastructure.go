@@ -172,12 +172,17 @@ func (spec *Spec) CreateInfrastructure() error {
 		prefix + "/Microsoft.Network/loadBalancers/azk-internal-lb/backendAddressPools/master-internal-backEndPool",
 	}
 
+	natPoolIDs := []string{
+		prefix + "/Microsoft.Network/loadBalancers/azk-lb/inboundNatPools/natSSHPool",
+	}
+
 	log.Info("Creating", "VMSS", masterVmssName)
 	if err := spec.CreateVMSS(
 		context.TODO(),
 		masterVmssName,
 		subnetID,
 		loadbalancerIDs,
+		natPoolIDs,
 		base64.StdEncoding.EncodeToString([]byte(azhelpers.GetCustomData(customData, customRunData))),
 		spec.BootstrapVMSKUType,
 		1); err != nil {

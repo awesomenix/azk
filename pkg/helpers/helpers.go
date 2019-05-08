@@ -174,6 +174,34 @@ func GetKubeClient(kubeconfig string) (client.Client, error) {
 	return kclient, nil
 }
 
+func WaitForNodeVersionReady(kclient client.Client, nodeName string, kubernetesVersion string) error {
+	var localErr error
+	for i := 0; i < 100; i++ {
+		node := &corev1.Node{}
+		if err := kclient.Get(context.TODO(), client.ObjectKey{Name: nodeName, Namespace: ""}, node); err != nil {
+			return err
+		}
+
+		for _, c := range node.Status.Conditions {
+			if c.Type != corev1.NodeReady {
+				localErr = fmt.Errorf("Found node %s not ready", nodeName)
+				time.Sleep(3 * time.Second)
+				continue
+			}
+		}
+
+		if node.Status.NodeInfo.KubeletVersion != "v"+kubernetesVersion {
+			localErr = fmt.Errorf("Found node %s with version %s expected %s", nodeName, node.Status.NodeInfo.KubeletVersion, kubernetesVersion)
+			time.Sleep(3 * time.Second)
+			continue
+		}
+		localErr = nil
+		break
+	}
+
+	return localErr
+}
+
 func Recover() {
 	// recover from panic if one occured. Set err to nil otherwise.
 	if r := recover(); r != nil {

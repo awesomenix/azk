@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Azure/azure-sdk-for-go/profiles/latest/compute/mgmt/compute"
+	"github.com/Azure/go-autorest/autorest/to"
+
+	"github.com/Azure/azure-sdk-for-go/services/compute/mgmt/2019-03-01/compute"
 	enginev1alpha1 "github.com/awesomenix/azk/pkg/apis/engine/v1alpha1"
 	azhelpers "github.com/awesomenix/azk/pkg/azure"
 	"github.com/awesomenix/azk/pkg/bootstrap"
@@ -67,6 +69,7 @@ EOF
 
 func getMasterStartupScript(kubernetesVersion, apiServerIP, internalDNSName, bootstrapToken, discoveryHash string) string {
 	return fmt.Sprintf(`
+set -eux
 %[1]s
 %[2]s
 #Setup using kubeadm
@@ -231,39 +234,23 @@ func (r *ReconcileControlPlane) Reconcile(request reconcile.Request) (reconcile.
 		prefix + "/Microsoft.Network/loadBalancers/azk-internal-lb/backendAddressPools/master-internal-backEndPool",
 	}
 
-	if len(instance.Status.NodeStatus) != 3 {
-		log.Info("Creating or Updating", "VMSS", masterVmssName)
-		if err := cluster.Spec.CreateVMSS(
-			context.TODO(),
-			masterVmssName,
-			subnetID,
-			loadbalancerIDs,
-			base64.StdEncoding.EncodeToString([]byte(azhelpers.GetCustomData(customData, customRunData))),
-			vmSKUType,
-			3); err != nil {
+	log.Info("Creating or Updating", "VMSS", masterVmssName)
+	if err := cluster.Spec.CreateVMSS(
+		context.TODO(),
+		masterVmssName,
+		subnetID,
+		loadbalancerIDs,
+		base64.StdEncoding.EncodeToString([]byte(azhelpers.GetCustomData(customData, customRunData))),
+		vmSKUType,
+		3); err != nil {
+		return reconcile.Result{}, err
+	}
+	log.Info("Successfully Created or Updated", "VMSS", masterVmssName)
+	if instance.Status.KubernetesVersion != "" &&
+		instance.Status.KubernetesVersion != instance.Spec.KubernetesVersion {
+		if err := upgradeVMSS(instance, cluster); err != nil {
 			return reconcile.Result{}, err
 		}
-		log.Info("Successfully Created or Updated", "VMSS", masterVmssName)
-	} else if instance.Status.KubernetesVersion != instance.Spec.KubernetesVersion {
-		// Upgrading scenario
-		// for i := 0; i < 3; i++ {
-		// 	vmName := fmt.Sprintf("%s-mastervm-%d", instance.Name, i)
-		// 	log.Info("Running Custom Script Extension, Upgrading", "VM", vmName, "KubernetesVersion", instance.Spec.KubernetesVersion)
-		// 	if err := cluster.Spec.UpdateVmsss(
-		// 		context.TODO(),
-		// 		vmName,
-		// 		"upgrade_"+instance.Spec.KubernetesVersion,
-		// 		base64.StdEncoding.EncodeToString([]byte(getUpgradeScript(instance)))); err != nil {
-		// 		log.Error(err, "Error Executing Custom Script Extension", "VM", vmName)
-		// 		globalErr = err
-		// 		continue
-		// 	}
-		// 	cluster.Spec.DeleteCustomScriptsExtension(
-		// 		context.TODO(),
-		// 		vmName,
-		// 		"upgrade_"+instance.Spec.KubernetesVersion)
-		// 	log.Info("Successfully Executed Custom Script Extension", "VM", vmName, "KubernetesVersion", instance.Spec.KubernetesVersion)
-		// }
 	}
 	if err := helpers.WaitForNodesReady(r.Client, masterVmssName, 3); err != nil {
 		return reconcile.Result{Requeue: true, RequeueAfter: 30 * time.Second}, err
@@ -307,15 +294,15 @@ func (r *ReconcileControlPlane) getCluster(ctx context.Context, namespace string
 }
 
 func updateVMSSStatus(instance *enginev1alpha1.ControlPlane, cluster *enginev1alpha1.Cluster) error {
-	vmssClient, err := cluster.Spec.GetVMSSVMsClient()
+	vmssVMClient, err := cluster.Spec.GetVMSSVMsClient()
 	if err != nil {
 		log.Error(err, "Error GetVMSSVMsClient", "VMSS", masterVmssName)
 		return err
 	}
 
-	result, err := vmssClient.List(context.TODO(), cluster.Spec.GroupName, masterVmssName, "", "", string(compute.InstanceView))
+	result, err := vmssVMClient.List(context.TODO(), cluster.Spec.GroupName, masterVmssName, "", "", string(compute.InstanceView))
 	if err != nil {
-		log.Error(err, "Error VMSSClient List", "VMSS", masterVmssName)
+		log.Error(err, "Error vmssVMClient List", "VMSS", masterVmssName)
 		return err
 	}
 
@@ -328,5 +315,44 @@ func updateVMSSStatus(instance *enginev1alpha1.ControlPlane, cluster *enginev1al
 		vmStatus = append(vmStatus, status)
 	}
 	instance.Status.NodeStatus = vmStatus
+	return nil
+}
+
+func upgradeVMSS(instance *enginev1alpha1.ControlPlane, cluster *enginev1alpha1.Cluster) error {
+	vmssVMClient, err := cluster.Spec.GetVMSSVMsClient()
+	if err != nil {
+		log.Error(err, "Error GetVMSSVMsClient", "VMSS", masterVmssName)
+		return err
+	}
+
+	upgradeCommand := compute.RunCommandInput{
+		CommandID: to.StringPtr("upgrade_kubernetes_" + instance.Spec.KubernetesVersion),
+		Script: &[]string{
+			base64.StdEncoding.EncodeToString([]byte(getUpgradeScript(instance))),
+		},
+	}
+
+	for _, nodeStatus := range instance.Status.NodeStatus {
+		log.Info("Running Custom Script Extension, Upgrading", "VM", nodeStatus.VMComputerName, "KubernetesVersion", instance.Spec.KubernetesVersion)
+
+		future, err := vmssVMClient.RunCommand(context.TODO(), cluster.Spec.GroupName, masterVmssName, nodeStatus.VMInstanceID, upgradeCommand)
+		if err != nil {
+			log.Error(err, "Error vmssVMClient Upgrade", "VMSS", masterVmssName)
+			return err
+		}
+		err = future.WaitForCompletionRef(context.TODO(), vmssVMClient.Client)
+		if err != nil {
+			return fmt.Errorf("cannot get the vmss update future response: %v", err)
+		}
+
+		_, err = future.Result(vmssVMClient)
+		if err != nil {
+			log.Error(err, "Error Upgrading", "VMSS", masterVmssName, "VM", nodeStatus.VMComputerName)
+			return err
+		}
+
+		log.Info("Successfully Executed Custom Script Extension", "VM", nodeStatus.VMComputerName, "KubernetesVersion", instance.Spec.KubernetesVersion)
+	}
+
 	return nil
 }

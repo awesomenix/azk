@@ -17,9 +17,18 @@ required = [
 
 [prune]
   go-tests = true
-
+  unused-packages = true
+  non-go = true
 
 # STANZAS BELOW ARE GENERATED AND MAY BE WRITTEN - DO NOT MODIFY BELOW THIS LINE.
+
+[[override]]
+  name = "github.com/census-instrumentation/opencensus-proto"
+  version = "=v0.2.0"
+
+[[override]]
+  name = "github.com/golang/protobuf"
+  version = "=v1.3.1"
 
 [[constraint]]
   name="sigs.k8s.io/controller-runtime"
@@ -27,11 +36,11 @@ required = [
 
 [[constraint]]
   name="sigs.k8s.io/controller-tools"
-  version="v0.1.1"
+  version="v0.1.10"
 
 [[constraint]]
   name = "github.com/Azure/azure-sdk-for-go"
-  version = "26.7.0"
+  version = "29.0.0"
 
 # For dependency below: Refer to issue https://github.com/golang/dep/issues/1799
 [[override]]
@@ -70,7 +79,3 @@ version="v1.4.7"
 [[override]]
   name = "k8s.io/cli-runtime"
   version = "kubernetes-1.13.5"
-  
-[[override]]
-  name = "github.com/russross/blackfriday"
-  revision = "300106c228d52c8941d4b3de6054a6062a86dda3"

@@ -78,6 +78,7 @@ func (spec *Spec) GetEncodedBootstrapStartupScript(kubernetesVersion string) str
 
 func (spec *Spec) GetBootstrapStartupScript(kubernetesVersion string) string {
 	return fmt.Sprintf(`
+set -eux
 %[1]s
 %[2]s
 sudo kubeadm init --config /tmp/kubeadm-config.yaml

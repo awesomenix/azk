@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Azure/azure-sdk-for-go/services/compute/mgmt/2018-10-01/compute"
+	"github.com/Azure/azure-sdk-for-go/services/compute/mgmt/2019-03-01/compute"
 	"github.com/Azure/go-autorest/autorest/to"
 	"github.com/awesomenix/azk/pkg/helpers"
 	"golang.org/x/crypto/ssh"
@@ -163,6 +163,14 @@ func (c *CloudConfiguration) CreateVMSS(ctx context.Context,
 						Publisher: to.StringPtr("Canonical"),
 						Sku:       to.StringPtr("18.04-LTS"),
 						Version:   to.StringPtr("latest"),
+					},
+					OsDisk: &compute.VirtualMachineScaleSetOSDisk{
+						CreateOption: compute.DiskCreateOptionTypesFromImage,
+						DiskSizeGB:   to.Int32Ptr(64),
+						OsType:       compute.Linux,
+						ManagedDisk: &compute.VirtualMachineScaleSetManagedDiskParameters{
+							StorageAccountType: compute.StorageAccountTypesPremiumLRS,
+						},
 					},
 				},
 				NetworkProfile: &compute.VirtualMachineScaleSetNetworkProfile{

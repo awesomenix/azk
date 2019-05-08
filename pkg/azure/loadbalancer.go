@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/Azure/azure-sdk-for-go/services/network/mgmt/2018-12-01/network"
+	"github.com/Azure/azure-sdk-for-go/services/network/mgmt/2019-02-01/network"
 	"github.com/Azure/go-autorest/autorest/to"
 )
 
@@ -95,6 +95,7 @@ func (c *CloudConfiguration) CreateLoadBalancer(ctx context.Context, lbName, pip
 							Probe: &network.SubResource{
 								ID: to.StringPtr(fmt.Sprintf("/%s/%s/probes/%s", idPrefix, lbName, probeName)),
 							},
+							EnableTCPReset: to.BoolPtr(true),
 						},
 					},
 				},
@@ -110,6 +111,7 @@ func (c *CloudConfiguration) CreateLoadBalancer(ctx context.Context, lbName, pip
 							FrontendIPConfiguration: &network.SubResource{
 								ID: to.StringPtr(fmt.Sprintf("/%s/%s/frontendIPConfigurations/%s", idPrefix, lbName, frontEndIPConfigName)),
 							},
+							EnableTCPReset: to.BoolPtr(true),
 						},
 					},
 					{
@@ -123,6 +125,7 @@ func (c *CloudConfiguration) CreateLoadBalancer(ctx context.Context, lbName, pip
 							FrontendIPConfiguration: &network.SubResource{
 								ID: to.StringPtr(fmt.Sprintf("/%s/%s/frontendIPConfigurations/%s", idPrefix, lbName, frontEndIPConfigName)),
 							},
+							EnableTCPReset: to.BoolPtr(true),
 						},
 					},
 					{
@@ -136,6 +139,7 @@ func (c *CloudConfiguration) CreateLoadBalancer(ctx context.Context, lbName, pip
 							FrontendIPConfiguration: &network.SubResource{
 								ID: to.StringPtr(fmt.Sprintf("/%s/%s/frontendIPConfigurations/%s", idPrefix, lbName, frontEndIPConfigName)),
 							},
+							EnableTCPReset: to.BoolPtr(true),
 						},
 					},
 				},
@@ -228,6 +232,7 @@ func (c *CloudConfiguration) CreateInternalLoadBalancer(ctx context.Context, vne
 							Probe: &network.SubResource{
 								ID: to.StringPtr(fmt.Sprintf("/%s/%s/probes/%s", idPrefix, lbName, probeName)),
 							},
+							EnableTCPReset: to.BoolPtr(true),
 						},
 					},
 				},

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Azure/azure-sdk-for-go/profiles/latest/compute/mgmt/compute"
+	"github.com/Azure/azure-sdk-for-go/services/compute/mgmt/2019-03-01/compute"
 	enginev1alpha1 "github.com/awesomenix/azk/pkg/apis/engine/v1alpha1"
 	azhelpers "github.com/awesomenix/azk/pkg/azure"
 	"github.com/awesomenix/azk/pkg/bootstrap"

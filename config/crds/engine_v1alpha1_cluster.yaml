@@ -66,6 +66,8 @@ spec:
               type: string
             publicDNSName:
               type: string
+            publicIPAddress:
+              type: string
             serviceAccountKey:
               type: string
             serviceAccountPub:

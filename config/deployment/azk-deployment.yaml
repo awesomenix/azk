@@ -345,7 +345,7 @@ spec:
               fieldPath: metadata.namespace
         - name: SECRET_NAME
           value: azk-webhook-server-secret
-        image: quay.io/awesomenix/azk-manager:v0.1.1
+        image: quay.io/awesomenix/azk-manager:v0.1.3
         imagePullPolicy: Always
         name: manager
         ports:

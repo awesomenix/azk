@@ -79,3 +79,7 @@ version="v1.4.7"
 [[override]]
   name = "k8s.io/cli-runtime"
   version = "kubernetes-1.13.5"
+
+[[override]]
+  name = "github.com/russross/blackfriday"
+  version = "v1.5.2"

@@ -26,7 +26,7 @@ const (
 )
 
 type Spec struct {
-	azhelpers.CloudConfiguration `json:"-"`
+	azhelpers.CloudConfiguration `json:",inline"`
 	DNSPrefix                    string   `json:"dnsPrefix,omitempty"`
 	ClusterName                  string   `json:"clusterName,omitempty"`
 	CACertificate                string   `json:"caCertificate,omitempty"`

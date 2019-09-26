@@ -8,6 +8,7 @@ import (
 
 	"github.com/go-logr/logr"
 	"k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/record"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -24,6 +25,7 @@ type NodePoolReconciler struct {
 	client.Client
 	Log logr.Logger
 	record.EventRecorder
+	*runtime.Scheme
 }
 
 // +kubebuilder:rbac:groups=engine.azk.io,resources=nodepools,verbs=get;list;watch;create;update;patch;delete
@@ -62,7 +64,7 @@ func (r *NodePoolReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 			VMSKUType:         instance.Spec.VMSKUType,
 		},
 	}
-	if err := controllerutil.SetControllerReference(instance, nodeSet, nil); err != nil {
+	if err := controllerutil.SetControllerReference(instance, nodeSet, r.Scheme); err != nil {
 		return ctrl.Result{}, err
 	}
 

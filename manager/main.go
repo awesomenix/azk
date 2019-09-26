@@ -66,6 +66,7 @@ func main() {
 		Client:        mgr.GetClient(),
 		Log:           ctrl.Log.WithName("controllers").WithName("NodePool"),
 		EventRecorder: mgr.GetEventRecorderFor("nodepool-controller"),
+		Scheme:        scheme,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "NodePool")
 		os.Exit(1)

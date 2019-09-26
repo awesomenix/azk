@@ -30,20 +30,22 @@ func KubectlApply(manifestPath, kubeconfig string) error {
 	}
 
 	apply := kubectlapply.NewCmdApply("kubectl", f, streams)
-	args := []string{manifestPath}
-	options := kubectlapply.NewApplyOptions(streams)
 
-	err = options.Complete(f, apply)
+	apply.SetArgs([]string{
+		"-f",
+		manifestPath,
+	})
+
+	var applyerr error
+	cmdutil.BehaviorOnFatal(func(msg string, code int) {
+		applyerr = fmt.Errorf("failed to apply: %s", msg)
+	})
+	err = apply.Execute()
 	if err != nil {
-		return fmt.Errorf("error setting up apply: %v", err)
+		return err
 	}
-
-	options.DeleteOptions.FilenameOptions.Filenames = args
-	options.DeleteOptions.FilenameOptions.Recursive = true
-
-	err = options.Run()
-	if err != nil {
-		return fmt.Errorf("failed to apply %s: %v", manifestPath, err)
+	if applyerr != nil {
+		return applyerr
 	}
 
 	return nil

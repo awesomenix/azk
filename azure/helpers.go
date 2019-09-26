@@ -13,14 +13,14 @@ const (
 )
 
 type CloudConfiguration struct {
-	CloudName      string
-	SubscriptionID string
-	ClientID       string
-	ClientSecret   string
-	TenantID       string
-	GroupName      string
-	GroupLocation  string
-	UserAgent      string
+	CloudName      string `json:"cloud,omitempty"`
+	SubscriptionID string `json:"subscriptionID,omitempty"`
+	ClientID       string `json:"clientID,omitempty"`
+	ClientSecret   string `json:"clientSecret,omitempty"`
+	TenantID       string `json:"tenantID,omitempty"`
+	GroupName      string `json:"groupName,omitempty"`
+	GroupLocation  string `json:"groupLocation,omitempty"`
+	UserAgent      string `json:"userAgent,omitempty"`
 }
 
 // ResourceNotFound parses the error to check if its a resource not found

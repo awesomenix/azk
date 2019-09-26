@@ -14,15 +14,15 @@ endif
 all: manager
 
 # Run tests
-test: generate fmt vet manifests
+test: deployment fmt vet
 	go test ./... -coverprofile cover.out
 
 # Build manager binary
-manager: generate fmt vet
+manager: generate fmt vet allassets
 	go build -o bin/manager manager/main.go
 
 # Run against the configured Kubernetes cluster in ~/.kube/config
-run: generate fmt vet manifests
+run: generate fmt vet manifests allassets
 	go run ./manager/main.go
 
 # Install CRDs into a cluster
@@ -38,10 +38,12 @@ deploy: manifests
 manifests: generate
 	$(CONTROLLER_GEN) $(CRD_OPTIONS) rbac:roleName=manager-role webhook paths="./..." output:crd:artifacts:config=config/crd/bases
 
-manifest-deployment: manifests
+deployment: manifests
 	mkdir -p config/deployment
 	cd config/manager && kustomize edit set image controller=${IMG}
 	kustomize build config/default > config/deployment/azk-deployment.yaml
+	go generate -tags dev ./assets/...
+	go generate -tags dev ./addonassets/...
 
 # Run go fmt against code
 fmt:
@@ -52,7 +54,7 @@ vet:
 	go vet ./...
 
 # Generate code
-generate: allassets controller-gen
+generate: controller-gen
 	$(CONTROLLER_GEN) object:headerFile=./hack/boilerplate.go.txt paths="./..."
 
 allassets:

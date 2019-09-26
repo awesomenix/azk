@@ -44,6 +44,12 @@ spec:
               type: string
             caCertificateKey:
               type: string
+            clientID:
+              type: string
+            clientSecret:
+              type: string
+            cloud:
+              type: string
             clusterName:
               type: string
             customerKubeConfig:
@@ -62,6 +68,10 @@ spec:
               type: string
             frontProxyCACertificateKey:
               type: string
+            groupLocation:
+              type: string
+            groupName:
+              type: string
             internalDNSName:
               type: string
             publicDNSName:
@@ -71,6 +81,12 @@ spec:
             serviceAccountKey:
               type: string
             serviceAccountPub:
+              type: string
+            subscriptionID:
+              type: string
+            tenantID:
+              type: string
+            userAgent:
               type: string
           type: object
         status:

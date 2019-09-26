@@ -1,10 +1,7 @@
 apiVersion: engine.azk.io/v1alpha1
 kind: NodeSet
 metadata:
-  labels:
-    controller-tools.k8s.io: "1.0"
   name: nodeset-sample
 spec:
   # Add fields here
-  kubernetesVersion: 1.11.6
-  replicas: 1
+  foo: bar

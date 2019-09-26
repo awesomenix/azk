@@ -1,48 +1,61 @@
 
 # Image URL to use all building/pushing image targets
 IMG ?= quay.io/awesomenix/azk-manager:latest
-RELEASE_LABEL ?= $(git describe --tags)
+# Produce CRDs that work back to Kubernetes 1.11 (no version conversion)
+CRD_OPTIONS ?= "crd:trivialVersions=true"
 
-all: test manager
+# Get the currently used golang install path (in GOPATH/bin, unless GOBIN is set)
+ifeq (,$(shell go env GOBIN))
+GOBIN=$(shell go env GOPATH)/bin
+else
+GOBIN=$(shell go env GOBIN)
+endif
+
+all: manager
 
 # Run tests
 test: generate fmt vet manifests
-	go test ./pkg/... ./cmd/... -coverprofile cover.out
+	go test ./... -coverprofile cover.out
 
 # Build manager binary
 manager: generate fmt vet
-	go build -o bin/manager github.com/awesomenix/azk/cmd/manager
+	go build -o bin/manager manager/main.go
 
 # Run against the configured Kubernetes cluster in ~/.kube/config
-run: generate fmt vet
-	go run ./cmd/manager/main.go
+run: generate fmt vet manifests
+	go run ./manager/main.go
 
 # Install CRDs into a cluster
 install: manifests
-	kubectl apply -f config/crds
+	kustomize build config/crd | kubectl apply -f -
 
 # Deploy controller in the configured Kubernetes cluster in ~/.kube/config
 deploy: manifests
-	kubectl apply -f config/crds
+	cd config/manager && kustomize edit set image controller=${IMG}
 	kustomize build config/default | kubectl apply -f -
 
 # Generate manifests e.g. CRD, RBAC etc.
-manifests:
-	go run vendor/sigs.k8s.io/controller-tools/cmd/controller-gen/main.go all
+manifests: generate
+	$(CONTROLLER_GEN) $(CRD_OPTIONS) rbac:roleName=manager-role webhook paths="./..." output:crd:artifacts:config=config/crd/bases
+
+manifest-deployment: manifests
+	mkdir -p config/deployment
+	cd config/manager && kustomize edit set image controller=${IMG}
+	kustomize build config/default > config/deployment/azk-deployment.yaml
 
 # Run go fmt against code
 fmt:
-	go fmt ./pkg/... ./cmd/...
+	go fmt ./...
 
 # Run go vet against code
 vet:
-	go vet ./pkg/... ./cmd/...
+	go vet ./...
 
 # Generate code
-generate:
-	go get -u github.com/shurcooL/vfsgen/cmd/vfsgendev
-	go generate ./pkg/... ./cmd/...
-	kustomize build config/default > config/deployment/azk-deployment.yaml
+generate: allassets controller-gen
+	$(CONTROLLER_GEN) object:headerFile=./hack/boilerplate.go.txt paths="./..."
+
+allassets:
 	go generate -tags dev ./assets/...
 	go generate -tags dev ./addonassets/...
 
@@ -54,8 +67,12 @@ docker-build: test
 docker-push:
 	docker push ${IMG}
 
-release:
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o bin/linux/azk cmd/azk/main.go
-	tar -czf bin/azk-linux-${RELEASE_LABEL}.tar.gz bin/linux/azk
-	CGO_ENABLED=0 GOARCH=amd64 go build -a -o bin/osx/azk cmd/azk/main.go
-	tar -czf bin/azk-osx-${RELEASE_LABEL}.tar.gz bin/osx/azk
+# find or download controller-gen
+# download controller-gen if necessary
+controller-gen:
+ifeq (, $(shell which controller-gen))
+	go get sigs.k8s.io/controller-tools/cmd/controller-gen@v0.2.0
+CONTROLLER_GEN=$(GOBIN)/controller-gen
+else
+CONTROLLER_GEN=$(shell which controller-gen)
+endif

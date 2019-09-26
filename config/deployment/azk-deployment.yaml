@@ -2,39 +2,330 @@ apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    controller-tools.k8s.io: "1.0"
+    control-plane: controller-manager
   name: azk-system
 ---
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
 metadata:
   creationTimestamp: null
-  name: azk-manager-role
+  name: clusters.engine.azk.io
+spec:
+  group: engine.azk.io
+  names:
+    kind: Cluster
+    plural: clusters
+  scope: ""
+  subresources:
+    status: {}
+  validation:
+    openAPIV3Schema:
+      description: Cluster is the Schema for the clusters API
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          description: ClusterSpec defines the desired state of Cluster
+          properties:
+            adminKubeConfig:
+              type: string
+            azureCloudProviderConfig:
+              type: string
+            bootstrapKubernetesVersion:
+              type: string
+            bootstrapVMSKUType:
+              type: string
+            caCertificate:
+              type: string
+            caCertificateKey:
+              type: string
+            clusterName:
+              type: string
+            customerKubeConfig:
+              type: string
+            discoveryHashes:
+              items:
+                type: string
+              type: array
+            dnsPrefix:
+              type: string
+            etcdCACertificate:
+              type: string
+            etcdCACertificateKey:
+              type: string
+            frontProxyCACertificate:
+              type: string
+            frontProxyCACertificateKey:
+              type: string
+            internalDNSName:
+              type: string
+            publicDNSName:
+              type: string
+            publicIPAddress:
+              type: string
+            serviceAccountKey:
+              type: string
+            serviceAccountPub:
+              type: string
+          type: object
+        status:
+          description: ClusterStatus defines the observed state of Cluster
+          properties:
+            provisioningState:
+              type: string
+          type: object
+      type: object
+  version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  name: controlplanes.engine.azk.io
+spec:
+  group: engine.azk.io
+  names:
+    kind: ControlPlane
+    plural: controlplanes
+  scope: ""
+  subresources:
+    status: {}
+  validation:
+    openAPIV3Schema:
+      description: ControlPlane is the Schema for the controlplanes API
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          description: ControlPlaneSpec defines the desired state of ControlPlane
+          properties:
+            kubernetesVersion:
+              type: string
+            vmSKUType:
+              type: string
+          type: object
+        status:
+          description: ControlPlaneStatus defines the observed state of ControlPlane
+          properties:
+            kubernetesVersion:
+              type: string
+            nodeStatus:
+              items:
+                properties:
+                  vmComputerName:
+                    type: string
+                  vmInstanceID:
+                    type: string
+                type: object
+              type: array
+            provisioningState:
+              type: string
+          type: object
+      type: object
+  version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  name: nodepools.engine.azk.io
+spec:
+  group: engine.azk.io
+  names:
+    kind: NodePool
+    plural: nodepools
+  scope: ""
+  subresources:
+    scale:
+      specReplicasPath: .spec.replicas
+      statusReplicasPath: .status.replicas
+    status: {}
+  validation:
+    openAPIV3Schema:
+      description: NodePool is the Schema for the nodepools API
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          description: NodePoolSpec defines the desired state of NodePool
+          properties:
+            kubernetesVersion:
+              type: string
+            replicas:
+              format: int32
+              type: integer
+            vmSKUType:
+              type: string
+          type: object
+        status:
+          description: NodePoolStatus defines the observed state of NodePool
+          properties:
+            kubeConfig:
+              type: string
+            kubernetesVersion:
+              type: string
+            nodeStatus:
+              items:
+                properties:
+                  vmComputerName:
+                    type: string
+                  vmInstanceID:
+                    type: string
+                type: object
+              type: array
+            nodesetName:
+              type: string
+            provisioningState:
+              type: string
+            replicas:
+              format: int32
+              type: integer
+            vmreplicas:
+              format: int32
+              type: integer
+          type: object
+      type: object
+  version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  name: nodesets.engine.azk.io
+spec:
+  group: engine.azk.io
+  names:
+    kind: NodeSet
+    plural: nodesets
+  scope: ""
+  validation:
+    openAPIV3Schema:
+      description: NodeSet is the Schema for the nodesets API
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          description: NodeSetSpec defines the desired state of NodeSet
+          properties:
+            kubernetesVersion:
+              type: string
+            replicas:
+              format: int32
+              type: integer
+            vmSKUType:
+              type: string
+          type: object
+        status:
+          description: NodeSetStatus defines the observed state of NodeSet
+          properties:
+            kubeConfig:
+              type: string
+            kubernetesVersion:
+              type: string
+            nodeStatus:
+              items:
+                properties:
+                  vmComputerName:
+                    type: string
+                  vmInstanceID:
+                    type: string
+                type: object
+              type: array
+            provisioningState:
+              type: string
+            replicas:
+              format: int32
+              type: integer
+          type: object
+      type: object
+  version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: azk-leader-election-role
+  namespace: azk-system
 rules:
-- apiGroups:
-  - ""
-  resources:
-  - nodes
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
-- apiGroups:
-  - ""
-  resources:
-  - secrets
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
 - apiGroups:
   - ""
   resources:
@@ -50,152 +341,144 @@ rules:
 - apiGroups:
   - ""
   resources:
-  - events
+  - configmaps/status
   verbs:
   - get
-  - list
-  - watch
-  - create
   - update
   - patch
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  creationTimestamp: null
+  name: azk-manager-role
+rules:
+- resources:
+  - configmaps
+  verbs:
+  - create
   - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- resources:
+  - events
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- resources:
+  - nodes
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- resources:
+  - secrets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
 - apiGroups:
   - engine.azk.io
   resources:
   - clusters
   verbs:
+  - create
+  - delete
   - get
   - list
-  - watch
-  - create
-  - update
   - patch
-  - delete
+  - update
+  - watch
 - apiGroups:
   - engine.azk.io
   resources:
   - clusters/status
   verbs:
   - get
-  - update
   - patch
+  - update
 - apiGroups:
   - engine.azk.io
   resources:
   - controlplanes
   verbs:
+  - create
+  - delete
   - get
   - list
-  - watch
-  - create
-  - update
   - patch
-  - delete
+  - update
+  - watch
 - apiGroups:
   - engine.azk.io
   resources:
   - controlplanes/status
   verbs:
   - get
-  - update
   - patch
-- apiGroups:
-  - engine.azk.io
-  resources:
-  - nodesets
-  verbs:
-  - get
-  - list
-  - watch
-  - create
   - update
-  - patch
-  - delete
-- apiGroups:
-  - engine.azk.io
-  resources:
-  - nodesets/status
-  verbs:
-  - get
-  - update
-  - patch
 - apiGroups:
   - engine.azk.io
   resources:
   - nodepools
   verbs:
+  - create
+  - delete
   - get
   - list
-  - watch
-  - create
-  - update
   - patch
-  - delete
+  - update
+  - watch
 - apiGroups:
   - engine.azk.io
   resources:
   - nodepools/status
   verbs:
   - get
-  - update
   - patch
+  - update
 - apiGroups:
   - engine.azk.io
   resources:
   - nodesets
   verbs:
+  - create
+  - delete
   - get
   - list
-  - watch
-  - create
-  - update
   - patch
-  - delete
+  - update
+  - watch
 - apiGroups:
   - engine.azk.io
   resources:
   - nodesets/status
   verbs:
   - get
-  - update
   - patch
-- apiGroups:
-  - admissionregistration.k8s.io
-  resources:
-  - mutatingwebhookconfigurations
-  - validatingwebhookconfigurations
-  verbs:
-  - get
-  - list
-  - watch
-  - create
   - update
-  - patch
-  - delete
-- apiGroups:
-  - ""
-  resources:
-  - secrets
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
-- apiGroups:
-  - ""
-  resources:
-  - services
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -216,9 +499,22 @@ rules:
   - create
 ---
 apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: azk-leader-election-rolebinding
+  namespace: azk-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: azk-leader-election-role
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: azk-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  creationTimestamp: null
   name: azk-manager-rolebinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -243,12 +539,6 @@ subjects:
   namespace: azk-system
 ---
 apiVersion: v1
-kind: Secret
-metadata:
-  name: azk-webhook-server-secret
-  namespace: azk-system
----
-apiVersion: v1
 kind: Service
 metadata:
   annotations:
@@ -257,7 +547,6 @@ metadata:
     prometheus.io/scrape: "true"
   labels:
     control-plane: controller-manager
-    controller-tools.k8s.io: "1.0"
   name: azk-controller-manager-metrics-service
   namespace: azk-system
 spec:
@@ -267,108 +556,47 @@ spec:
     targetPort: https
   selector:
     control-plane: controller-manager
-    controller-tools.k8s.io: "1.0"
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    control-plane: controller-manager
-    controller-tools.k8s.io: "1.0"
-  name: azk-controller-manager-service
-  namespace: azk-system
-spec:
-  ports:
-  - port: 443
-  selector:
-    control-plane: controller-manager
-    controller-tools.k8s.io: "1.0"
 ---
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   labels:
     control-plane: controller-manager
-    controller-tools.k8s.io: "1.0"
   name: azk-controller-manager
   namespace: azk-system
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       control-plane: controller-manager
-      controller-tools.k8s.io: "1.0"
-  serviceName: azk-controller-manager-service
   template:
     metadata:
       labels:
         control-plane: controller-manager
-        controller-tools.k8s.io: "1.0"
     spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: node-role.kubernetes.io/master
-                operator: In
-                values:
-                - ""
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: control-plane
-                operator: In
-                values:
-                - controller-manager
-            topologyKey: kubernetes.io/hostname
       containers:
       - args:
         - --secure-listen-address=0.0.0.0:8443
         - --upstream=http://127.0.0.1:8080/
         - --logtostderr=true
         - --v=10
-        image: quay.io/brancz/kube-rbac-proxy:v0.4.0
+        image: gcr.io/kubebuilder/kube-rbac-proxy:v0.4.0
         name: kube-rbac-proxy
         ports:
         - containerPort: 8443
           name: https
       - args:
         - --metrics-addr=127.0.0.1:8080
+        - --enable-leader-election
         command:
         - /manager
-        env:
-        - name: POD_NAMESPACE
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.namespace
-        - name: SECRET_NAME
-          value: azk-webhook-server-secret
-        image: quay.io/awesomenix/azk-manager:v0.1.5
-        imagePullPolicy: Always
+        image: quay.io/awesomenix/azk-manager:latest
         name: manager
-        ports:
-        - containerPort: 9876
-          name: webhook-server
-          protocol: TCP
         resources:
           limits:
-            cpu: 200m
-            memory: 300Mi
+            cpu: 100m
+            memory: 30Mi
           requests:
-            cpu: 200m
-            memory: 300Mi
-        volumeMounts:
-        - mountPath: /tmp/cert
-          name: cert
-          readOnly: true
+            cpu: 100m
+            memory: 20Mi
       terminationGracePeriodSeconds: 10
-      tolerations:
-      - effect: NoSchedule
-        key: node-role.kubernetes.io/master
-      volumes:
-      - name: cert
-        secret:
-          defaultMode: 420
-          secretName: azk-webhook-server-secret

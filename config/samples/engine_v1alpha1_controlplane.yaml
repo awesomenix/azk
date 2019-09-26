@@ -1,8 +1,7 @@
 apiVersion: engine.azk.io/v1alpha1
 kind: ControlPlane
 metadata:
-  labels:
-    controller-tools.k8s.io: "1.0"
   name: controlplane-sample
 spec:
-  kubernetesVersion: 1.11.6
+  # Add fields here
+  foo: bar

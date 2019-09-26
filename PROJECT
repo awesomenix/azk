@@ -1,3 +1,16 @@
-version: "1"
+version: "2"
 domain: azk.io
 repo: github.com/awesomenix/azk
+resources:
+- group: engine
+  version: v1alpha1
+  kind: Cluster
+- group: engine
+  version: v1alpha1
+  kind: ControlPlane
+- group: engine
+  version: v1alpha1
+  kind: NodePool
+- group: engine
+  version: v1alpha1
+  kind: NodeSet

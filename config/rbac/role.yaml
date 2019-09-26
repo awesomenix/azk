@@ -1,0 +1,128 @@
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  creationTimestamp: null
+  name: manager-role
+rules:
+- resources:
+  - configmaps
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- resources:
+  - events
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- resources:
+  - nodes
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- resources:
+  - secrets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - engine.azk.io
+  resources:
+  - clusters
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - engine.azk.io
+  resources:
+  - clusters/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - engine.azk.io
+  resources:
+  - controlplanes
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - engine.azk.io
+  resources:
+  - controlplanes/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - engine.azk.io
+  resources:
+  - nodepools
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - engine.azk.io
+  resources:
+  - nodepools/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - engine.azk.io
+  resources:
+  - nodesets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - engine.azk.io
+  resources:
+  - nodesets/status
+  verbs:
+  - get
+  - patch
+  - update

@@ -1,15 +1,7 @@
 apiVersion: engine.azk.io/v1alpha1
 kind: Cluster
 metadata:
-  labels:
-    controller-tools.k8s.io: "1.0"
   name: cluster-sample
 spec:
   # Add fields here
-  subscriptionID: ""
-  tenantID: ""
-  clientID: ""
-  clientSecret: ""
-  resourceGroupName: resourcegroup
-  dnsPrefix: mydnsprefix
-  location: eastus2
+  foo: bar

@@ -13,6 +13,7 @@ import (
 	"k8s.io/client-go/tools/record"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/controller"
 
 	enginev1alpha1 "github.com/awesomenix/azk/api/v1alpha1"
 	azhelpers "github.com/awesomenix/azk/azure"
@@ -327,5 +328,6 @@ func getCustomData(instance *enginev1alpha1.NodeSet, cluster *enginev1alpha1.Clu
 func (r *NodeSetReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&enginev1alpha1.NodeSet{}).
+		WithOptions(controller.Options{MaxConcurrentReconciles: 30}).
 		Complete(r)
 }

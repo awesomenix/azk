@@ -12,6 +12,7 @@ import (
 	"k8s.io/client-go/tools/record"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/controller"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 
 	enginev1alpha1 "github.com/awesomenix/azk/api/v1alpha1"
@@ -131,5 +132,6 @@ func (r *NodePoolReconciler) performGarbageCollection(namespace, nodeSetName str
 func (r *NodePoolReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&enginev1alpha1.NodePool{}).
+		WithOptions(controller.Options{MaxConcurrentReconciles: 30}).
 		Complete(r)
 }

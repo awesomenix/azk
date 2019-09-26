@@ -359,7 +359,9 @@ metadata:
   creationTimestamp: null
   name: azk-manager-role
 rules:
-- resources:
+- apiGroups:
+  - ""
+  resources:
   - configmaps
   verbs:
   - create
@@ -369,7 +371,9 @@ rules:
   - patch
   - update
   - watch
-- resources:
+- apiGroups:
+  - ""
+  resources:
   - events
   verbs:
   - create
@@ -379,7 +383,9 @@ rules:
   - patch
   - update
   - watch
-- resources:
+- apiGroups:
+  - ""
+  resources:
   - nodes
   verbs:
   - create
@@ -389,7 +395,9 @@ rules:
   - patch
   - update
   - watch
-- resources:
+- apiGroups:
+  - ""
+  resources:
   - secrets
   verbs:
   - create
@@ -574,6 +582,24 @@ spec:
       labels:
         control-plane: controller-manager
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: node-role.kubernetes.io/master
+                operator: In
+                values:
+                - ""
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: control-plane
+                operator: In
+                values:
+                - controller-manager
+            topologyKey: kubernetes.io/hostname
       containers:
       - args:
         - --secure-listen-address=0.0.0.0:8443
@@ -600,3 +626,6 @@ spec:
             cpu: 100m
             memory: 20Mi
       terminationGracePeriodSeconds: 10
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master

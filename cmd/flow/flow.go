@@ -106,8 +106,8 @@ func RunFlow() error {
 		if err != nil {
 			return fmt.Errorf("invalid semver %s", i)
 		}
-		greater, _ := semver.Make("1.13.0")
-		less, _ := semver.Make("1.13.5")
+		greater, _ := semver.Make("1.15.3")
+		less, _ := semver.Make("1.16.1")
 		if input.GTE(greater) && input.LTE(less) {
 			return nil
 		}

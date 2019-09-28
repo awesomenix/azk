@@ -30,7 +30,7 @@ func (c *CloudConfiguration) GetLoadBalancer(ctx context.Context, lbName string)
 
 // CreateLoadBalancer creates a load balancer with 2 inbound NAT rules.
 func (c *CloudConfiguration) CreateLoadBalancer(ctx context.Context, lbName, pipName string) error {
-	probeName := "tcpHTTPSProbe"
+	probeName := "httpsProbe"
 	frontEndIPConfigName := "master-lbFrontEnd"
 	backEndAddressPoolName := "master-backEndPool"
 	idPrefix := fmt.Sprintf("/subscriptions/%s/resourceGroups/%s/providers/Microsoft.Network/loadBalancers", c.SubscriptionID, c.GroupName)
@@ -69,10 +69,11 @@ func (c *CloudConfiguration) CreateLoadBalancer(ctx context.Context, lbName, pip
 					{
 						Name: &probeName,
 						ProbePropertiesFormat: &network.ProbePropertiesFormat{
-							Protocol:          network.ProbeProtocolTCP,
+							Protocol:          network.ProbeProtocolHTTPS,
 							Port:              to.Int32Ptr(6443),
-							IntervalInSeconds: to.Int32Ptr(15),
-							NumberOfProbes:    to.Int32Ptr(4),
+							RequestPath:       to.StringPtr("/healthz"),
+							IntervalInSeconds: to.Int32Ptr(5),
+							NumberOfProbes:    to.Int32Ptr(2),
 						},
 					},
 				},

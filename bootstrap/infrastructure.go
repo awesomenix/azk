@@ -66,6 +66,10 @@ kubernetesVersion: %[3]s
 controlPlaneEndpoint: "%[2]s:6443"
 networking:
   podSubnet: "10.244.0.0/16"
+etcd:
+  local:
+    imageRepository: gcr.io/etcd-development
+    imageTag: v3.4.1
 EOF
 `, spec.PublicDNSName,
 		spec.InternalDNSName,

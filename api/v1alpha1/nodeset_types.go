@@ -26,6 +26,7 @@ type VMStatus struct {
 }
 
 // +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
 
 // NodeSet is the Schema for the nodesets API
 type NodeSet struct {

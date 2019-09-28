@@ -274,6 +274,8 @@ spec:
     kind: NodeSet
     plural: nodesets
   scope: ""
+  subresources:
+    status: {}
   validation:
     openAPIV3Schema:
       description: NodeSet is the Schema for the nodesets API
@@ -636,11 +638,11 @@ spec:
         name: manager
         resources:
           limits:
-            cpu: 100m
-            memory: 30Mi
+            cpu: 500m
+            memory: 300Mi
           requests:
-            cpu: 100m
-            memory: 20Mi
+            cpu: 300m
+            memory: 200Mi
       terminationGracePeriodSeconds: 10
       tolerations:
       - effect: NoSchedule

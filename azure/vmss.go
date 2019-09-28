@@ -350,13 +350,13 @@ func (c *CloudConfiguration) getZones(vmSKU string) ([]string, error) {
 	resClient.Authorizer = a
 	resClient.AddToUserAgent(c.UserAgent)
 
-	res, err := resClient.List(context.TODO())
+	res, err := resClient.ListComplete(context.TODO())
 	if err != nil {
 		return nil, err
 	}
 
 	var zones []string
-	for _, resSku := range res.Values() {
+	for resSku := res.Value(); res.NotDone(); err = res.Next() {
 		if !strings.EqualFold(*resSku.Name, vmSKU) {
 			continue
 		}

@@ -11,6 +11,8 @@ spec:
     kind: NodeSet
     plural: nodesets
   scope: ""
+  subresources:
+    status: {}
   validation:
     openAPIV3Schema:
       description: NodeSet is the Schema for the nodesets API

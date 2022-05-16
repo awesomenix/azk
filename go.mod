@@ -4,7 +4,7 @@ go 1.13
 
 require (
 	github.com/Azure/azure-sdk-for-go v33.4.0+incompatible
-	github.com/Azure/go-autorest v13.0.1+incompatible
+	github.com/Azure/go-autorest v13.0.1+incompatible // indirect
 	github.com/Azure/go-autorest/autorest v0.9.1
 	github.com/Azure/go-autorest/autorest/adal v0.6.0
 	github.com/Azure/go-autorest/autorest/to v0.3.0
@@ -20,12 +20,10 @@ require (
 	github.com/nicksnyder/go-i18n v1.10.0 // indirect
 	github.com/onsi/ginkgo v1.8.0
 	github.com/onsi/gomega v1.5.0
-	github.com/shurcooL/httpfs v0.0.0-20190707220628-8d4bc4ba7749 // indirect
-	github.com/shurcooL/vfsgen v0.0.0-20181202132449-6a9ea43bcacd // indirect
 	github.com/spf13/cobra v0.0.5
 	golang.org/x/crypto v0.0.0-20190611184440-5c40567a22f8
 	gopkg.in/alecthomas/kingpin.v3-unstable v3.0.0-20180810215634-df19058c872c // indirect
-	gopkg.in/yaml.v2 v2.2.2
+	gopkg.in/yaml.v2 v2.2.8
 	k8s.io/api v0.0.0
 	k8s.io/apimachinery v0.0.0
 	k8s.io/cli-runtime v0.0.0
